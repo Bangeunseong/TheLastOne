@@ -1,6 +1,7 @@
 using System;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -14,6 +15,5 @@ namespace _1.Scripts.Manager.Subs
         public GameManager(Managers core){ coreManager = core; }
         
         // Methods
-        
     }
 }
