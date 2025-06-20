@@ -11,6 +11,7 @@ namespace _1.Scripts.Manager.Core
         public static SceneLoadManager sceneLoadManager;
         public static SpawnManager spawnManager;
         public static UIManager uiManager;
+        public static ResourceManager resourceManager;
         
         // Properties
         public Task saveTask = Task.CompletedTask;
@@ -31,6 +32,7 @@ namespace _1.Scripts.Manager.Core
             sceneLoadManager = new SceneLoadManager(this);
             spawnManager = new SpawnManager(this);
             uiManager = new UIManager(this);
+            resourceManager = new ResourceManager(this);
             
             sceneLoadManager.Start();
             SaveData_QueuedAsync();
