@@ -30,21 +30,24 @@ namespace _1.Scripts.Manager.Subs
             var save = new DataTransferObject
             {
                 MaxHealth = 100,  Health = 100, CurrentStageId = 0,
-                CurrentCharacterPosition = Vector3.zero, CurrentCharacterRotation = Quaternion.identity,
+                CurrentCharacterPosition = new SerializableVector3(Vector3.zero), 
+                CurrentCharacterRotation = new SerializableQuaternion(Quaternion.identity),
             };
             
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
+            Debug.Log(json);
             await File.WriteAllTextAsync(SaveFilePath, json);
         }
 
         public async Task TryLoadData()
         {
             var str = File.ReadAllTextAsync(SaveFilePath);
-            while(!str.IsCompleted){await Task.Yield();}
+            while(!str.IsCompleted) { await Task.Yield(); }
 
             if (str.IsCompletedSuccessfully)
             {
                 SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str.Result);
+                Debug.Log(SaveData);
                 // TODO: Apply Loaded Data to Character
             }
             else
