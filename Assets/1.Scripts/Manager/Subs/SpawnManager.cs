@@ -7,9 +7,9 @@ namespace _1.Scripts.Manager.Subs
     [Serializable] public class SpawnManager
     {
         [Header("Core")]
-        [SerializeField] private Managers coreManager;
+        [SerializeField] private CoreManager coreCoreManager;
         
         // Constructor
-        public SpawnManager(Managers core){ coreManager = core; }
+        public SpawnManager(CoreManager coreCore){ coreCoreManager = coreCore; }
     }
 }
