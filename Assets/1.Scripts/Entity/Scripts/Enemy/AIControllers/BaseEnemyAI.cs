@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Enemy.BehaviorTree;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.Enemy
+namespace _1.Scripts.Entity.Scripts.Enemy.AIControllers
 {
     /// <summary>
     /// Enemy 공통 동작 정의
     /// </summary>
-    public abstract class BaseEnemy : MonoBehaviour
+    public abstract class BaseEnemyAI : MonoBehaviour
     {
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
         // 적 스탯 정보 SO 필요
