@@ -2,6 +2,7 @@ using System;
 using System.Resources;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,19 +11,21 @@ namespace _1.Scripts.Manager.Subs
 {
     public enum SceneType
     {
-        Intro, 
+        IntroScene, 
         Loading, 
-        Game,
+        Stage1,
+        Stage2,
+        EndingScene,
     }
     
     [Serializable] public class SceneLoadManager
     {
         [Header("Core")]
-        [SerializeField] private Managers coreManager;
+        [SerializeField] private CoreManager coreManager;
         
         [Header("Scene Info.")]
-        [SerializeField, ReadOnly] private string previousScene;
-        [SerializeField, ReadOnly] private string currentScene;
+        [SerializeField, ReadOnly] private SceneType previousScene;
+        [SerializeField, ReadOnly] private SceneType currentScene;
         
         // Fields
         private AsyncOperation sceneLoad;
@@ -34,7 +37,7 @@ namespace _1.Scripts.Manager.Subs
         public bool IsLoading { get; private set; }
         
         // Constructor
-        public SceneLoadManager(Managers core){ coreManager = core; }
+        public SceneLoadManager(CoreManager core){ coreManager = core; }
         
         // Methods
         public void Start()
@@ -51,12 +54,12 @@ namespace _1.Scripts.Manager.Subs
             if (Input.anyKeyDown) isKeyPressed = true;
         }
 
-        public async Task OpenScene(string sceneName)
+        public async Task OpenScene(SceneType sceneName)
         {
             IsLoading = true;
             
             previousScene = currentScene;
-            if (previousScene != null && previousScene != sceneName)
+            if (previousScene != sceneName)
             {
                 // await ResourceManager.Instance.UnloadSceneResources(previousScene);
                 currentScene = sceneName;
@@ -72,13 +75,12 @@ namespace _1.Scripts.Manager.Subs
             
             Debug.Log("Resource and Scene Load Started!");
             // await ResourceManager.Instance.LoadSceneResourcesWithProgress(currentScene);
-            // await GameManager.Instance.TryLoadData();
             await LoadSceneWithProgress(currentScene);
         }
         
-        private async Task LoadSceneWithProgress(string sceneName)
+        private async Task LoadSceneWithProgress(SceneType sceneName)
         {
-            sceneLoad = SceneManager.LoadSceneAsync(sceneName);
+            sceneLoad = SceneManager.LoadSceneAsync(sceneName.ToString());
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
@@ -101,9 +103,10 @@ namespace _1.Scripts.Manager.Subs
 
             switch (sceneName)
             { 
-                case nameof(SceneType.Intro): // uiManager.ChangeState(SceneType.Intro);
+                case SceneType.IntroScene: // uiManager.ChangeState(SceneType.Intro);
                     break;
-                case nameof(SceneType.Game): // uiManager.ChangeState(SceneType.Game);
+                case SceneType.Stage1:
+                case SceneType.Stage2:// uiManager.ChangeState(SceneType.Game);
                     break;
             }
 

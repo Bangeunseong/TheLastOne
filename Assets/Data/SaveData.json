@@ -1,7 +1,9 @@
 {
-  "MaxHealth": 100,
-  "Health": 100,
-  "CurrentStageId": 0,
+  "maxHealth": 100,
+  "health": 100,
+  "damage": 10,
+  "attackRate": 1.0,
+  "CurrentSceneId": 0,
   "CurrentCharacterPosition": {
     "x": 0.0,
     "y": 0.0,

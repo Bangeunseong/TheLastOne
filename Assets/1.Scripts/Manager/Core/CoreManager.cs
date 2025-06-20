@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _1.Scripts.Manager.Core
 {
-    public class Managers : MonoBehaviour
+    public class CoreManager : MonoBehaviour
     {
         // Sub Managers
         public static GameManager gameManager;
@@ -13,10 +13,10 @@ namespace _1.Scripts.Manager.Core
         public static UIManager uiManager;
         
         // Properties
-        public Task saveLoadTask = Task.CompletedTask;
+        public Task saveTask = Task.CompletedTask;
         
         // Singleton
-        public static Managers Instance { get; private set; }
+        public static CoreManager Instance { get; private set; }
 
         private void Awake()
         {
@@ -34,7 +34,7 @@ namespace _1.Scripts.Manager.Core
             
             sceneLoadManager.Start();
             SaveData_QueuedAsync();
-            LoadData_QueuedAsync();
+            _ = LoadData_QueuedAsync();
         }
 
         // Update is called once per frame
@@ -49,16 +49,43 @@ namespace _1.Scripts.Manager.Core
         /// <remarks>Each Saving Process will be queued when a previous save or loading process is currently not done!</remarks>
         public void SaveData_QueuedAsync()
         {
-            saveLoadTask = saveLoadTask.ContinueWith(_ => gameManager.TrySaveData()).Unwrap();
+            saveTask = saveTask.ContinueWith(_ => gameManager.TrySaveData()).Unwrap();
         }
 
         /// <summary>
         /// Load User Data
         /// </summary>
         /// <remarks>Each Loading Process will be queued when a previous save or loading process is currently not done!</remarks>
-        public void LoadData_QueuedAsync()
+        public async Task LoadData_QueuedAsync()
         {
-            saveLoadTask = saveLoadTask.ContinueWith(_ => gameManager.TryLoadData()).Unwrap();
+            while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
+            
+            var loadedData = await gameManager.TryLoadData();
+            if (loadedData == null)
+            {
+                await sceneLoadManager.OpenScene(SceneType.Stage1);
+                return;
+            }
+            gameManager.ApplyLoadedData(loadedData);
+            await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
+        }
+
+        /// <summary>
+        /// Start Game with the latest saved data
+        /// </summary>
+        public void StartGame()
+        {
+            _ = LoadData_QueuedAsync();
+        }
+
+        /// <summary>
+        /// Save data and move to the next scene
+        /// </summary>
+        /// <param name="nextScene"></param>
+        public void MoveToNextScene(SceneType nextScene)
+        {
+            SaveData_QueuedAsync();
+            _ = LoadData_QueuedAsync();
         }
     }
 }

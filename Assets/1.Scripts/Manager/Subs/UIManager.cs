@@ -7,9 +7,9 @@ namespace _1.Scripts.Manager.Subs
     [Serializable] public class UIManager
     {
         [Header("Core")]
-        [SerializeField] private Managers coreManager;
+        [SerializeField] private CoreManager coreCoreManager;
         
         // Constructor
-        public UIManager(Managers core){ coreManager = core; }
+        public UIManager(CoreManager coreCore){ coreCoreManager = coreCore; }
     }
 }

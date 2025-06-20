@@ -1,4 +1,5 @@
 ﻿using System;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Data
@@ -28,18 +29,20 @@ namespace _1.Scripts.Manager.Data
     [Serializable] public class DataTransferObject
     {
         [Header("Character Stat.")]
-        [SerializeField] public int MaxHealth;
-        [SerializeField] public int Health;
+        [SerializeField] public int maxHealth;
+        [SerializeField] public int health;
+        [SerializeField] public int damage;
+        [SerializeField] public float attackRate;
 
         [Header("Stage Info.")] 
-        [SerializeField] public int CurrentStageId;
+        [SerializeField] public SceneType CurrentSceneId;
         [SerializeField] public SerializableVector3 CurrentCharacterPosition;
         [SerializeField] public  SerializableQuaternion CurrentCharacterRotation;
 
         public override string ToString()
         {
             return
-                $"Character Stat.\n{MaxHealth}, {Health}\n" +
+                $"Character Stat.\n{maxHealth}, {health}\n{damage}, {attackRate}\n" +
                 $"Stage Info.\n{CurrentCharacterPosition.ToVector3()}, {CurrentCharacterRotation.ToQuaternion()}";
         }
     }
