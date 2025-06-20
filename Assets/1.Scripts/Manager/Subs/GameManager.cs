@@ -35,7 +35,7 @@ namespace _1.Scripts.Manager.Subs
             };
             
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
-            Debug.Log(json);
+            // Debug.Log(json);
             await File.WriteAllTextAsync(SaveFilePath, json);
         }
 

@@ -34,6 +34,7 @@ namespace _1.Scripts.Manager.Core
             
             sceneLoadManager.Start();
             SaveData_QueuedAsync();
+            LoadData_QueuedAsync();
         }
 
         // Update is called once per frame
