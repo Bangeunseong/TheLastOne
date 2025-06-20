@@ -27,12 +27,14 @@ namespace _1.Scripts.Manager.Core
             sceneLoadManager = new SceneLoadManager(this);
             spawnManager = new SpawnManager(this);
             uiManager = new UIManager(this);
+            
+            sceneLoadManager.Start();
         }
 
         // Update is called once per frame
         private void Update()
         {
-        
+            if (!sceneLoadManager.IsLoading){ sceneLoadManager.Update(); } 
         }
     }
 }
