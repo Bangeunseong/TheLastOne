@@ -24,6 +24,9 @@ namespace _1.Scripts.Manager.Core
         private void Start()
         {
             gameManager = new GameManager(this);
+            sceneLoadManager = new SceneLoadManager(this);
+            spawnManager = new SpawnManager(this);
+            uiManager = new UIManager(this);
         }
 
         // Update is called once per frame
