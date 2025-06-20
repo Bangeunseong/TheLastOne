@@ -1,3 +1,4 @@
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player
@@ -7,7 +8,7 @@ namespace _1.Scripts.Entity.Scripts.Player
         // Start is called before the first frame update
         void Start()
         {
-        
+            
         }
 
         // Update is called once per frame
