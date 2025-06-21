@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using UnityEngine;
@@ -19,9 +20,6 @@ namespace _1.Scripts.Manager.Subs
         [Header("Save Settings")] 
         [SerializeField, ReadOnly] private string SaveFilePath = "Assets/Data/SaveData.json";
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
-        
-        [field: Header("Player")]
-        [field: SerializeField] public Player Player { get; private set; }
 
         // Constructor
         public GameManager(CoreManager coreCore){ coreCoreManager = coreCore; }
@@ -53,11 +51,6 @@ namespace _1.Scripts.Manager.Subs
             }
             Debug.LogWarning("Failed to load character data!");
             return null;
-        }
-
-        public void ApplyLoadedData(DataTransferObject data)
-        {
-            Debug.Log($"{data}");
         }
     }
 }

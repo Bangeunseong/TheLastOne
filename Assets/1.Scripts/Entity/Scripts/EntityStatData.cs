@@ -11,15 +11,17 @@ namespace _1.Scripts.Entity.Scripts
         public bool isAlly;
 
         [Header("Stats")] 
-        public float maxHealth;
-        public float currentHealth;
-        public float baseDamage;
+        public int maxHealth;
+        public int currentHealth;
+        public int baseDamage;
         public float baseAttackRate;
 
         [Header("Movement")] 
         public float moveSpeed;
+        public float jumpForce;
         public float runMultiplier;
         public float walkMultiplier;
+        public float crouchMultiplier;
 
         [Header("Audio")] 
         public AudioClip[] footStepSounds;
