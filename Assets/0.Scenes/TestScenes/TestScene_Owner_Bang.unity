@@ -152,6 +152,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d931a4bb8a5c8514bb44131ce6ba6cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager:
+    coreCoreManager: {fileID: 920342547}
+    SaveFilePath: Assets/Data/SaveData.json
+    <SaveData>k__BackingField:
+      maxHealth: 0
+      health: 0
+      damage: 0
+      attackRate: 0
+      CurrentSceneId: 0
+      CurrentCharacterPosition:
+        x: 0
+        y: 0
+        z: 0
+      CurrentCharacterRotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    <Player>k__BackingField: {fileID: 0}
+  sceneLoadManager:
+    coreManager: {fileID: 920342547}
+    previousScene: 0
+    currentScene: 0
+  spawnManager:
+    coreCoreManager: {fileID: 920342547}
+  uiManager:
+    coreCoreManager: {fileID: 920342547}
+  resourceManager:
+    resources:
+      _serializedList: []
 --- !u!4 &920342548
 Transform:
   m_ObjectHideFlags: 0

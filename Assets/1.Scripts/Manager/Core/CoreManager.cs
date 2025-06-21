@@ -1,17 +1,22 @@
+using System;
 using System.Threading.Tasks;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Core
 {
     public class CoreManager : MonoBehaviour
     {
         // Sub Managers
-        public static GameManager gameManager;
-        public static SceneLoadManager sceneLoadManager;
-        public static SpawnManager spawnManager;
-        public static UIManager uiManager;
-        public static ResourceManager resourceManager;
+        [Header("Managers")]
+        [SerializeField] public GameManager gameManager;
+        [SerializeField] public SceneLoadManager sceneLoadManager;
+        [SerializeField] public SpawnManager spawnManager;
+        [SerializeField] public UIManager uiManager;
+        [SerializeField] public ResourceManager resourceManager;
         
         // Properties
         public Task saveTask = Task.CompletedTask;
@@ -23,20 +28,29 @@ namespace _1.Scripts.Manager.Core
         {
             if (!Instance) { Instance = this; DontDestroyOnLoad(gameObject); } 
             else { if (Instance != this) Destroy(gameObject); }
+            
+            gameManager = new GameManager(this);
+            sceneLoadManager = new SceneLoadManager(this);
+            spawnManager = new SpawnManager(this);
+            uiManager = new UIManager(this);
+            resourceManager = new ResourceManager(this);
         }
 
-        // Start is called before the first frame update
-        private void Start()
+        private void Reset()
         {
             gameManager = new GameManager(this);
             sceneLoadManager = new SceneLoadManager(this);
             spawnManager = new SpawnManager(this);
             uiManager = new UIManager(this);
             resourceManager = new ResourceManager(this);
-            
+        }
+
+        // Start is called before the first frame update
+        private void Start()
+        {
             sceneLoadManager.Start();
             SaveData_QueuedAsync();
-            _ = LoadData_QueuedAsync();
+            _ = LoadDataAndScene();
         }
 
         // Update is called once per frame
@@ -58,18 +72,40 @@ namespace _1.Scripts.Manager.Core
         /// Load User Data
         /// </summary>
         /// <remarks>Each Loading Process will be queued when a previous save or loading process is currently not done!</remarks>
-        public async Task LoadData_QueuedAsync()
+        public async Task LoadDataAndScene()
         {
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             
             var loadedData = await gameManager.TryLoadData();
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            
             if (loadedData == null)
             {
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
                 return;
             }
-            gameManager.ApplyLoadedData(loadedData);
+            
             await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
+            return;
+
+            void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+            {
+                var player = GameObject.FindWithTag("Player")?.GetComponent<PlayerCondition>();
+                if (player != null)
+                {
+                    player.InitializeStat(loadedData);
+
+                    // 위치 및 회전 적용
+                    if (loadedData != null)
+                    {
+                        player.transform.position = loadedData.CurrentCharacterPosition.ToVector3();
+                        player.transform.rotation = loadedData.CurrentCharacterRotation.ToQuaternion();
+                    }
+                }
+
+                // 중복 호출 방지를 위해 제거
+                SceneManager.sceneLoaded -= OnSceneLoaded;
+            }
         }
 
         /// <summary>
@@ -77,17 +113,25 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void StartGame()
         {
-            _ = LoadData_QueuedAsync();
+            _ = LoadDataAndScene();
+        }
+        
+        /// <summary>
+        /// Back to Intro Scene
+        /// </summary>
+        public void MoveToIntroScene() 
+        {
+            _ = sceneLoadManager.OpenScene(SceneType.IntroScene);
         }
 
         /// <summary>
         /// Save data and move to the next scene
         /// </summary>
         /// <param name="nextScene"></param>
-        public void MoveToNextScene(SceneType nextScene)
+        public void MoveToNextGameScene(SceneType nextScene)
         {
             SaveData_QueuedAsync();
-            _ = LoadData_QueuedAsync();
+            _ = LoadDataAndScene();
         }
     }
 }

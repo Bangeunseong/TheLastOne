@@ -44,7 +44,7 @@ namespace _1.Scripts.Manager.Subs
         {
             // uiManager = UIManager.Instance;
             
-            // currentScene = nameof(CurrentScene.Intro);
+            currentScene = SceneType.IntroScene;
             // StartCoroutine(LoadMainScene());
         }
 

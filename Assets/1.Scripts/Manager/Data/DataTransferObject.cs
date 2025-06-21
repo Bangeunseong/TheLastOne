@@ -33,6 +33,8 @@ namespace _1.Scripts.Manager.Data
         [SerializeField] public int health;
         [SerializeField] public int damage;
         [SerializeField] public float attackRate;
+        [SerializeField] public int level;
+        [SerializeField] public int experience;
 
         [Header("Stage Info.")] 
         [SerializeField] public SceneType CurrentSceneId;
@@ -42,7 +44,7 @@ namespace _1.Scripts.Manager.Data
         public override string ToString()
         {
             return
-                $"Character Stat.\n{maxHealth}, {health}\n{damage}, {attackRate}\n" +
+                $"Character Stat.\n{maxHealth}, {health}\n{damage}, {attackRate}\n{level}, {experience}" +
                 $"Stage Info.\n{CurrentCharacterPosition.ToVector3()}, {CurrentCharacterRotation.ToQuaternion()}";
         }
     }

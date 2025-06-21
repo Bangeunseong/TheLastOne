@@ -9,6 +9,6 @@ namespace _1.Scripts.Entity.Scripts.Enemy.StatControllers
     /// </summary>
     public abstract class BaseEnemyStat : MonoBehaviour, IDamagable
     {
-        public abstract void TakeDamage(float damage); // 데미지 입을 시 
+        public abstract void OnTakeDamage(int damage); // 데미지 입을 시 
     }
 }
