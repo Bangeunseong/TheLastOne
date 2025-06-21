@@ -1,4 +1,5 @@
 using System;
+using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using Cinemachine;
 using UnityEngine;
@@ -7,12 +8,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class Player : MonoBehaviour
     {
+        [field: Header("Animation Data")]
+        [field: SerializeField] public AnimationData AnimationData { get; private set; } 
+        
         [field: Header("Components")]
         [field: SerializeField] public Animator Animator { get; private set; }
         [field: SerializeField] public CharacterController Controller { get; private set; }
         [field: SerializeField] public PlayerInput PlayerInput { get; private set; }
         [field: SerializeField] public PlayerCondition PlayerCondition { get; private set; }
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
+        [field: SerializeField] public PlayerGravity PlayerGravity { get; private set; }
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
         [field: SerializeField] public Transform CameraPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
@@ -28,11 +33,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
+            if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
 
             if (!FirstPersonCamera) FirstPersonCamera = this.TryFindFirstChild("FirstPersonCamera").GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = this.TryFindFirstChild("ThirdPersonCamera").GetComponent<CinemachineVirtualCamera>();
             
+            AnimationData.Initialize();
         }
 
         private void Reset()
@@ -41,11 +48,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
+            if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
 
             if (!FirstPersonCamera) FirstPersonCamera = this.TryFindFirstChild("FirstPersonCamera").GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = this.TryFindFirstChild("ThirdPersonCamera").GetComponent<CinemachineVirtualCamera>();
 
+            AnimationData.Initialize();
         }
 
         // Start is called before the first frame update
