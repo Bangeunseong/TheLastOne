@@ -22,7 +22,11 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
 
         // Constructor
-        public GameManager(CoreManager coreCore){ coreCoreManager = coreCore; }
+        public GameManager(CoreManager coreCore)
+        { 
+            coreCoreManager = coreCore;
+            SaveData = null;
+        }
         
         // Methods
         public async Task TrySaveData()

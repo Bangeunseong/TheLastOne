@@ -49,8 +49,7 @@ namespace _1.Scripts.Manager.Core
         private void Start()
         {
             sceneLoadManager.Start();
-            SaveData_QueuedAsync();
-            _ = LoadDataAndScene();
+            StartGame();
         }
 
         // Update is called once per frame
