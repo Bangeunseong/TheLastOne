@@ -37,7 +37,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             StatData = CoreManager.Instance.resourceManager.GetAsset<EntityStatData>("Player");
         }
-        
+
+        private void Start()
+        {
+            InitializeStat(CoreManager.Instance.gameManager.SaveData);
+        }
+
         public void InitializeStat(DataTransferObject data)
         {
             if (data == null)

@@ -15,16 +15,16 @@ namespace _1.Scripts.Manager.Subs
     {
         // Fields
         [Header("Core")]
-        [SerializeField] private CoreManager coreCoreManager;
+        [SerializeField] private CoreManager coreManager;
         
         [Header("Save Settings")] 
         [SerializeField, ReadOnly] private string SaveFilePath = "Assets/Data/SaveData.json";
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
 
         // Constructor
-        public GameManager(CoreManager coreCore)
+        public GameManager(CoreManager core)
         { 
-            coreCoreManager = coreCore;
+            coreManager = core;
             SaveData = null;
         }
         
@@ -51,7 +51,7 @@ namespace _1.Scripts.Manager.Subs
 
             if (str.IsCompletedSuccessfully)
             {
-                return JsonConvert.DeserializeObject<DataTransferObject>(str.Result);
+                return SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str.Result);
             }
             Debug.LogWarning("Failed to load character data!");
             return null;

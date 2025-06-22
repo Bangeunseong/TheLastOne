@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
+    [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
+    [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity))]
+    
     public class Player : MonoBehaviour
     {
         [field: Header("Animation Data")]
@@ -33,11 +36,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
+            if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
 
-            if (!FirstPersonCamera) FirstPersonCamera = this.TryFindFirstChild("FirstPersonCamera").GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = this.TryFindFirstChild("ThirdPersonCamera").GetComponent<CinemachineVirtualCamera>();
+            if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
+            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             
             AnimationData.Initialize();
         }
@@ -48,11 +52,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
+            if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
 
-            if (!FirstPersonCamera) FirstPersonCamera = this.TryFindFirstChild("FirstPersonCamera").GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = this.TryFindFirstChild("ThirdPersonCamera").GetComponent<CinemachineVirtualCamera>();
+            if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
+            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
 
             AnimationData.Initialize();
         }
@@ -66,7 +71,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = cam?.transform;
             
             stateMachine = new PlayerStateMachine(this);
-            // stateMachine.ChangeState(stateMachine.IdleState);
+            stateMachine.ChangeState(stateMachine.IdleState);
         }
 
         private void FixedUpdate()

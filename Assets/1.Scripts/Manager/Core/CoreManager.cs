@@ -17,6 +17,10 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public SpawnManager spawnManager;
         [SerializeField] public UIManager uiManager;
         [SerializeField] public ResourceManager resourceManager;
+
+        [field: Header("Debug")]
+        [field: SerializeField] public bool IsDebug { get; private set; } = true;
+        [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
         
         // Properties
         public Task saveTask = Task.CompletedTask;
@@ -76,8 +80,6 @@ namespace _1.Scripts.Manager.Core
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             
             var loadedData = await gameManager.TryLoadData();
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            
             if (loadedData == null)
             {
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
@@ -85,26 +87,6 @@ namespace _1.Scripts.Manager.Core
             }
             
             await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
-            return;
-
-            void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-            {
-                var player = GameObject.FindWithTag("Player")?.GetComponent<PlayerCondition>();
-                if (player != null)
-                {
-                    player.InitializeStat(loadedData);
-
-                    // 위치 및 회전 적용
-                    if (loadedData != null)
-                    {
-                        player.transform.position = loadedData.CurrentCharacterPosition.ToVector3();
-                        player.transform.rotation = loadedData.CurrentCharacterRotation.ToQuaternion();
-                    }
-                }
-
-                // 중복 호출 방지를 위해 제거
-                SceneManager.sceneLoaded -= OnSceneLoaded;
-            }
         }
 
         /// <summary>
