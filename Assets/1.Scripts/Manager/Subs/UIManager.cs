@@ -23,6 +23,7 @@ namespace _1.Scripts.Manager.Subs
         Menu,
         None
     }
+    
     [Serializable] public class UIManager
     {
         [Header("Core")]
@@ -61,7 +62,6 @@ namespace _1.Scripts.Manager.Subs
         // Constructor
         public UIManager(CoreManager core){ coreManager = core; }
         
-
         public void Initialize()
         {
             // Managers에서 초기화
