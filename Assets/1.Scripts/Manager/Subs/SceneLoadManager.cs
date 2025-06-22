@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Data;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = System.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -61,11 +62,11 @@ namespace _1.Scripts.Manager.Subs
             previousScene = currentScene;
             if (previousScene != sceneName)
             {
-                // await ResourceManager.Instance.UnloadSceneResources(previousScene);
+                await coreManager.resourceManager.UnloadAssetsByLabelAsync(previousScene.ToString());
                 currentScene = sceneName;
             }
             
-            var loadingScene = SceneManager.LoadSceneAsync(nameof(SceneType.Loading));
+            var loadingScene = SceneManager.LoadSceneAsync(coreManager.IsDebug ? coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
             while (!loadingScene!.isDone)
             {
                 await Task.Yield();
@@ -74,13 +75,13 @@ namespace _1.Scripts.Manager.Subs
             // uiManager.ChangeState(CurrentScene.Loading);
             
             Debug.Log("Resource and Scene Load Started!");
-            // await ResourceManager.Instance.LoadSceneResourcesWithProgress(currentScene);
+            await coreManager.resourceManager.LoadAssetsByLabelAsync<ScriptableObject>(currentScene.ToString());
             await LoadSceneWithProgress(currentScene);
         }
         
         private async Task LoadSceneWithProgress(SceneType sceneName)
         {
-            sceneLoad = SceneManager.LoadSceneAsync(sceneName.ToString());
+            sceneLoad = SceneManager.LoadSceneAsync(coreManager.IsDebug ? coreManager.DebugPrefix + sceneName : sceneName.ToString());
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {

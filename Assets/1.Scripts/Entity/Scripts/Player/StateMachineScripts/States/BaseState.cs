@@ -89,7 +89,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
             return movementSpeed;
         }
 
