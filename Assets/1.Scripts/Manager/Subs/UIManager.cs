@@ -28,7 +28,7 @@ namespace _1.Scripts.Manager.Subs
         [Header("Core")]
         [SerializeField] private CoreManager coreManager;
         
-        private CurrentState currentState;
+        private CurrentState currentState = CurrentState.None;
         private CurrentState previousState;
 
         private Transform _mainCanvas;
@@ -75,6 +75,7 @@ namespace _1.Scripts.Manager.Subs
             else
             {
                 Service.Log("UIManager: 메인캔버스를 찾지 못함");
+                _mainCanvas = new GameObject("MainCanvas").transform;
             }
 
             if (popupCanvas != null)
@@ -87,9 +88,9 @@ namespace _1.Scripts.Manager.Subs
             }
 
             // 게임 상태와 Address 맵핑
-            /*Dictionary<CurrentState, string> uiAddressMap = new Dictionary<CurrentState, string>();
+            Dictionary<CurrentState, string> uiAddressMap = new Dictionary<CurrentState, string>();
             uiAddressMap.Add(CurrentState.Lobby, LOBBY_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.Loading, LOADING_UI_ADDRESS);
+            /*uiAddressMap.Add(CurrentState.Loading, LOADING_UI_ADDRESS);
             uiAddressMap.Add(CurrentState.InGame, INGAME_UI_ADDRESS);
             uiAddressMap.Add(CurrentState.Setting, SETTING_UI_ADDRESS);
             uiAddressMap.Add(CurrentState.Inventory, INVENTORY_UI_ADDRESS);
