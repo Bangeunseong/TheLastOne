@@ -75,7 +75,7 @@ namespace _1.Scripts.Manager.Subs
             // uiManager.ChangeState(CurrentScene.Loading);
             
             Debug.Log("Resource and Scene Load Started!");
-            await coreManager.resourceManager.LoadAssetsByLabelAsync<ScriptableObject>(currentScene.ToString());
+            await coreManager.resourceManager.LoadAssetsByLabelAsync(currentScene.ToString());
             await LoadSceneWithProgress(currentScene);
         }
         
