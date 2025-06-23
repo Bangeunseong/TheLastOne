@@ -3449,7 +3449,7 @@ MonoBehaviour:
   characterController: {fileID: 7058540756104092436}
   <Gravity>k__BackingField: -9.81
   <GroundedOffset>k__BackingField: -0.14
-  <GroundedRadius>k__BackingField: 0.4
+  <GroundedRadius>k__BackingField: 0.28
   <GroundLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 1
