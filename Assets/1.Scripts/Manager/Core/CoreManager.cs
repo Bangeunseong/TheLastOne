@@ -53,6 +53,7 @@ namespace _1.Scripts.Manager.Core
         {
             gameManager.Start();
             sceneLoadManager.Start();
+            objectPoolManager.Start();
             
             StartGame();
         }
