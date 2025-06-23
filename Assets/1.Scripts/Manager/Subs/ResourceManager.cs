@@ -17,7 +17,6 @@ namespace _1.Scripts.Manager.Subs
         [Header("Resources")]
         [SerializeField] private SerializedDictionary<string, Object> resources = new();
         private Dictionary<string, List<AsyncOperationHandle>> handlesByLabel = new();
-
         private CoreManager coreManager;
         
         public ResourceManager(CoreManager core)
@@ -30,23 +29,32 @@ namespace _1.Scripts.Manager.Subs
         /// </summary>
         /// <param name="label"></param>
         /// <typeparam name="T"></typeparam>
-        public async Task LoadAssetsByLabelAsync<T>(string label) where T : Object
+        public async Task LoadAssetsByLabelAsync(string label)
         {
-            var handle = Addressables.LoadAssetsAsync<T>(label, null);
-            await handle.Task;
+            var handle = Addressables.LoadAssetsAsync<Object>(label, null);
 
-            if (!handlesByLabel.ContainsKey(label))
+            while (!handle.IsDone)
             {
-                handlesByLabel[label] = new List<AsyncOperationHandle>();
+                float progress = handle.PercentComplete;
+                // 여기서 로딩바 UI 업데이트
+                await Task.Yield();
             }
             
-            handlesByLabel[label].Add(handle);
-            
-            foreach (var asset in handle.Result)
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                if (!resources.ContainsKey(asset.name))
+                if (!handlesByLabel.ContainsKey(label))
                 {
-                    resources.Add(asset.name, asset);
+                    handlesByLabel[label] = new List<AsyncOperationHandle>();
+                }
+                
+                handlesByLabel[label].Add(handle);
+                
+                foreach (var asset in handle.Result)
+                {
+                    if (!resources.ContainsKey(asset.name))
+                    {
+                        resources.Add(asset.name, asset);
+                    }
                 }
             }
         }
@@ -98,7 +106,6 @@ namespace _1.Scripts.Manager.Subs
                 }
                 
                 Addressables.Release(handle);
-                await Task.Yield();
             }
             
             handlesByLabel.Remove(label);
