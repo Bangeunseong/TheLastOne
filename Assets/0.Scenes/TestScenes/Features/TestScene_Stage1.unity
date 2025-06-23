@@ -968,16 +968,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: <FirstPersonCamera>k__BackingField
-      value: 
-      objectReference: {fileID: 1917048629}
-    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: <ThirdPersonCamera>k__BackingField
-      value: 
-      objectReference: {fileID: 311603909}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1028,40 +1018,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7058540756104092436, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7058540756104092436, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7058540756104092436, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_SkinWidth
-      value: 0.025
-      objectReference: {fileID: 0}
     - target: {fileID: 7874159748350873753, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7874159748350873753, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7874159748350873753, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8155339996397314302, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

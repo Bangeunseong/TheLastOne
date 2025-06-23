@@ -1,10 +1,7 @@
-using System;
 using System.Threading.Tasks;
-using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Core
 {
@@ -22,8 +19,7 @@ namespace _1.Scripts.Manager.Core
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
         [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
         
-        // Properties
-        public Task saveTask = Task.CompletedTask;
+        private Task saveTask = Task.CompletedTask;
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -33,26 +29,28 @@ namespace _1.Scripts.Manager.Core
             if (!Instance) { Instance = this; DontDestroyOnLoad(gameObject); } 
             else { if (Instance != this) Destroy(gameObject); }
             
-            gameManager = new GameManager(this);
-            sceneLoadManager = new SceneLoadManager(this);
-            spawnManager = new SpawnManager(this);
-            uiManager = new UIManager(this);
-            resourceManager = new ResourceManager(this);
+            gameManager = new GameManager();
+            sceneLoadManager = new SceneLoadManager();
+            spawnManager = new SpawnManager();
+            uiManager = new UIManager();
+            resourceManager = new ResourceManager();
         }
 
         private void Reset()
         {
-            gameManager = new GameManager(this);
-            sceneLoadManager = new SceneLoadManager(this);
-            spawnManager = new SpawnManager(this);
-            uiManager = new UIManager(this);
-            resourceManager = new ResourceManager(this);
+            gameManager = new GameManager();
+            sceneLoadManager = new SceneLoadManager();
+            spawnManager = new SpawnManager();
+            uiManager = new UIManager();
+            resourceManager = new ResourceManager();
         }
 
         // Start is called before the first frame update
         private void Start()
         {
+            gameManager.Start();
             sceneLoadManager.Start();
+            
             StartGame();
         }
 
@@ -79,13 +77,15 @@ namespace _1.Scripts.Manager.Core
         {
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             
-            var loadedData = await gameManager.TryLoadData();
+            await gameManager.TryLoadData();
+            DataTransferObject loadedData = gameManager.SaveData;
             if (loadedData == null)
             {
+                Debug.Log("DataTransferObject is null");
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
                 return;
             }
-            
+            Debug.Log("DataTransferObject is not null");
             await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
         }
 

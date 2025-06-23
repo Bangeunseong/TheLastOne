@@ -31,7 +31,9 @@ namespace _1.Scripts.Manager.Data
         [Header("Character Stat.")]
         [SerializeField] public int maxHealth;
         [SerializeField] public int health;
-        [SerializeField] public int damage;
+        [SerializeField] public float maxStamina;
+        [SerializeField] public float stamina;
+        [SerializeField] public float damage;
         [SerializeField] public float attackRate;
         [SerializeField] public int level;
         [SerializeField] public int experience;

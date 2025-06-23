@@ -26,9 +26,6 @@ namespace _1.Scripts.Manager.Subs
     
     [Serializable] public class UIManager
     {
-        [Header("Core")]
-        [SerializeField] private CoreManager coreManager;
-        
         private CurrentState currentState = CurrentState.None;
         private CurrentState previousState;
 
@@ -58,9 +55,6 @@ namespace _1.Scripts.Manager.Subs
         public InventoryUI InventoryUI => loadedUI[CurrentState.Inventory];
         public HackingUI HackingUI => loadedUI[CurrentState.Hacking];
         public WeaponTuningUI WeaponTuningUI => loadedUI[CurrentState.WeaponTuning];*/
-        
-        // Constructor
-        public UIManager(CoreManager core){ coreManager = core; }
         
         public void Initialize()
         {
