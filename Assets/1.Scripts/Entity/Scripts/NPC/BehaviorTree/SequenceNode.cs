@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
+namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
     /// <summary>
     /// 시퀀스 노드 - 자식 노드들 중 하나라도 FAILED일시 멈춤

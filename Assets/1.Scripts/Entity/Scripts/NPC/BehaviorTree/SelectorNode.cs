@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
+namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
     /// <summary>
     /// 셀렉터 노드 - 자식노드 중 하나라도 SUCCESS일시 멈춤

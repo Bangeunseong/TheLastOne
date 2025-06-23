@@ -1,6 +1,6 @@
 using System;
 
-namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
+namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 { 
     /// <summary>
     /// 최하위 노드인 액션 노드, 조건이나 동작 정의

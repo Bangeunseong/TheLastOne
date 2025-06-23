@@ -1,4 +1,4 @@
-namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
+namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
     /// <summary>
     /// 노드 인터페이스

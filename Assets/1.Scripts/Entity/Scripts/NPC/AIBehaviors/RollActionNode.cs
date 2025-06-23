@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.Enemy.BehaviorTree;
+using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.Enemy.AIBehaviors
+namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
 {
     /// <summary>
     /// 테스트 중

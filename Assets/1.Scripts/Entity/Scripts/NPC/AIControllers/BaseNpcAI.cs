@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.Enemy.BehaviorTree;
+using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.Enemy.AIControllers
+namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
 {
     /// <summary>
     /// Npc 공통 동작 정의
