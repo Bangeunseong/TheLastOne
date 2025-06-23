@@ -25,13 +25,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         private IEnumerator RollCoroutine()
         {
             isRunning = true;
-            context.controller.CurrentActionChange(this);
+            context.controller.IsCurrentActionRunning(true);
             Debug.Log("Roll Start");
 
             yield return new WaitForSeconds(1.0f);
 
             Debug.Log("Roll End");
-            context.controller.CurrentActionNull();
+            context.controller.IsCurrentActionRunning(false);
             isRunning = false;
         }
     }

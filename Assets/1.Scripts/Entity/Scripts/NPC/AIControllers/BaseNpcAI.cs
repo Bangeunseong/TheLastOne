@@ -11,7 +11,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     /// </summary>
     public abstract class BaseNpcAI : MonoBehaviour
     {
-        protected INode currentActionNode; // 현재 액션 노드 (중첩 방지)
+        protected bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
         protected BTContext context;
         // 스탯 정보 SO 필요
@@ -32,7 +32,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Update()
         {
-            if (currentActionNode != null)
+            if (currentActionRunning)
             {
                 return; // 지속실행
             }
@@ -41,14 +41,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             rootNode?.Evaluate(context);
         }
 
-        public void CurrentActionChange(INode node)
+        public void IsCurrentActionRunning(bool running)
         {
-            currentActionNode = node;
-        }
-
-        public void CurrentActionNull()
-        {
-            currentActionNode = null;
+            currentActionRunning = running;
         }
     }
 }
