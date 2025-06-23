@@ -59,9 +59,6 @@ namespace _1.Scripts.Manager.Subs
         public HackingUI HackingUI => loadedUI[CurrentState.Hacking];
         public WeaponTuningUI WeaponTuningUI => loadedUI[CurrentState.WeaponTuning];*/
         
-        // Constructor
-        public UIManager(CoreManager core){ coreManager = core; }
-        
         public void Initialize()
         {
             // Managers에서 초기화

@@ -13,28 +13,30 @@ namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class GameManager
     {
-        // Fields
-        [Header("Core")]
-        [SerializeField] private CoreManager coreManager;
-        
         [Header("Save Settings")] 
         [SerializeField, ReadOnly] private string SaveFilePath = "Assets/Data/SaveData.json";
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
-
-        // Constructor
-        public GameManager(CoreManager core)
-        { 
-            coreManager = core;
+        [field: SerializeField] public Player Player { get; private set; }
+        
+        private CoreManager coreManager;
+        
+        public void Start()
+        {
+            coreManager = CoreManager.Instance;
             SaveData = null;
         }
         
         // Methods
+        public void Initialize_Player(Player player) { Player = player; }
+        
         public async Task TrySaveData()
         {
             var save = new DataTransferObject
             {
-                maxHealth = 100, health = 100, attackRate = 1, damage = 10,
-                CurrentSceneId = 0,
+                maxHealth = Player.PlayerCondition.MaxHealth, health = Player.PlayerCondition.CurrentHealth, 
+                maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
+                attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
+                CurrentSceneId = coreManager.sceneLoadManager.CurrentScene,
                 CurrentCharacterPosition = new SerializableVector3(Vector3.zero), 
                 CurrentCharacterRotation = new SerializableQuaternion(Quaternion.identity),
             };
@@ -44,17 +46,10 @@ namespace _1.Scripts.Manager.Subs
             await File.WriteAllTextAsync(SaveFilePath, json);
         }
 
-        public async Task<DataTransferObject> TryLoadData()
+        public async Task TryLoadData()
         {
-            var str = File.ReadAllTextAsync(SaveFilePath);
-            while (!str.IsCompleted) { await Task.Yield(); }
-
-            if (str.IsCompletedSuccessfully)
-            {
-                return SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str.Result);
-            }
-            Debug.LogWarning("Failed to load character data!");
-            return null;
+            var str = await File.ReadAllTextAsync(SaveFilePath);
+            SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str);
         }
     }
 }

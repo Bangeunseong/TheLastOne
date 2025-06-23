@@ -12,7 +12,7 @@ namespace _1.Scripts.Entity.Scripts
 
         [Header("Stats")] 
         public int maxHealth;
-        public int currentHealth;
+        public float maxStamina;
         public int baseDamage;
         public float baseAttackRate;
 

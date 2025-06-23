@@ -17,12 +17,6 @@ namespace _1.Scripts.Manager.Subs
         [Header("Resources")]
         [SerializeField] private SerializedDictionary<string, Object> resources = new();
         private Dictionary<string, List<AsyncOperationHandle>> handlesByLabel = new();
-        private CoreManager coreManager;
-        
-        public ResourceManager(CoreManager core)
-        {
-            coreManager = core;
-        }
         
         /// <summary>
         /// 씬 라벨을 기준으로 필요한 리소스들 전부 불러옴
@@ -106,6 +100,7 @@ namespace _1.Scripts.Manager.Subs
                 }
                 
                 Addressables.Release(handle);
+                await Task.Yield();
             }
             
             handlesByLabel.Remove(label);
