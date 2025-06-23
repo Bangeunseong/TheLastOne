@@ -14,7 +14,8 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public SpawnManager spawnManager;
         [SerializeField] public UIManager uiManager;
         [SerializeField] public ResourceManager resourceManager;
-
+        [SerializeField] public ObjectPoolManager objectPoolManager;
+        
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
         [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
@@ -34,6 +35,7 @@ namespace _1.Scripts.Manager.Core
             spawnManager = new SpawnManager();
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
+            objectPoolManager = new ObjectPoolManager();
         }
 
         private void Reset()
@@ -43,6 +45,7 @@ namespace _1.Scripts.Manager.Core
             spawnManager = new SpawnManager();
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
+            objectPoolManager = new ObjectPoolManager();
         }
 
         // Start is called before the first frame update
