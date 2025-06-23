@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Interfaces;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Enemy.StatControllers

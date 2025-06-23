@@ -57,6 +57,7 @@ namespace _1.Scripts.Manager.Subs
             PreviousScene = CurrentScene;
             if (PreviousScene != sceneName)
             {
+                await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
                 CurrentScene = sceneName;
             }
@@ -73,6 +74,7 @@ namespace _1.Scripts.Manager.Subs
             
             Debug.Log("Resource and Scene Load Started!");
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             await LoadSceneWithProgress(CurrentScene);
         }
         
