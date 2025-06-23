@@ -12,13 +12,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Enter()
         {
             base.Enter();
-            StartAnimation(stateMachine.Player.AnimationData.CrouchWalkParameterHash);
+            // StartAnimation(stateMachine.Player.AnimationData.CrouchWalkParameterHash);
         }
 
         public override void Exit()
         {
             base.Exit();
-            StopAnimation(stateMachine.Player.AnimationData.CrouchWalkParameterHash);
+            // StopAnimation(stateMachine.Player.AnimationData.CrouchWalkParameterHash);
         }
         
         protected override void OnCrouchStarted(InputAction.CallbackContext context)

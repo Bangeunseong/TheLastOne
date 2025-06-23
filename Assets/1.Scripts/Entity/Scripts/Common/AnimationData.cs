@@ -8,9 +8,7 @@ namespace _1.Scripts.Entity.Scripts.Common
     {
         [Header("Animation Parameters on ground")]
         [SerializeField, ReadOnly] private string groundParameterName = "@Ground";
-        [SerializeField, ReadOnly] private string idleParameterName = "Idle";
-        [SerializeField, ReadOnly] private string walkParameterName = "Walk";
-        [SerializeField, ReadOnly] private string runParameterName = "Run";
+        [SerializeField, ReadOnly] private string speedParameterName = "Speed";
         [SerializeField, ReadOnly] private string crouchParameterName = "Crouch";
         [SerializeField, ReadOnly] private string crouchWalkParameterName = "CrouchWalk";
         
@@ -25,9 +23,7 @@ namespace _1.Scripts.Entity.Scripts.Common
         
         // Properties of parameter hash
         public int GroundParameterHash { get; private set; }
-        public int IdleParameterHash { get; private set; }
-        public int WalkParameterHash { get; private set; }
-        public int RunParameterHash { get; private set; }
+        public int SpeedParameterHash { get; private set; }
         public int CrouchParameterHash { get; private set; }
         public int CrouchWalkParameterHash { get; private set; }
         public int AirParameterHash { get; private set; }
@@ -39,9 +35,7 @@ namespace _1.Scripts.Entity.Scripts.Common
         public void Initialize()
         {
             GroundParameterHash = Animator.StringToHash(groundParameterName);
-            IdleParameterHash = Animator.StringToHash(idleParameterName);
-            WalkParameterHash = Animator.StringToHash(walkParameterName);
-            RunParameterHash = Animator.StringToHash(runParameterName);
+            SpeedParameterHash = Animator.StringToHash(speedParameterName);
             CrouchParameterHash = Animator.StringToHash(crouchParameterName);
             CrouchWalkParameterHash = Animator.StringToHash(crouchWalkParameterName);
 

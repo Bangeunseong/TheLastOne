@@ -6,6 +6,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [Header("Components")]
         [SerializeField] private CharacterController characterController;
+
+        [field: Header("Gravity Settings")] 
+        [field: SerializeField] public float Gravity = -9.81f;
         
         private float verticalVelocity;
         
@@ -23,13 +26,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void Update()
         {
-            if (characterController.isGrounded && verticalVelocity < 0f) verticalVelocity = Physics.gravity.y * Time.unscaledDeltaTime;
-            else verticalVelocity += Physics.gravity.y * Time.unscaledDeltaTime;
+            if (characterController.isGrounded && verticalVelocity < 0f) verticalVelocity = Gravity * Time.unscaledDeltaTime;
+            else verticalVelocity += Gravity * Time.unscaledDeltaTime;
         }
         
         public void Jump(float jumpForce)
         {
-            verticalVelocity = jumpForce;
+            verticalVelocity = Mathf.Sqrt(jumpForce * -2f * Gravity);
         }
     }
 }

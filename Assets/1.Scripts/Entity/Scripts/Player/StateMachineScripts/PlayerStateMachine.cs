@@ -24,14 +24,14 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts
         public Vector2 MovementDirection { get; set; }
         public float MovementSpeed { get; private set; }
         public float RotationDamping { get; private set; }
-        public float MovementSpeedModifier { get; set; } = 1f;
-        public float JumpForce { get; set; }
+        public float MovementSpeedModifier { get; set; }
+        public float JumpHeight { get; set; }
         public Transform MainCameraTransform { get; set; }
 
         public PlayerStateMachine(Player player)
         {
             Player = player;
-            JumpForce = player.PlayerCondition.JumpForce;
+            JumpHeight = player.PlayerCondition.JumpForce;
             MainCameraTransform = player.MainCameraTransform;
             MovementSpeed = player.PlayerCondition.Speed;
             RotationDamping = player.PlayerCondition.RotationDamping;

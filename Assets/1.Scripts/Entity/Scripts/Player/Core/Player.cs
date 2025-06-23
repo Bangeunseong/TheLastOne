@@ -26,7 +26,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         
-        private PlayerStateMachine stateMachine;
+        [Header("StateMachine")]
+        [SerializeField] private PlayerStateMachine stateMachine;
         
         public Camera cam { get; private set; }
 
