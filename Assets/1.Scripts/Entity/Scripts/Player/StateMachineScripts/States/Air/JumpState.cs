@@ -10,7 +10,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         
         public override void Enter()
         {
-            stateMachine.Player.PlayerGravity.Jump(stateMachine.JumpForce);
+            stateMachine.Player.PlayerGravity.Jump(stateMachine.JumpHeight);
             
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
