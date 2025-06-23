@@ -39,7 +39,7 @@ namespace _1.Scripts.Manager.Subs
         // Methods
         public void Start()
         {
-            // uiManager = UIManager.Instance;
+            uiManager = CoreManager.Instance.uiManager;
             coreManager = CoreManager.Instance;
             CurrentScene = SceneType.IntroScene;
         }
@@ -60,6 +60,7 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
                 CurrentScene = sceneName;
             }
+            uiManager.ChangeState(CurrentState.Loading);
             
             var loadingScene = 
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
@@ -69,7 +70,6 @@ namespace _1.Scripts.Manager.Subs
                 await Task.Yield();
             }
             
-            // uiManager.ChangeState(CurrentScene.Loading);
             
             Debug.Log("Resource and Scene Load Started!");
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
@@ -82,14 +82,14 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                // uiManager.LoadingUI.UpdateLoadingProgress(sceneLoad.progress);
+                uiManager.LoadingUI.UpdateLoadingProgress(sceneLoad.progress);
                 await Task.Yield();
             }
             
             // Wait for user input
             isInputAllowed = true;
-            // uiManager.LoadingUI.UpdateLoadingProgress(1f);
-            // uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
+            uiManager.LoadingUI.UpdateLoadingProgress(1f);
+            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             
@@ -107,10 +107,12 @@ namespace _1.Scripts.Manager.Subs
             
             switch (sceneName)
             { 
-                case SceneType.IntroScene: // uiManager.ChangeState(SceneType.Intro);
+                case SceneType.IntroScene:
+                    uiManager.ChangeState(CurrentState.Lobby);
                     break;
                 case SceneType.Stage1:
-                case SceneType.Stage2:// uiManager.ChangeState(SceneType.Game);
+                case SceneType.Stage2:
+                    uiManager.ChangeState(CurrentState.InGame);
                     break;
             }
 

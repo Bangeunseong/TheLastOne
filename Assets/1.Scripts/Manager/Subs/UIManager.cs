@@ -8,6 +8,11 @@ using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
 using _1.Scripts.UI;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.Inventory;
+using _1.Scripts.UI.Loading;
+using _1.Scripts.UI.Lobby;
+using _1.Scripts.UI.Setting;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -46,13 +51,45 @@ namespace _1.Scripts.Manager.Subs
         private const string HACKING_UI_ADDRESS = "HackingUI";
         private const string WEAPONTUNING_UI_ADDRESS = "WeaponTuningUI";
         private const string MENU_UI_ADDRESS = "MenuUI";
-        
-        /*public LobbyUI LobbyUI => loadedUI[CurrentState.Lobby];
-        public LoadingUI LoadingUI => loadedUI[CurrentState.Loading];
-        public InGameUI InGameUI => loadedUI[CurrentState.InGame];
-        public SettingUI SettingUI => loadedUI[CurrentState.Setting];
-        public MenuUI MenuUI => loadedUI[CurrentState.Menu];
+
+        public LobbyUI LobbyUI
+        {
+            get
+            {
+                if (loadedUI.TryGetValue(CurrentState.Lobby, out var lobbyUI))
+                {
+                    return lobbyUI as LobbyUI;
+                }
+                return null;
+            }
+        }
+
+        public LoadingUI LoadingUI
+        {
+            get
+            {
+                if (loadedUI.TryGetValue(CurrentState.Loading, out var loadingUI))
+                {
+                    return loadingUI as LoadingUI;
+                }
+                return null;
+            }
+        }
+
+        public InGameUI InGameUI
+        {
+            get
+            {
+                if (loadedUI.TryGetValue(CurrentState.InGame, out var inGameUI))
+                {
+                    return inGameUI as InGameUI;
+                }
+                return null;
+            }
+        }
+        /*public SettingUI SettingUI => loadedUI[CurrentState.Setting];
         public InventoryUI InventoryUI => loadedUI[CurrentState.Inventory];
+        public MenuUI MenuUI => loadedUI[CurrentState.Menu];
         public HackingUI HackingUI => loadedUI[CurrentState.Hacking];
         public WeaponTuningUI WeaponTuningUI => loadedUI[CurrentState.WeaponTuning];*/
         

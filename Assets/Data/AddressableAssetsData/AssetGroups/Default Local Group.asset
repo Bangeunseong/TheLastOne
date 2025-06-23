@@ -23,6 +23,31 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2ea48a0764abdd14bb26ce01fb54e8a9
+    m_Address: SettingUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b462468169f96f4e812900e4e71ddaf
+    m_Address: LobbyUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20535ae089634c640921fef284ad943f
+    m_Address: LoadingUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29a9275e7cb2a4e459a2cd0921af92ca
+    m_Address: InGameUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0ae2e4c5c799ee4d876a365f4d81677
+    m_Address: InventoryUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
