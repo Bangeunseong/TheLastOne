@@ -11,9 +11,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     /// </summary>
     public abstract class BaseNpcAI : MonoBehaviour
     {
-        protected bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        private BTContext context;
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
-        protected BTContext context;
         // 스탯 정보 SO 필요
         
         // 각 몬스터가 자신의 행동 트리를 정의하도록 강제
