@@ -12,7 +12,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     public abstract class BaseNpcAI : MonoBehaviour
     {
         private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
-        private BTContext context;
+        private BTContext context; // AI컨토를러 정보
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
         // 스탯 정보 SO 필요
         

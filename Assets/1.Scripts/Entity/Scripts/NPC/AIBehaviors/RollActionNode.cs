@@ -15,9 +15,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
 
         public INode.State Evaluate(BTContext context)
         {
+            this.context = context;
+            
             if (isRunning) return INode.State.RUN;
 
-            this.context = context;
+            context.controller.IsCurrentActionRunning(true);
             context.controller.StartCoroutine(RollCoroutine());
             return INode.State.RUN;
         }
@@ -25,7 +27,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         private IEnumerator RollCoroutine()
         {
             isRunning = true;
-            context.controller.IsCurrentActionRunning(true);
             Debug.Log("Roll Start");
 
             yield return new WaitForSeconds(1.0f);
