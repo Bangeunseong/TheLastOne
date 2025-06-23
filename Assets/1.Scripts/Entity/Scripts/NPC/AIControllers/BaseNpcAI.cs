@@ -6,12 +6,12 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.Enemy.AIControllers
 {
     /// <summary>
-    /// Enemy 공통 동작 정의
+    /// Npc 공통 동작 정의
     /// </summary>
-    public abstract class BaseEnemyAI : MonoBehaviour
+    public abstract class BaseNpcAI : MonoBehaviour
     {
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
-        // 적 스탯 정보 SO 필요
+        // 스탯 정보 SO 필요
         
         protected virtual void Awake()
         {
@@ -27,4 +27,3 @@ namespace _1.Scripts.Entity.Scripts.Enemy.AIControllers
         protected abstract void BuildTree();
     }
 }
-    
