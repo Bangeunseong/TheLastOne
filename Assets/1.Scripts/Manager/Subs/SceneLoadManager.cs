@@ -73,6 +73,7 @@ namespace _1.Scripts.Manager.Subs
             
             Debug.Log("Resource and Scene Load Started!");
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             await LoadSceneWithProgress(CurrentScene);
         }
         
