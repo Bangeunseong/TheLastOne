@@ -19,10 +19,14 @@ MonoBehaviour:
   maxStamina: 100
   baseDamage: 10
   baseAttackRate: 1.5
-  moveSpeed: 8
-  jumpForce: 5
+  consumeRateOfStamina: 10
+  recoverRateOfStamina_Idle: 20
+  recoverRateOfStamina_Walk: 5
+  interval: 0.1
+  moveSpeed: 6
+  jumpHeight: 1.2
   runMultiplier: 1
-  walkMultiplier: 0.25
+  walkMultiplier: 0.4
   crouchMultiplier: 0.15
   footStepSounds: []
   hitSounds: []

@@ -1,4 +1,6 @@
-﻿using _1.Scripts.Entity.Scripts.Common;
+﻿using System.Collections;
+using System.Globalization;
+using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +11,9 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
     {
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
+        protected Coroutine staminaCoroutine;
+
+        private float speed;
         
         public BaseState(PlayerStateMachine machine)
         {
@@ -83,8 +88,18 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void Move(Vector3 direction)
         {
-            var movementSpeed = GetMovementSpeed();
-            stateMachine.Player.Controller.Move((direction * movementSpeed + stateMachine.Player.PlayerGravity.ExtraMovement) * Time.unscaledDeltaTime);
+            var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
+            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
+            
+            if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
+            {
+                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
+                    Time.deltaTime * 10f);
+            }
+            else speed = targetSpeed;
+            // Service.Log(speed.ToString());
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+            stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
         }
         
         private float GetMovementSpeed()
@@ -125,6 +140,24 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Jump.started -= OnJumpStarted;
             playerInput.PlayerActions.Run.started -= OnRunStarted;
             playerInput.PlayerActions.Crouch.started -= OnCrouchStarted;
+        }
+
+        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
+        {
+            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
+            {
+                playerCondition.OnRecoverStamina(recoverRate);
+                yield return new WaitForSeconds(interval);
+            }
+        }
+        
+        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
+        {
+            while (playerCondition.CurrentStamina > 0)
+            {
+                playerCondition.OnConsumeStamina(consumeRate);
+                yield return new WaitForSeconds(interval);
+            }
         }
 
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
