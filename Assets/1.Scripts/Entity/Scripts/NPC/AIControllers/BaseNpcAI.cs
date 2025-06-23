@@ -41,6 +41,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             rootNode?.Evaluate(context);
         }
 
+        /// <summary>
+        /// 현재 실행중인 액션노드 있는지 여부 설정
+        /// </summary>
+        /// <param name="running"></param>
         public void IsCurrentActionRunning(bool running)
         {
             currentActionRunning = running;

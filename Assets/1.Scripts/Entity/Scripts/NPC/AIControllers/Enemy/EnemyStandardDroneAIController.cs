@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         }
         
         protected override void BuildTree()
-        { // 노드 만드는게 아니라 노드를 가지고 트리만 설계해야 함
+        {
             ActionNode rolling = new ActionNode(new RollActionNode().Evaluate);
             rootNode.Add(rolling);
         }
