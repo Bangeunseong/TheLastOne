@@ -26,9 +26,6 @@ namespace _1.Scripts.Manager.Subs
     
     [Serializable] public class UIManager
     {
-        [Header("Core")]
-        [SerializeField] private CoreManager coreManager;
-        
         private CurrentState currentState = CurrentState.None;
         private CurrentState previousState;
 

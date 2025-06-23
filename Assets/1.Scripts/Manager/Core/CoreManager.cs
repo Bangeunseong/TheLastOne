@@ -19,8 +19,7 @@ namespace _1.Scripts.Manager.Core
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
         [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
         
-        // Properties
-        public Task saveTask = Task.CompletedTask;
+        private Task saveTask = Task.CompletedTask;
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -51,6 +50,7 @@ namespace _1.Scripts.Manager.Core
         {
             gameManager.Start();
             sceneLoadManager.Start();
+            
             StartGame();
         }
 
@@ -81,10 +81,11 @@ namespace _1.Scripts.Manager.Core
             DataTransferObject loadedData = gameManager.SaveData;
             if (loadedData == null)
             {
+                Debug.Log("DataTransferObject is null");
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
                 return;
             }
-            
+            Debug.Log("DataTransferObject is not null");
             await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
         }
 

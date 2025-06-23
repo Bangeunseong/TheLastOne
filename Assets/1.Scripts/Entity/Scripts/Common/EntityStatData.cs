@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts
+namespace _1.Scripts.Entity.Scripts.Common
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity")]
     public class EntityStatData : ScriptableObject

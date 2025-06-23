@@ -48,8 +48,11 @@ namespace _1.Scripts.Manager.Subs
 
         public async Task TryLoadData()
         {
-            var str = await File.ReadAllTextAsync(SaveFilePath);
-            SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str);
+            if (File.Exists(SaveFilePath))
+            {
+                var str = await File.ReadAllTextAsync(SaveFilePath);
+                SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str);
+            } else SaveData = null;
         }
     }
 }
