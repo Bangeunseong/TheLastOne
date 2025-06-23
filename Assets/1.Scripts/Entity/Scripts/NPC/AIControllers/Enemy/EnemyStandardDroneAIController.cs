@@ -10,15 +10,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
 {
     public class EnemyStandardDroneAIController : BaseNpcAI
     {
-        void Start()
-        {
-            BuildTree();
-        }
-        
         protected override void BuildTree()
         {
-            RollActionNode rollActionNode = new RollActionNode();
-            ActionNode rolling = new ActionNode(context => rollActionNode.Evaluate(context));
+            ActionNode rolling = new ActionNode(new RollActionNode().Evaluate);
             rootNode.Add(rolling);
         }
     }

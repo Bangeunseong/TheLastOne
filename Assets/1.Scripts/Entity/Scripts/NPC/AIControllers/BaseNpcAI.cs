@@ -16,10 +16,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         protected BTContext context;
         // 스탯 정보 SO 필요
         
+        // 각 몬스터가 자신의 행동 트리를 정의하도록 강제
+        protected abstract void BuildTree();
+        
         protected virtual void Awake()
         {
             rootNode = new SelectorNode();
             // context = new BTContext(this, 플레이어 위치, transform.position);
+        }
+
+        protected virtual void Start()
+        {
+            BuildTree();
         }
         
         protected virtual void Update()
@@ -32,9 +40,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             // 아니면 rootNode Evaluate
             rootNode?.Evaluate(context);
         }
-        
-        // 각 몬스터가 자신의 행동 트리를 정의하도록 강제
-        protected abstract void BuildTree();
 
         public void CurrentActionChange(INode node)
         {

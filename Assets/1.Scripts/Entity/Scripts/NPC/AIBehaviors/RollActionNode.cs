@@ -10,37 +10,30 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     /// </summary>
     public class RollActionNode : INode
     {
-        private Transform transform;
-        private float rollDuration = 1.0f;
-        private float rollTimer = 0f;
-        private bool isRolling = false;
-        
+        private bool isRunning = false;
+        private BTContext context;
+
         public INode.State Evaluate(BTContext context)
         {
-            context.controller.CurrentActionChange(this);
-            
-            if (!isRolling)
-            {
-                isRolling = true;
-                rollTimer = 0f;
-                PlayRollAnimation();
-            }
+            if (isRunning) return INode.State.RUN;
 
-            rollTimer += Time.deltaTime;
-            if (rollTimer >= rollDuration)
-            {
-                isRolling = false;
-                context.controller.CurrentActionNull();
-                return INode.State.SUCCESS;
-            }
-
+            this.context = context;
+            context.controller.StartCoroutine(RollCoroutine());
             return INode.State.RUN;
         }
 
-        private void PlayRollAnimation()
+        private IEnumerator RollCoroutine()
         {
-            Debug.Log("Roll Start Animation");
-            // anim.SetTrigger("Roll");
+            isRunning = true;
+            context.controller.CurrentActionChange(this);
+            Debug.Log("Roll Start");
+
+            yield return new WaitForSeconds(1.0f);
+
+            Debug.Log("Roll End");
+            context.controller.CurrentActionNull();
+            isRunning = false;
         }
     }
+
 }
