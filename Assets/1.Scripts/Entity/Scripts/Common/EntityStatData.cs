@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts
+namespace _1.Scripts.Entity.Scripts.Common
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity")]
     public class EntityStatData : ScriptableObject
@@ -12,13 +12,19 @@ namespace _1.Scripts.Entity.Scripts
 
         [Header("Stats")] 
         public int maxHealth;
-        public int currentHealth;
+        public float maxStamina;
         public int baseDamage;
         public float baseAttackRate;
 
+        [Header("Update Rates And Intervals")] 
+        public float consumeRateOfStamina;
+        public float recoverRateOfStamina_Idle;
+        public float recoverRateOfStamina_Walk;
+        public float interval;
+
         [Header("Movement")] 
         public float moveSpeed;
-        public float jumpForce;
+        public float jumpHeight;
         public float runMultiplier;
         public float walkMultiplier;
         public float crouchMultiplier;

@@ -15,14 +15,18 @@ MonoBehaviour:
   entityName: Sam
   isPlayer: 1
   isAlly: 0
-  maxHealth: 0
-  currentHealth: 0
-  baseDamage: 0
-  baseAttackRate: 0
-  moveSpeed: 5
-  jumpForce: 5
+  maxHealth: 100
+  maxStamina: 100
+  baseDamage: 10
+  baseAttackRate: 1.5
+  consumeRateOfStamina: 10
+  recoverRateOfStamina_Idle: 20
+  recoverRateOfStamina_Walk: 5
+  interval: 0.1
+  moveSpeed: 6
+  jumpHeight: 1.2
   runMultiplier: 1
-  walkMultiplier: 0.225
+  walkMultiplier: 0.4
   crouchMultiplier: 0.15
   footStepSounds: []
   hitSounds: []

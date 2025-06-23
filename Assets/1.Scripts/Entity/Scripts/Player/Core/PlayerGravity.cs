@@ -6,6 +6,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [Header("Components")]
         [SerializeField] private CharacterController characterController;
+
+        [field: Header("Gravity Settings")]
+        [field: SerializeField] public float Gravity { get; private set; } = -9.81f;
+        [field: SerializeField] public float GroundedOffset { get; private set; } = -0.14f;
+        [field: SerializeField] public float GroundedRadius { get; private set; } = 0.4f;
+        [field: SerializeField] public LayerMask GroundLayers { get; private set; }
+        [field: SerializeField] public bool IsGrounded { get; private set; } = true;
         
         private float verticalVelocity;
         
@@ -23,13 +30,22 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void Update()
         {
-            if (characterController.isGrounded && verticalVelocity < 0f) verticalVelocity = Physics.gravity.y * Time.unscaledDeltaTime;
-            else verticalVelocity += Physics.gravity.y * Time.unscaledDeltaTime;
+            CheckCharacterIsGrounded();
+            if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
+            else verticalVelocity += Gravity * Time.unscaledDeltaTime;
+        }
+
+        private void CheckCharacterIsGrounded()
+        {
+            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
+                transform.position.z);
+            IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+                QueryTriggerInteraction.Ignore);
         }
         
         public void Jump(float jumpForce)
         {
-            verticalVelocity = jumpForce;
+            verticalVelocity = Mathf.Sqrt(jumpForce * -2f * Gravity);
         }
     }
 }

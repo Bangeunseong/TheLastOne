@@ -1,4 +1,7 @@
-﻿namespace _1.Scripts.Entity.Scripts.Common
+﻿using System;
+using UnityEngine;
+
+namespace _1.Scripts.Entity.Scripts.Common
 {
     public interface IState
     {
@@ -7,16 +10,20 @@
         public void Update();
         public void PhysicsUpdate();
         public void Exit();
+        public string ToString();
     }
     
-    public abstract class StateMachine
+    [Serializable] public abstract class StateMachine
     {
+        [field: Header("Current State")]
+        [field: SerializeField] public string CurrentStateName { get; protected set; }
         public IState CurrentState { get; protected set; }
 
         public void ChangeState(IState newState)
         {
             CurrentState?.Exit();
             CurrentState = newState;
+            CurrentStateName = CurrentState.ToString();
             CurrentState?.Enter();
         }
 

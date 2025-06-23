@@ -1,4 +1,5 @@
 using System;
+using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -15,6 +16,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: Header("Current Condition Data")]
         [field: SerializeField] public int MaxHealth { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; private set; }
+        [field: SerializeField] public float MaxStamina { get; private set; }
+        [field: SerializeField] public float CurrentStamina { get; private set; }
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
@@ -29,18 +32,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
         [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
+
+        private CoreManager coreManager;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
 
-        private void Awake()
-        {
-            StatData = CoreManager.Instance.resourceManager.GetAsset<EntityStatData>("Player");
-        }
-
         private void Start()
         {
-            InitializeStat(CoreManager.Instance.gameManager.SaveData);
+            coreManager = CoreManager.Instance;
+            StatData = coreManager.resourceManager.GetAsset<EntityStatData>("Player");
+            
+            InitializeStat(coreManager.gameManager.SaveData);
         }
 
         public void InitializeStat(DataTransferObject data)
@@ -48,6 +51,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (data == null)
             {
                 MaxHealth = CurrentHealth = StatData.maxHealth;
+                MaxStamina = CurrentStamina = StatData.maxStamina;
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
                 Level = 1;
@@ -57,13 +61,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 Level = data.level;
                 Experience = data.experience;
-                MaxHealth = data.maxHealth;
-                CurrentHealth = data.health;
-                AttackRate = data.attackRate;
+                MaxHealth = data.maxHealth; CurrentHealth = data.health;
+                MaxStamina = data.maxStamina; CurrentStamina = data.stamina;
+                AttackRate = data.attackRate; 
             }
 
             Speed = StatData.moveSpeed;
-            JumpForce = StatData.jumpForce;
+            JumpForce = StatData.jumpHeight;
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
@@ -74,18 +78,33 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             CurrentHealth -= damage;
             OnDamage?.Invoke();
-
+            
+            
             if (CurrentHealth <= 0) { OnDead(); }
+        }
+
+        public void OnRecoverStamina(float stamina)
+        {
+            if (IsDead) return;
+            CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
+        }
+
+        public void OnConsumeStamina(float stamina)
+        {
+            if (IsDead) return;
+            CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
         }
         
         public void OnTakeExp(int exp)
         {
+            if (IsDead) return;
             Experience += exp;
             if (Experience >= Level * 120) { OnLevelUp(); return; } // 조정 필요
         }
 
         private void OnLevelUp()
         {
+            if (IsDead) return;
             Experience -= Level * 120;
             Level++;
             CoreManager.Instance.SaveData_QueuedAsync();

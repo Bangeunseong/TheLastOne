@@ -1,6 +1,7 @@
 using System;
 using System.Resources;
 using System.Threading.Tasks;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using Unity.Collections;
@@ -21,32 +22,26 @@ namespace _1.Scripts.Manager.Subs
     
     [Serializable] public class SceneLoadManager
     {
-        [Header("Core")]
-        [SerializeField] private CoreManager coreManager;
-        
-        [Header("Scene Info.")]
-        [SerializeField, ReadOnly] private SceneType previousScene;
-        [SerializeField, ReadOnly] private SceneType currentScene;
+        [field: Header("Scene Info.")]
+        [field: SerializeField, ReadOnly] public SceneType PreviousScene { get; private set; }
+        [field: SerializeField, ReadOnly] public SceneType CurrentScene { get; private set; }
         
         // Fields
         private AsyncOperation sceneLoad;
         private bool isInputAllowed;
         private bool isKeyPressed;
         private UIManager uiManager;
+        private CoreManager coreManager;
         
         // Properties
         public bool IsLoading { get; private set; }
-        
-        // Constructor
-        public SceneLoadManager(CoreManager core){ coreManager = core; }
         
         // Methods
         public void Start()
         {
             // uiManager = UIManager.Instance;
-            
-            currentScene = SceneType.IntroScene;
-            // StartCoroutine(LoadMainScene());
+            coreManager = CoreManager.Instance;
+            CurrentScene = SceneType.IntroScene;
         }
 
         public void Update()
@@ -59,14 +54,17 @@ namespace _1.Scripts.Manager.Subs
         {
             IsLoading = true;
             
-            previousScene = currentScene;
-            if (previousScene != sceneName)
+            PreviousScene = CurrentScene;
+            if (PreviousScene != sceneName)
             {
-                await coreManager.resourceManager.UnloadAssetsByLabelAsync(previousScene.ToString());
-                currentScene = sceneName;
+                await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
+                await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
+                CurrentScene = sceneName;
             }
             
-            var loadingScene = SceneManager.LoadSceneAsync(coreManager.IsDebug ? coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
+            var loadingScene = 
+                SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
+                    coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
             while (!loadingScene!.isDone)
             {
                 await Task.Yield();
@@ -75,8 +73,9 @@ namespace _1.Scripts.Manager.Subs
             // uiManager.ChangeState(CurrentScene.Loading);
             
             Debug.Log("Resource and Scene Load Started!");
-            await coreManager.resourceManager.LoadAssetsByLabelAsync(currentScene.ToString());
-            await LoadSceneWithProgress(currentScene);
+            await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            await LoadSceneWithProgress(CurrentScene);
         }
         
         private async Task LoadSceneWithProgress(SceneType sceneName)
@@ -101,7 +100,13 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-
+            
+            var obj = GameObject.FindWithTag("Player");
+            if (obj != null && obj.TryGetComponent(out Player player))
+            {
+                coreManager.gameManager.Initialize_Player(player);
+            }
+            
             switch (sceneName)
             { 
                 case SceneType.IntroScene: // uiManager.ChangeState(SceneType.Intro);
