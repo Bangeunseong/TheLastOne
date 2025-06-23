@@ -1069,7 +1069,7 @@ Animator:
   m_GameObject: {fileID: 2637958900676673545}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 73ffbc06802a247cfb1b26f4ee67eba8, type: 3}
-  m_Controller: {fileID: 9100000, guid: f159e0da2b147a340b88e92df9006191, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1394,7 +1394,7 @@ Transform:
   m_GameObject: {fileID: 2974952792971347838}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.65, z: 0.025}
+  m_LocalPosition: {x: 0, y: 1.65, z: 0.075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3262,6 +3262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6813290790807052004}
   - component: {fileID: 7058540756104092436}
+  - component: {fileID: 7450652038461916066}
   - component: {fileID: 3698284712353514345}
   - component: {fileID: 4066541975679567171}
   - component: {fileID: 71050111894547790}
@@ -3318,6 +3319,27 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
+--- !u!95 &7450652038461916066
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7874159748350873753}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 73ffbc06802a247cfb1b26f4ee67eba8, type: 3}
+  m_Controller: {fileID: 9100000, guid: f159e0da2b147a340b88e92df9006191, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &3698284712353514345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3340,7 +3362,7 @@ MonoBehaviour:
     fallParameterName: Fall
     deathParameterName: Dead
     hitParameterName: Hit
-  <Animator>k__BackingField: {fileID: 7191935484274118351}
+  <Animator>k__BackingField: {fileID: 7450652038461916066}
   <Controller>k__BackingField: {fileID: 7058540756104092436}
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
@@ -3425,7 +3447,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 7058540756104092436}
-  Gravity: -9.81
+  <Gravity>k__BackingField: -9.81
+  <GroundedOffset>k__BackingField: -0.14
+  <GroundedRadius>k__BackingField: 0.4
+  <GroundLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 1
+  <IsGrounded>k__BackingField: 1
 --- !u!1 &7881978126587593273
 GameObject:
   m_ObjectHideFlags: 0
