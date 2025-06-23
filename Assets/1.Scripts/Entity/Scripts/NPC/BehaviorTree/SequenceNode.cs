@@ -7,19 +7,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
     /// </summary>
     public class SequenceNode : INode
     {
-        List<INode> children; // 자식 노드들을 담을 수 있는 리스트
+        private readonly List<INode> children = new();
 
-        public SequenceNode()
-        {
-            children = new List<INode>();
-        }
+        public void Add(INode node) => children.Add(node);
 
-        public void Add(INode node)
-        {
-            children.Add(node);
-        }
-
-        public INode.State Evaluate()
+        public INode.State Evaluate(BTContext context)
         {
             // 자식 노드의 수가 0 이하라면 실패
             if (children.Count <= 0)
@@ -28,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
             foreach (INode child in children)
             {
                 // 자식 노드들중 하나라도 FAILED 라면 시퀀스는 FAILED
-                switch (child.Evaluate())
+                switch (child.Evaluate(context))
                 {
                     case INode.State.RUN:
                         return INode.State.RUN;

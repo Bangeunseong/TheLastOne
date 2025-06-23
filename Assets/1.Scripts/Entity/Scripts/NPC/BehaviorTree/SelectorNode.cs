@@ -7,25 +7,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
     /// </summary>
     public class SelectorNode : INode
     {
-        List<INode> children; // 여러 노드를 가질 수 있도록 리스트 생성
+        private readonly List<INode> children = new();
 
-        public SelectorNode()
-        {
-            children = new List<INode>();
-        }
+        public void Add(INode node) => children.Add(node);
 
-        public void Add(INode node)
-        {
-            children.Add(node);
-        } // 셀렉터에 자식노드를 추가하는 메서드
-
-        public INode.State Evaluate()
+        public INode.State Evaluate(BTContext context)
         {
             // 리스트 내의 노드들을 왼쪽부터(넣은 순으로) 검사
             foreach (INode child in children)
             {
-
-                INode.State state = child.Evaluate();
+                INode.State state = child.Evaluate(context);
                 // child 노드의 state 가 하나라도 SUCCESS 이면 성공을 반환
                 // 실행 중인 경우 RUN 반환
                 switch (state)

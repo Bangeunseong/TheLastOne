@@ -12,6 +12,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
             FAILED
         }
 
-        public INode.State Evaluate(); // 판단하여 상태 리턴
+        public INode.State Evaluate(BTContext context); // 판단하여 상태 리턴
     }
 }

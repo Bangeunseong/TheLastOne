@@ -14,14 +14,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         private float rollDuration = 1.0f;
         private float rollTimer = 0f;
         private bool isRolling = false;
-
-        public RollActionNode(Transform transform)
-        {
-            this.transform = transform;
-        }
         
-        public INode.State Evaluate()
+        public INode.State Evaluate(BTContext context)
         {
+            context.controller.CurrentActionChange(this);
+            
             if (!isRolling)
             {
                 isRolling = true;
@@ -33,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             if (rollTimer >= rollDuration)
             {
                 isRolling = false;
+                context.controller.CurrentActionNull();
                 return INode.State.SUCCESS;
             }
 
