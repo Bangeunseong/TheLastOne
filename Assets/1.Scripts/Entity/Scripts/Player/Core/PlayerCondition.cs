@@ -67,7 +67,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
 
             Speed = StatData.moveSpeed;
-            JumpForce = StatData.jumpForce;
+            JumpForce = StatData.jumpHeight;
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
@@ -78,18 +78,33 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             CurrentHealth -= damage;
             OnDamage?.Invoke();
-
+            
+            
             if (CurrentHealth <= 0) { OnDead(); }
+        }
+
+        public void OnRecoverStamina(float stamina)
+        {
+            if (IsDead) return;
+            CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
+        }
+
+        public void OnConsumeStamina(float stamina)
+        {
+            if (IsDead) return;
+            CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
         }
         
         public void OnTakeExp(int exp)
         {
+            if (IsDead) return;
             Experience += exp;
             if (Experience >= Level * 120) { OnLevelUp(); return; } // 조정 필요
         }
 
         private void OnLevelUp()
         {
+            if (IsDead) return;
             Experience -= Level * 120;
             Level++;
             CoreManager.Instance.SaveData_QueuedAsync();
