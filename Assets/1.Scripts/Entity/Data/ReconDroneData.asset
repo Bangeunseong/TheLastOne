@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb1fccafacfb57b43be1c33753fc53bc, type: 3}
-  m_Name: StandardDroneStat
+  m_Script: {fileID: 11500000, guid: f84de557cae96fc4bb965d13771c19fb, type: 3}
+  m_Name: ReconDroneData
   m_EditorClassIdentifier: 
-  entityName: StandardDrone
+  entityName: ReconDrone
   isPlayer: 0
   isAlly: 0
   maxHealth: 100

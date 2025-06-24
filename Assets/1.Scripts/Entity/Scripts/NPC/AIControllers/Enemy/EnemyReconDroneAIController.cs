@@ -13,13 +13,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
     /// <summary>
     /// 드론(Recon Drone) 
     /// </summary>
-    public class EnemyStandardDroneAIController : BaseNpcAI
+    public class EnemyReconDroneAIController : BaseNpcAI
     {
         public bool isAlerted = false;
 
         protected override void Start()
         {
-            statData = CoreManager.Instance.resourceManager.GetAsset<StandardDroneStat>("StandardDroneStat");
+            statData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneData>("ReconDroneData");
             // 액션노드 추가해서 등장연출 가능
             base.Start();
         }

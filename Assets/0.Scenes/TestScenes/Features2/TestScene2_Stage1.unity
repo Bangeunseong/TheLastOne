@@ -7234,10 +7234,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 919132148319837372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a2241ba1507d3d43adf9dbdd9ce3426, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ce457f9840857944bed4cadc3740b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statData: {fileID: 0}
+  isAlerted: 0
 --- !u!4 &1151388027839559518
 Transform:
   m_ObjectHideFlags: 0

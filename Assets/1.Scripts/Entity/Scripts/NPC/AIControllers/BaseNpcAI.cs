@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
@@ -26,6 +27,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Awake()
         {
+            if (CoreManager.Instance.gameManager.Player == null)
+            {
+                Debug.Log("플레이어 없음");
+            }
             rootNode = new SelectorNode();
             context = new BTContext();
             context.controller = this;
