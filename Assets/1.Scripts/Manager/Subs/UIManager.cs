@@ -29,9 +29,9 @@ namespace _1.Scripts.Manager.Subs
         private LoadingUI loadingUI;
         private SettingUI settingUI;
         
-        private readonly Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
-        private readonly Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
-        private readonly Stack<UIPopup> popupStack = new Stack<UIPopup>();
+        private Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
+        private Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
+        private Stack<UIPopup> popupStack = new Stack<UIPopup>();
         
         public LoadingUI LoadingUI => loadingUI;
         
