@@ -59,6 +59,7 @@ namespace _1.Scripts.Manager.Subs
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
+                if (CurrentScene == SceneType.IntroScene) await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
                 CurrentScene = sceneName;
             }
             
@@ -70,11 +71,16 @@ namespace _1.Scripts.Manager.Subs
                 await Task.Yield();
             }
             
+            // uiManager.LoadingUI.UpdateLoadingProgress(0f);
             // uiManager.ChangeState(CurrentScene.Loading);
             
             Debug.Log("Resource and Scene Load Started!");
+            if (PreviousScene == SceneType.IntroScene) await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+            // uiManager.LoadingUI.UpdateLoadingProgress(0.2f);
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            // uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            // uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
             await LoadSceneWithProgress(CurrentScene);
         }
         
@@ -84,7 +90,7 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                // uiManager.LoadingUI.UpdateLoadingProgress(sceneLoad.progress);
+                // uiManager.LoadingUI.UpdateLoadingProgress(0.6f + sceneLoad.progress * 0.4f);
                 await Task.Yield();
             }
             
