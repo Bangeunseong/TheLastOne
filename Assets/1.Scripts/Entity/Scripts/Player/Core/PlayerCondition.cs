@@ -74,12 +74,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             RunSpeedModifier = StatData.runMultiplier;
         }
 
+        public void OnRecoverHealth(int value)
+        {
+            if (IsDead) return;
+            CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+        }
+
         public void OnTakeDamage(int damage)
         {
             if (IsDead) return;
             CurrentHealth -= damage;
             OnDamage?.Invoke();
-            
             
             if (CurrentHealth <= 0) { OnDead(); }
         }
