@@ -1,5 +1,9 @@
-﻿using _1.Scripts.Interfaces;
+﻿using System;
+using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _1.Scripts.Weapon.Scripts
 {
@@ -7,10 +11,25 @@ namespace _1.Scripts.Weapon.Scripts
     {
         [field: Header("DummyGun Settings")]
         [field: SerializeField] public GunType Type { get; private set; }
-        
+
+        public UnityEvent OnPicked;
+
         public void OnInteract(GameObject ownerObj)
         {
+            if (!ownerObj.TryGetComponent(out Player player)) return;
             
+            var index = -1;
+            for (var i = 0; i < player.Guns.Count; i++)
+            {
+                if (player.Guns[i].WeaponData.WeaponStat.Type != Type) continue;
+                index = i; break;
+            }
+            Debug.Log(index);
+            player.AvailableGuns[index] = true;
+            player.OnSwitchWeapon(index, 1f);
+                
+            OnPicked?.Invoke();
+            Destroy(gameObject);
         }
     }
 }

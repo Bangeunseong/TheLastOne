@@ -2,6 +2,7 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts
@@ -23,24 +24,35 @@ namespace _1.Scripts.Weapon.Scripts
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public LayerMask HittableLayer { get; private set; }
-
-        [Header("Current Weapon State")]
+        [SerializeField] private Transform face;
+        
+        [field: Header("Current Weapon State")]
         [SerializeField] private bool isEmpty;
-        [SerializeField] private bool isReloading;
+        [field: SerializeField] public bool IsReloading { get; set; }
         [SerializeField] private bool isRecoiling;
 
         [Header("Owner")] 
         [SerializeField] private GameObject owner;
 
         private float timeSinceLastShotFired;
-        private Transform face;
-        private Player player;
+        
+        [CanBeNull] private Player player;
+        
         // private Enemy enemy;
         
-        public bool IsReady => !isEmpty && !isReloading && !isRecoiling;
+        public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
+        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
 
-        
-        
+        private void Awake()
+        {
+            BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+        }
+
+        private void Reset()
+        {
+            BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+        }
+
         private void Start()
         {
             timeSinceLastShotFired = WeaponData.WeaponStat.Recoil;
@@ -49,8 +61,8 @@ namespace _1.Scripts.Weapon.Scripts
         private void Update()
         {
             if (!isRecoiling) return;
-            if (timeSinceLastShotFired < WeaponData.WeaponStat.Recoil) timeSinceLastShotFired += Time.deltaTime;
-            else isRecoiling = false;
+            if (timeSinceLastShotFired < WeaponData.WeaponStat.Rpm / 3600f) timeSinceLastShotFired += Time.deltaTime;
+            else { timeSinceLastShotFired = 0f; isRecoiling = false;}
         }
 
         public void Initialize(GameObject ownerObj)
@@ -59,8 +71,8 @@ namespace _1.Scripts.Weapon.Scripts
             if (ownerObj.TryGetComponent(out Player user))
             {
                 player = user;
-                face = player.CameraPivot;
-                // TODO: Enable Gun Prefab
+                face = user.CameraPivot;
+                HittableLayer &= ~(1 << user.gameObject.layer);
             }
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
@@ -73,11 +85,16 @@ namespace _1.Scripts.Weapon.Scripts
             if (!obj.TryGetComponent(out Bullet bullet)) return;
             
             isRecoiling = true;
-            timeSinceLastShotFired = 0f;
-            bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(), 
+            Debug.Log("Fire Bullet");
+            bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
                 WeaponData.WeaponStat.MaxWeaponRange,
                 WeaponData.WeaponStat.BulletSpeed, 
                 WeaponData.WeaponStat.Damage, HittableLayer);
+            
+            CurrentAmmoCountInMagazine--;
+            if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
+            if (WeaponData.WeaponStat.Type != GunType.Pistol) return;
+            if (player != null) player.IsAttacking = false;
         }
 
         public void OnReload()
@@ -103,7 +120,7 @@ namespace _1.Scripts.Weapon.Scripts
                 targetPoint = hit.point;
             } else targetPoint = face.position + face.forward * WeaponData.WeaponStat.MaxWeaponRange;
 
-            return (targetPoint - BulletSpawnPoint.position).normalized;
+            return (targetPoint - BulletSpawnPoint.position).z < 0 ? BulletSpawnPoint.forward : (targetPoint - BulletSpawnPoint.position).normalized;
         }
     }
 }
