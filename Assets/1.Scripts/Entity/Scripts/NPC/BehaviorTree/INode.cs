@@ -1,4 +1,4 @@
-namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
+namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
     /// <summary>
     /// 노드 인터페이스
@@ -12,6 +12,6 @@ namespace _1.Scripts.Entity.Scripts.Enemy.BehaviorTree
             FAILED
         }
 
-        public INode.State Evaluate(); // 판단하여 상태 리턴
+        public INode.State Evaluate(BTContext context); // 판단하여 상태 리턴
     }
 }
