@@ -1,3 +1,5 @@
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+
 namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
     /// <summary>
@@ -12,6 +14,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
             FAILED
         }
 
-        public INode.State Evaluate(BTContext context); // 판단하여 상태 리턴
+        public INode.State Evaluate(BaseNpcAI controller); // 판단하여 상태 리턴
     }
 }
