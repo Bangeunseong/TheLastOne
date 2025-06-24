@@ -180,6 +180,9 @@ MonoBehaviour:
   resourceManager:
     resources:
       _serializedList: []
+  objectPoolManager:
+    activeObjects:
+      _serializedList: []
   <IsDebug>k__BackingField: 1
   <DebugPrefix>k__BackingField: TestScene_
 --- !u!4 &1367050390
