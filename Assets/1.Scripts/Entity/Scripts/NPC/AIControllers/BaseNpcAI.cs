@@ -6,6 +6,7 @@ using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
 {
@@ -15,6 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     public abstract class BaseNpcAI : MonoBehaviour
     {
         [Header("AI Information")]
+        private NavMeshAgent navMeshAgent;
         private BTContext context; // AI컨토를러 정보
         public EntityStatData statData; // 자신이 소유한 스탯데이터
         
@@ -27,13 +29,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Awake()
         {
-            if (CoreManager.Instance.gameManager.Player == null)
-            {
-                Debug.Log("플레이어 없음");
-            }
             rootNode = new SelectorNode();
-            context = new BTContext();
-            context.controller = this;
+            context = new BTContext(this);
+            navMeshAgent = GetComponent<NavMeshAgent>();
         }
 
         protected virtual void Start()

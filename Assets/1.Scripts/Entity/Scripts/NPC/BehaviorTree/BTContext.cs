@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
@@ -12,5 +13,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
     {
         public BaseNpcAI controller;   // 현재 NPC의 컨트롤러
         // 필요한 거 계속 추가
+        public BTContext(BaseNpcAI controller)
+        {
+            this.controller = controller;
+        }
+        
     }
 }
