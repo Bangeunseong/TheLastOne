@@ -28,7 +28,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             Vector3 pos = context.controller.transform.position;
             Vector3 playerPos = CoreManager.Instance.gameManager.Player.transform.position;
             float sqrDistance = (pos - playerPos).sqrMagnitude;
-
+            
             return sqrDistance <= sqrDetectRange ? INode.State.SUCCESS : INode.State.FAILED;
         }
     }   

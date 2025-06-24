@@ -15,6 +15,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
     /// </summary>
     public class EnemyStandardDroneAIController : BaseNpcAI
     {
+        public bool isAlerted = false;
+
         protected override void Start()
         {
             statData = CoreManager.Instance.resourceManager.GetAsset<StandardDroneStat>("StandardDroneStat");
@@ -26,6 +28,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         {
             ActionNode isPlayerInDetectRange = new ActionNode(new IsPlayerInDetectRange().Evaluate);
             rootNode.Add(isPlayerInDetectRange);
+        }
+        
+        public void SetAlert(bool alert)
+        {
+            isAlerted = alert;
         }
     }
 }

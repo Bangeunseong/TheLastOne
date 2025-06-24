@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: e6e7c9a33c8a64248a9951f8fa4b0485
   m_SerializeEntries:
   - m_GUID: bcec0ba7039188e459573f51f1204d0e
-    m_Address: StandardDrone
+    m_Address: StandardDroneStat
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1
