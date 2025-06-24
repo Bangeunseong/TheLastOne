@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts
 {
-    public class Gun : MonoBehaviour, IShootable, IReloadable, IInteractable
+    public class Gun : MonoBehaviour, IShootable, IReloadable
     {
         [field: Header("Weapon Data")]
         [field: SerializeField] public WeaponData WeaponData { get; private set; }
@@ -27,7 +27,7 @@ namespace _1.Scripts.Weapon.Scripts
         [SerializeField] private GameObject owner;
 
         private float timeSinceLastShotFired;
-        private Camera cam;
+        private Transform face;
         private Player player;
         // private Enemy enemy;
         
@@ -36,7 +36,6 @@ namespace _1.Scripts.Weapon.Scripts
         private void Start()
         {
             timeSinceLastShotFired = WeaponData.WeaponStat.Recoil;
-            cam = Camera.main;
         }
 
         private void Update()
@@ -46,10 +45,15 @@ namespace _1.Scripts.Weapon.Scripts
             else isRecoiling = false;
         }
 
-        public void Initialize(GameObject owner)
+        public void Initialize(GameObject ownerObj)
         {
-            this.owner = owner;
-            if (owner.TryGetComponent(out Player player)) this.player = player;
+            owner = ownerObj;
+            if (ownerObj.TryGetComponent(out Player user))
+            {
+                player = user;
+                face = player.CameraPivot;
+                // TODO: Enable Gun Prefab
+            }
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
 
@@ -85,18 +89,13 @@ namespace _1.Scripts.Weapon.Scripts
         private Vector3 GetDirectionOfBullet()
         {
             Vector3 targetPoint;
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out var hit, WeaponData.WeaponStat.MaxWeaponRange,
+            if (Physics.Raycast(face.position, face.forward, out var hit, WeaponData.WeaponStat.MaxWeaponRange,
                     HittableLayer))
             {
                 targetPoint = hit.point;
-            } else targetPoint = cam.transform.position + cam.transform.forward * WeaponData.WeaponStat.MaxWeaponRange;
+            } else targetPoint = face.position + face.forward * WeaponData.WeaponStat.MaxWeaponRange;
 
             return (targetPoint - BulletSpawnPoint.position).normalized;
-        }
-
-        public void OnInteract()
-        {
-            
         }
     }
 }
