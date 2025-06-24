@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -18,7 +16,7 @@ namespace _1.Scripts.Manager.Subs
     {
         private Dictionary<string, ObjectPool<GameObject>> pools = new(); // 풀들 모음
         private Dictionary<string, HashSet<GameObject>> activeObjects = new(); // Get()으로 빠져나간 Clone을 추적하기위해 만듬, HashSet으로 한 이유 1. 성능 2. 중복방지
-        private readonly Dictionary<string, HashSet<string>> scenePrefabMap = new() // 풀로 만들 프리팹 딕셔너리
+        private readonly Dictionary<string, HashSet<string>> scenePrefabMap = new() // 풀로 만들 프리팹들의 정보 모아놓은 딕셔너리
         {
             { "Stage1", PoolableGameObjects_Stage1.prefabs },
             { "Stage2", PoolableGameObjects_Stage2.prefabs },
@@ -29,14 +27,14 @@ namespace _1.Scripts.Manager.Subs
         
         private int defaultCapacity = 50; // 용량설정
         private int maxCapacity = 500;
-
+        
         /// <summary>
         /// 풀매니저 생성자, poolRoot 생성
         /// </summary>
-        public ObjectPoolManager()
+        public void Start()
         {
             poolRoot = new GameObject("ObjectPoolManager").transform;
-            UnityEngine.Object.DontDestroyOnLoad(poolRoot.gameObject);
+            poolRoot.SetParent(CoreManager.Instance.transform);
         }
         
         /// <summary>
@@ -72,16 +70,9 @@ namespace _1.Scripts.Manager.Subs
                 defaultCapacity: poolCapacity,
                 maxSize: poolMaxSize);
 
-            List<GameObject> temp = new List<GameObject>();
-
             for (int i = 0; i < poolCapacity; ++i)
             {
                 GameObject obj = pool.Get();
-                temp.Add(obj);
-            }
-
-            foreach (GameObject obj in temp)
-            {
                 pool.Release(obj);
             }
 
@@ -122,9 +113,9 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="obj"></param>
         public void Release(GameObject obj)
         {
-            if (pools.TryGetValue(obj.name, out var pool))
+            if (pools.TryGetValue(obj.name, out ObjectPool<GameObject> pool))
             {
-                if (activeObjects.TryGetValue(obj.name, out var set))
+                if (activeObjects.TryGetValue(obj.name, out HashSet<GameObject> set))
                 {
                     set.Remove(obj);
                 }
@@ -159,22 +150,47 @@ namespace _1.Scripts.Manager.Subs
         }
         
         /// <summary>
+        /// 현재 씬에서 사용하지 않는 풀은 삭제 (메모리 최적화)
+        /// </summary>
+        public async Task DestroyUnusedStagePools(string currentScene) // 이 currentScene은 다음씬으로 넘어가기 전의 현재 씬
+        {
+            ReleaseAll();
+            
+            if (scenePrefabMap.TryGetValue(currentScene, out HashSet<string> prefabsToDestroy)) // 현재 씬 기준으로 필요한 프리팹들
+            {
+                foreach (string prefabName in prefabsToDestroy)
+                {
+                    pools.Remove(prefabName); // 풀에서 삭제
+                    activeObjects.Remove(prefabName); // 추적 해시에서 삭제
+                    
+                    Transform parent = poolRoot.Find($"{prefabName}_Parent"); // 부모오브젝트 찾아서 삭제
+                    if (parent != null)
+                    {
+                        UnityEngine.Object.Destroy(parent.gameObject);
+                    }
+                    
+                    await Task.Yield(); // 한프레임 양보 (파괴작업이니까)
+                }
+            }
+        }
+        
+        /// <summary>
         /// 현재 씬 이름에 따라 알맞은 풀 생성
         /// </summary>
         /// <param name="sceneName"></param>
         public async Task CreatePoolsFromResourceBySceneLabelAsync(string sceneName)
         {
-            // 모든 풀링 오브젝트 Release
-            ReleaseAll();
-
-            await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs);
+            var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs); 
+            if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
+            {
+                await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
+            }
 
             if (!scenePrefabMap.TryGetValue(sceneName, out HashSet<string> prefabsToLoad))
             {
                 // 풀 만들기가 필요없는 씬
                 return;
             }
-            
             await CreatePoolsFromListAsync(prefabsToLoad);
         }
         

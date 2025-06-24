@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Address: Player
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Stage1
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2ea48a0764abdd14bb26ce01fb54e8a9
     m_Address: SettingUI

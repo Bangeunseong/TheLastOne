@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IDamagable
+namespace _1.Scripts.Interfaces
 {
-    public void OnTakeDamage(int damage);
+    public interface IDamagable
+    {
+        public void OnTakeDamage(int damage);
+    }
 }
