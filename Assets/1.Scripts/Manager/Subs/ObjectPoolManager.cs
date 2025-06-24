@@ -65,7 +65,7 @@ namespace _1.Scripts.Manager.Subs
                 actionOnRelease: item =>
                 {
                     item.gameObject.SetActive(false);
-                    item.transform.SetParent(poolRoot);
+                    item.transform.SetParent(parent);
                 },
                 actionOnDestroy: item => UnityEngine.Object.Destroy(item.gameObject),
                 collectionCheck: false,
