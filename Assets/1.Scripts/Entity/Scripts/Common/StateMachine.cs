@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Collections;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Common
@@ -16,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.Common
     [Serializable] public abstract class StateMachine
     {
         [field: Header("Current State")]
-        [field: SerializeField] public string CurrentStateName { get; protected set; }
+        [field: SerializeField, ReadOnly] public string CurrentStateName { get; protected set; }
         public IState CurrentState { get; protected set; }
 
         public void ChangeState(IState newState)

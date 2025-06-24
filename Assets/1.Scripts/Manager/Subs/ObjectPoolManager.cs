@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -15,7 +16,8 @@ namespace _1.Scripts.Manager.Subs
     public class ObjectPoolManager
     {
         private Dictionary<string, ObjectPool<GameObject>> pools = new(); // 풀들 모음
-        private Dictionary<string, HashSet<GameObject>> activeObjects = new(); // Get()으로 빠져나간 Clone을 추적하기위해 만듬, HashSet으로 한 이유 1. 성능 2. 중복방지
+        [Header("Active Objects")]
+        [SerializeField] private SerializedDictionary<string, HashSet<GameObject>> activeObjects = new(); // Get()으로 빠져나간 Clone을 추적하기위해 만듬, HashSet으로 한 이유 1. 성능 2. 중복방지
         private readonly Dictionary<string, HashSet<string>> scenePrefabMap = new() // 풀로 만들 프리팹들의 정보 모아놓은 딕셔너리
         {
             { "Stage1", PoolableGameObjects_Stage1.prefabs },
@@ -63,7 +65,7 @@ namespace _1.Scripts.Manager.Subs
                 actionOnRelease: item =>
                 {
                     item.gameObject.SetActive(false);
-                    item.transform.SetParent(poolRoot);
+                    item.transform.SetParent(parent);
                 },
                 actionOnDestroy: item => UnityEngine.Object.Destroy(item.gameObject),
                 collectionCheck: false,

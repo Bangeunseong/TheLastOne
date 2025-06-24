@@ -17,20 +17,17 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: ef93f16b5ec1ef54395c6bc3705e6741
   m_SerializeEntries:
-  - m_GUID: 20535ae089634c640921fef284ad943f
-    m_Address: LoadingUI
+  - m_GUID: 2d06c1e77f1c34b4aaa32dc2fcd2164e
+    m_Address: Player
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0b462468169f96f4e812900e4e71ddaf
-    m_Address: LobbyUI
+  - m_GUID: 73a100272e614dd4d965b1a1963b9462
+    m_Address: Bullet
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2ea48a0764abdd14bb26ce01fb54e8a9
-    m_Address: SettingUI
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
