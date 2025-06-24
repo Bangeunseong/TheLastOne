@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   <WeaponStat>k__BackingField:
+    <Type>k__BackingField: 0
     <MaxAmmoCount>k__BackingField: 60
     <MaxWeaponRange>k__BackingField: 30
-    <BulletSpeed>k__BackingField: 500
+    <BulletSpeed>k__BackingField: 25
     <Recoil>k__BackingField: 0
     <Accuracy>k__BackingField: 0
     <ReloadTime>k__BackingField: 0.8

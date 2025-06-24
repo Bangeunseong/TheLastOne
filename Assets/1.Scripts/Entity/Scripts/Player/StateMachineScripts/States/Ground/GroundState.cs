@@ -46,5 +46,14 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.OnJumpStarted(context);
             stateMachine.ChangeState(stateMachine.JumpState);
         }
+
+        protected override void OnReloadStarted(InputAction.CallbackContext context)
+        {
+            base.OnReloadStarted(context);
+            if (stateMachine.Player.EquippedGunIndex < 0 || !stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReadyToReload) return;
+            if(reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = false; }
+            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(stateMachine.Player
+                .Guns[stateMachine.Player.EquippedGunIndex].WeaponData.WeaponStat.ReloadTime));
+        }
     }
 }

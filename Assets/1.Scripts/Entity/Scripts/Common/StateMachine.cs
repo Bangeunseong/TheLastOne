@@ -10,6 +10,7 @@ namespace _1.Scripts.Entity.Scripts.Common
         public void HandleInput();
         public void Update();
         public void PhysicsUpdate();
+        public void LateUpdate();
         public void Exit();
         public string ToString();
     }
@@ -36,6 +37,11 @@ namespace _1.Scripts.Entity.Scripts.Common
         public void Update()
         {
             CurrentState?.Update();
+        }
+
+        public void LateUpdate()
+        {
+            CurrentState?.LateUpdate();
         }
 
         public void PhysicsUpdate()

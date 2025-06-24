@@ -28,6 +28,11 @@ namespace _1.Scripts.Weapon.Scripts
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
         }
 
+        private void Reset()
+        {
+            if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+        }
+
         private void OnEnable()
         {
             isAlreadyReached = false;
@@ -56,7 +61,8 @@ namespace _1.Scripts.Weapon.Scripts
             appliedForce = force; 
             maxMoveDistance = maxDistance;
             direction = dir;
-            hittableLayer = hitLayer;
+            hittableLayer = 0;
+            hittableLayer |= hitLayer;
 
             rigidBody.velocity = direction * appliedForce;
         }
