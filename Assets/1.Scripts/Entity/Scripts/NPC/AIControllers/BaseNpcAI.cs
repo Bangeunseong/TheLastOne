@@ -17,7 +17,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     {
         [Header("AI Information")]
         private NavMeshAgent navMeshAgent;
-        private BTContext context; // AI컨토를러 정보
         public EntityStatData statData; // 자신이 소유한 스탯데이터
         
         [Header("Node Information")]
@@ -30,7 +29,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         protected virtual void Awake()
         {
             rootNode = new SelectorNode();
-            context = new BTContext(this);
             navMeshAgent = GetComponent<NavMeshAgent>();
         }
 
@@ -47,7 +45,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             }
 
             // 아니면 rootNode Evaluate
-            rootNode?.Evaluate(context);
+            rootNode?.Evaluate(this);
         }
 
         /// <summary>

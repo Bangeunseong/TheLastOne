@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Interfaces;
@@ -14,18 +15,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     /// </summary>
     public class IsPlayerInDetectRange : INode 
     {
-        public INode.State Evaluate(BTContext context)
+        public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (context.controller.statData is not IDetectable detectable) // 있을 시 변환
+            if (controller.statData is not IDetectable detectable) // 있을 시 변환
             {
-                Debug.LogWarning($"[IsPlayerInDetectRange] statData가 IDetectable을 구현하지 않음. 컨트롤러: {context.controller.name}");
+                Debug.LogWarning($"[IsPlayerInDetectRange] statData가 IDetectable을 구현하지 않음. 컨트롤러: {controller.name}");
                 return INode.State.FAILED;
             }
             
             float detectRange = detectable.DetectRange;
             float sqrDetectRange = detectRange * detectRange;
 
-            Vector3 pos = context.controller.transform.position;
+            Vector3 pos = controller.transform.position;
             Vector3 playerPos = CoreManager.Instance.gameManager.Player.transform.position;
             float sqrDistance = (pos - playerPos).sqrMagnitude;
             

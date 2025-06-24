@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
@@ -13,18 +14,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     /// </summary>
     public class IsPlayerInAttackRange : INode
     {
-        public INode.State Evaluate(BTContext context)
+        public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (context.controller.statData is not IAttackable attackable) // 있을 시 변환
+            if (controller.statData is not IAttackable attackable) // 있을 시 변환
             {
-                Debug.LogWarning($"[IsPlayerInAttackRange] statData가 IAttackable을 구현하지 않음. 컨트롤러: {context.controller.name}");
+                Debug.LogWarning($"[IsPlayerInAttackRange] statData가 IAttackable을 구현하지 않음. 컨트롤러: {controller.name}");
                 return INode.State.FAILED;
             }
                 
             float attackRange = attackable.AttackRange;
             float sqrAttackRange = attackRange * attackRange;
             
-            Vector3 pos = context.controller.transform.position;
+            Vector3 pos = controller.transform.position;
             Vector3 playerPos = CoreManager.Instance.gameManager.Player.transform.position;
             float sqrDistance = (pos - playerPos).sqrMagnitude;
                 

@@ -15,7 +15,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
     /// </summary>
     public class EnemyReconDroneAIController : BaseNpcAI
     {
-        public bool isAlerted = false;
+        private bool isAlerted = false;
 
         protected override void Start()
         {
