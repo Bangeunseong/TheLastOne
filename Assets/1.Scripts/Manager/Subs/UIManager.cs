@@ -127,8 +127,6 @@ namespace _1.Scripts.Manager.Subs
             }
         }
         
-        #region Popup Management
-        
         public void ShowSettingPopup()
         {
             if (settingUI == null) return;
@@ -173,8 +171,6 @@ namespace _1.Scripts.Manager.Subs
                 popupStack.Pop().SetActive(false);
             }
         }
-
-        #endregion
         
         private T FindUIComponent<T>(string name) where T : Component
         {
