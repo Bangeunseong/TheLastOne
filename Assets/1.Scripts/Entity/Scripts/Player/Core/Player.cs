@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
+using _1.Scripts.Weapon.Scripts;
+using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
 
@@ -24,13 +28,21 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
         [field: SerializeField] public Transform CameraPivot { get; private set; }
         [field: SerializeField] public Transform WeaponPivot  { get; private set; }
-        [field: SerializeField] public Transform WieldPoint { get; private set; }
-        [field: SerializeField] public Transform AimPoint { get; private set; }
+        [field: SerializeField] public SerializedDictionary<string, Transform> WeaponPoints = new();
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         
         [Header("StateMachine")]
         [SerializeField] private PlayerStateMachine stateMachine;
+
+        [field: Header("Guns")]
+        [field: SerializeField] public List<Gun> Guns { get; private set; } = new();
+        [field: SerializeField] public List<bool> AvailableGuns { get; private set; } = new();
+        [field: SerializeField] public int EquippedGunIndex { get; private set; } = -1;
+        [field: SerializeField] public bool IsAttacking { get; set; }
+        [field: SerializeField] public bool IsSwitching { get; private set; }
+
+        private Coroutine switchCoroutine;
         
         public Camera cam { get; private set; }
 
@@ -44,8 +56,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
-            if (!WieldPoint) WieldPoint = this.TryGetChildComponent<Transform>("WieldPoint");
-            if (!AimPoint) AimPoint = this.TryGetChildComponent<Transform>("AimPoint");
+            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
+            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
+            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
 
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
@@ -63,8 +76,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
-            if (!WieldPoint) WieldPoint = this.TryGetChildComponent<Transform>("WieldPoint");
-            if (!AimPoint) AimPoint = this.TryGetChildComponent<Transform>("AimPoint");
+            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
+            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
+            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
@@ -82,6 +96,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             stateMachine = new PlayerStateMachine(this);
             stateMachine.ChangeState(stateMachine.IdleState);
+            
+            var listOfGuns = GetComponentsInChildren<Gun>(true);
+            foreach (var gun in listOfGuns)
+            {
+                gun.Initialize(gameObject);
+                Guns.Add(gun); 
+                AvailableGuns.Add(false);
+            }
         }
 
         private void FixedUpdate()
@@ -95,7 +117,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             stateMachine.HandleInput();
             stateMachine.Update();
         }
-        
+
+        private void LateUpdate()
+        {
+            stateMachine.LateUpdate();
+            
+            if(IsAttacking && EquippedGunIndex >= 0) { Guns[EquippedGunIndex].OnShoot(); }
+        }
+
         /// <summary>
         /// Play Foot Step Sound
         /// </summary>
@@ -126,16 +155,66 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             // }
         }
 
-        /// <summary>
-        /// Play Reload Animation
-        /// </summary>
-        /// <param name="animationEvent"></param>
-        private void OnReload(AnimationEvent animationEvent)
+        /* - Weapon Switch 메소드 - */
+        public void OnSwitchWeapon(int weaponIndex, float duration)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                // TODO: 무기가 존재할 시 무기 내 OnReload 함수 호출
-            }
+            if(switchCoroutine != null){ StopCoroutine(switchCoroutine); }
+            switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(weaponIndex, duration));
         }
+
+        public IEnumerator OnSwitchWeapon_Coroutine(int weaponIndex, float duration)
+        {
+            Vector3 currentWeaponPivotPosition = WeaponPivot.localPosition;
+            Quaternion currentWeaponPivotRotation = WeaponPivot.localRotation;
+            Vector3 targetLocalPosition = WeaponPoints["SwitchPoint"].localPosition;
+            Quaternion targetLocalRotation = WeaponPoints["SwitchPoint"].localRotation;
+
+            if (EquippedGunIndex >= 0)
+            {
+                // 무기를 밑으로 먼저 내리기
+                var time = 0f;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    float t = time / duration;
+                    WeaponPivot.SetLocalPositionAndRotation(
+                        Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
+                        Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
+                    yield return null;
+                }
+
+                WeaponPivot.transform.SetLocalPositionAndRotation(WeaponPoints["WieldPoint"].localPosition, WeaponPoints["WieldPoint"].localRotation);
+                Guns[EquippedGunIndex].gameObject.SetActive(false);
+                EquippedGunIndex = -1;
+            }
+            
+            // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
+            if (weaponIndex < 0 || !AvailableGuns[weaponIndex])
+            {
+                yield break;
+            }
+            
+            currentWeaponPivotPosition = WeaponPivot.localPosition;
+            currentWeaponPivotRotation = WeaponPivot.localRotation;
+            targetLocalPosition = WeaponPoints["WieldPoint"].localPosition;
+            targetLocalRotation = WeaponPoints["WieldPoint"].localRotation;
+            EquippedGunIndex = weaponIndex;
+            Guns[EquippedGunIndex].gameObject.SetActive(true);
+            
+            float weaponWieldTime = 0f;
+            while (weaponWieldTime < duration)
+            {
+                weaponWieldTime += Time.deltaTime;
+                float t = weaponWieldTime / duration;
+                WeaponPivot.SetLocalPositionAndRotation(
+                    Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
+                    Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
+                yield return null;
+            }
+            
+            WeaponPivot.transform.SetLocalPositionAndRotation(WeaponPoints["WieldPoint"].localPosition, WeaponPoints["WieldPoint"].localRotation);
+            switchCoroutine = null;
+        }
+        /* --------------------- */
     }
 }

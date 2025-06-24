@@ -135,11 +135,10 @@ namespace _1.Scripts.Manager.Subs
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            GameObject playerObj = GameObject.FindWithTag("Player");
-            if (playerObj != null && playerObj.TryGetComponent(out Player player))
-            {
-                CoreManager.Instance.gameManager.Initialize_Player(player);
-            }
+            var playerObj = GameObject.FindWithTag("Player");
+            if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
+            CoreManager.Instance.gameManager.Initialize_Player(player);
+            player.PlayerCondition.IsPlayerHasControl = true;
         }
         
         private async Task WaitForUserInput()

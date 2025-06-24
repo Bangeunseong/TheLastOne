@@ -47,5 +47,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.OnRunStarted(context);
             stateMachine.ChangeState(stateMachine.WalkState);
         }
+
+        protected override void OnAimStarted(InputAction.CallbackContext context)
+        {
+            base.OnAimStarted(context);
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
     }
 }
