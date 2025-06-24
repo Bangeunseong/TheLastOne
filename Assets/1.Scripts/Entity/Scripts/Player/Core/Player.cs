@@ -93,6 +93,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <param name="animationEvent"></param>
         private void OnFootstep(AnimationEvent animationEvent)
         {
+            // TODO: 걸을 때 소리 추가
             // if (animationEvent.animatorClipInfo.weight > 0.5f)
             // {
             //     if (FootstepAudioClips.Length > 0)
@@ -109,10 +110,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <param name="animationEvent"></param>
         private void OnLand(AnimationEvent animationEvent)
         {
+            // TODO: 착치할 때 소리 추가
             // if (animationEvent.animatorClipInfo.weight > 0.5f)
             // {
             //     AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             // }
+        }
+
+        /// <summary>
+        /// Play Reload Animation
+        /// </summary>
+        /// <param name="animationEvent"></param>
+        private void OnReload(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                // TODO: 무기가 존재할 시 무기 내 OnReload 함수 호출
+            }
         }
     }
 }

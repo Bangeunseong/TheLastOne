@@ -131,6 +131,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Jump.started += OnJumpStarted;
             playerInput.PlayerActions.Run.started += OnRunStarted;
             playerInput.PlayerActions.Crouch.started += OnCrouchStarted;
+            playerInput.PlayerActions.Reload.started += OnReloadStarted;
         }
         
         private void RemoveInputActionCallbacks()
@@ -140,6 +141,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Jump.started -= OnJumpStarted;
             playerInput.PlayerActions.Run.started -= OnRunStarted;
             playerInput.PlayerActions.Crouch.started -= OnCrouchStarted;
+            playerInput.PlayerActions.Reload.started -= OnReloadStarted;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -170,6 +172,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsDead) return;
         }
         protected virtual void OnCrouchStarted(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsDead) return;
+        }
+        protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead) return;
         }

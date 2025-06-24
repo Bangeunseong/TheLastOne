@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
-using Object = System.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -31,7 +27,7 @@ namespace _1.Scripts.Manager.Subs
         
         private int defaultCapacity = 50; // 용량설정
         private int maxCapacity = 500;
-
+        
         /// <summary>
         /// 풀매니저 생성자, poolRoot 생성
         /// </summary>

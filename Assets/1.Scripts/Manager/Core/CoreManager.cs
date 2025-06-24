@@ -61,7 +61,7 @@ namespace _1.Scripts.Manager.Core
         // Update is called once per frame
         private void Update()
         {
-            if (sceneLoadManager.IsLoading){ sceneLoadManager.Update(); } 
+            if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
         }
 
         /// <summary>
