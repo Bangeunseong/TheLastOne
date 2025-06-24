@@ -38,7 +38,7 @@ namespace _1.Scripts.Manager.Subs
         private const string INGAME_UI_ADDRESS = "InGameUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
-        public Task Initialize()
+        public void Initialize()
         {
             lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");
             loadingUI = FindUIComponent<LoadingUI>("LoadingUI");
@@ -53,7 +53,6 @@ namespace _1.Scripts.Manager.Subs
             settingUI?.SetActive(false);
             
             ChangeState(CurrentState.Lobby);
-            return Task.CompletedTask;
         }
         
         public void ChangeState(CurrentState newState)
