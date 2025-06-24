@@ -1,5 +1,6 @@
 using System;
 using _1.Scripts.Entity.Scripts.Common;
+using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -12,7 +13,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     public class PlayerCondition : MonoBehaviour, IDamagable
     {
         [field: Header("Base Condition Data")]
-        [field: SerializeField] public EntityStatData StatData { get; private set; }
+        [field: SerializeField] public PlayerStatData StatData { get; private set; }
         
         [field: Header("Current Condition Data")]
         [field: SerializeField] public int MaxHealth { get; private set; }
@@ -42,7 +43,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Start()
         {
             coreManager = CoreManager.Instance;
-            StatData = coreManager.resourceManager.GetAsset<EntityStatData>("Player");
+            StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
             InitializeStat(coreManager.gameManager.SaveData);
         }
