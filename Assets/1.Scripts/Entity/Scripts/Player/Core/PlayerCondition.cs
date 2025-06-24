@@ -1,5 +1,6 @@
 using System;
 using _1.Scripts.Entity.Scripts.Common;
+using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
