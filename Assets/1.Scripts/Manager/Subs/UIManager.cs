@@ -1,18 +1,14 @@
 using System;
 using System.Collections.Generic;
-using _1.Scripts.Manager.Core;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.UI;
-using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using _1.Scripts.UI.Setting;
+using UnityEngine;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -21,263 +17,180 @@ namespace _1.Scripts.Manager.Subs
         Lobby,
         Loading,
         InGame,
-        Setting,
-        Inventory,
-        Hacking,
-        WeaponTuning,
-        Menu,
         None
     }
     
-    [Serializable] public class UIManager
+    [Serializable]
+    public class UIManager
     {
         private CurrentState currentState = CurrentState.None;
-        private CurrentState previousState;
-
-        private Transform _mainCanvas;
-        private Transform _popupCanvas;
-        private Stack<UIPopup> popupStack = new Stack<UIPopup>();
-        private Dictionary<string, UIPopup> popupCache = new Dictionary<string, UIPopup>();
         
-        private Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
-        private Dictionary<CurrentState, AsyncOperationHandle<GameObject>> loadingOperation = new Dictionary<CurrentState, AsyncOperationHandle<GameObject>>();
+        private LobbyUI lobbyUI;
+        private LoadingUI loadingUI;
+        private SettingUI settingUI;
         
-        // UI Address 이름
-        private const string LOBBY_UI_ADDRESS = "LobbyUI";
-        private const string LOADING_UI_ADDRESS = "LoadingUI";
+        private readonly Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
+        private readonly Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
+        private readonly Stack<UIPopup> popupStack = new Stack<UIPopup>();
+        
+        public LoadingUI LoadingUI => loadingUI;
+        
         private const string INGAME_UI_ADDRESS = "InGameUI";
-        private const string SETTING_UI_ADDRESS = "SettingUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
-        private const string HACKING_UI_ADDRESS = "HackingUI";
-        private const string WEAPONTUNING_UI_ADDRESS = "WeaponTuningUI";
-        private const string MENU_UI_ADDRESS = "MenuUI";
-
-        public LobbyUI LobbyUI
-        {
-            get
-            {
-                if (loadedUI.TryGetValue(CurrentState.Lobby, out var lobbyUI))
-                {
-                    return lobbyUI as LobbyUI;
-                }
-                return null;
-            }
-        }
-
-        public LoadingUI LoadingUI
-        {
-            get
-            {
-                if (loadedUI.TryGetValue(CurrentState.Loading, out var loadingUI))
-                {
-                    return loadingUI as LoadingUI;
-                }
-                return null;
-            }
-        }
-
-        public InGameUI InGameUI
-        {
-            get
-            {
-                if (loadedUI.TryGetValue(CurrentState.InGame, out var inGameUI))
-                {
-                    return inGameUI as InGameUI;
-                }
-                return null;
-            }
-        }
-        /*public SettingUI SettingUI => loadedUI[CurrentState.Setting];
-        public InventoryUI InventoryUI => loadedUI[CurrentState.Inventory];
-        public MenuUI MenuUI => loadedUI[CurrentState.Menu];
-        public HackingUI HackingUI => loadedUI[CurrentState.Hacking];
-        public WeaponTuningUI WeaponTuningUI => loadedUI[CurrentState.WeaponTuning];*/
         
-        public void Initialize()
+        public Task Initialize()
         {
-            // Managers에서 초기화
-            GameObject mainCanvas = GameObject.Find("MainCanvas");
-            GameObject popupCanvas = GameObject.Find("PopupCanvas");
+            lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");
+            loadingUI = FindUIComponent<LoadingUI>("LoadingUI");
+            settingUI = FindUIComponent<SettingUI>("SettingUI");
             
-            if (mainCanvas != null)
-            {
-                _mainCanvas = mainCanvas.transform;
-            }
-            else
-            {
-                Service.Log("UIManager: 메인캔버스를 찾지 못함");
-                _mainCanvas = new GameObject("MainCanvas").transform;
-            }
-
-            if (popupCanvas != null)
-            {
-                _popupCanvas = popupCanvas.transform;
-            }
-            else
-            {
-                _popupCanvas = new GameObject("PopupCanvas").transform;
-            }
-
-            // 게임 상태와 Address 맵핑
-            Dictionary<CurrentState, string> uiAddressMap = new Dictionary<CurrentState, string>();
-            uiAddressMap.Add(CurrentState.Lobby, LOBBY_UI_ADDRESS);
-            /*uiAddressMap.Add(CurrentState.Loading, LOADING_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.InGame, INGAME_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.Setting, SETTING_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.Inventory, INVENTORY_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.Hacking, HACKING_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.WeaponTuning, WEAPONTUNING_UI_ADDRESS);
-            uiAddressMap.Add(CurrentState.Menu, MENU_UI_ADDRESS);*/
+            lobbyUI?.Init(this);
+            loadingUI?.Init(this);
+            settingUI?.Init(this);
+            
+            lobbyUI?.SetActive(false);
+            loadingUI?.SetActive(false);
+            settingUI?.SetActive(false);
             
             ChangeState(CurrentState.Lobby);
+            return Task.CompletedTask;
+        }
+        
+        public void ChangeState(CurrentState newState)
+        {
+            if (currentState == newState) return;
+            
+            DeactivateState(currentState);
+
+            currentState = newState;
+            
+            ActivateState(currentState);
         }
 
-        public async Task<T> ShowPopup<T>(string address) where T : UIPopup
+        private void ActivateState(CurrentState state)
         {
-            if (popupCache.TryGetValue(address, out UIPopup cachedPopup))
+            switch (state)
             {
-                popupStack.Push(cachedPopup);
-                cachedPopup.gameObject.SetActive(true);
+                case CurrentState.Lobby:
+                    lobbyUI?.SetActive(true);
+                    break;
+                case CurrentState.Loading:
+                    loadingUI?.SetActive(true);
+                    break;
+                
+                case CurrentState.InGame:
+                    LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
+                    break;
+            }
+        }
+
+        private void DeactivateState(CurrentState state)
+        {
+            switch (state)
+            {
+                case CurrentState.Lobby:
+                    lobbyUI?.SetActive(false);
+                    break;
+                case CurrentState.Loading:
+                    loadingUI?.SetActive(false);
+                    break;
+                
+                case CurrentState.InGame:
+                    if (loadedUI.TryGetValue(state, out var ui))
+                    {
+                        ui.SetActive(false);
+                    }
+                    break;
+            }
+        }
+        
+        private void LoadUI<T>(CurrentState state, string address) where T : UIBase
+        {
+            if (loadedUI.TryGetValue(state, out var ui))
+            {
+                ui.SetActive(true);
+                return;
+            }
+
+            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
+            if (prefab != null)
+            {
+                var canvas = GameObject.Find("MainCanvas").transform;
+                var instance = GameObject.Instantiate(prefab, canvas);
+                var component = instance.GetComponent<T>();
+                if (component != null)
+                {
+                    component.Init(this);
+                    loadedUI[state] = component; // 캐시에 저장
+                    component.SetActive(true);
+                }
+            }
+        }
+        
+        #region Popup Management
+        
+        public void ShowSettingPopup()
+        {
+            if (settingUI == null) return;
+            
+            settingUI.transform.SetAsLastSibling();
+            settingUI.SetActive(true);
+            popupStack.Push(settingUI);
+        }
+        
+        public T ShowPopup<T>(string address) where T : UIPopup
+        {
+            if (loadedPopup.TryGetValue(address, out UIPopup cachedPopup))
+            {
                 cachedPopup.transform.SetAsLastSibling();
+                cachedPopup.SetActive(true);
+                popupStack.Push(cachedPopup);
                 return cachedPopup as T;
             }
 
-            var handle = Addressables.LoadAssetAsync<GameObject>(address);
-            GameObject popupPanel = await handle.Task;
-
-            if (popupPanel != null)
+            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
+            if (prefab != null)
             {
-                GameObject popupInstance = UnityEngine.Object.Instantiate(popupPanel, _popupCanvas);
-                T popupComponent = popupInstance.GetComponent<T>();
-
-                if (popupComponent != null)
+                var canvas = GameObject.Find("PopupCanvas").transform;
+                var instance = GameObject.Instantiate(prefab, canvas);
+                var component = instance.GetComponent<T>();
+                if (component != null)
                 {
-                    popupComponent.Init(this);
-                    popupCache[address] = popupComponent;
-                    popupStack.Push(popupComponent);
-                    popupComponent.transform.SetAsLastSibling();
-                    return popupComponent;
-                }
-                else
-                {
-                    UnityEngine.Object.Destroy(popupInstance);
-                    return null;
+                    component.Init(this);
+                    loadedPopup[address] = component;
+                    popupStack.Push(component);
+                    component.SetActive(true);
+                    return component;
                 }
             }
             return null;
         }
-
-        public void ClosePopup(UIPopup popup)
-        {
-            if (popupStack.Count > 0 && popupStack.Peek() == popup)
-            {
-                popupStack.Pop();
-                popup.gameObject.SetActive(false);
-            }
-        }
-
-        public void CloseTopPopup()
+        
+        public void ClosePopup()
         {
             if (popupStack.Count > 0)
             {
-                UIPopup topPopup = popupStack.Pop();
-                topPopup.gameObject.SetActive(false);
+                popupStack.Pop().SetActive(false);
             }
         }
 
-        public async void ChangeState(CurrentState newState)
+        #endregion
+        
+        private T FindUIComponent<T>(string name) where T : Component
         {
-            // 화면에 띄울 UI를 게임 상태가 변경됨에 따라 교체해준다
-            if (currentState == newState) return;
-
-            if (currentState != CurrentState.None)
+            foreach (var canvas in Resources.FindObjectsOfTypeAll<Canvas>())
             {
-                if (loadedUI.TryGetValue(currentState, out var previousPanel))
+                if (canvas.isRootCanvas)
                 {
-                    previousPanel.SetActive(false);
+                    var component = canvas.GetComponentInChildren<T>(true);
+                    if (component != null && component.gameObject.name == name)
+                    {
+                        return component;
+                    }
                 }
             }
-            
-            previousState = currentState;
-            currentState = newState;
-
-            if (!loadedUI.ContainsKey(newState) || loadedUI[newState] == null)
-            {
-                await LoadUI(newState);
-            }
-            else
-            {
-                loadedUI[newState].SetActive(true);
-            }
-        }
-
-        public CurrentState GetCurrentState()
-        {
-            return currentState;
-        }
-
-        public CurrentState GetPreviousState()
-        {
-            return previousState;
-        }
-
-        private async Task LoadUI(CurrentState state)
-        {
-            string address = GetUIAddress(state);
-            if (string.IsNullOrEmpty(address)) return;
-
-            if (loadingOperation.ContainsKey(state) && loadingOperation[state].IsValid())
-            {
-                await loadingOperation[state].Task;
-                if (loadedUI.TryGetValue(state, out var loadedPanel) && loadedPanel != null)
-                {
-                    loadedPanel.SetActive(true);
-                }
-                return;
-            }
-            
-            var handle = Addressables.LoadAssetAsync<GameObject>(address);
-            loadingOperation[state] = handle;
-            
-            GameObject panel = await handle.Task;
-
-            if (panel != null)
-            {
-                GameObject uiInstance = UnityEngine.Object.Instantiate(panel, _mainCanvas);
-                UIBase uiBase = uiInstance.GetComponent<UIBase>();
-                if (uiBase != null)
-                {
-                    uiBase.Init(this);
-                    loadedUI[state] = uiBase;
-                    uiBase.SetActive(true);
-                }
-                else
-                {
-                    UnityEngine.Object.Destroy(uiInstance);
-                }
-            }
-            else
-            {
-                Service.Log($"UIManager: {state}에 맞는 UI프리팹 로드 실패");
-            }
-
-            loadingOperation.Remove(state);
-        }
-
-        private string GetUIAddress(CurrentState state)
-        {
-            switch (state)
-            {
-                case CurrentState.Lobby: return LOBBY_UI_ADDRESS;
-                case CurrentState.Loading: return LOADING_UI_ADDRESS;
-                case CurrentState.InGame: return INGAME_UI_ADDRESS;
-                case CurrentState.Setting: return SETTING_UI_ADDRESS;
-                case CurrentState.Inventory: return INVENTORY_UI_ADDRESS;
-                case CurrentState.Hacking: return HACKING_UI_ADDRESS;
-                case CurrentState.WeaponTuning: return WEAPONTUNING_UI_ADDRESS;
-                case CurrentState.Menu: return MENU_UI_ADDRESS;
-                default: return null;
-            }
+            Debug.LogWarning($"이름이 '{name}'인 UI 오브젝트를 씬에서 찾을 수 없습니다.");
+            return null;
         }
     }
 }

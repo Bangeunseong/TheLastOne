@@ -33,8 +33,7 @@ namespace _1.Scripts.UI.Lobby
 
         private void OnStartButtonClicked()
         {
-            //CoreManager.Instance.StartGame();
-            uiManager.ChangeState(CurrentState.InGame);
+            CoreManager.Instance.StartGame();
         }
         
         private void OnLoadButtonClicked()
@@ -42,9 +41,9 @@ namespace _1.Scripts.UI.Lobby
             CoreManager.Instance.StartGame();
         }
 
-        private async void OnSettingButtonClicked()
-        {
-            await uiManager.ShowPopup<SettingUI>("SettingUI");
+        private void OnSettingButtonClicked()
+        { 
+            uiManager.ShowSettingPopup();
         }
         
         private void OnQuitButtonClicked()

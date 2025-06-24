@@ -108,14 +108,14 @@ namespace _1.Scripts.UI.InGame
             levelText.text = level.ToString();
         }
         
-        private async void OnSettingButtonClicked()
+        private void OnSettingButtonClicked()
         {
-            await uiManager.ShowPopup<SettingUI>("SettingUI");
+            uiManager.ShowSettingPopup();
         }
 
-        private async void OnInventoryButtonClicked()
+        private void OnInventoryButtonClicked()
         {
-            await uiManager.ShowPopup<InventoryUI>("InventoryUI");
+            uiManager.ShowPopup<InventoryUI>("InventoryUI");
         }
     }
 }
