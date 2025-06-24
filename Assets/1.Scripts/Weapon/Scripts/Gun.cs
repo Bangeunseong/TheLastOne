@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts
 {
+    public enum GunType
+    {
+        Pistol,
+        Rifle,
+    }
+    
     public class Gun : MonoBehaviour, IShootable, IReloadable
     {
         [field: Header("Weapon Data")]
@@ -33,6 +39,8 @@ namespace _1.Scripts.Weapon.Scripts
         
         public bool IsReady => !isEmpty && !isReloading && !isRecoiling;
 
+        
+        
         private void Start()
         {
             timeSinceLastShotFired = WeaponData.WeaponStat.Recoil;

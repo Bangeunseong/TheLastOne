@@ -2865,7 +2865,7 @@ MonoBehaviour:
   <CurrentAmmoCountInMagazine>k__BackingField: 0
   <HittableLayer>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   isEmpty: 0
   isReloading: 0
   isRecoiling: 0
