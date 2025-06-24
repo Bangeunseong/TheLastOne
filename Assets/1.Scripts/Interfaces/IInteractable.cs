@@ -1,7 +1,9 @@
-﻿namespace _1.Scripts.Interfaces
+﻿using UnityEngine;
+
+namespace _1.Scripts.Interfaces
 {
     public interface IInteractable
     {
-        void OnInteract();
+        void OnInteract(GameObject ownerObj);
     }
 }

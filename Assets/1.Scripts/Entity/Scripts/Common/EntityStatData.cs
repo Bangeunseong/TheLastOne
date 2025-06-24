@@ -12,22 +12,13 @@ namespace _1.Scripts.Entity.Scripts.Common
 
         [Header("Stats")] 
         public int maxHealth;
-        public float maxStamina;
         public int baseDamage;
         public float baseAttackRate;
 
-        [Header("Update Rates And Intervals")] 
-        public float consumeRateOfStamina;
-        public float recoverRateOfStamina_Idle;
-        public float recoverRateOfStamina_Walk;
-        public float interval;
-
         [Header("Movement")] 
         public float moveSpeed;
-        public float jumpHeight;
         public float runMultiplier;
         public float walkMultiplier;
-        public float crouchMultiplier;
 
         [Header("Audio")] 
         public AudioClip[] footStepSounds;
