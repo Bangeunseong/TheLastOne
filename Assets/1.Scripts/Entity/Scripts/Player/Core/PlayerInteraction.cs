@@ -50,7 +50,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         public void OnInteract()
         {
-            Interactable.OnInteract();
+            Interactable.OnInteract(gameObject);
             ResetParameters();
         }
 
