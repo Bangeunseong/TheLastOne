@@ -11,8 +11,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
     public class BTContext
     {
         public BaseNpcAI controller;   // 현재 NPC의 컨트롤러
-        public Transform myPosition;   // 현재 내 위치
-        public Transform target;       // 플레이어 또는 목표
         // 필요한 거 계속 추가
     }
 }

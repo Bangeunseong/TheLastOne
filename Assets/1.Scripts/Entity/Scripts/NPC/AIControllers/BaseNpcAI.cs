@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
@@ -11,18 +13,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     /// </summary>
     public abstract class BaseNpcAI : MonoBehaviour
     {
-        private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        [Header("AI Information")]
         private BTContext context; // AI컨토를러 정보
-        protected SelectorNode rootNode; // 최상위 셀렉터 노드
-        // 스탯 정보 SO 필요
+        public EntityStatData statData; // 자신이 소유한 스탯데이터
         
-        // 각 몬스터가 자신의 행동 트리를 정의하도록 강제
+        [Header("Node Information")]
+        private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        protected SelectorNode rootNode; // 최상위 셀렉터 노드
+        
+        // 각 NPC가 자신의 행동 트리를 정의하도록 강제
         protected abstract void BuildTree();
         
         protected virtual void Awake()
         {
             rootNode = new SelectorNode();
-            // context = new BTContext(this, 플레이어 위치, transform.position);
+            context = new BTContext();
+            context.controller = this;
         }
 
         protected virtual void Start()
