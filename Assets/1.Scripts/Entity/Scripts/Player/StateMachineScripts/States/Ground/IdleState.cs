@@ -15,7 +15,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.Enter();
             // StartAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
             if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
-            if(stateMachine.Player == null) Debug.Log("Player is null!");
             staminaCoroutine = stateMachine.Player.StartCoroutine(RecoverStamina_Coroutine(
                 playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval,
                 playerCondition.StatData.interval));
