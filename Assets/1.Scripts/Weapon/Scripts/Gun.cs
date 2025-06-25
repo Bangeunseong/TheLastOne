@@ -81,7 +81,7 @@ namespace _1.Scripts.Weapon.Scripts
         {
             if (!IsReady) return;
             
-            var obj = CoreManager.Instance.objectPoolManager.Get("Bullet");
+            var obj = CoreManager.Instance.objectPoolManager.Get(WeaponData.WeaponStat.BulletPrefabId);
             if (!obj.TryGetComponent(out Bullet bullet)) return;
             
             isRecoiling = true;

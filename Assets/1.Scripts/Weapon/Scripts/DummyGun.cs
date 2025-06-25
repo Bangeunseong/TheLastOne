@@ -26,7 +26,7 @@ namespace _1.Scripts.Weapon.Scripts
             }
             Debug.Log(index);
             player.AvailableGuns[index] = true;
-            player.OnSwitchWeapon(index, 1f);
+            player.OnSwitchWeapon(index, 0.5f);
                 
             OnPicked?.Invoke();
             Destroy(gameObject);
