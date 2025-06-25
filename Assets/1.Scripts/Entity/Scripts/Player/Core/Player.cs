@@ -223,7 +223,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (EquippedGunIndex >= 0)
             {
-                Debug.Log("Switch Weapon");
+                Service.Log("Switch Weapon");
                 // 무기를 밑으로 먼저 내리기
                 var time = 0f;
                 while (time < duration)
@@ -249,7 +249,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 yield break;
             }
             
-            Debug.Log("Wield Weapon");
+            Service.Log("Wield Weapon");
             currentWeaponPivotPosition = WeaponPivot.localPosition;
             currentWeaponPivotRotation = WeaponPivot.localRotation;
             targetLocalPosition = WeaponPoints["WieldPoint"].localPosition;

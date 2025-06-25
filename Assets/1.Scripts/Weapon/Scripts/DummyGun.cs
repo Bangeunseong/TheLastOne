@@ -24,7 +24,7 @@ namespace _1.Scripts.Weapon.Scripts
                 if (player.Guns[i].WeaponData.WeaponStat.Type != Type) continue;
                 index = i; break;
             }
-            Debug.Log(index);
+            Service.Log(index.ToString());
             player.AvailableGuns[index] = true;
             player.OnSwitchWeapon(index, 0.5f);
                 
