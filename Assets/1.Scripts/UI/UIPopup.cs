@@ -4,18 +4,17 @@ using _1.Scripts.Manager.Subs;
 
 namespace _1.Scripts.UI
 {
-    public abstract class UIPopup : MonoBehaviour
+    public abstract class UIPopup : UIBase
     {
-        protected UIManager uiManager;
-
-        public virtual void Init(UIManager manager)
-        {
-            uiManager = manager;
-        }
 
         public virtual void ClosePopup()
         {
-            uiManager.ClosePopup(this);
+            uiManager.ClosePopup();
+        }
+        
+        public override void SetActive(bool active)
+        {
+            gameObject.SetActive(active);
         }
     }
 }
