@@ -17,7 +17,7 @@ MonoBehaviour:
     <MaxAmmoCount>k__BackingField: 150
     <MaxAmmoCountInMagazine>k__BackingField: 30
     <MaxWeaponRange>k__BackingField: 80
-    <BulletSpeed>k__BackingField: 40
+    <BulletSpeed>k__BackingField: 30
     <Recoil>k__BackingField: 0
     <Accuracy>k__BackingField: 0
     <ReloadTime>k__BackingField: 1.2

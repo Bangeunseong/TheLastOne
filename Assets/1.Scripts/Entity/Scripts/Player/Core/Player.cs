@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
@@ -7,6 +6,7 @@ using _1.Scripts.Weapon.Scripts;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
@@ -37,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [SerializeField] private PlayerStateMachine stateMachine;
 
         [field: Header("Guns")]
-        [field: SerializeField] public List<Gun> Guns { get; private set; } = new();
+        [field: SerializeField] public List<Object> Weapons { get; private set; } = new();
         [field: SerializeField] public List<bool> AvailableGuns { get; private set; } = new();
         [field: SerializeField] public int EquippedGunIndex { get; private set; } = -1;
         [field: SerializeField] public bool IsAttacking { get; set; }
@@ -109,7 +109,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             foreach (var gun in listOfGuns)
             {
                 gun.Initialize(gameObject);
-                Guns.Add(gun); 
+                Weapons.Add(gun); 
                 AvailableGuns.Add(false);
             }
             
@@ -132,8 +132,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void LateUpdate()
         {
             stateMachine.LateUpdate();
-            
-            if (IsAttacking && EquippedGunIndex >= 0) { Guns[EquippedGunIndex].OnShoot(); }
+
+            if (IsAttacking && EquippedGunIndex >= 0)
+            {
+                if (Weapons[EquippedGunIndex] is Gun gun) gun.OnShoot();
+            }
         }
 
         /// <summary>
@@ -237,7 +240,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
 
                 WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-                Guns[EquippedGunIndex].gameObject.SetActive(false);
+                if (Weapons[EquippedGunIndex] is Gun gunToStore){ gunToStore.gameObject.SetActive(false); }
                 EquippedGunIndex = -1;
             }
             
@@ -255,7 +258,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             targetLocalPosition = WeaponPoints["WieldPoint"].localPosition;
             targetLocalRotation = WeaponPoints["WieldPoint"].localRotation;
             EquippedGunIndex = weaponIndex;
-            Guns[EquippedGunIndex].gameObject.SetActive(true);
+            if (Weapons[EquippedGunIndex] is Gun gunToSwitch){ gunToSwitch.gameObject.SetActive(true); }
             
             float weaponWieldTime = 0f;
             while (weaponWieldTime < duration)

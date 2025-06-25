@@ -19,9 +19,9 @@ namespace _1.Scripts.Weapon.Scripts
             if (!ownerObj.TryGetComponent(out Player player)) return;
             
             var index = -1;
-            for (var i = 0; i < player.Guns.Count; i++)
+            for (var i = 0; i < player.Weapons.Count; i++)
             {
-                if (player.Guns[i].WeaponData.WeaponStat.Type != Type) continue;
+                if (player.Weapons[i] is not Gun gun || gun.WeaponData.WeaponStat.Type != Type) continue;
                 index = i; break;
             }
             Service.Log(index.ToString());

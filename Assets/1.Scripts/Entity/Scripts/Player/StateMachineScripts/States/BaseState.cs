@@ -218,11 +218,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
+            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedGunIndex] is not Gun gun) yield break;
+            
             // TODO: Play Animation
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = true;
+            gun.IsReloading = true;
             yield return new WaitForSeconds(interval);
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].OnReload();
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = false;
+            gun.OnReload();
+            gun.IsReloading = false;
             reloadCoroutine = null;
         }
         /* ---------------------------- */
@@ -233,7 +235,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (stateMachine.Player.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = stateMachine.Player.Guns.Count;
+            int weaponCount = stateMachine.Player.Weapons.Count;
             int currentIndex = stateMachine.Player.EquippedGunIndex;
 
             if (weaponCount == 0) return;
