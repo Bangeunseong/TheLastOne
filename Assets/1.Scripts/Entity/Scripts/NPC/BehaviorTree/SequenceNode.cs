@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 
 namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {
@@ -11,7 +12,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 
         public void Add(INode node) => children.Add(node);
 
-        public INode.State Evaluate(BTContext context)
+        public INode.State Evaluate(BaseNpcAI controller)
         {
             // 자식 노드의 수가 0 이하라면 실패
             if (children.Count <= 0)
@@ -20,7 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
             foreach (INode child in children)
             {
                 // 자식 노드들중 하나라도 FAILED 라면 시퀀스는 FAILED
-                switch (child.Evaluate(context))
+                switch (child.Evaluate(controller))
                 {
                     case INode.State.RUN:
                         return INode.State.RUN;

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84de557cae96fc4bb965d13771c19fb, type: 3}
+  m_Name: ReconDroneData
+  m_EditorClassIdentifier: 
+  entityName: ReconDrone
+  isPlayer: 0
+  isAlly: 0
+  maxHealth: 100
+  baseDamage: 10
+  baseAttackRate: 2
+  moveSpeed: 5
+  runMultiplier: 1
+  walkMultiplier: 0
+  footStepSounds: []
+  hitSounds: []
+  deathSounds: []
+  detectRange: 10
+  attackRange: 5
