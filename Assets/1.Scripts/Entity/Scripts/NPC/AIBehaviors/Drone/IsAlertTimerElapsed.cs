@@ -15,7 +15,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (!controller.TryGetStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
+            if (!controller.statController.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
             {
                 return INode.State.FAILED;
             }
@@ -27,7 +27,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
             }
 
             // EnemySuicideDroneAIController 타입인지 확인
-            if (controller is EnemySuicideDroneAIController suicideDrone)
+            if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
             {
                 return suicideDrone.TimerCheck() <= alertable.AlertDuration ?  INode.State.SUCCESS : INode.State.FAILED;
             }

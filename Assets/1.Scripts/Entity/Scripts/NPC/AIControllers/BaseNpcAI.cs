@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     {
         [Header("AI Information")]
         public NavMeshAgent navMeshAgent;
-        public EntityStatData statData; // 자신이 소유한 스탯데이터
+        public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
         
         [Header("Node Information")]
         private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
@@ -30,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             rootNode = new SelectorNode();
             navMeshAgent = GetComponent<NavMeshAgent>();
+            statController = GetComponent<BaseNpcStatController>();
         }
 
         protected virtual void Start()
@@ -55,26 +56,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         public void IsCurrentActionRunning(bool running)
         {
             currentActionRunning = running;
-        }
-        
-        /// <summary>
-        /// 자식 스탯 정보가 필요할 때 인터페이스 기반으로 불러낼 것
-        /// </summary>
-        /// <param name="result"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public bool TryGetStatInterface<T>(out T result) where T : class
-        {
-            result = null;
-            
-            result = statData as T;
-            if (result == null)
-            {
-                Debug.LogWarning($"statData가 {typeof(T).Name}을 구현하지 않음. 컨트롤러: {name} {GetType().Name}");
-                return false;
-            }
-            
-            return true;
         }
         
         /// <summary>

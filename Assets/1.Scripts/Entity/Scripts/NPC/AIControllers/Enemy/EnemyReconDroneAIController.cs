@@ -26,7 +26,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         
         protected override void Start()
         {
-            statData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneData>("ReconDroneData");
             // 액션노드 추가해서 등장연출 가능
             base.Start();
         }

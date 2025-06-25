@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: e6e7c9a33c8a64248a9951f8fa4b0485
   m_SerializeEntries:
   - m_GUID: 77b59f610eb53bc4d938c74e5d94fb92
-    m_Address: ReconDroneData
+    m_Address: ReconDroneStatData
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

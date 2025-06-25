@@ -7,7 +7,7 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.Data
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity/Enemy/ReconDroneData")]
-    public class ReconDroneData : EntityStatData, IDetectable, IAttackable, IAlertable
+    public class ReconDroneStatData : EntityStatData, IDetectable, IAttackable, IAlertable
     {
         [Header("Range")] 
         [SerializeField] private float detectRange;
