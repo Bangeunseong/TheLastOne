@@ -30,18 +30,18 @@ namespace _1.Scripts.Manager.Subs
         private AsyncOperation sceneLoad;
         private bool isInputAllowed;
         private bool isKeyPressed;
-        private bool isAlreadyLoadedPlayer;
         private UIManager uiManager;
         private CoreManager coreManager;
         
         // Properties
         public bool IsLoading { get; private set; }
+        public float LoadingProgress { get; set; }
         
         // Methods
         public void Start()
         {
-            // uiManager = UIManager.Instance;
             coreManager = CoreManager.Instance;
+            uiManager = CoreManager.Instance.uiManager;
             CurrentScene = SceneType.IntroScene;
         }
 
@@ -76,9 +76,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-            
-            // uiManager.LoadingUI.UpdateLoadingProgress(0f);
-            // uiManager.ChangeState(CurrentScene.Loading);
+
+            LoadingProgress = 0f;
+            uiManager.ChangeState(CurrentState.Loading);
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
@@ -87,11 +88,11 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            // uiManager.LoadingUI.UpdateLoadingProgress(0.2f);
+            uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
-            // uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
+            uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
-            // uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
+            uiManager.LoadingUI.UpdateLoadingProgress(0.8f);
             await LoadSceneWithProgress(CurrentScene);
         }
         
@@ -102,14 +103,15 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                // uiManager.LoadingUI.UpdateLoadingProgress(0.6f + sceneLoad.progress * 0.4f);
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
+            LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            // uiManager.LoadingUI.UpdateLoadingProgress(1f);
-            // uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             
@@ -121,15 +123,18 @@ namespace _1.Scripts.Manager.Subs
             
             switch (sceneName)
             { 
-                case SceneType.IntroScene: // uiManager.ChangeState(SceneType.Intro);
+                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby);
+                    break;
+                case SceneType.Loading: 
                     break;
                 case SceneType.Stage1:
-                case SceneType.Stage2:// uiManager.ChangeState(SceneType.Game);
+                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame);
+                    break;
+                case SceneType.EndingScene:
                     break;
             }
 
             IsLoading = false;
-            isAlreadyLoadedPlayer = false;
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 

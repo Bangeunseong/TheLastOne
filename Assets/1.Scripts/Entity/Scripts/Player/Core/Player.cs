@@ -41,8 +41,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public int EquippedGunIndex { get; private set; } = -1;
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
+        [field: SerializeField] public bool IsAiming { get; private set; }
 
         private Coroutine switchCoroutine;
+        private Coroutine aimCoroutine;
         
         public Camera cam { get; private set; }
 
@@ -122,7 +124,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             stateMachine.LateUpdate();
             
-            if(IsAttacking && EquippedGunIndex >= 0) { Guns[EquippedGunIndex].OnShoot(); }
+            if (IsAttacking && EquippedGunIndex >= 0) { Guns[EquippedGunIndex].OnShoot(); }
         }
 
         /// <summary>
@@ -154,16 +156,59 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             //     AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             // }
         }
+        
+        /* - Aim 관련 메소드 - */
 
+        public void OnAim(bool isAim, float targetFoV, float transitionTime)
+        {
+            if(aimCoroutine != null){StopCoroutine(aimCoroutine);}
+            aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
+            IsAiming = isAim;
+        }
+        
+        private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
+        {
+            Vector3 currentPosition = WeaponPivot.localPosition;
+            Vector3 targetLocalPosition = isAim
+                ? WeaponPoints["AimPoint"].localPosition
+                : WeaponPoints["WieldPoint"].localPosition;
+            float currentFoV = stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView;
+
+            var time = 0f;
+            while (time < transitionTime)
+            {
+                time += Time.deltaTime;
+                float t = time / transitionTime;
+                var value = Mathf.Lerp(currentFoV, targetFoV, t);
+                FirstPersonCamera.m_Lens.FieldOfView = value;
+                if(EquippedGunIndex >= 0)
+                    WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
+                yield return null;
+            }
+
+            FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
+            if(EquippedGunIndex >= 0)
+                WeaponPivot.localPosition = targetLocalPosition;
+            aimCoroutine = null;
+        }
+        
+        /* ----------------- */
+        
         /* - Weapon Switch 메소드 - */
         public void OnSwitchWeapon(int weaponIndex, float duration)
         {
-            if(switchCoroutine != null){ StopCoroutine(switchCoroutine); }
+            IsAttacking = false;
+            if (switchCoroutine != null){ StopCoroutine(switchCoroutine); }
             switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(weaponIndex, duration));
         }
 
         public IEnumerator OnSwitchWeapon_Coroutine(int weaponIndex, float duration)
         {
+            IsSwitching = true;
+            
+            if (IsAiming) OnAim(false, 60, 0.2f);
+            while (IsAiming){}
+            
             Vector3 currentWeaponPivotPosition = WeaponPivot.localPosition;
             Quaternion currentWeaponPivotRotation = WeaponPivot.localRotation;
             Vector3 targetLocalPosition = WeaponPoints["SwitchPoint"].localPosition;
@@ -191,6 +236,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
             if (weaponIndex < 0 || !AvailableGuns[weaponIndex])
             {
+                IsSwitching = false;
                 yield break;
             }
             
@@ -214,6 +260,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             WeaponPivot.transform.SetLocalPositionAndRotation(WeaponPoints["WieldPoint"].localPosition, WeaponPoints["WieldPoint"].localRotation);
             switchCoroutine = null;
+            IsSwitching = false;
         }
         /* --------------------- */
     }
