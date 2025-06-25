@@ -15,6 +15,9 @@ namespace _1.Scripts.Weapon.Scripts
     
     public class Gun : MonoBehaviour, IShootable, IReloadable
     {
+        [Header("Components")] 
+        [SerializeField] private ParticleSystem shellParticles;
+        
         [field: Header("Weapon Data")]
         [field: SerializeField] public WeaponData WeaponData { get; private set; }
         
@@ -45,12 +48,14 @@ namespace _1.Scripts.Weapon.Scripts
 
         private void Awake()
         {
-            BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("ShellParticle");
         }
 
         private void Reset()
         {
-            BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("ShellParticle");
         }
 
         private void Start()
@@ -91,6 +96,9 @@ namespace _1.Scripts.Weapon.Scripts
                 WeaponData.WeaponStat.MaxWeaponRange,
                 WeaponData.WeaponStat.BulletSpeed, 
                 WeaponData.WeaponStat.Damage, HittableLayer);
+            
+            if(shellParticles.isPlaying) shellParticles.Stop();
+            shellParticles.Play();
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
