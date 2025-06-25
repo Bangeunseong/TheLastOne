@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors;
+using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
@@ -26,6 +27,24 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         
         protected override void BuildTree()
         {
+            // 공격 시퀀스 등록
+            SequenceNode attackSequenceNode = new SequenceNode();
+            ActionNode isPlayerInAttackRange = new ActionNode(new IsPlayerInAttackRange().Evaluate);
+            ActionNode reconDroneAttack = new ActionNode(new ReconDroneAttacking().Evaluate);
+            attackSequenceNode.Add(isPlayerInAttackRange);
+            attackSequenceNode.Add(reconDroneAttack);
+            
+            // 추적 시퀀스 등록
+            SequenceNode chaseSequenceNode = new SequenceNode();
+            SelectorNode chaseCheckSelectorNode = new SelectorNode();
+            SelectorNode chasingSelectorNode = new SelectorNode();
+            chaseSequenceNode.Add(chaseCheckSelectorNode);
+            chaseSequenceNode.Add(chasingSelectorNode);
+            
+            SequenceNode checkAlertSequenceNode = new SequenceNode();
+            SequenceNode checkPlayerInDetectRangeSequenceNode = new SequenceNode();
+            
+            
             ActionNode isPlayerInDetectRange = new ActionNode(new IsPlayerInDetectRange().Evaluate);
             rootNode.Add(isPlayerInDetectRange);
         }
