@@ -35,12 +35,13 @@ namespace _1.Scripts.Manager.Subs
         
         // Properties
         public bool IsLoading { get; private set; }
+        public float LoadingProgress { get; set; }
         
         // Methods
         public void Start()
         {
-            uiManager = CoreManager.Instance.uiManager;
             coreManager = CoreManager.Instance;
+            uiManager = CoreManager.Instance.uiManager;
             CurrentScene = SceneType.IntroScene;
         }
 
@@ -75,9 +76,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-            
+
+            LoadingProgress = 0f;
             uiManager.ChangeState(CurrentState.Loading);
-            uiManager.LoadingUI.UpdateLoadingProgress(0f);
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
@@ -86,11 +88,11 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            uiManager.LoadingUI.UpdateLoadingProgress(0.2f);
-            await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
             uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
-            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
             uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
+            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            uiManager.LoadingUI.UpdateLoadingProgress(0.8f);
             await LoadSceneWithProgress(CurrentScene);
         }
         
@@ -101,13 +103,14 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.LoadingUI.UpdateLoadingProgress(0.6f + sceneLoad.progress * 0.4f);
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
+            LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.LoadingUI.UpdateLoadingProgress(1f);
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
             uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;

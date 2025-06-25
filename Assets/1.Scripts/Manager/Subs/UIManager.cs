@@ -38,7 +38,7 @@ namespace _1.Scripts.Manager.Subs
         private const string INGAME_UI_ADDRESS = "InGameUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
-        public void Initialize()
+        public void Start()
         {
             lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");
             loadingUI = FindUIComponent<LoadingUI>("LoadingUI");

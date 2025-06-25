@@ -51,13 +51,11 @@ namespace _1.Scripts.Manager.Core
         // Start is called before the first frame update
         private void Start()
         {
-            uiManager.Initialize();
-            
+            uiManager.Start();
             gameManager.Start();
             sceneLoadManager.Start();
             objectPoolManager.Start();
-            
-            // StartGame();
+            resourceManager.Start();
         }
 
         // Update is called once per frame

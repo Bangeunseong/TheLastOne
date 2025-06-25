@@ -26,6 +26,7 @@ namespace _1.Scripts.Manager.Subs
         };
             
         private Transform poolRoot; // 풀들 부모
+        private CoreManager coreManager;
         
         private int defaultCapacity = 50; // 용량설정
         private int maxCapacity = 500;
@@ -35,6 +36,7 @@ namespace _1.Scripts.Manager.Subs
         /// </summary>
         public void Start()
         {
+            coreManager = CoreManager.Instance;
             poolRoot = new GameObject("ObjectPoolManager").transform;
             poolRoot.SetParent(CoreManager.Instance.transform);
         }
@@ -220,7 +222,8 @@ namespace _1.Scripts.Manager.Subs
                 current++;
                 
                 float progress = (float)current / total;
-                // 여기서 progress로 UI 업데이트 
+                coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
+                coreManager.sceneLoadManager.LoadingProgress += 0.2f;
                 await Task.Yield(); 
             }
         }
