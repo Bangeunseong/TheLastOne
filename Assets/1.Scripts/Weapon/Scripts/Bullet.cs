@@ -10,7 +10,6 @@ namespace _1.Scripts.Weapon.Scripts
     {
         [Header("Components")] 
         [SerializeField] private Rigidbody rigidBody;
-        [SerializeField] private PhysicalBullet bullet;
 
         [Header("Bullet Presets")] 
         [SerializeField] private float appliedForce;
@@ -60,7 +59,6 @@ namespace _1.Scripts.Weapon.Scripts
             transform.rotation = Quaternion.LookRotation(dir);
             
             damage = dealtDamage;
-            bullet.damage = damage;
             appliedForce = force; 
             maxMoveDistance = maxDistance;
             direction = dir;
