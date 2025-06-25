@@ -145,6 +145,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Fire.started += OnFireStarted;
             playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
             playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
         }
         
         private void RemoveInputActionCallbacks()
@@ -161,6 +163,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Fire.started -= OnFireStarted;
             playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
             playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
