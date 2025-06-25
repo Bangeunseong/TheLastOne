@@ -33,35 +33,90 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         
         protected override void BuildTree()
         {
-            // 공격 시퀀스 등록
-            // 1-1
-            SequenceNode attackSequenceNode = new SequenceNode();
-            // 1-2
-            ActionNode isPlayerInAttackRange = new ActionNode(new IsPlayerInAttackRange().Evaluate);
-            ActionNode reconDroneAttack = new ActionNode(new ReconDroneAttacking().Evaluate);
+            // 1-1 공격 시퀀스 등록
+            var attackSequenceNode = new SequenceNode();
+            
+            // 1-2 공격사거리 내인지 감지 및 공격
+            var isPlayerInAttackRange = new ActionNode(new IsPlayerInAttackRange().Evaluate);
+            var reconDroneAttack = new ActionNode(new ReconDroneAttacking().Evaluate);
             attackSequenceNode.Add(isPlayerInAttackRange);
             attackSequenceNode.Add(reconDroneAttack);
             
-            // 추적 시퀀스 등록
-            // 2-1
-            SequenceNode chaseSequenceNode = new SequenceNode();
-            // 2-2
-            SelectorNode chaseCheckSelectorNode = new SelectorNode();
-            SelectorNode chasingSelectorNode = new SelectorNode();
+            
+            // 2-1 추적 시퀀스 등록
+            var chaseSequenceNode = new SequenceNode();
+            
+            // 2-2 추적상태인지 판단하는 셀렉터, 추적하는 셀렉터 등록
+            var chaseCheckSelectorNode = new SelectorNode();
+            var chasingSelectorNode = new SelectorNode();
             chaseSequenceNode.Add(chaseCheckSelectorNode);
             chaseSequenceNode.Add(chasingSelectorNode);
-            // 2-3
-            SequenceNode checkAlertSequenceNode = new SequenceNode();
-            SequenceNode checkPlayerInDetectRangeSequenceNode = new SequenceNode();
+            
+            // 2-3 chaseCheckSelectorNode -> 알람상태인지 검사하는 시퀀스 노드, 탐지거리 내인지 검사하는 시퀀스 노드 등록
+            // chasingSelectorNode -> 추적중인 상태인지 판단하는 시퀀스 노드, 맹목적 RUN 반환 액션노드 등록
+            var checkAlertSequenceNode = new SequenceNode();
+            var checkPlayerInDetectRangeSequenceNode = new SequenceNode();
             chaseCheckSelectorNode.Add(checkAlertSequenceNode);
             chaseCheckSelectorNode.Add(checkPlayerInDetectRangeSequenceNode);
-            SequenceNode giveNewPathSequenceNode = new SequenceNode();
-            ActionNode returnRun = new ActionNode(new ReturnRun().Evaluate); 
+            var giveNewPathSequenceNode = new SequenceNode();
+            var returnRun = new ActionNode(new ReturnRun().Evaluate); 
             chasingSelectorNode.Add(giveNewPathSequenceNode);
-            chaseCheckSelectorNode.Add(returnRun);
-            // 2-4
-            ActionNode isDroneAlerted = new ActionNode(new IsDroneAlerted().Evaluate);
-            ActionNode timerStart = new ActionNode(new AlertTimerStart().Evaluate);
+            chasingSelectorNode.Add(returnRun);
+            
+            // 2-4 checkAlertSequenceNode -> 알림상태인지 판단 액션노드, 타이머 실행 액션노드, 타이머 관리 셀렉터 등록
+            // checkPlayerInDetectRangeSequenceNode -> 탐지거리 내인지 체크 액션노드, 주변 알람 활성화 액션노드 등록
+            // giveNewPathSequenceNode -> 지정된 경로 있는지 검사하는 액션노드, 플레이어에게 이동경로 지정하는 액션노드 등록
+            var isDroneAlerted = new ActionNode(new IsDroneAlerted().Evaluate);
+            var timerStart = new ActionNode(new AlertTimerStart().Evaluate);
+            var timerControlSelectorNode = new SelectorNode();
+            checkAlertSequenceNode.Add(isDroneAlerted);
+            checkAlertSequenceNode.Add(timerStart);
+            checkAlertSequenceNode.Add(timerControlSelectorNode);
+            var isPlayerInDetectRange = new ActionNode(new IsPlayerInDetectRange().Evaluate);
+            var alertNearByDrones = new ActionNode(new AlertNearbyDrones().Evaluate);
+            checkPlayerInDetectRangeSequenceNode.Add(isPlayerInDetectRange);
+            checkPlayerInDetectRangeSequenceNode.Add(alertNearByDrones);
+            var isNavMeshAgentNotHasPath = new ActionNode(new IsNavMeshAgentNotHasPath().Evaluate);
+            var setDestinationToPlayer = new ActionNode(new SetDestinationToPlayer().Evaluate);
+            giveNewPathSequenceNode.Add(isNavMeshAgentNotHasPath);
+            giveNewPathSequenceNode.Add(setDestinationToPlayer);
+            
+            // 2-5 timerControlSelectorNode -> 타이머 리셋하는 시퀀스 노드, 타이머 지날 시 어그로 풀리는 시퀀스 노드, 맹목적 Success반환 액션노드 등록
+            var timerResetSequenceNode = new SequenceNode();
+            var lostPlayerSequenceNode = new SequenceNode();
+            var returnSuccess = new ActionNode(new ReturnSuccess().Evaluate);
+            timerControlSelectorNode.Add(timerResetSequenceNode);
+            timerControlSelectorNode.Add(lostPlayerSequenceNode);
+            timerControlSelectorNode.Add(returnSuccess);
+            
+            // 2-6 timerResetSequenceNode -> 플레이어가 시야각 내 있는지 검사하는 액션노드, 타이머 초기화하는 액션노드 등록
+            // lostPlayerInFOVSequenceNode -> 타이머가 일정시간 이상 흘렀는지 검사하는 액션노드, 알람상태 전부 초기화하는 액션노드 등록
+            var isPlayerInFOV = new ActionNode(new IsPlayerInFOV().Evaluate);
+            var alertTimerReset = new ActionNode(new AlertTimerReset().Evaluate);
+            timerResetSequenceNode.Add(isPlayerInFOV);
+            timerResetSequenceNode.Add(alertTimerReset);
+            var isAlertTimerElapsed = new ActionNode(new IsAlertTimerElapsed().Evaluate);
+            var alertStateReset = new ActionNode(new AlertStateReset().Evaluate);
+            lostPlayerSequenceNode.Add(isAlertTimerElapsed); 
+            lostPlayerSequenceNode.Add(alertStateReset);
+            
+            // 3-1 배회 셀렉터 등록
+            var patrolSelectorNode = new SelectorNode();
+            
+            // 3-2 patrolSelectorNode -> 지정된 경로 있는지 판단할 시퀀스 노드 등록, 맹목적 RUN반환 액션노드 등록
+            var isNavMeshAgentNotHasPathSequenceNode = new SequenceNode();
+            patrolSelectorNode.Add(isNavMeshAgentNotHasPathSequenceNode);
+            patrolSelectorNode.Add(returnRun); // 선언X 재사용
+            
+            // 3-3 isNavMeshAgentNotHasPathSequenceNode -> 지정된 경로 있는지 검사하는 액션노드, 랜덤위치 지정 액션노드 등록
+            isNavMeshAgentNotHasPathSequenceNode.Add(isNavMeshAgentNotHasPath); // 선언X 재사용
+            var setDestinationToPatrol = new ActionNode(new SetDestinationToPatrol().Evaluate);
+            isNavMeshAgentNotHasPathSequenceNode.Add(setDestinationToPatrol);
+            
+            // 최종 - rootNode에 모두 등록
+            rootNode.Add(attackSequenceNode);
+            rootNode.Add(chaseSequenceNode);
+            rootNode.Add(patrolSelectorNode);
         }
 
         public bool IsAlertedCheck()
@@ -82,12 +137,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         public void ResetAll()
         {
             SetAlert(false);
-            ResetTimer();
             if (timerCoroutine != null)
             {
                 StopCoroutine(timerCoroutine);
                 timerCoroutine = null;
             }
+            ResetTimer();
         }
         
         public void ResetTimer()
@@ -102,8 +157,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
 
         private IEnumerator TimerStart()
         {
-            timer += Time.deltaTime;
-            yield return null;
+            while (true)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }   
         }
     }
 }
