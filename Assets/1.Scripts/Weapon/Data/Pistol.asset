@@ -23,4 +23,4 @@ MonoBehaviour:
     <Rpm>k__BackingField: 400
     <Damage>k__BackingField: 25
     <IsKnockbackAvailable>k__BackingField: 0
-    <BulletPrefabId>k__BackingField: 
+    <BulletPrefabId>k__BackingField: Bullet

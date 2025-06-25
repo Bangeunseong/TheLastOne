@@ -123,6 +123,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SwitchWeapon",
+                    "type": "Value",
+                    "id": "8f6a2e40-f487-40e7-b4ba-bae47595f42e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Focus",
                     "type": "Button",
                     "id": "18fad8f6-9ab0-4990-83d1-7e5e62a26252",
@@ -139,15 +148,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "SwitchWeapon",
-                    "type": "Value",
-                    "id": "8f6a2e40-f487-40e7-b4ba-bae47595f42e",
-                    "expectedControlType": "Delta",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
