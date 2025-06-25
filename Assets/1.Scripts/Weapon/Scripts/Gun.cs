@@ -56,6 +56,7 @@ namespace _1.Scripts.Weapon.Scripts
         private void Start()
         {
             timeSinceLastShotFired = WeaponData.WeaponStat.Recoil;
+            MaxAmmoCountInMagazine = CurrentAmmoCountInMagazine = WeaponData.WeaponStat.MaxAmmoCountInMagazine;
         }
 
         private void Update()
