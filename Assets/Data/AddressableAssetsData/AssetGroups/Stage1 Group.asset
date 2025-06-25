@@ -17,14 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: e6e7c9a33c8a64248a9951f8fa4b0485
   m_SerializeEntries:
-  - m_GUID: 29a9275e7cb2a4e459a2cd0921af92ca
-    m_Address: InGameUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c0ae2e4c5c799ee4d876a365f4d81677
-    m_Address: InventoryUI
+  - m_GUID: 77b59f610eb53bc4d938c74e5d94fb92
+    m_Address: ReconDroneData
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

@@ -12,6 +12,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         {
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
+            if (reloadCoroutine == null) return;
+            stateMachine.Player.StopCoroutine(reloadCoroutine); 
+            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = false;
+            reloadCoroutine = null;
         }
 
         public override void Exit()

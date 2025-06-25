@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using UnityEngine;
 
@@ -11,16 +12,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     public class RollActionNode : INode
     {
         private bool isRunning = false;
-        private BTContext context;
-
-        public INode.State Evaluate(BTContext context)
+        private BaseNpcAI controller;
+        
+        public INode.State Evaluate(BaseNpcAI aiController)
         {
-            this.context = context;
+            controller = aiController;
             
             if (isRunning) return INode.State.RUN;
 
-            context.controller.IsCurrentActionRunning(true);
-            context.controller.StartCoroutine(RollCoroutine());
+            controller.IsCurrentActionRunning(true);
+            controller.StartCoroutine(RollCoroutine());
             return INode.State.RUN;
         }
 
@@ -32,7 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             yield return new WaitForSeconds(1.0f);
 
             Debug.Log("Roll End");
-            context.controller.IsCurrentActionRunning(false);
+            controller.IsCurrentActionRunning(false);
             isRunning = false;
         }
     }

@@ -2,6 +2,8 @@
 using System.Globalization;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces;
+using _1.Scripts.Weapon.Scripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +14,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
+        protected Coroutine aimCoroutine;
+        protected Coroutine reloadCoroutine;
 
         private float speed;
         
@@ -36,6 +40,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             if (playerCondition.IsDead) { return; }
             Move();
+        }
+
+        public virtual void LateUpdate()
+        {
             Rotate(stateMachine.Player.MainCameraTransform.forward);
         }
 
@@ -132,6 +140,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Run.started += OnRunStarted;
             playerInput.PlayerActions.Crouch.started += OnCrouchStarted;
             playerInput.PlayerActions.Reload.started += OnReloadStarted;
+            playerInput.PlayerActions.Interact.started += OnInteractStarted;
+            playerInput.PlayerActions.Aim.started += OnAimStarted;
+            playerInput.PlayerActions.Aim.canceled += OnAimCanceled;
+            playerInput.PlayerActions.Fire.started += OnFireStarted;
+            playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
         }
         
         private void RemoveInputActionCallbacks()
@@ -142,6 +155,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Run.started -= OnRunStarted;
             playerInput.PlayerActions.Crouch.started -= OnCrouchStarted;
             playerInput.PlayerActions.Reload.started -= OnReloadStarted;
+            playerInput.PlayerActions.Interact.started -= OnInteractStarted;
+            playerInput.PlayerActions.Aim.started -= OnAimStarted;
+            playerInput.PlayerActions.Aim.canceled -= OnAimCanceled;
+            playerInput.PlayerActions.Fire.started -= OnFireStarted;
+            playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -163,21 +181,86 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
 
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-        protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
+        protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
+        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
+
+        /* - Aim 관련 메소드 - */
+        protected virtual void OnAimStarted(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
+            if (aimCoroutine != null){stateMachine.Player.StopCoroutine(aimCoroutine);}
+            aimCoroutine = stateMachine.Player.StartCoroutine(ChangeFoV_Coroutine(true, 30, 0.5f));
+        }
+        protected virtual void OnAimCanceled(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
+            if(aimCoroutine != null){stateMachine.Player.StopCoroutine(aimCoroutine);}
+            aimCoroutine = stateMachine.Player.StartCoroutine(ChangeFoV_Coroutine(false, 60, 0.5f));
+        }
+        private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
+        {
+            Vector3 currentPosition = stateMachine.Player.WeaponPivot.localPosition;
+            Vector3 targetLocalPosition = isAim
+                ? stateMachine.Player.WeaponPoints["AimPoint"].localPosition
+                : stateMachine.Player.WeaponPoints["WieldPoint"].localPosition;
+            float currentFoV = stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView;
+
+            var time = 0f;
+            while (time < transitionTime)
+            {
+                time += Time.deltaTime;
+                float t = time / transitionTime;
+                var value = Mathf.Lerp(currentFoV, targetFoV, t);
+                stateMachine.Player.WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
+                stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView = value;
+                yield return null;
+            }
+
+            stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
+            stateMachine.Player.WeaponPivot.localPosition = targetLocalPosition;
+            aimCoroutine = null;
+        }
+        /* ----------------- */
+        
+        /* - Fire & Reload 관련 메소드 - */
+        protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead) return;
+            stateMachine.Player.IsAttacking = true;
         }
-        protected virtual void OnRunStarted(InputAction.CallbackContext context)
+        protected virtual void OnFireCanceled(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead) return;
+            stateMachine.Player.IsAttacking = false;
         }
-        protected virtual void OnCrouchStarted(InputAction.CallbackContext context)
-        {
-            if (playerCondition.IsDead) return;
-        }
+        
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead) return;
+            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
         }
+        protected IEnumerator Reload_Coroutine(float interval)
+        {
+            // TODO: Play Animation
+            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = true;
+            yield return new WaitForSeconds(interval);
+            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].OnReload();
+            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = false;
+            reloadCoroutine = null;
+        }
+        /* ---------------------------- */
+        
+        /* - Interact 관련 메소드 - */
+        protected virtual void OnInteractStarted(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsDead) return;
+            if (stateMachine.Player.PlayerInteraction.Interactable == null) return;
+
+            IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
+            if (interactable is DummyGun gun)
+            {
+                gun.OnInteract(stateMachine.Player.gameObject);
+            }
+        }
+        /* ---------------------- */
     }
 }
