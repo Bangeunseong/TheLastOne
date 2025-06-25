@@ -145,6 +145,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Fire.started += OnFireStarted;
             playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
             playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
         }
         
         private void RemoveInputActionCallbacks()
@@ -161,6 +163,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Fire.started -= OnFireStarted;
             playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
             playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -230,12 +234,30 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* ---------------------------- */
         
         /* - Weapon Switch 관련 메소드 - */
+        protected virtual void OnSwitchToMain(InputAction.CallbackContext context)
+        {
+            if (stateMachine.Player.IsSwitching) return;
+            
+            int weaponCount = stateMachine.Player.Weapons.Count;
+            
+            if (weaponCount == 0) return;
+            stateMachine.Player.OnSwitchWeapon(0, 0.5f);
+        }
+        protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
+        {
+            if (stateMachine.Player.IsSwitching) return;
+            
+            int weaponCount = stateMachine.Player.Weapons.Count;
+            
+            if (weaponCount == 0) return;
+            stateMachine.Player.OnSwitchWeapon(1, 0.5f);
+        }
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (stateMachine.Player.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = stateMachine.Player.Weapons.Count;
+            int weaponCount = stateMachine.Player.AvailableGuns.FindAll(val => val).Count;
             int currentIndex = stateMachine.Player.EquippedGunIndex;
 
             if (weaponCount == 0) return;
@@ -247,8 +269,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             {
                 if (currentIndex < 0) nextIndex = weaponCount - 1;
                 else nextIndex = currentIndex % (weaponCount + 1) - 1;
+                Debug.Log(currentIndex + "," + nextIndex);
             }
-            
             if (nextIndex != currentIndex) stateMachine.Player.OnSwitchWeapon(nextIndex, 0.5f);
         }
         /* --------------------------- */
