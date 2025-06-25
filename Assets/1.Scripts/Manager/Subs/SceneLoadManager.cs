@@ -30,7 +30,6 @@ namespace _1.Scripts.Manager.Subs
         private AsyncOperation sceneLoad;
         private bool isInputAllowed;
         private bool isKeyPressed;
-        private bool isAlreadyLoadedPlayer;
         private UIManager uiManager;
         private CoreManager coreManager;
         
@@ -123,13 +122,16 @@ namespace _1.Scripts.Manager.Subs
             { 
                 case SceneType.IntroScene: // uiManager.ChangeState(SceneType.Intro);
                     break;
+                case SceneType.Loading: 
+                    break;
                 case SceneType.Stage1:
                 case SceneType.Stage2:// uiManager.ChangeState(SceneType.Game);
+                    break;
+                case SceneType.EndingScene:
                     break;
             }
 
             IsLoading = false;
-            isAlreadyLoadedPlayer = false;
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
