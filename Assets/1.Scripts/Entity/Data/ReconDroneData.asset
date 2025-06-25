@@ -26,3 +26,5 @@ MonoBehaviour:
   deathSounds: []
   detectRange: 10
   attackRange: 5
+  alertDuration: 3
+  alertRadius: 10

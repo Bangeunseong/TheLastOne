@@ -100,6 +100,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             lostPlayerSequenceNode.Add(isAlertTimerElapsed); 
             lostPlayerSequenceNode.Add(alertStateReset);
             
+            
             // 3-1 배회 셀렉터 등록
             var patrolSelectorNode = new SelectorNode();
             
@@ -112,6 +113,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             isNavMeshAgentNotHasPathSequenceNode.Add(isNavMeshAgentNotHasPath); // 선언X 재사용
             var setDestinationToPatrol = new ActionNode(new SetDestinationToPatrol().Evaluate);
             isNavMeshAgentNotHasPathSequenceNode.Add(setDestinationToPatrol);
+            
             
             // 최종 - rootNode에 모두 등록
             rootNode.Add(attackSequenceNode);
