@@ -8,26 +8,25 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
 {
     /// <summary>
-    /// 알람 켜졌는지 알려주는 노드
+    /// 알람 타이머 시작 노드
     /// </summary>
-    public class IsDroneAlerted : INode
+    public class AlertTimerStart : INode
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
             // EnemyReconDroneAIController 타입인지 확인
             if (controller is EnemyReconDroneAIController reconDrone)
             {
-                return reconDrone.IsAlertedCheck() ? INode.State.SUCCESS : INode.State.FAILED;
+                reconDrone.TimerStartIfNull();
             }
 
             // EnemySuicideDroneAIController 타입인지 확인
             if (controller is EnemySuicideDroneAIController suicideDrone)
             {
-                return suicideDrone.IsAlertedCheck() ? INode.State.SUCCESS : INode.State.FAILED;
+                suicideDrone.TimerStartIfNull();
             }
-
-            // 위 두 타입이 아니면 기본적으로 FAIL 처리
-            return INode.State.FAILED;
+            
+            return INode.State.SUCCESS;
         }
     }
 }

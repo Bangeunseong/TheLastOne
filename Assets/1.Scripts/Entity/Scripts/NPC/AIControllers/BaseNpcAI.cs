@@ -16,7 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     public abstract class BaseNpcAI : MonoBehaviour
     {
         [Header("AI Information")]
-        private NavMeshAgent navMeshAgent;
+        public NavMeshAgent navMeshAgent;
         public EntityStatData statData; // 자신이 소유한 스탯데이터
         
         [Header("Node Information")]

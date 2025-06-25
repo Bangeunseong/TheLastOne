@@ -6,6 +6,6 @@ namespace _1.Scripts.Interfaces
 {
     public interface IDetectable
     {
-        float DetectRange { get; }
+        public float DetectRange { get; }
     }
 }
