@@ -37,6 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnRunStarted(InputAction.CallbackContext context)
         {
             base.OnRunStarted(context);
+            if (stateMachine.Player.IsAiming) return;
             stateMachine.ChangeState(stateMachine.RunState);
         }
     }

@@ -8,6 +8,7 @@ namespace _1.Scripts.Weapon.Scripts
         [field: Header("Weapon SetUp")]
         [field: SerializeField] public GunType Type { get; private set; }
         [field: SerializeField] public int MaxAmmoCount { get; private set; }
+        [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public float MaxWeaponRange { get; private set; }
         [field: SerializeField] public float BulletSpeed { get; private set; }
         [field: SerializeField] public float Recoil { get; private set; }
