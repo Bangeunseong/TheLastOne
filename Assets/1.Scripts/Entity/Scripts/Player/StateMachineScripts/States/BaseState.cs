@@ -14,7 +14,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
-        protected Coroutine aimCoroutine;
         protected Coroutine reloadCoroutine;
 
         private float speed;
@@ -180,53 +179,30 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             }
         }
 
+        /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
         protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
         protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
         protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
-
+        /* -------------------- */
+        
         /* - Aim 관련 메소드 - */
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            if (aimCoroutine != null){stateMachine.Player.StopCoroutine(aimCoroutine);}
-            aimCoroutine = stateMachine.Player.StartCoroutine(ChangeFoV_Coroutine(true, 30, 0.5f));
+            stateMachine.Player.OnAim(true, 30, 0.4f);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            if(aimCoroutine != null){stateMachine.Player.StopCoroutine(aimCoroutine);}
-            aimCoroutine = stateMachine.Player.StartCoroutine(ChangeFoV_Coroutine(false, 60, 0.5f));
-        }
-        private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
-        {
-            Vector3 currentPosition = stateMachine.Player.WeaponPivot.localPosition;
-            Vector3 targetLocalPosition = isAim
-                ? stateMachine.Player.WeaponPoints["AimPoint"].localPosition
-                : stateMachine.Player.WeaponPoints["WieldPoint"].localPosition;
-            float currentFoV = stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView;
-
-            var time = 0f;
-            while (time < transitionTime)
-            {
-                time += Time.deltaTime;
-                float t = time / transitionTime;
-                var value = Mathf.Lerp(currentFoV, targetFoV, t);
-                stateMachine.Player.WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
-                stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView = value;
-                yield return null;
-            }
-
-            stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            stateMachine.Player.WeaponPivot.localPosition = targetLocalPosition;
-            aimCoroutine = null;
+            stateMachine.Player.OnAim(false, 60, 0.4f);
         }
         /* ----------------- */
         
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead) return;
+            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
             stateMachine.Player.IsAttacking = true;
         }
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
