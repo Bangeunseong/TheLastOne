@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
@@ -17,6 +18,7 @@ namespace _1.Scripts.Weapon.Scripts
     {
         [Header("Components")] 
         [SerializeField] private ParticleSystem shellParticles;
+        [SerializeField] private Light gunShotLight;
         
         [field: Header("Weapon Data")]
         [field: SerializeField] public WeaponData WeaponData { get; private set; }
@@ -40,7 +42,6 @@ namespace _1.Scripts.Weapon.Scripts
         private float timeSinceLastShotFired;
         
         [CanBeNull] private Player player;
-        
         // private Enemy enemy;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
@@ -49,13 +50,15 @@ namespace _1.Scripts.Weapon.Scripts
         private void Awake()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
-            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("ShellParticle");
+            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!gunShotLight) gunShotLight = GetComponentInChildren<Light>(true);
         }
 
         private void Reset()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
-            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("ShellParticle");
+            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!gunShotLight) gunShotLight = GetComponentInChildren<Light>(true);
         }
 
         private void Start()
@@ -99,6 +102,7 @@ namespace _1.Scripts.Weapon.Scripts
             
             if(shellParticles.isPlaying) shellParticles.Stop();
             shellParticles.Play();
+            StartCoroutine(Flicker());
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
@@ -130,6 +134,13 @@ namespace _1.Scripts.Weapon.Scripts
             } else targetPoint = face.position + face.forward * WeaponData.WeaponStat.MaxWeaponRange;
 
             return (targetPoint - BulletSpawnPoint.position).z < 0 ? BulletSpawnPoint.forward : (targetPoint - BulletSpawnPoint.position).normalized;
+        }
+
+        private IEnumerator Flicker()
+        {
+            gunShotLight.enabled = true;
+            yield return new WaitForSeconds(0.08f);
+            gunShotLight.enabled = false;
         }
     }
 }
