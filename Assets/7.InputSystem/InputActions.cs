@@ -145,6 +145,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""SwitchWeapon"",
+                    ""type"": ""Value"",
+                    ""id"": ""8f6a2e40-f487-40e7-b4ba-bae47595f42e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Focus"",
                     ""type"": ""Button"",
                     ""id"": ""18fad8f6-9ab0-4990-83d1-7e5e62a26252"",
@@ -161,15 +170,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SwitchWeapon"",
-                    ""type"": ""Value"",
-                    ""id"": ""8f6a2e40-f487-40e7-b4ba-bae47595f42e"",
-                    ""expectedControlType"": ""Delta"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -413,9 +413,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_SwitchToSub = m_Player.FindAction("SwitchToSub", throwIfNotFound: true);
         m_Player_SwitchToBomb = m_Player.FindAction("SwitchToBomb", throwIfNotFound: true);
         m_Player_SwitchToHack = m_Player.FindAction("SwitchToHack", throwIfNotFound: true);
+        m_Player_SwitchWeapon = m_Player.FindAction("SwitchWeapon", throwIfNotFound: true);
         m_Player_Focus = m_Player.FindAction("Focus", throwIfNotFound: true);
         m_Player_Instinct = m_Player.FindAction("Instinct", throwIfNotFound: true);
-        m_Player_SwitchWeapon = m_Player.FindAction("SwitchWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -490,9 +490,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwitchToSub;
     private readonly InputAction m_Player_SwitchToBomb;
     private readonly InputAction m_Player_SwitchToHack;
+    private readonly InputAction m_Player_SwitchWeapon;
     private readonly InputAction m_Player_Focus;
     private readonly InputAction m_Player_Instinct;
-    private readonly InputAction m_Player_SwitchWeapon;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -510,9 +510,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchToSub => m_Wrapper.m_Player_SwitchToSub;
         public InputAction @SwitchToBomb => m_Wrapper.m_Player_SwitchToBomb;
         public InputAction @SwitchToHack => m_Wrapper.m_Player_SwitchToHack;
+        public InputAction @SwitchWeapon => m_Wrapper.m_Player_SwitchWeapon;
         public InputAction @Focus => m_Wrapper.m_Player_Focus;
         public InputAction @Instinct => m_Wrapper.m_Player_Instinct;
-        public InputAction @SwitchWeapon => m_Wrapper.m_Player_SwitchWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -561,15 +561,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SwitchToHack.started += instance.OnSwitchToHack;
             @SwitchToHack.performed += instance.OnSwitchToHack;
             @SwitchToHack.canceled += instance.OnSwitchToHack;
+            @SwitchWeapon.started += instance.OnSwitchWeapon;
+            @SwitchWeapon.performed += instance.OnSwitchWeapon;
+            @SwitchWeapon.canceled += instance.OnSwitchWeapon;
             @Focus.started += instance.OnFocus;
             @Focus.performed += instance.OnFocus;
             @Focus.canceled += instance.OnFocus;
             @Instinct.started += instance.OnInstinct;
             @Instinct.performed += instance.OnInstinct;
             @Instinct.canceled += instance.OnInstinct;
-            @SwitchWeapon.started += instance.OnSwitchWeapon;
-            @SwitchWeapon.performed += instance.OnSwitchWeapon;
-            @SwitchWeapon.canceled += instance.OnSwitchWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -613,15 +613,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @SwitchToHack.started -= instance.OnSwitchToHack;
             @SwitchToHack.performed -= instance.OnSwitchToHack;
             @SwitchToHack.canceled -= instance.OnSwitchToHack;
+            @SwitchWeapon.started -= instance.OnSwitchWeapon;
+            @SwitchWeapon.performed -= instance.OnSwitchWeapon;
+            @SwitchWeapon.canceled -= instance.OnSwitchWeapon;
             @Focus.started -= instance.OnFocus;
             @Focus.performed -= instance.OnFocus;
             @Focus.canceled -= instance.OnFocus;
             @Instinct.started -= instance.OnInstinct;
             @Instinct.performed -= instance.OnInstinct;
             @Instinct.canceled -= instance.OnInstinct;
-            @SwitchWeapon.started -= instance.OnSwitchWeapon;
-            @SwitchWeapon.performed -= instance.OnSwitchWeapon;
-            @SwitchWeapon.canceled -= instance.OnSwitchWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -654,8 +654,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnSwitchToSub(InputAction.CallbackContext context);
         void OnSwitchToBomb(InputAction.CallbackContext context);
         void OnSwitchToHack(InputAction.CallbackContext context);
+        void OnSwitchWeapon(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
         void OnInstinct(InputAction.CallbackContext context);
-        void OnSwitchWeapon(InputAction.CallbackContext context);
     }
 }

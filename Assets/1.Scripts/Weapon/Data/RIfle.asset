@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22d3dcceb85a4027b75f30463c4db223, type: 3}
-  m_Name: RIfle
+  m_Name: Rifle
   m_EditorClassIdentifier: 
   <WeaponStat>k__BackingField:
-    <Type>k__BackingField: 0
-    <MaxAmmoCount>k__BackingField: 0
-    <MaxWeaponRange>k__BackingField: 0
-    <BulletSpeed>k__BackingField: 0
+    <Type>k__BackingField: 1
+    <MaxAmmoCount>k__BackingField: 150
+    <MaxAmmoCountInMagazine>k__BackingField: 30
+    <MaxWeaponRange>k__BackingField: 80
+    <BulletSpeed>k__BackingField: 30
     <Recoil>k__BackingField: 0
     <Accuracy>k__BackingField: 0
-    <ReloadTime>k__BackingField: 0
-    <Rpm>k__BackingField: 0
-    <Damage>k__BackingField: 0
+    <ReloadTime>k__BackingField: 1.2
+    <Rpm>k__BackingField: 650
+    <Damage>k__BackingField: 30
     <IsKnockbackAvailable>k__BackingField: 0
-    <BulletPrefabId>k__BackingField: 
+    <BulletPrefabId>k__BackingField: Bullet

@@ -144,6 +144,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Aim.canceled += OnAimCanceled;
             playerInput.PlayerActions.Fire.started += OnFireStarted;
             playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
+            playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
         }
         
         private void RemoveInputActionCallbacks()
@@ -159,6 +160,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Aim.canceled -= OnAimCanceled;
             playerInput.PlayerActions.Fire.started -= OnFireStarted;
             playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
+            playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -190,12 +192,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            stateMachine.Player.OnAim(true, 30, 0.4f);
+            stateMachine.Player.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            stateMachine.Player.OnAim(false, 60, 0.4f);
+            stateMachine.Player.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
         }
         /* ----------------- */
         
@@ -216,14 +218,40 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
+            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedGunIndex] is not Gun gun) yield break;
+            
             // TODO: Play Animation
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = true;
+            gun.IsReloading = true;
             yield return new WaitForSeconds(interval);
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].OnReload();
-            stateMachine.Player.Guns[stateMachine.Player.EquippedGunIndex].IsReloading = false;
+            gun.OnReload();
+            gun.IsReloading = false;
             reloadCoroutine = null;
         }
         /* ---------------------------- */
+        
+        /* - Weapon Switch 관련 메소드 - */
+        protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
+        {
+            if (stateMachine.Player.IsSwitching) return;
+            
+            var value = context.ReadValue<Vector2>();
+            int weaponCount = stateMachine.Player.Weapons.Count;
+            int currentIndex = stateMachine.Player.EquippedGunIndex;
+
+            if (weaponCount == 0) return;
+
+            int nextIndex = currentIndex;
+
+            if (value.y < 0f) { nextIndex = (currentIndex + 2) % (weaponCount + 1) - 1; }
+            else if (value.y > 0f)
+            {
+                if (currentIndex < 0) nextIndex = weaponCount - 1;
+                else nextIndex = currentIndex % (weaponCount + 1) - 1;
+            }
+            
+            if (nextIndex != currentIndex) stateMachine.Player.OnSwitchWeapon(nextIndex, 0.5f);
+        }
+        /* --------------------------- */
         
         /* - Interact 관련 메소드 - */
         protected virtual void OnInteractStarted(InputAction.CallbackContext context)

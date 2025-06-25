@@ -15,6 +15,7 @@ MonoBehaviour:
   <WeaponStat>k__BackingField:
     <Type>k__BackingField: 0
     <MaxAmmoCount>k__BackingField: 60
+    <MaxAmmoCountInMagazine>k__BackingField: 6
     <MaxWeaponRange>k__BackingField: 30
     <BulletSpeed>k__BackingField: 25
     <Recoil>k__BackingField: 0
@@ -23,4 +24,4 @@ MonoBehaviour:
     <Rpm>k__BackingField: 400
     <Damage>k__BackingField: 25
     <IsKnockbackAvailable>k__BackingField: 0
-    <BulletPrefabId>k__BackingField: 
+    <BulletPrefabId>k__BackingField: Bullet
