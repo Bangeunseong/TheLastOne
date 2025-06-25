@@ -15,14 +15,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (controller.statData is not IAlertable alertable) // 있을 시 변환
+            if (!controller.TryGetStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
             {
-                Debug.LogWarning($"[IsAlertTimerElapsed] statData가 IAlertable을 구현하지 않음. 컨트롤러: {controller.name}");
                 return INode.State.FAILED;
             }
             
             // EnemyReconDroneAIController 타입인지 확인
-            if (controller is EnemyReconDroneAIController reconDrone)
+            if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
             {
                 return reconDrone.TimerCheck() <= alertable.AlertDuration ?  INode.State.SUCCESS : INode.State.FAILED;
             }
