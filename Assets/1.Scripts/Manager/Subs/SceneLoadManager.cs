@@ -84,6 +84,8 @@ namespace _1.Scripts.Manager.Subs
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+                coreManager.soundManager.CacheSoundGroup();
+                await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -94,6 +96,8 @@ namespace _1.Scripts.Manager.Subs
             }
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            coreManager.soundManager.CacheSoundGroup();
+            await coreManager.soundManager.LoadClips();
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             await LoadSceneWithProgress(CurrentScene);
         }
