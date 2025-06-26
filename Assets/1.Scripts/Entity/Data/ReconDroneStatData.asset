@@ -28,3 +28,7 @@ MonoBehaviour:
   attackRange: 5
   alertDuration: 3
   alertRadius: 10
+  minWaitingDuration: 2
+  maxWaitingDuration: 4
+  minWanderingDistance: 10
+  maxWanderingDistance: 15

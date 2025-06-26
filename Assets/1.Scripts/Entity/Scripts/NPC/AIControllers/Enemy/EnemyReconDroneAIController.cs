@@ -7,6 +7,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
+using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -103,6 +104,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             // 3-3 isNavMeshAgentNotHasPathSequenceNode -> 지정된 경로 있는지 검사하는 액션노드, 랜덤위치 지정 액션노드 등록
             var isNavMeshAgentNotHasPath = new ActionNode(new IsNavMeshAgentNotHasPath().Evaluate);
             isNavMeshAgentNotHasPathSequenceNode.Add(isNavMeshAgentNotHasPath);
+            
+            IPatrolable patrolable = null;
+            statController.TryGetRuntimeStatInterface<IPatrolable>(out patrolable);
+            var waitingForSeconds = new ActionNode(new WaitingForSeconds(patrolable.MinWaitingDuration, patrolable.MaxWaitingDuration).Evaluate);
+            
             var setDestinationToPatrol = new ActionNode(new SetDestinationToPatrol().Evaluate);
             isNavMeshAgentNotHasPathSequenceNode.Add(setDestinationToPatrol);
             

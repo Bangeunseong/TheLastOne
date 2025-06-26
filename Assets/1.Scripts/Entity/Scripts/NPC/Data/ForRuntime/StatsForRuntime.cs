@@ -1,5 +1,6 @@
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.Data;
+using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Interfaces;
 using UnityEngine;
 
@@ -46,12 +47,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         }
     }
     
-    public class RuntimeReconDroneStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable
+    public class RuntimeReconDroneStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
     {
         public float DetectRange { get; set; }
         public float AttackRange { get; set; }
         public float AlertDuration { get; set; }
         public float AlertRadius { get; set; }
+        public float MinWaitingDuration { get; set; }
+        public float MaxWaitingDuration { get; set;  }
+        public float MinWanderingDistance { get; set; }
+        public float MaxWanderingDistance { get; set; }
 
         // 생성자: ReconDroneData(SO)에서 값 복사 + 베이스 생성자 호출
         public RuntimeReconDroneStatData(ReconDroneStatData so) : base(so)
@@ -60,6 +65,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             AttackRange = so.AttackRange;
             AlertDuration = so.AlertDuration;
             AlertRadius = so.AlertRadius;
+            MinWaitingDuration = so.MinWaitingDuration;
+            MaxWaitingDuration = so.MaxWaitingDuration;
+            MinWanderingDistance = so.MinWanderingDistance;
+            MaxWanderingDistance = so.MaxWanderingDistance;
         }
     }
 }
