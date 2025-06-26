@@ -32308,22 +32308,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a25ae6527a46fe8fbe7421578752c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <HittableLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 1992
+  owner: {fileID: 0}
   shellParticles: {fileID: 6571928884187005755}
   gunShotLight: {fileID: 6571928884178212733}
-  <WeaponData>k__BackingField: {fileID: 11400000, guid: ea541e8e32829864fb06b06b69d2c126,
+  <GunData>k__BackingField: {fileID: 11400000, guid: ea541e8e32829864fb06b06b69d2c126,
     type: 2}
   <BulletSpawnPoint>k__BackingField: {fileID: 3885544301312390150}
   <CurrentAmmoCount>k__BackingField: 0
   <MaxAmmoCountInMagazine>k__BackingField: 30
   <CurrentAmmoCountInMagazine>k__BackingField: 30
-  <HittableLayer>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 1992
   face: {fileID: 0}
   isEmpty: 0
-  <IsReloading>k__BackingField: 0
   isRecoiling: 0
-  owner: {fileID: 0}
+  <IsReloading>k__BackingField: 0
 --- !u!1 &7558549788891048255
 GameObject:
   m_ObjectHideFlags: 0
