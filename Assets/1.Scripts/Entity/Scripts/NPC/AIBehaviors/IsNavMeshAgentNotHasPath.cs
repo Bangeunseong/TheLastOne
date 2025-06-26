@@ -16,7 +16,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            return controller.navMeshAgent.hasPath ? INode.State.FAILED : INode.State.SUCCESS;
+            if (controller.navMeshAgent.hasPath)
+            {
+                return INode.State.FAILED;
+            }
+            else
+            {
+                Debug.Log("경로없음");
+                return INode.State.SUCCESS;
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
         
         private void Awake()
         {
-            var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneData"); // 자신만의 데이터 가져오기
+            var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneStatData"); // 자신만의 데이터 가져오기
             runtimeReconDroneStatData = new RuntimeReconDroneStatData(reconDroneStatData); // 복사
             baseMoveSpeed = runtimeReconDroneStatData.moveSpeed;
         }

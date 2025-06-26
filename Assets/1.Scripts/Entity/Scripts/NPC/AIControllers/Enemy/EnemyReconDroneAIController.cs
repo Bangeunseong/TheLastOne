@@ -108,6 +108,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             IPatrolable patrolable = null;
             statController.TryGetRuntimeStatInterface<IPatrolable>(out patrolable);
             var waitingForSeconds = new ActionNode(new WaitingForSeconds(patrolable.MinWaitingDuration, patrolable.MaxWaitingDuration).Evaluate);
+            isNavMeshAgentNotHasPathSequenceNode.Add(waitingForSeconds);
             
             var setDestinationToPatrol = new ActionNode(new SetDestinationToPatrol().Evaluate);
             isNavMeshAgentNotHasPathSequenceNode.Add(setDestinationToPatrol);
