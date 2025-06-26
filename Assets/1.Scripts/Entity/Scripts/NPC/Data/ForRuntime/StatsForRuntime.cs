@@ -26,7 +26,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         public AudioClip[] hitSounds;
         public AudioClip[] deathSounds;
         
-        public RuntimeEntityStatData(EntityStatData so)
+        protected RuntimeEntityStatData(EntityStatData so)
         {
             entityName = so.entityName;
             isPlayer = so.isPlayer;
