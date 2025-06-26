@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            return INode.State.SUCCESS;
+            return INode.State.FAILED;
         }
     }   
 }

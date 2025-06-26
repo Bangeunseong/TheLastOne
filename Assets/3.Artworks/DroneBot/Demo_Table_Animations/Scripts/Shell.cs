@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 //this script is for the  shell
 public class Shell : MonoBehaviour {
@@ -16,17 +17,15 @@ public class Shell : MonoBehaviour {
 		GetComponent<Rigidbody> ().velocity =Vector3.zero;
 		GetComponent<Collider> ().enabled = false;
 		GetComponent<Renderer> ().enabled = false;
-	 	Destroy (gameObject, 2);	 
-
- 
- 
+		
+		CoreManager.Instance.objectPoolManager.Release(gameObject);
 	}
+	
 	private IEnumerator Start()
 	{
 		yield return new WaitForSeconds(0.03f);
 		GetComponent<Collider> ().enabled = true;
 		yield return new WaitForSeconds(lifeTime);
-		Destroy(gameObject);
- 
+		CoreManager.Instance.objectPoolManager.Release(gameObject);
 	}
 }

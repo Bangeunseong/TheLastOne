@@ -13,6 +13,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
+            controller.shouldLookAtPlayer = true;
+            
+            
             // 레콘드론 공격
             return INode.State.RUN;
         }

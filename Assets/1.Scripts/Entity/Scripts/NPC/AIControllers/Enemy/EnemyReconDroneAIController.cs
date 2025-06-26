@@ -46,7 +46,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             // 2-1 추적 시퀀스 등록
             var chaseSequenceNode = new SequenceNode();
             
-            // 2-2 추적상태인지 판단하는 셀렉터, 추적하는 셀렉터 등록
+            // 2-2 추적상태인지 판단하는 셀렉터, 추적하는 액션노드 등록
             var chaseCheckSelectorNode = new SelectorNode();
             var chasingPlayer = new ActionNode(new SetDestinationToPlayer().Evaluate);
             chaseSequenceNode.Add(chaseCheckSelectorNode);
