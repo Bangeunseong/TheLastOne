@@ -70,11 +70,12 @@ namespace _1.Scripts.Manager.Subs
         
         [Header("Sound Groups")]
         [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
-
-        public void Start()
+        
+        public void Start(AudioSource audioSource)
         {
             resourceManager = CoreManager.Instance.resourceManager;
             poolManager = CoreManager.Instance.objectPoolManager;
+            bgmSource = audioSource;
             
             bgmSource.playOnAwake = true;
             bgmSource.loop = true;
