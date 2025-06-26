@@ -15,6 +15,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public UIManager uiManager;
         [SerializeField] public ResourceManager resourceManager;
         [SerializeField] public ObjectPoolManager objectPoolManager;
+        [SerializeField] public SoundManager soundManager;
         
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
@@ -36,6 +37,7 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            soundManager = new SoundManager();
         }
 
         private void Reset()
@@ -46,6 +48,7 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            soundManager = new SoundManager();
         }
 
         // Start is called before the first frame update
@@ -56,6 +59,7 @@ namespace _1.Scripts.Manager.Core
             sceneLoadManager.Start();
             objectPoolManager.Start();
             resourceManager.Start();
+            soundManager.Start();
         }
 
         // Update is called once per frame
