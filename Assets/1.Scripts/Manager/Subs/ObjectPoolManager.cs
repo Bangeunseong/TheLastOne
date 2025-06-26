@@ -223,9 +223,9 @@ namespace _1.Scripts.Manager.Subs
                 
                 float progress = (float)current / total;
                 coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
-                coreManager.sceneLoadManager.LoadingProgress += 0.2f;
                 await Task.Yield(); 
             }
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
         }
     }
 }

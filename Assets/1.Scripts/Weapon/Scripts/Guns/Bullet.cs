@@ -1,10 +1,8 @@
-﻿using System;
-using _1.Scripts.Interfaces;
+﻿using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
-using RaycastPro.Bullets;
 using UnityEngine;
 
-namespace _1.Scripts.Weapon.Scripts
+namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class Bullet : MonoBehaviour
     {
@@ -65,7 +63,7 @@ namespace _1.Scripts.Weapon.Scripts
             hittableLayer = 0;
             hittableLayer |= hitLayer;
 
-            rigidBody.velocity = direction * appliedForce;
+            rigidBody.AddForce(direction * appliedForce, ForceMode.Impulse);
         }
 
         private void OnTriggerEnter(Collider other)
