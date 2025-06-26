@@ -1576,16 +1576,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1271617819082102559, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_Layer
-      value: 31
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977320588093521907, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.114
-      objectReference: {fileID: 0}
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: <FirstPersonCamera>k__BackingField
@@ -1596,21 +1586,6 @@ PrefabInstance:
       propertyPath: <ThirdPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 311603909}
-    - target: {fileID: 5888070373289262119, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5888070373289262119, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5888070373289262119, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
