@@ -15,29 +15,36 @@ using CharacterInfo = _1.Scripts.Manager.Data.CharacterInfo;
 
 namespace _1.Scripts.Manager.Subs
 {
-    [Serializable] public class GameManager
+    [Serializable]
+    public class GameManager
     {
-        [Header("Save Settings")] 
-        [SerializeField, ReadOnly] private string SaveDirectoryPath = "Assets/Data/";
-        [SerializeField, ReadOnly] private string FileName = "SaveData.json";
+        [Header("Save Settings")] [SerializeField, ReadOnly]
+        private string SaveDirectoryPath = "Assets/Data/";
+
+        [SerializeField, ReadOnly] private string SaveFileName = "SaveData.json";
+        [SerializeField, ReadOnly] private string SettingFileName = "Settings.json";
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
+        [field: SerializeField] public SettingDTO SettingData { get; private set; }
         [field: SerializeField] public Player Player { get; private set; }
-        
+
         private CoreManager coreManager;
-        
+
         public void Start()
         {
             coreManager = CoreManager.Instance;
             SaveData = null;
         }
-        
+
         // Methods
-        public void Initialize_Player(Player player) { Player = player; }
-        
+        public void Initialize_Player(Player player)
+        {
+            Player = player;
+        }
+
         public async Task TrySaveData()
         {
             if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
-            
+
             var save = new DataTransferObject
             {
                 characterInfo = new CharacterInfo
@@ -48,7 +55,7 @@ namespace _1.Scripts.Manager.Subs
                     level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
-                currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition), 
+                currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
                 currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
             };
 
@@ -67,18 +74,46 @@ namespace _1.Scripts.Manager.Subs
 
             save.Weapons = newWeaponInfo.ToArray();
             save.AvailableWeapons = newAvailableWeapons.ToArray();
-            
+
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
-            await File.WriteAllTextAsync(SaveDirectoryPath + FileName, json);
+            await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);
+        }
+
+        public async Task TrySaveSettingData()
+        {
+            if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
+
+            var setting = new SettingDTO
+            {
+                resolution = new Resolution { width = 1920, height = 1080 },
+                isFullScreen = true,
+                masterVolume = coreManager.soundManager.MasterVolume,
+                bgmVolume = coreManager.soundManager.BgmVolume,
+                sfxVolume = coreManager.soundManager.SfxVolume,
+            };
+            
+            var json = JsonConvert.SerializeObject(setting, Formatting.Indented);
+            await File.WriteAllTextAsync(SaveDirectoryPath + SettingFileName, json);
         }
 
         public async Task TryLoadData()
         {
-            if (File.Exists(SaveDirectoryPath + FileName))
+            if (File.Exists(SaveDirectoryPath + SaveFileName))
             {
-                var str = await File.ReadAllTextAsync(SaveDirectoryPath + FileName);
+                var str = await File.ReadAllTextAsync(SaveDirectoryPath + SaveFileName);
                 SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str);
-            } else SaveData = null;
+            }
+            else SaveData = null;
+        }
+
+        public async Task TryLoadSettingData()
+        {
+            if (File.Exists(SaveDirectoryPath + SettingFileName))
+            {
+                var str = await File.ReadAllTextAsync(SaveDirectoryPath + SettingFileName);
+                SettingData = JsonConvert.DeserializeObject<SettingDTO>(str);
+            }
+            else SettingData = null;
         }
     }
 }

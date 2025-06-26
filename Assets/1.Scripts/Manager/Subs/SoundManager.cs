@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Sound;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -67,16 +68,15 @@ namespace _1.Scripts.Manager.Subs
         public float BgmVolume => bgmVolume;
         public float SfxVolume => sfxVolume;
         
-        private Dictionary<string, SoundGroupSO> soundGroups = new Dictionary<string, SoundGroupSO>();
+        [Header("Sound Groups")]
+        [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
 
         public void Start()
         {
             resourceManager = CoreManager.Instance.resourceManager;
             poolManager = CoreManager.Instance.objectPoolManager;
             
-            GameObject smObject = CoreManager.Instance.gameObject;
-            bgmSource = smObject.AddComponent<AudioSource>();
-            bgmSource.playOnAwake = false;
+            bgmSource.playOnAwake = true;
             bgmSource.loop = true;
             
             LoadVolumeSettings(); 

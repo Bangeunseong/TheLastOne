@@ -60,6 +60,9 @@ namespace _1.Scripts.Manager.Core
             objectPoolManager.Start();
             resourceManager.Start();
             soundManager.Start();
+
+            // gameManager.TryLoadSettingData().Wait();
+            // if (gameManager.SettingData != null) { }
         }
 
         // Update is called once per frame
