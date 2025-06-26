@@ -17,15 +17,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            Vector3 dronePosition = controller.transform.position;
-            Vector3 playerPosition = CoreManager.Instance.gameManager.Player.transform.position;
+            Vector3 origin = controller.transform.position;
+            Vector3 direction = (CoreManager.Instance.gameManager.Player.transform.position - origin).normalized;
 
-            Vector3 direction = playerPosition - dronePosition;
-            float distance = direction.magnitude;
+            // 시야 최대 거리 설정 (예: 100f)
+            float maxViewDistance = 100f;
 
-            if (Physics.Raycast(dronePosition, direction.normalized, out RaycastHit hit, distance))
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
             {
-                return hit.transform.position == playerPosition ? INode.State.SUCCESS : INode.State.FAILED;
+                if (hit.collider.CompareTag("Player"))
+                {
+                    return INode.State.SUCCESS;
+                }
             }
 
             return INode.State.FAILED;

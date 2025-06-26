@@ -3364,6 +3364,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7058540756104092436, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7874159748350873753, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_Name
@@ -7204,6 +7209,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ReconDrone
+      objectReference: {fileID: 0}
+    - target: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}

@@ -21,7 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         public bool shouldLookAtPlayer = false;
         
         [Header("Node Information")]
-        private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        protected bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
 
         [Header("Animation Information")]
@@ -63,7 +63,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         /// 현재 실행중인 액션노드 있는지 여부 설정
         /// </summary>
         /// <param name="running"></param>
-        public void IsCurrentActionRunning(bool running)
+        public virtual void IsCurrentActionRunning(bool running)
         {
             currentActionRunning = running;
         }

@@ -88,15 +88,23 @@ public class Unit_DroneBot : MonoBehaviour
 			pos_side = Gun_EndL.transform;
 		}
 
-		Quaternion shellRot = Quaternion.Euler(pos_side.eulerAngles.x + Random.Range(-3f, 3f),
-			pos_side.eulerAngles.y + Random.Range(-3f, 3f), pos_side.eulerAngles.z + Random.Range(-3f, 3f));
+		// 총알 생성
 		GameObject shell = CoreManager.Instance.objectPoolManager.Get("Shell");
 		shell.transform.position = pos_side.position;
-		shell.transform.rotation = shellRot;
 
-		Vector3 dir = shellRot * Vector3.right * (shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f));
+		// 목표 방향 계산: 플레이어 위치 기준
+		Transform player = CoreManager.Instance.gameManager.Player.transform;
+		Vector3 directionToPlayer = (player.position - pos_side.position).normalized;
 
-		shell.GetComponent<Rigidbody>().AddForce(dir);
+		// 정확한 방향을 바라보게 회전 설정 (선택)
+		shell.transform.rotation = Quaternion.LookRotation(directionToPlayer);
+
+		// 총알 속도 설정
+		float finalShellSpeed = shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f);
+		Vector3 dir = directionToPlayer * finalShellSpeed;
+
+		// 힘 적용
+		shell.GetComponent<Rigidbody>().velocity = dir;
 
 		m_AudioSource.PlayOneShot(s_Fire);
 	}

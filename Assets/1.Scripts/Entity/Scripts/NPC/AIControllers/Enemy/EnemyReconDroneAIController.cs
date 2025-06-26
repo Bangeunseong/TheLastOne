@@ -156,6 +156,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             return timer;
         }
 
+        public void CurrentActionRunningForAnimationEvent()
+        {
+            currentActionRunning = true;
+        }
+
+        public void CurrentActionFinishedForAnimationEvent()
+        {
+            currentActionRunning = false;
+        }
+
         private IEnumerator TimerStart()
         {
             while (true)

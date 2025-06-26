@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.Data;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
@@ -24,6 +25,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
             var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneStatData"); // 자신만의 데이터 가져오기
             runtimeReconDroneStatData = new RuntimeReconDroneStatData(reconDroneStatData); // 복사
             baseMoveSpeed = runtimeReconDroneStatData.moveSpeed;
+            animator = GetComponent<Animator>();
         }
 
         public override void OnTakeDamage(int damage)
@@ -31,8 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
             runtimeReconDroneStatData.maxHealth -= damage;
             if (runtimeReconDroneStatData.maxHealth <= 0)
             {
-                // Die 로직 추가
-                Destroy(gameObject);
+                animator.SetTrigger(DroneAnimationHashData.Dead3);
             }
         }
 
@@ -44,6 +45,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
         public override void Running(bool isRunning)
         {
             runtimeReconDroneStatData.moveSpeed = isRunning ? baseMoveSpeed + runtimeReconDroneStatData.runMultiplier : baseMoveSpeed;
+        }
+
+        public void DestroyObjectForAnimationEvent()
+        {
+            Destroy(gameObject);
         }
     }
 }
