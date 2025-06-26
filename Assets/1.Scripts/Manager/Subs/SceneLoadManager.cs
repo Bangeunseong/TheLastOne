@@ -1,14 +1,11 @@
 using System;
-using System.Resources;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = System.Object;
 
 namespace _1.Scripts.Manager.Subs
 {

@@ -1,9 +1,7 @@
 ﻿using System;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
-using _1.Scripts.Manager.Core;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace _1.Scripts.Weapon.Scripts
 {
@@ -19,14 +17,14 @@ namespace _1.Scripts.Weapon.Scripts
             if (!ownerObj.TryGetComponent(out Player player)) return;
             
             var index = -1;
-            for (var i = 0; i < player.Weapons.Count; i++)
+            for (var i = 0; i < player.PlayerCondition.Weapons.Count; i++)
             {
-                if (player.Weapons[i] is not Gun gun || gun.WeaponData.WeaponStat.Type != Type) continue;
+                if (player.PlayerCondition.Weapons[i] is not Gun gun || gun.WeaponData.WeaponStat.Type != Type) continue;
                 index = i; break;
             }
             
-            player.AvailableWeapons[index] = true;
-            player.OnSwitchWeapon(index, 0.5f);
+            player.PlayerCondition.AvailableWeapons[index] = true;
+            player.PlayerCondition.OnSwitchWeapon(index, 0.5f);
             player.PlayerCondition.LastSavedPosition = player.transform.position;
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             

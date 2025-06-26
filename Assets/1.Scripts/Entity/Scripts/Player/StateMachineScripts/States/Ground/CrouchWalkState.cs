@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 {

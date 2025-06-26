@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
-using _1.Scripts.Manager.Core;
-using _1.Scripts.Weapon.Scripts;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
@@ -37,21 +32,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [Header("StateMachine")]
         [SerializeField] private PlayerStateMachine stateMachine;
 
-        [field: Header("Guns")]
-        [field: SerializeField] public List<Object> Weapons { get; private set; } = new();
-        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
-        [field: SerializeField] public int EquippedWeaponIndex { get; private set; } = -1;
-        [field: SerializeField] public bool IsAttacking { get; set; }
-        [field: SerializeField] public bool IsSwitching { get; private set; }
-        [field: SerializeField] public bool IsAiming { get; private set; }
-
         [field: Header("Camera Settings")]
         [field: SerializeField] public float OriginalFoV { get; private set; }
         [field: SerializeField] public float ZoomFoV { get; private set; } = 40f;
         [field: SerializeField] public float TransitionTime { get; private set; } = 0.5f;
-        
-        private Coroutine switchCoroutine;
-        private Coroutine aimCoroutine;
         
         public Camera cam { get; private set; }
 
@@ -106,22 +90,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
-            var listOfGuns = GetComponentsInChildren<Gun>(true);
-            foreach (var gun in listOfGuns)
-            {
-                gun.Initialize(gameObject);
-                Weapons.Add(gun); 
-                AvailableWeapons.Add(false);
-            }
-
-            if (CoreManager.Instance.gameManager.SaveData != null)
-            {
-                for (var i = 0; i < CoreManager.Instance.gameManager.SaveData.AvailableWeapons.Length; i++)
-                {
-                    AvailableWeapons[i] = CoreManager.Instance.gameManager.SaveData.AvailableWeapons[i];
-                }
-            }
-            
             stateMachine = new PlayerStateMachine(this); 
             stateMachine.ChangeState(stateMachine.IdleState);
         }
@@ -141,11 +109,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void LateUpdate()
         {
             stateMachine.LateUpdate();
-
-            if (IsAttacking && EquippedWeaponIndex >= 0)
-            {
-                if (Weapons[EquippedWeaponIndex] is Gun gun) gun.OnShoot();
-            }
         }
 
         /// <summary>
@@ -177,113 +140,5 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             //     AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             // }
         }
-        
-        /* - Aim 관련 메소드 - */
-        public void OnAim(bool isAim, float targetFoV, float transitionTime)
-        {
-            if(aimCoroutine != null){StopCoroutine(aimCoroutine);}
-            aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
-            IsAiming = isAim;
-        }
-        
-        private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
-        {
-            Vector3 currentPosition = WeaponPivot.localPosition;
-            Vector3 targetLocalPosition = isAim
-                ? WeaponPoints["AimPoint"].localPosition
-                : WeaponPoints["WieldPoint"].localPosition;
-            float currentFoV = stateMachine.Player.FirstPersonCamera.m_Lens.FieldOfView;
-
-            var time = 0f;
-            while (time < transitionTime)
-            {
-                time += Time.deltaTime;
-                float t = time / transitionTime;
-                var value = Mathf.Lerp(currentFoV, targetFoV, t);
-                FirstPersonCamera.m_Lens.FieldOfView = value;
-                if(EquippedWeaponIndex >= 0)
-                    WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
-                yield return null;
-            }
-
-            FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            if(EquippedWeaponIndex >= 0)
-                WeaponPivot.localPosition = targetLocalPosition;
-            aimCoroutine = null;
-        }
-        /* ----------------- */
-        
-        /* - Weapon Switch 메소드 - */
-        public void OnSwitchWeapon(int currentWeaponIndex, float duration)
-        {
-            IsAttacking = false;
-            int previousWeaponIndex = EquippedWeaponIndex;
-            EquippedWeaponIndex = currentWeaponIndex;
-            if (switchCoroutine != null){ StopCoroutine(switchCoroutine); }
-            switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(previousWeaponIndex, currentWeaponIndex, duration));
-        }
-
-        public IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
-        {
-            IsSwitching = true;
-            
-            if (IsAiming) OnAim(false, 67.5f, 0.2f);
-            while (IsAiming){}
-            
-            Vector3 currentWeaponPivotPosition = WeaponPivot.localPosition;
-            Quaternion currentWeaponPivotRotation = WeaponPivot.localRotation;
-            Vector3 targetLocalPosition = WeaponPoints["SwitchPoint"].localPosition;
-            Quaternion targetLocalRotation = WeaponPoints["SwitchPoint"].localRotation;
-            
-            if (previousWeaponIndex >= 0)
-            {
-                Service.Log("Switch Weapon");
-                // 무기를 밑으로 먼저 내리기
-                var time = 0f;
-                while (time < duration)
-                {
-                    time += Time.deltaTime;
-                    float t = time / duration;
-                    WeaponPivot.SetLocalPositionAndRotation(
-                        Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
-                        Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
-                    yield return null;
-                }
-
-                WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-                if (Weapons[previousWeaponIndex] is Gun gunToStore){ gunToStore.gameObject.SetActive(false); }
-            }
-            
-            // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
-            if (currentWeaponIndex < 0 || !AvailableWeapons[currentWeaponIndex])
-            {
-                switchCoroutine = null;
-                IsSwitching = false;
-                yield break;
-            }
-            
-            Service.Log("Wield Weapon");
-            currentWeaponPivotPosition = WeaponPivot.localPosition;
-            currentWeaponPivotRotation = WeaponPivot.localRotation;
-            targetLocalPosition = WeaponPoints["WieldPoint"].localPosition;
-            targetLocalRotation = WeaponPoints["WieldPoint"].localRotation;
-            if (Weapons[EquippedWeaponIndex] is Gun gunToSwitch){ gunToSwitch.gameObject.SetActive(true); }
-            
-            float weaponWieldTime = 0f;
-            while (weaponWieldTime < duration)
-            {
-                weaponWieldTime += Time.deltaTime;
-                float t = weaponWieldTime / duration;
-                WeaponPivot.SetLocalPositionAndRotation(
-                    Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
-                    Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
-                yield return null;
-            }
-            
-            WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-            switchCoroutine = null;
-            IsSwitching = false;
-        }
-        /* --------------------- */
     }
 }

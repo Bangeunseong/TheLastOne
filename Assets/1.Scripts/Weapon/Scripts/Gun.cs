@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
@@ -84,6 +83,7 @@ namespace _1.Scripts.Weapon.Scripts
                     var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)WeaponData.WeaponStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
+                    if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
                 }
                 else
                 {
@@ -118,7 +118,7 @@ namespace _1.Scripts.Weapon.Scripts
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
             if (WeaponData.WeaponStat.Type != GunType.Pistol) return;
-            if (player != null) player.IsAttacking = false;
+            if (player != null) player.PlayerCondition.IsAttacking = false;
         }
 
         public void OnReload()

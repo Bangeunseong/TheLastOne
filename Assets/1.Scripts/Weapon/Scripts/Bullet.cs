@@ -1,7 +1,5 @@
-﻿using System;
-using _1.Scripts.Interfaces;
+﻿using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
-using RaycastPro.Bullets;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using _1.Scripts.Entity.Scripts.Player;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -53,8 +52,8 @@ namespace _1.Scripts.Manager.Subs
             };
 
             var newWeaponInfo = new List<WeaponInfo>();
-            var newAvailableWeapons = Player.AvailableWeapons.ToList();
-            foreach (var weapon in Player.Weapons)
+            var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
+            foreach (var weapon in Player.PlayerCondition.Weapons)
             {
                 if (weapon is Gun gun)
                     newWeaponInfo.Add(new WeaponInfo

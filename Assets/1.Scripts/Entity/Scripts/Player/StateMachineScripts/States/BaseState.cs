@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Globalization;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
@@ -195,35 +194,35 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Aim 관련 메소드 - */
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            stateMachine.Player.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
+            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            playerCondition.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            stateMachine.Player.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
+            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            playerCondition.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
         }
         /* ----------------- */
         
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
-            stateMachine.Player.IsAttacking = true;
+            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            playerCondition.IsAttacking = true;
         }
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
         {
-            stateMachine.Player.IsAttacking = false;
+            playerCondition.IsAttacking = false;
         }
         
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || stateMachine.Player.IsSwitching) return;
+            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
-            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedWeaponIndex] is not Gun gun) yield break;
-            if(gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) yield break;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) yield break;
+            if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) yield break;
             
             // TODO: Play Animation
             gun.IsReloading = true;
@@ -237,29 +236,29 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Weapon Switch 관련 메소드 - */
         protected virtual void OnSwitchToMain(InputAction.CallbackContext context)
         {
-            if (stateMachine.Player.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             
-            int weaponCount = stateMachine.Player.Weapons.Count;
+            int weaponCount = playerCondition.Weapons.Count;
             
             if (weaponCount == 0) return;
-            stateMachine.Player.OnSwitchWeapon(0, 0.5f);
+            playerCondition.OnSwitchWeapon(0, 0.5f);
         }
         protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
-            if (stateMachine.Player.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             
-            int weaponCount = stateMachine.Player.Weapons.Count;
+            int weaponCount = playerCondition.Weapons.Count;
             
             if (weaponCount == 0) return;
-            stateMachine.Player.OnSwitchWeapon(1, 0.5f);
+            playerCondition.OnSwitchWeapon(1, 0.5f);
         }
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
-            if (stateMachine.Player.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = stateMachine.Player.AvailableWeapons.FindAll(val => val).Count;
-            int currentIndex = stateMachine.Player.EquippedWeaponIndex;
+            int weaponCount = playerCondition.AvailableWeapons.FindAll(val => val).Count;
+            int currentIndex = playerCondition.EquippedWeaponIndex;
 
             if (weaponCount == 0) return;
 
@@ -272,7 +271,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 else nextIndex = currentIndex % (weaponCount + 1) - 1;
                 Debug.Log(currentIndex + "," + nextIndex);
             }
-            if (nextIndex != currentIndex) stateMachine.Player.OnSwitchWeapon(nextIndex, 0.5f);
+            if (nextIndex != currentIndex) playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
         /* --------------------------- */
         

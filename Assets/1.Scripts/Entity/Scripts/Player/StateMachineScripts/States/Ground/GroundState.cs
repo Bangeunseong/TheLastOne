@@ -51,8 +51,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnReloadStarted(InputAction.CallbackContext context)
         {
             base.OnReloadStarted(context);
-            if (stateMachine.Player.EquippedWeaponIndex < 0) return;
-            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedWeaponIndex] is not Gun gun) return;
+            if (playerCondition.EquippedWeaponIndex < 0) return;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
             if (!gun.IsReadyToReload) return;
             
             if(reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
