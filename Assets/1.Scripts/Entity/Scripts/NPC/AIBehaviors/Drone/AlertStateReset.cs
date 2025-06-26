@@ -19,15 +19,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
             if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
             {
                 reconDrone.ResetAll();
+                return INode.State.SUCCESS;
             }
 
             // EnemySuicideDroneAIController 타입인지 확인
             if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
             {
                 suicideDrone.ResetAll();
+                return INode.State.SUCCESS;
             }
-            
-            return INode.State.SUCCESS;
+
+            return INode.State.FAILED;
         }
     }
 }

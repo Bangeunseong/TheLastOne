@@ -17,6 +17,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
+            Vector3 dronePosition = controller.transform.position;
+            Vector3 playerPosition = CoreManager.Instance.gameManager.Player.transform.position;
+
+            Vector3 direction = playerPosition - dronePosition;
+            float distance = direction.magnitude;
+
+            if (Physics.Raycast(dronePosition, direction.normalized, out RaycastHit hit, distance))
+            {
+                return hit.transform.position == playerPosition ? INode.State.SUCCESS : INode.State.FAILED;
+            }
+
             return INode.State.FAILED;
         }
     }   

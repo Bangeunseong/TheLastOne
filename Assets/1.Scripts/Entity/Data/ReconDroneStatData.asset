@@ -18,7 +18,7 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 10
   baseAttackRate: 2
-  moveSpeed: 3
+  moveSpeed: 1
   runMultiplier: 1
   walkMultiplier: 0
   footStepSounds: []

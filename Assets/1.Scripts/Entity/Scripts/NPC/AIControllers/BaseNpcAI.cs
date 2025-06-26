@@ -24,7 +24,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
 
-        private Animator animator;
+        [Header("Animation Information")]
+        public Animator animator;
         
         // 각 NPC가 자신의 행동 트리를 정의하도록 강제
         protected abstract void BuildTree();
@@ -80,7 +81,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             result = this as T;
             if (result == null)
             {
-                Debug.LogWarning($"컨트롤러가 {typeof(T).Name} 타입이 아님. 실제 타입: {GetType().Name}");
                 return false;
             }
 
