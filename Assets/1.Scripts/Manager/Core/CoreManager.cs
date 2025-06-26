@@ -7,6 +7,9 @@ namespace _1.Scripts.Manager.Core
 {
     public class CoreManager : MonoBehaviour
     {
+        [Header("Components")] 
+        [SerializeField] private AudioSource audioSource;
+        
         // Sub Managers
         [Header("Managers")]
         [SerializeField] public GameManager gameManager;
@@ -30,6 +33,8 @@ namespace _1.Scripts.Manager.Core
         {
             if (!Instance) { Instance = this; DontDestroyOnLoad(gameObject); } 
             else { if (Instance != this) Destroy(gameObject); }
+
+            if (!audioSource) audioSource = this.TryGetComponent<AudioSource>();
             
             gameManager = new GameManager();
             sceneLoadManager = new SceneLoadManager();
@@ -42,6 +47,8 @@ namespace _1.Scripts.Manager.Core
 
         private void Reset()
         {
+            if (!audioSource) audioSource = this.TryGetComponent<AudioSource>();
+            
             gameManager = new GameManager();
             sceneLoadManager = new SceneLoadManager();
             spawnManager = new SpawnManager();
@@ -59,7 +66,7 @@ namespace _1.Scripts.Manager.Core
             sceneLoadManager.Start();
             objectPoolManager.Start();
             resourceManager.Start();
-            soundManager.Start();
+            soundManager.Start(audioSource);
 
             // gameManager.TryLoadSettingData().Wait();
             // if (gameManager.SettingData != null) { }
