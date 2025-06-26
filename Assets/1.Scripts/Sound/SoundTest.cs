@@ -8,6 +8,7 @@ public class SoundTest : MonoBehaviour
     private SoundManager soundManager;
     private UIManager uiManager;
     private bool bgmPlayed = false;
+    private bool settingPopupShowed = false;
 
     public Transform soundTest;
     public Transform soundTest2;
@@ -23,13 +24,23 @@ public class SoundTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            uiManager.ShowSettingPopup();
+            if (!settingPopupShowed)
+            {
+                uiManager.ShowSettingPopup();
+                settingPopupShowed = true;
+            }
+            else
+            {
+                uiManager.ClosePopup();
+                settingPopupShowed = false;
+            }
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
             if (!bgmPlayed)
             {
-                soundManager.PlayBGM("LobbyBGM");
+                Service.Log("Sound Test: Play BGM");
+                soundManager.PlayBGM(BgmType.Lobby, 0);
                 bgmPlayed = true;
             }
         }
@@ -37,6 +48,7 @@ public class SoundTest : MonoBehaviour
         {
             if (bgmPlayed)
             {
+                Service.Log("Sound Test: Stop BGM");
                 soundManager.StopBGM();
                 bgmPlayed = false;
             }
@@ -46,7 +58,7 @@ public class SoundTest : MonoBehaviour
         {
             if (soundTest2 != null)
             {
-                soundManager.PlaySFX("Voice_Male_V1_Attack_Mono_03", soundTest2.position);
+                soundManager.PlaySFX(SfxType.Test, soundTest2.position, 0);
             }
         }
 
@@ -54,7 +66,7 @@ public class SoundTest : MonoBehaviour
         {
             if (soundTest != null)
             {
-                soundManager.PlaySFX("Voice_Male_V1_Attack_Mono_03", soundTest.position);
+                soundManager.PlaySFX(SfxType.Test, soundTest.position, 0);
             }
         }
     }

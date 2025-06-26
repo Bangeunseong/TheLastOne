@@ -76,6 +76,19 @@ namespace _1.Scripts.Manager.Subs
             Debug.LogWarning($"Asset not found: {name}");
             return null;
         }
+        
+        public List<T> GetAllAssetsOfType<T>() where T : Object
+        {
+            var assets = new List<T>();
+            foreach (var resource in resources.Values)
+            {
+                if (resource is T asset)
+                {
+                    assets.Add(asset);
+                }
+            }
+            return assets;
+        }
 
         /// <summary>
         /// 씬 라벨 기준으로 로드했던 자료들 언로드
