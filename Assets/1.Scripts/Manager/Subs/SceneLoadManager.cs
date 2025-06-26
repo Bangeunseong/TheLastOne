@@ -1,17 +1,16 @@
 using System;
-using System.Resources;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Data;
+using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = System.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
-    public enum SceneType
+    [Serializable] public enum SceneType
     {
         IntroScene, 
         Loading, 
@@ -85,14 +84,21 @@ namespace _1.Scripts.Manager.Subs
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+                coreManager.soundManager.CacheSoundGroup();
+                await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
+            else
+            {
+                LoadingProgress = 0.4f;
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            }
+            
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
-            uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
+            coreManager.soundManager.CacheSoundGroup();
+            await coreManager.soundManager.LoadClips();
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
-            uiManager.LoadingUI.UpdateLoadingProgress(0.8f);
             await LoadSceneWithProgress(CurrentScene);
         }
         
@@ -138,12 +144,25 @@ namespace _1.Scripts.Manager.Subs
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
+        /// <summary>
+        /// 씬 이동 시 내부에 있는 더미 건 컴포넌트를 찾아 저장 기능 부여, 나중에 특정 트리거를 찾아 저장하는 기능도 추가 가능
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             CoreManager.Instance.gameManager.Initialize_Player(player);
             player.PlayerCondition.IsPlayerHasControl = true;
+
+            var dummyGunList =
+                UnityEngine.Object.FindObjectsByType<DummyGun>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var dummyGun in dummyGunList)
+            {
+                Service.Log(dummyGun.name);
+                dummyGun.OnPicked += coreManager.SaveData_QueuedAsync;
+            }
         }
         
         private async Task WaitForUserInput()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _1.Scripts.Manager.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,8 @@ namespace _1.Scripts.UI.Setting
         
         [Header("사운드 설정")]
         [SerializeField] private Slider masterVolumeSlider;
+        [SerializeField] private Slider bgmVolumeSlider;
+        [SerializeField] private Slider sfxVolumeSlider;
         
         [Header("조작 설정")]
         [SerializeField] private Slider mouseSensitivitySlider;
@@ -57,8 +60,11 @@ namespace _1.Scripts.UI.Setting
             
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
             resolutionDropdown.onValueChanged.AddListener(SetResolution);
-            masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
             mouseSensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
+            
+            masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
+            bgmVolumeSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+            sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
         }
 
         private void InitResolutions()
@@ -76,6 +82,8 @@ namespace _1.Scripts.UI.Setting
             fullscreenToggle.isOn = PlayerPrefs.GetInt("IsFullscreen", 1) == 1;
             resolutionDropdown.value = PlayerPrefs.GetInt("ResolutionIndex", 0);
             masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1);
+            bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1);
+            sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1);
             mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 1);
         }
 
@@ -99,10 +107,19 @@ namespace _1.Scripts.UI.Setting
             PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
         }
 
-        private void SetMasterVolume(float volume)
+        private void OnMasterVolumeChanged(float volume)
         {
-            // SoundManager.Instance.SetMasterVolume(volume);
-            PlayerPrefs.SetFloat("MasterVolume", volume);
+            CoreManager.Instance.soundManager.SetMasterVolume(volume);
+        }
+
+        private void OnBGMVolumeChanged(float volume)
+        {
+            CoreManager.Instance.soundManager.SetBGMVolume(volume);
+        }
+
+        private void OnSFXVolumeChanged(float volume)
+        {
+            CoreManager.Instance.soundManager.SetSFXVolume(volume);
         }
 
         private void SetMouseSensitivity(float sensitivity)

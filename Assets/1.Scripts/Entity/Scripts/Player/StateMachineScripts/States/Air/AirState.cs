@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
@@ -14,7 +15,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             if (reloadCoroutine == null) return;
-            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedGunIndex] is not Gun gun) return;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
             stateMachine.Player.StopCoroutine(reloadCoroutine); 
             gun.IsReloading = false;
             reloadCoroutine = null;
