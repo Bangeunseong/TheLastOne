@@ -86,11 +86,14 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            uiManager.LoadingUI.UpdateLoadingProgress(0.4f);
+            else
+            {
+                LoadingProgress = 0.4f;
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            }
+            
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
-            uiManager.LoadingUI.UpdateLoadingProgress(0.6f);
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
-            uiManager.LoadingUI.UpdateLoadingProgress(0.8f);
             await LoadSceneWithProgress(CurrentScene);
         }
         

@@ -36,11 +36,10 @@ namespace _1.Scripts.Manager.Subs
             while (!handle.IsDone)
             {
                 float progress = handle.PercentComplete;
-                
                 coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
-                coreManager.sceneLoadManager.LoadingProgress += 0.2f;
                 await Task.Yield();
             }
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
             
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
