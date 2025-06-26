@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d3dcceb85a4027b75f30463c4db223, type: 3}
   m_Name: Rifle
   m_EditorClassIdentifier: 
-  <WeaponStat>k__BackingField:
-    <Type>k__BackingField: 1
+  <GunStat>k__BackingField:
     <MaxAmmoCount>k__BackingField: 150
-    <MaxAmmoCountInMagazine>k__BackingField: 30
-    <MaxWeaponRange>k__BackingField: 80
-    <BulletSpeed>k__BackingField: 20
-    <Recoil>k__BackingField: 0
-    <Accuracy>k__BackingField: 0
-    <ReloadTime>k__BackingField: 1.2
-    <Rpm>k__BackingField: 650
+    <MaxWeaponRange>k__BackingField: 450
+    <Recoil>k__BackingField: 5
     <Damage>k__BackingField: 30
     <IsKnockbackAvailable>k__BackingField: 0
+    <Type>k__BackingField: 1
+    <MaxAmmoCountInMagazine>k__BackingField: 30
+    <BulletSpeed>k__BackingField: 8
+    <Accuracy>k__BackingField: 2
+    <ReloadTime>k__BackingField: 1.2
+    <Rpm>k__BackingField: 650
     <BulletPrefabId>k__BackingField: Bullet

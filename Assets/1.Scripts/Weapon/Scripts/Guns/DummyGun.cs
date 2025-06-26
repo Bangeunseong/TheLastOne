@@ -3,7 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using UnityEngine;
 
-namespace _1.Scripts.Weapon.Scripts
+namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class DummyGun : MonoBehaviour, IInteractable
     {
@@ -19,7 +19,7 @@ namespace _1.Scripts.Weapon.Scripts
             var index = -1;
             for (var i = 0; i < player.PlayerCondition.Weapons.Count; i++)
             {
-                if (player.PlayerCondition.Weapons[i] is not Gun gun || gun.WeaponData.WeaponStat.Type != Type) continue;
+                if (player.PlayerCondition.Weapons[i] is not Gun gun || gun.GunData.GunStat.Type != Type) continue;
                 index = i; break;
             }
             

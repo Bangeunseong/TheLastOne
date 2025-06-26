@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -56,7 +57,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             if (!gun.IsReadyToReload) return;
             
             if(reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
-            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.WeaponData.WeaponStat.ReloadTime));
+            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime));
         }
     }
 }

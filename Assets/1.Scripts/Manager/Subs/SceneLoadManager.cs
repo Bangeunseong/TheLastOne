@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;

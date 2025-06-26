@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air

@@ -2,7 +2,7 @@
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
-namespace _1.Scripts.Weapon.Scripts
+namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class Bullet : MonoBehaviour
     {

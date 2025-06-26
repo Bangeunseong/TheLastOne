@@ -6,9 +6,10 @@ using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Guns;
 using JetBrains.Annotations;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
@@ -42,7 +43,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
         
         [field: Header("Guns")]
-        [field: SerializeField] public List<Object> Weapons { get; private set; } = new();
+        [field: SerializeField] public List<BaseWeapon> Weapons { get; private set; } = new();
         [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
         [field: SerializeField] public int EquippedWeaponIndex { get; private set; } = -1;
         [field: SerializeField] public bool IsAttacking { get; set; }
@@ -75,7 +76,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         public void Initialize(DataTransferObject data)
         {
-            var listOfGuns = GetComponentsInChildren<Gun>(true);
+            var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
             foreach (var gun in listOfGuns)
             {
                 gun.Initialize(gameObject);
