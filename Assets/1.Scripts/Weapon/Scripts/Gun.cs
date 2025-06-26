@@ -38,10 +38,13 @@ namespace _1.Scripts.Weapon.Scripts
         [Header("Owner")] 
         [SerializeField] private GameObject owner;
         
+        // Fields
         [CanBeNull] private Player player;
         // private Enemy enemy;
+        private bool isOwnedByPlayer;
         private float timeSinceLastShotFired;
         
+        // Properties
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
         public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
 
@@ -78,6 +81,7 @@ namespace _1.Scripts.Weapon.Scripts
             if (ownerObj.TryGetComponent(out Player user))
             {
                 player = user;
+                isOwnedByPlayer = true;
                 if (CoreManager.Instance.gameManager.SaveData != null)
                 {
                     var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)WeaponData.WeaponStat.Type];
@@ -106,14 +110,28 @@ namespace _1.Scripts.Weapon.Scripts
             
             isRecoiling = true;
             Debug.Log("Fire Bullet");
-            bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
-                WeaponData.WeaponStat.MaxWeaponRange,
-                WeaponData.WeaponStat.BulletSpeed, 
-                WeaponData.WeaponStat.Damage, HittableLayer);
+
+            if (!isOwnedByPlayer)
+            {
+                bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
+                    WeaponData.WeaponStat.MaxWeaponRange,
+                    WeaponData.WeaponStat.BulletSpeed,
+                    WeaponData.WeaponStat.Damage, HittableLayer);
+            }
+            else
+            {
+                if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, float.MaxValue, HittableLayer))
+                {
+                    if (hit.collider.TryGetComponent(out IDamagable damagable))
+                    {
+                        damagable.OnTakeDamage(WeaponData.WeaponStat.Damage);
+                    }
+                }
+            }
             
-            if(shellParticles.isPlaying) shellParticles.Stop();
+            if (gunShotLight != null) StartCoroutine(Flicker());
+            if (shellParticles.isPlaying) shellParticles.Stop();
             shellParticles.Play();
-            StartCoroutine(Flicker());
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
