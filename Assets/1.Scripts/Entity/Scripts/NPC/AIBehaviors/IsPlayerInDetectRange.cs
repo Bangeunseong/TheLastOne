@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (controller.statData is not IDetectable detectable) // 있을 시 변환
+            if (!controller.statController.TryGetRuntimeStatInterface<IDetectable>(out var detectable)) // 있을 시 변환
             {
                 Debug.LogWarning($"[IsPlayerInDetectRange] statData가 IDetectable을 구현하지 않음. 컨트롤러: {controller.name}");
                 return INode.State.FAILED;

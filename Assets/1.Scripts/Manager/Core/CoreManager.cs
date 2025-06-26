@@ -89,11 +89,11 @@ namespace _1.Scripts.Manager.Core
             DataTransferObject loadedData = gameManager.SaveData;
             if (loadedData == null)
             {
-                Debug.Log("DataTransferObject is null");
+                Service.Log("DataTransferObject is null");
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
                 return;
             }
-            Debug.Log("DataTransferObject is not null");
+            Service.Log("DataTransferObject is not null");
             await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
         }
 

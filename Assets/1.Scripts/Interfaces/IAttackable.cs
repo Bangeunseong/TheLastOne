@@ -6,6 +6,6 @@ namespace _1.Scripts.Interfaces
 {
     public interface IAttackable
     {
-        float AttackRange { get; }
+        public float AttackRange { get; }
     }
 }

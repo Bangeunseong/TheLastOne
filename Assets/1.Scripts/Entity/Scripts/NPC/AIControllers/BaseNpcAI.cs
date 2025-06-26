@@ -16,8 +16,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     public abstract class BaseNpcAI : MonoBehaviour
     {
         [Header("AI Information")]
-        private NavMeshAgent navMeshAgent;
-        public EntityStatData statData; // 자신이 소유한 스탯데이터
+        public NavMeshAgent navMeshAgent;
+        public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
         
         [Header("Node Information")]
         private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
@@ -30,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             rootNode = new SelectorNode();
             navMeshAgent = GetComponent<NavMeshAgent>();
+            statController = GetComponent<BaseNpcStatController>();
         }
 
         protected virtual void Start()
@@ -56,5 +57,26 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             currentActionRunning = running;
         }
+        
+        /// <summary>
+        /// BaseNpcAI 말고 자식 클래스 기능이 필요할 때 사용할것
+        /// </summary>
+        /// <param name="result"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool TryGetAIController<T>(out T result) where T : BaseNpcAI
+        {
+            result = null;
+        
+            result = this as T;
+            if (result == null)
+            {
+                Debug.LogWarning($"컨트롤러가 {typeof(T).Name} 타입이 아님. 실제 타입: {GetType().Name}");
+                return false;
+            }
+
+            return true;
+        }
+        
     }
 }
