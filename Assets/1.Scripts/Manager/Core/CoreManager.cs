@@ -90,7 +90,7 @@ namespace _1.Scripts.Manager.Core
                 return;
             }
             Service.Log("DataTransferObject is not null");
-            await sceneLoadManager.OpenScene(loadedData.CurrentSceneId);
+            await sceneLoadManager.OpenScene(loadedData.currentSceneId);
         }
 
         /// <summary>

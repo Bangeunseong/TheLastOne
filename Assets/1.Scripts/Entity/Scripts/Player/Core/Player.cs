@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
@@ -38,8 +39,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         [field: Header("Guns")]
         [field: SerializeField] public List<Object> Weapons { get; private set; } = new();
-        [field: SerializeField] public List<bool> AvailableGuns { get; private set; } = new();
-        [field: SerializeField] public int EquippedGunIndex { get; private set; } = -1;
+        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
+        [field: SerializeField] public int EquippedWeaponIndex { get; private set; } = -1;
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
@@ -110,7 +111,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 gun.Initialize(gameObject);
                 Weapons.Add(gun); 
-                AvailableGuns.Add(false);
+                AvailableWeapons.Add(false);
+            }
+
+            if (CoreManager.Instance.gameManager.SaveData != null)
+            {
+                for (var i = 0; i < CoreManager.Instance.gameManager.SaveData.AvailableWeapons.Length; i++)
+                {
+                    AvailableWeapons[i] = CoreManager.Instance.gameManager.SaveData.AvailableWeapons[i];
+                }
             }
             
             stateMachine = new PlayerStateMachine(this); 
@@ -133,9 +142,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             stateMachine.LateUpdate();
 
-            if (IsAttacking && EquippedGunIndex >= 0)
+            if (IsAttacking && EquippedWeaponIndex >= 0)
             {
-                if (Weapons[EquippedGunIndex] is Gun gun) gun.OnShoot();
+                if (Weapons[EquippedWeaponIndex] is Gun gun) gun.OnShoot();
             }
         }
 
@@ -192,27 +201,29 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 FirstPersonCamera.m_Lens.FieldOfView = value;
-                if(EquippedGunIndex >= 0)
+                if(EquippedWeaponIndex >= 0)
                     WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
                 yield return null;
             }
 
             FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            if(EquippedGunIndex >= 0)
+            if(EquippedWeaponIndex >= 0)
                 WeaponPivot.localPosition = targetLocalPosition;
             aimCoroutine = null;
         }
         /* ----------------- */
         
         /* - Weapon Switch 메소드 - */
-        public void OnSwitchWeapon(int weaponIndex, float duration)
+        public void OnSwitchWeapon(int currentWeaponIndex, float duration)
         {
             IsAttacking = false;
+            int previousWeaponIndex = EquippedWeaponIndex;
+            EquippedWeaponIndex = currentWeaponIndex;
             if (switchCoroutine != null){ StopCoroutine(switchCoroutine); }
-            switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(weaponIndex, duration));
+            switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(previousWeaponIndex, currentWeaponIndex, duration));
         }
 
-        public IEnumerator OnSwitchWeapon_Coroutine(int weaponIndex, float duration)
+        public IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
         {
             IsSwitching = true;
             
@@ -224,7 +235,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             Vector3 targetLocalPosition = WeaponPoints["SwitchPoint"].localPosition;
             Quaternion targetLocalRotation = WeaponPoints["SwitchPoint"].localRotation;
             
-            if (EquippedGunIndex >= 0)
+            if (previousWeaponIndex >= 0)
             {
                 Service.Log("Switch Weapon");
                 // 무기를 밑으로 먼저 내리기
@@ -240,12 +251,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
 
                 WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-                if (Weapons[EquippedGunIndex] is Gun gunToStore){ gunToStore.gameObject.SetActive(false); }
-                EquippedGunIndex = -1;
+                if (Weapons[previousWeaponIndex] is Gun gunToStore){ gunToStore.gameObject.SetActive(false); }
             }
             
             // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
-            if (weaponIndex < 0 || !AvailableGuns[weaponIndex])
+            if (currentWeaponIndex < 0 || !AvailableWeapons[currentWeaponIndex])
             {
                 switchCoroutine = null;
                 IsSwitching = false;
@@ -257,8 +267,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             currentWeaponPivotRotation = WeaponPivot.localRotation;
             targetLocalPosition = WeaponPoints["WieldPoint"].localPosition;
             targetLocalRotation = WeaponPoints["WieldPoint"].localRotation;
-            EquippedGunIndex = weaponIndex;
-            if (Weapons[EquippedGunIndex] is Gun gunToSwitch){ gunToSwitch.gameObject.SetActive(true); }
+            if (Weapons[EquippedWeaponIndex] is Gun gunToSwitch){ gunToSwitch.gameObject.SetActive(true); }
             
             float weaponWieldTime = 0f;
             while (weaponWieldTime < duration)

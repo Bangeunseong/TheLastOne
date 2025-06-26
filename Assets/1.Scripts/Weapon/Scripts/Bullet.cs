@@ -65,7 +65,7 @@ namespace _1.Scripts.Weapon.Scripts
             hittableLayer = 0;
             hittableLayer |= hitLayer;
 
-            rigidBody.velocity = direction * appliedForce;
+            rigidBody.AddForce(direction * appliedForce, ForceMode.Impulse);
         }
 
         private void OnTriggerEnter(Collider other)

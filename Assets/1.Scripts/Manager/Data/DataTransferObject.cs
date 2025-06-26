@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
 
@@ -25,29 +26,53 @@ namespace _1.Scripts.Manager.Data
         
         public Quaternion ToQuaternion() { return new Quaternion(x, y, z, w); }
     }
+
+    [Serializable]
+    public class CharacterInfo
+    {
+        public int maxHealth;
+        public int health;
+        public float maxStamina;
+        public float stamina;
+        public float damage;
+        public float attackRate;
+        public int level;
+        public int experience;
+    }
+
+    [Serializable]
+    public class WeaponInfo
+    {
+        public int currentAmmoCount;
+        public int currentAmmoCountInMagazine;
+    }
     
     [Serializable] public class DataTransferObject
     {
         [Header("Character Stat.")]
-        [SerializeField] public int maxHealth;
-        [SerializeField] public int health;
-        [SerializeField] public float maxStamina;
-        [SerializeField] public float stamina;
-        [SerializeField] public float damage;
-        [SerializeField] public float attackRate;
-        [SerializeField] public int level;
-        [SerializeField] public int experience;
+        [SerializeField] public CharacterInfo characterInfo;
+
+        [field: Header("Character Weapons")] 
+        [field: SerializeField] public WeaponInfo[] Weapons { get; set; }
+        [field: SerializeField] public bool[] AvailableWeapons { get; set; }
 
         [Header("Stage Info.")] 
-        [SerializeField] public SceneType CurrentSceneId;
-        [SerializeField] public SerializableVector3 CurrentCharacterPosition;
-        [SerializeField] public  SerializableQuaternion CurrentCharacterRotation;
+        [SerializeField] public SceneType currentSceneId;
+        [SerializeField] public SerializableVector3 currentCharacterPosition;
+        [SerializeField] public SerializableQuaternion currentCharacterRotation;
 
         public override string ToString()
         {
             return
-                $"Character Stat.\n{maxHealth}, {health}\n{damage}, {attackRate}\n{level}, {experience}" +
-                $"Stage Info.\n{CurrentCharacterPosition.ToVector3()}, {CurrentCharacterRotation.ToQuaternion()}";
+                $"Character Stat.\n{characterInfo.maxHealth}, " +
+                $"{characterInfo.health}\n{characterInfo.damage}, " +
+                $"{characterInfo.attackRate}\n{characterInfo.level}, " +
+                $"{characterInfo.experience}" +
+                
+                
+                
+                $"Stage Info.\n{currentCharacterPosition.ToVector3()}, " +
+                $"{currentCharacterRotation.ToQuaternion()}";
         }
     }
 }

@@ -35,6 +35,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
         [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
 
+        [field: Header("Saved Position & Rotation")]
+        [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
+        [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
+        
         private CoreManager coreManager;
         
         // Action events
@@ -45,13 +49,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
-            InitializeStat(coreManager.gameManager.SaveData);
+            Initialize(coreManager.gameManager.SaveData);
         }
 
-        public void InitializeStat(DataTransferObject data)
+        public void Initialize(DataTransferObject data)
         {
             if (data == null)
             {
+                Service.Log("DataTransferObject is null");
                 MaxHealth = CurrentHealth = StatData.maxHealth;
                 MaxStamina = CurrentStamina = StatData.maxStamina;
                 Damage = StatData.baseDamage;
@@ -61,11 +66,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             else
             {
-                Level = data.level;
-                Experience = data.experience;
-                MaxHealth = data.maxHealth; CurrentHealth = data.health;
-                MaxStamina = data.maxStamina; CurrentStamina = data.stamina;
-                AttackRate = data.attackRate; 
+                Service.Log("DataTransferObject is not null");
+                Level = data.characterInfo.level; Experience = data.characterInfo.experience;
+                MaxHealth = data.characterInfo.maxHealth; CurrentHealth = data.characterInfo.health;
+                MaxStamina = data.characterInfo.maxStamina; CurrentStamina = data.characterInfo.stamina;
+                AttackRate = data.characterInfo.attackRate; Damage = data.characterInfo.damage;
+                LastSavedPosition = data.currentCharacterPosition.ToVector3();
+                LastSavedRotation = data.currentCharacterRotation.ToQuaternion();
+                
+                Service.Log(LastSavedPosition + "," +  LastSavedRotation);
+                transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
             }
 
             Speed = StatData.moveSpeed;
@@ -73,6 +83,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
+            
+            coreManager.gameManager.Player.Controller.enabled = true;
         }
 
         public void OnRecoverHealth(int value)

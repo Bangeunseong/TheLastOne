@@ -12,7 +12,7 @@ namespace _1.Scripts.Weapon.Scripts
         [field: Header("DummyGun Settings")]
         [field: SerializeField] public GunType Type { get; private set; }
 
-        public UnityEvent OnPicked;
+        public event Action OnPicked;
 
         public void OnInteract(GameObject ownerObj)
         {
@@ -24,10 +24,12 @@ namespace _1.Scripts.Weapon.Scripts
                 if (player.Weapons[i] is not Gun gun || gun.WeaponData.WeaponStat.Type != Type) continue;
                 index = i; break;
             }
-            Service.Log(index.ToString());
-            player.AvailableGuns[index] = true;
+            
+            player.AvailableWeapons[index] = true;
             player.OnSwitchWeapon(index, 0.5f);
-                
+            player.PlayerCondition.LastSavedPosition = player.transform.position;
+            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
+            
             OnPicked?.Invoke();
             Destroy(gameObject);
         }

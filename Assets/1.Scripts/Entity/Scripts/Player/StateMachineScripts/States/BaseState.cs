@@ -222,7 +222,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
-            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedGunIndex] is not Gun gun) yield break;
+            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedWeaponIndex] is not Gun gun) yield break;
+            if(gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) yield break;
             
             // TODO: Play Animation
             gun.IsReloading = true;
@@ -257,8 +258,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (stateMachine.Player.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = stateMachine.Player.AvailableGuns.FindAll(val => val).Count;
-            int currentIndex = stateMachine.Player.EquippedGunIndex;
+            int weaponCount = stateMachine.Player.AvailableWeapons.FindAll(val => val).Count;
+            int currentIndex = stateMachine.Player.EquippedWeaponIndex;
 
             if (weaponCount == 0) return;
 

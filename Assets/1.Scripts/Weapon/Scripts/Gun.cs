@@ -38,11 +38,10 @@ namespace _1.Scripts.Weapon.Scripts
 
         [Header("Owner")] 
         [SerializeField] private GameObject owner;
-
-        private float timeSinceLastShotFired;
         
         [CanBeNull] private Player player;
         // private Enemy enemy;
+        private float timeSinceLastShotFired;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
         public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
@@ -64,7 +63,7 @@ namespace _1.Scripts.Weapon.Scripts
         private void Start()
         {
             timeSinceLastShotFired = WeaponData.WeaponStat.Recoil;
-            MaxAmmoCountInMagazine = CurrentAmmoCountInMagazine = WeaponData.WeaponStat.MaxAmmoCountInMagazine;
+            MaxAmmoCountInMagazine = WeaponData.WeaponStat.MaxAmmoCountInMagazine;
         }
 
         private void Update()
@@ -80,6 +79,18 @@ namespace _1.Scripts.Weapon.Scripts
             if (ownerObj.TryGetComponent(out Player user))
             {
                 player = user;
+                if (CoreManager.Instance.gameManager.SaveData != null)
+                {
+                    var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)WeaponData.WeaponStat.Type];
+                    CurrentAmmoCount = weapon.currentAmmoCount;
+                    CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
+                }
+                else
+                {
+                    CurrentAmmoCount = 12;
+                    CurrentAmmoCountInMagazine = WeaponData.WeaponStat.MaxAmmoCountInMagazine;
+                }
+                    
                 face = user.CameraPivot;
                 HittableLayer &= ~(1 << user.gameObject.layer);
             }
@@ -117,6 +128,7 @@ namespace _1.Scripts.Weapon.Scripts
             
             CurrentAmmoCount -= reloadableAmmoCount;
             CurrentAmmoCountInMagazine += reloadableAmmoCount;
+            isEmpty = CurrentAmmoCountInMagazine <= 0;
         }
 
         public void OnRefillAmmo(int ammo)
