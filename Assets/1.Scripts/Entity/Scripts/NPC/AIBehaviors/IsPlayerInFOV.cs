@@ -17,23 +17,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            Vector3 origin = controller.transform.position;
-            Vector3 direction = (CoreManager.Instance.gameManager.Player.transform.position - origin).normalized;
-
-            // 시야 최대 거리 설정 (예: 100f)
-            float maxViewDistance = 100f;
-            
-            Debug.DrawRay(origin + Vector3.up, direction * maxViewDistance, Color.red);
-            if (Physics.Raycast(origin + Vector3.up, direction, out RaycastHit hit, maxViewDistance))
+            if (Service.IsPlayerVisible(controller.transform.position + Vector3.up, 100f))
             {
-                if (hit.collider.CompareTag("Player"))
-                {
-                    Debug.Log("플레이어 시야 내에 보임. 타이머 초기화");
-                    return INode.State.SUCCESS;
-                }
+                // 플레이어가 보이는 곳에 있음. 타이머 초기화
+                return INode.State.SUCCESS;
             }
-
-            return INode.State.FAILED;
+            else
+            {
+                return INode.State.FAILED;
+            }
         }
     }   
 }

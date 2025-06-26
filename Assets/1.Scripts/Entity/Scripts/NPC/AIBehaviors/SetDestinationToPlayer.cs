@@ -16,6 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
+            controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed + controller.statController.RuntimeStatData.runMultiplier;
             controller.shouldLookAtPlayer = true;
             
             Vector3 playerPosition = CoreManager.Instance.gameManager.Player.transform.position;
