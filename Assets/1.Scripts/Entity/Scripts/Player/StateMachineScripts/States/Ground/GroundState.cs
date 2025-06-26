@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Weapon.Scripts;
+﻿using System.Collections;
+using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;

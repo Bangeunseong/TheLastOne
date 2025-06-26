@@ -31,6 +31,7 @@ namespace _1.Scripts.Manager.Subs
         PlayerAttack,
         PlayerHit,
         PlayerFootStep,
+        PlayerLand,
         
         // Enemy SFX
         EnemyAttack,
@@ -205,7 +206,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     if (clipRef == null) 
                         continue;
-
+                    Service.Log(group.name);
                     AudioClip clip;
 
                     if (clipRef.Asset is AudioClip existingClip)
@@ -218,7 +219,7 @@ namespace _1.Scripts.Manager.Subs
                         await handle.Task;
                         if (handle.Status != AsyncOperationStatus.Succeeded)
                         {
-                            Debug.LogWarning($"[LoadClips] 로드 실패: {clipRef.RuntimeKey}");
+                            Debug.LogWarning($"[LoadClips] 로드 실패: {clipRef}");
                             continue;
                         }
                         clip = handle.Result;

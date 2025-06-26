@@ -43,12 +43,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 93e2375703cfc9445b94007a531cd9f7
-    m_Address: Assets/3.Artworks/Voices - Essentials/Voice_Male/Voice_Male_Attack/Voice_Male_V1_Attack_Mono_01.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:

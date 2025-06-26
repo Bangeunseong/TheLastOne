@@ -1,5 +1,7 @@
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
@@ -117,15 +119,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <param name="animationEvent"></param>
         private void OnFootstep(AnimationEvent animationEvent)
         {
-            // TODO: 걸을 때 소리 추가
-            // if (animationEvent.animatorClipInfo.weight > 0.5f)
-            // {
-            //     if (FootstepAudioClips.Length > 0)
-            //     {
-            //         var index = Random.Range(0, FootstepAudioClips.Length);
-            //         AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-            //     }
-            // }
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position, -1);
+            }
         }
 
         /// <summary>
@@ -134,11 +131,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <param name="animationEvent"></param>
         private void OnLand(AnimationEvent animationEvent)
         {
-            // TODO: 착치할 때 소리 추가
-            // if (animationEvent.animatorClipInfo.weight > 0.5f)
-            // {
-            //     AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
-            // }
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position, -1);
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
+using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
@@ -18,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         {
             base.Exit();
             StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, stateMachine.Player.transform.position, -1);
         }
 
         public override void Update()

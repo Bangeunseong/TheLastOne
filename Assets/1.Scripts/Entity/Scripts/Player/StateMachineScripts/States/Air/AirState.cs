@@ -14,6 +14,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         {
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
+            
+            // Stop FootStep Sound Coroutine
+            if (footStepCoroutine != null) { stateMachine.Player.StopCoroutine(footStepCoroutine); footStepCoroutine = null; }
+            
+            // Stop Reload Coroutine
             if (reloadCoroutine == null) return;
             if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
             stateMachine.Player.StopCoroutine(reloadCoroutine); 

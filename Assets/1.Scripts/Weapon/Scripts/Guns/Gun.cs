@@ -2,6 +2,7 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
@@ -118,13 +119,27 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (hit.collider.TryGetComponent(out IDamagable damagable))
                     {
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
+                    } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
+                    {
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                        bulletHole.transform.position = hit.point;
+                        bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                    } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+                    {
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                        bulletHole.transform.position = hit.point;
+                        bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
                     }
                 }
             }
             
+            // Play VFX
             if (gunShotLight != null) StartCoroutine(Flicker());
             if (shellParticles.isPlaying) shellParticles.Stop();
             shellParticles.Play();
+            
+            // Play Randomized Gun Shooting Sound
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
