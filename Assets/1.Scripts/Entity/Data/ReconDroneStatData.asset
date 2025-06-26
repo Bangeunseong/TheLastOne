@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f84de557cae96fc4bb965d13771c19fb, type: 3}
-  m_Name: ReconDroneData
+  m_Name: ReconDroneStatData
   m_EditorClassIdentifier: 
   entityName: ReconDrone
   isPlayer: 0
@@ -26,3 +26,5 @@ MonoBehaviour:
   deathSounds: []
   detectRange: 10
   attackRange: 5
+  alertDuration: 3
+  alertRadius: 10

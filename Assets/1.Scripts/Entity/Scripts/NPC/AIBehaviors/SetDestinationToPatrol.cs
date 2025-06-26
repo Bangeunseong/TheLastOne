@@ -9,7 +9,7 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
 {
     /// <summary>
-    /// 플레이어에게 경로 지정
+    /// 배회경로 지정
     /// </summary>
     public class SetDestinationToPatrol : INode
     {

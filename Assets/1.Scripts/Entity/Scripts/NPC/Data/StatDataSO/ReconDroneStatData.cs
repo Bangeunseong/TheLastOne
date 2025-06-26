@@ -7,16 +7,20 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.Data
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity/Enemy/ReconDroneData")]
-    public class ReconDroneData : EntityStatData, IDetectable, IAttackable, IAlertable
+    public class ReconDroneStatData : EntityStatData, IDetectable, IAttackable, IAlertable
     {
         [Header("Range")] 
-        public float detectRange;
-        public float attackRange;
-        public float alertDuration;
+        [SerializeField] private float detectRange;
+        [SerializeField] private float attackRange;
+        
+        [Header("Alert")]
+        [SerializeField] private float alertDuration;
+        [SerializeField] private float alertRadius;
         
         public float DetectRange => detectRange;
         public float AttackRange => attackRange;
         public float AlertDuration => alertDuration;
+        public float AlertRadius => alertRadius;
     }
 }
 

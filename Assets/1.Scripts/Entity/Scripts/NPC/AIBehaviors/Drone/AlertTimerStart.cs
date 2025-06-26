@@ -15,13 +15,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
         public INode.State Evaluate(BaseNpcAI controller)
         {
             // EnemyReconDroneAIController 타입인지 확인
-            if (controller is EnemyReconDroneAIController reconDrone)
+            if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
             {
                 reconDrone.TimerStartIfNull();
             }
 
             // EnemySuicideDroneAIController 타입인지 확인
-            if (controller is EnemySuicideDroneAIController suicideDrone)
+            if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
             {
                 suicideDrone.TimerStartIfNull();
             }
