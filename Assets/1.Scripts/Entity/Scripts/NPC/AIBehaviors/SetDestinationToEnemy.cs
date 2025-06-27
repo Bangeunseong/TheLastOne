@@ -17,12 +17,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         public INode.State Evaluate(BaseNpcAI controller)
         {
             controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed + controller.statController.RuntimeStatData.runMultiplier;
-            controller.shouldLookAtPlayer = true;
+            controller.shouldLookTarget = true;
             
             // NavMesh 위의 가장 가까운 위치를 찾음
-            if (NavMesh.SamplePosition(controller.targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(controller.targetTransform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
-                controller.navMeshAgent.SetDestination(hit.position);
+                if (controller.targetTransform != null)
+                {
+                    controller.navMeshAgent.SetDestination(hit.position);   
+                }
             }
 
             return INode.State.RUN;

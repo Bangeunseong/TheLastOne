@@ -18,7 +18,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         [Header("AI Information")]
         public NavMeshAgent navMeshAgent;
         public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
-        public bool shouldLookAtPlayer = false;
+        public bool shouldLookTarget = false;
+        public Transform targetTransform;
         public Vector3 targetPos;
         private Collider _cachedCollider;
         public Vector3 MyPos
@@ -65,9 +66,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             if (!statController.isDead)
             {
-                if (shouldLookAtPlayer)
+                if (shouldLookTarget)
                 {
-                    LookAtPlayer();
+                    LookTarget();
                 }
                 
                 if (currentActionRunning)
@@ -108,9 +109,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             return true;
         }
         
-        private void LookAtPlayer()
+        private void LookTarget()
         {
-            Vector3 direction = CoreManager.Instance.gameManager.Player.transform.position - transform.position;
+            Vector3 direction = targetTransform.position - transform.position;
             direction.y = 0; // 수평 회전만
 
             if (direction != Vector3.zero)

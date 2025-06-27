@@ -14,7 +14,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            controller.shouldLookAtPlayer = true;
+            controller.shouldLookTarget = true;
             
             if (controller.animator.GetCurrentAnimatorStateInfo(0).IsName("DroneBot_Fire"))
             {

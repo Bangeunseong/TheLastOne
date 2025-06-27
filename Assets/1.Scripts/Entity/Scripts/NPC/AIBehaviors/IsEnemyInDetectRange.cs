@@ -37,6 +37,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
                 {
                     Debug.Log("Warning : Enemy in DetectRange");
+                    controller.targetTransform = collider.transform;
                     controller.targetPos = colliderPos;
                     return INode.State.SUCCESS;
                 }

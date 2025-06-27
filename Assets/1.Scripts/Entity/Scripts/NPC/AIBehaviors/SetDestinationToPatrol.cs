@@ -20,6 +20,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         public INode.State Evaluate(BaseNpcAI controller)
         {
             this.controller = controller;
+
+            controller.targetPos = Vector3.zero;
+            controller.targetTransform = null;
             
             controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed;
             controller.navMeshAgent.isStopped = false;
