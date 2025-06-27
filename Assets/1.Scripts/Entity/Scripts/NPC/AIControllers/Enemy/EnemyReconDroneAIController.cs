@@ -7,6 +7,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
+using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -45,11 +46,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             // 2-1 추적 시퀀스 등록
             var chaseSequenceNode = new SequenceNode();
             
-            // 2-2 추적상태인지 판단하는 셀렉터, 추적하는 셀렉터 등록
+            // 2-2 추적상태인지 판단하는 셀렉터, 추적하는 액션노드 등록
             var chaseCheckSelectorNode = new SelectorNode();
-            var chasingSelectorNode = new SelectorNode();
+            var chasingPlayer = new ActionNode(new SetDestinationToPlayer().Evaluate);
             chaseSequenceNode.Add(chaseCheckSelectorNode);
-            chaseSequenceNode.Add(chasingSelectorNode);
+            chaseSequenceNode.Add(chasingPlayer);
             
             // 2-3 chaseCheckSelectorNode -> 알람상태인지 검사하는 시퀀스 노드, 탐지거리 내인지 검사하는 시퀀스 노드 등록
             // chasingSelectorNode -> 추적중인 상태인지 판단하는 시퀀스 노드, 맹목적 RUN 반환 액션노드 등록
@@ -57,14 +58,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             var checkPlayerInDetectRangeSequenceNode = new SequenceNode();
             chaseCheckSelectorNode.Add(checkAlertSequenceNode);
             chaseCheckSelectorNode.Add(checkPlayerInDetectRangeSequenceNode);
-            var giveNewPathSequenceNode = new SequenceNode();
-            var returnRun = new ActionNode(new ReturnRun().Evaluate); 
-            chasingSelectorNode.Add(giveNewPathSequenceNode);
-            chasingSelectorNode.Add(returnRun);
             
             // 2-4 checkAlertSequenceNode -> 알림상태인지 판단 액션노드, 타이머 실행 액션노드, 타이머 관리 셀렉터 등록
             // checkPlayerInDetectRangeSequenceNode -> 탐지거리 내인지 체크 액션노드, 주변 알람 활성화 액션노드 등록
-            // giveNewPathSequenceNode -> 지정된 경로 있는지 검사하는 액션노드, 플레이어에게 이동경로 지정하는 액션노드 등록
             var isDroneAlerted = new ActionNode(new IsDroneAlerted().Evaluate);
             var timerStart = new ActionNode(new AlertTimerStart().Evaluate);
             var timerControlSelectorNode = new SelectorNode();
@@ -75,10 +71,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             var alertNearByDrones = new ActionNode(new AlertNearbyDrones().Evaluate);
             checkPlayerInDetectRangeSequenceNode.Add(isPlayerInDetectRange);
             checkPlayerInDetectRangeSequenceNode.Add(alertNearByDrones);
-            var isNavMeshAgentNotHasPath = new ActionNode(new IsNavMeshAgentNotHasPath().Evaluate);
-            var setDestinationToPlayer = new ActionNode(new SetDestinationToPlayer().Evaluate);
-            giveNewPathSequenceNode.Add(isNavMeshAgentNotHasPath);
-            giveNewPathSequenceNode.Add(setDestinationToPlayer);
             
             // 2-5 timerControlSelectorNode -> 타이머 리셋하는 시퀀스 노드, 타이머 지날 시 어그로 풀리는 시퀀스 노드, 맹목적 Success반환 액션노드 등록
             var timerResetSequenceNode = new SequenceNode();
@@ -105,11 +97,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             
             // 3-2 patrolSelectorNode -> 지정된 경로 있는지 판단할 시퀀스 노드 등록, 맹목적 RUN반환 액션노드 등록
             var isNavMeshAgentNotHasPathSequenceNode = new SequenceNode();
+            var returnRun = new ActionNode(new ReturnRun().Evaluate);
             patrolSelectorNode.Add(isNavMeshAgentNotHasPathSequenceNode);
-            patrolSelectorNode.Add(returnRun); // 선언X 재사용
+            patrolSelectorNode.Add(returnRun); 
             
             // 3-3 isNavMeshAgentNotHasPathSequenceNode -> 지정된 경로 있는지 검사하는 액션노드, 랜덤위치 지정 액션노드 등록
-            isNavMeshAgentNotHasPathSequenceNode.Add(isNavMeshAgentNotHasPath); // 선언X 재사용
+            var isNavMeshAgentNotHasPath = new ActionNode(new IsNavMeshAgentNotHasPath().Evaluate);
+            isNavMeshAgentNotHasPathSequenceNode.Add(isNavMeshAgentNotHasPath);
+            
+            IPatrolable patrolable = null;
+            statController.TryGetRuntimeStatInterface<IPatrolable>(out patrolable);
+            var waitingForSeconds = new ActionNode(new WaitingForSeconds(patrolable.MinWaitingDuration, patrolable.MaxWaitingDuration).Evaluate);
+            isNavMeshAgentNotHasPathSequenceNode.Add(waitingForSeconds);
+            
             var setDestinationToPatrol = new ActionNode(new SetDestinationToPatrol().Evaluate);
             isNavMeshAgentNotHasPathSequenceNode.Add(setDestinationToPatrol);
             
@@ -154,6 +154,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         public float TimerCheck()
         {
             return timer;
+        }
+
+        public void CurrentActionRunningForAnimationEvent()
+        {
+            currentActionRunning = true;
+        }
+
+        public void CurrentActionFinishedForAnimationEvent()
+        {
+            currentActionRunning = false;
         }
 
         private IEnumerator TimerStart()

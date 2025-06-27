@@ -4,10 +4,10 @@ using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Interfaces;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.NPC.Data
+namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity/Enemy/ReconDroneData")]
-    public class ReconDroneStatData : EntityStatData, IDetectable, IAttackable, IAlertable
+    public class ReconDroneStatData : EntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
     {
         [Header("Range")] 
         [SerializeField] private float detectRange;
@@ -17,10 +17,20 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data
         [SerializeField] private float alertDuration;
         [SerializeField] private float alertRadius;
         
+        [Header("Patrol")]
+        [SerializeField] private float minWaitingDuration;
+        [SerializeField] private float maxWaitingDuration;
+        [SerializeField] private float minWanderingDistance;
+        [SerializeField] private float maxWanderingDistance;
+        
         public float DetectRange => detectRange;
         public float AttackRange => attackRange;
         public float AlertDuration => alertDuration;
         public float AlertRadius => alertRadius;
+        public float MinWaitingDuration => minWaitingDuration;
+        public float MaxWaitingDuration => maxWaitingDuration;
+        public float MinWanderingDistance => minWanderingDistance;
+        public float MaxWanderingDistance => maxWanderingDistance;
     }
 }
 

@@ -18,7 +18,7 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 10
   baseAttackRate: 2
-  moveSpeed: 5
+  moveSpeed: 1
   runMultiplier: 1
   walkMultiplier: 0
   footStepSounds: []
@@ -28,3 +28,7 @@ MonoBehaviour:
   attackRange: 5
   alertDuration: 3
   alertRadius: 10
+  minWaitingDuration: 5
+  maxWaitingDuration: 10
+  minWanderingDistance: 10
+  maxWanderingDistance: 15
