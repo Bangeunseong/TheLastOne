@@ -1,4 +1,4 @@
-namespace _1.Scripts.Interfaces
+namespace _1.Scripts.Interfaces.Common
 {
     public interface IDamagable
     {

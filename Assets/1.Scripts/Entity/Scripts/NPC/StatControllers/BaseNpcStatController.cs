@@ -1,6 +1,7 @@
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers

@@ -2,6 +2,7 @@ using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
