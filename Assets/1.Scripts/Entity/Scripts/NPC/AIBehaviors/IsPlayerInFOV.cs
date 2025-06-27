@@ -17,7 +17,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            return INode.State.SUCCESS;
+            if (Service.IsPlayerVisible(controller.transform.position + Vector3.up, 100f))
+            {
+                // 플레이어가 보이는 곳에 있음. 타이머 초기화
+                return INode.State.SUCCESS;
+            }
+            else
+            {
+                return INode.State.FAILED;
+            }
         }
     }   
 }
