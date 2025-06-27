@@ -68,11 +68,10 @@ public class Unit_DroneBot : MonoBehaviour
 
 		p_dead.Play();
 		p_smoke.Play();
+		m_AudioSource.Stop();
 		m_AudioSource.PlayOneShot(s_dead);
 		m_AudioSource.loop = false;
 		restartRes = false;
-
-
 	}
 
 	void f_fire(int side) //shot 

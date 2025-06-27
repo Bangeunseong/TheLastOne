@@ -167,6 +167,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             currentActionRunning = false;
         }
 
+        public void ShouldLookAtPlayerFalseForAnimationEvent()
+        {
+            shouldLookAtPlayer = false;
+        }
+
+        public void SetDestinationNullForAnimationEvent()
+        {
+            navMeshAgent.SetDestination(transform.position);
+        }
+        
         private IEnumerator TimerStart()
         {
             while (true)
