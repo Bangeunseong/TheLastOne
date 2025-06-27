@@ -1679,7 +1679,7 @@ GameObject:
   - component: {fileID: 691201347177147415}
   - component: {fileID: 2886271144856313397}
   - component: {fileID: 4970842368283780195}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1898,7 +1898,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RigLayers: []
+  m_RigLayers:
+  - m_Rig: {fileID: 0}
+    m_Active: 1
   m_Effectors: []
 --- !u!114 &4970842368283780195
 MonoBehaviour:
@@ -2729,6 +2731,11 @@ PrefabInstance:
       propertyPath: owner
       value: 
       objectReference: {fileID: 7874159748350873753}
+    - target: {fileID: -1163905059684792765, guid: 31c154d9e83513b438bd70971aa83c15,
+        type: 3}
+      propertyPath: <HittableLayer>k__BackingField.m_Bits
+      value: 32712
+      objectReference: {fileID: 0}
     - target: {fileID: 7316314124499236665, guid: 31c154d9e83513b438bd70971aa83c15,
         type: 3}
       propertyPath: m_Name

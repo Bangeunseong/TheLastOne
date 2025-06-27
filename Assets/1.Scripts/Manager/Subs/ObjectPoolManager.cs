@@ -74,9 +74,15 @@ namespace _1.Scripts.Manager.Subs
                 defaultCapacity: poolCapacity,
                 maxSize: poolMaxSize);
 
+            List<GameObject> preloadedObjects = new List<GameObject>(poolCapacity);
             for (int i = 0; i < poolCapacity; ++i)
             {
                 GameObject obj = pool.Get();
+                preloadedObjects.Add(obj);
+            }
+
+            foreach (var obj in preloadedObjects)
+            {
                 pool.Release(obj);
             }
 
@@ -218,7 +224,7 @@ namespace _1.Scripts.Manager.Subs
                     continue;
                 }
 
-                CreatePool(prefab);
+                CreatePool(prefab, 500, 1000);
                 current++;
                 
                 float progress = (float)current / total;

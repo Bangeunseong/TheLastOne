@@ -20,7 +20,7 @@ MonoBehaviour:
     <IsKnockbackAvailable>k__BackingField: 0
     <Type>k__BackingField: 0
     <MaxAmmoCountInMagazine>k__BackingField: 6
-    <BulletSpeed>k__BackingField: 5
+    <BulletSpeed>k__BackingField: 2
     <Accuracy>k__BackingField: 5
     <ReloadTime>k__BackingField: 0.8
     <Rpm>k__BackingField: 400

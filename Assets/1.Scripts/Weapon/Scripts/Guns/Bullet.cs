@@ -65,17 +65,18 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             hittableLayer = 0;
             hittableLayer |= hitLayer;
 
-            rigidBody.AddForce(direction * appliedForce, ForceMode.Impulse);
+            rigidBody.AddForce(direction.normalized * appliedForce, ForceMode.Impulse);
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (((1 << other.gameObject.layer) & hittableLayer) != 0)
             {
+                Debug.Log(other.gameObject.layer);
                 if (other.TryGetComponent(out Player player)){ player.PlayerCondition.OnTakeDamage(damage); }
                 // else if()
+                CoreManager.Instance.objectPoolManager.Release(gameObject);
             }
-            CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
 }

@@ -182,9 +182,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private IEnumerator Flicker()
         {
-            gunShotLight.enabled = true;
+            if (gunShotLight != null) gunShotLight.enabled = true;
             yield return new WaitForSeconds(0.08f);
-            gunShotLight.enabled = false;
+            if (gunShotLight != null) gunShotLight.enabled = false;
         }
     }
 }
