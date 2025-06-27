@@ -31,6 +31,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
         [SerializeField] private Transform face;
+        [field: SerializeField] public bool IsRayCastGun { get; private set; }
         
         [field: Header("Current Weapon State")]
         [SerializeField] private bool isEmpty;
@@ -103,7 +104,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         public void OnShoot()
         {
             if (!IsReady) return;
-            if (!isOwnedByPlayer)
+            if (!IsRayCastGun)
             {
                 var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
                 if (!obj.TryGetComponent(out Bullet bullet)) return;
