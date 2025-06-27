@@ -25706,7 +25706,7 @@ MonoBehaviour:
   s_signal: {fileID: 8300000, guid: 76a98cc2b67b225468ff64d806ac3fa7, type: 3}
   hittableLayer:
     serializedVersion: 2
-    m_Bits: 32200
+    m_Bits: 31944
 --- !u!82 &2091223851770644466
 AudioSource:
   m_ObjectHideFlags: 0

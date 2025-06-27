@@ -10,8 +10,5 @@ namespace _1.Scripts.Weapon.Scripts.Common
         [field: SerializeField] public float MaxWeaponRange { get; private set; }
         [field: SerializeField] public float Recoil { get; private set; }
         [field: SerializeField] public int Damage { get; private set; }
-        
-        [field: Header("Knockback SetUp")]
-        [field: SerializeField] public bool IsKnockbackAvailable { get; private set; }
     }
 }

@@ -10,10 +10,11 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
-    public enum GunType
+    public enum WeaponType
     {
         Pistol,
         Rifle,
+        GrenadeThrow,
     }
     
     public class Gun : BaseWeapon, IShootable, IReloadable
@@ -122,14 +123,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
                     } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
                     {
-                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
-                        // bulletHole.transform.position = hit.point;
-                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
                     } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
                     {
-                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
-                        // bulletHole.transform.position = hit.point;
-                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
                     }
                 }
             }
@@ -146,7 +145,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
-            if (GunData.GunStat.Type != GunType.Pistol) return;
+            if (GunData.GunStat.Type != WeaponType.Pistol) return;
             if (player != null) player.PlayerCondition.IsAttacking = false;
         }
 
@@ -164,9 +163,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             isEmpty = CurrentAmmoCountInMagazine <= 0;
         }
 
-        public void OnRefillAmmo(int ammo)
+        public bool OnRefillAmmo(int ammo)
         {
+            if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
+            return true;
         }
 
         private Vector3 GetDirectionOfBullet()
