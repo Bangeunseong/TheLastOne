@@ -111,13 +111,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         private void LookTarget()
         {
-            Vector3 direction = targetTransform.position - transform.position;
-            direction.y = 0; // 수평 회전만
-
-            if (direction != Vector3.zero)
+            if (targetTransform != null)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+                Vector3 direction = targetTransform.position - transform.position;
+                direction.y = 0; // 수평 회전만
+
+                if (direction != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+                }
             }
         }
     }
