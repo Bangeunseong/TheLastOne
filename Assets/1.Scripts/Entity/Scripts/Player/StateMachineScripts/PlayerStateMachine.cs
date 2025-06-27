@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts
 {
-    using StateMachine = _1.Scripts.Entity.Scripts.Common.StateMachine;
     using Player = _1.Scripts.Entity.Scripts.Player.Core.Player;
     
     [Serializable] public class PlayerStateMachine : StateMachine

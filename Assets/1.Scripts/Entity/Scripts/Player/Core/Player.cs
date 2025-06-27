@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.Common;
+using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -106,6 +107,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             stateMachine.HandleInput();
             stateMachine.Update();
+            
+            PlayerCondition.OnAttack();
         }
 
         private void LateUpdate()

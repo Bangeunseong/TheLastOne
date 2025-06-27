@@ -25629,7 +25629,7 @@ GameObject:
   - component: {fileID: 5628670126002967865}
   - component: {fileID: 7217061825730023250}
   - component: {fileID: 1500416244500334887}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ReconDrone
   m_TagString: Enemy
   m_Icon: {fileID: 0}
