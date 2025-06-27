@@ -7,7 +7,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     [Serializable] public class GunStat : WeaponStat
     {
         [field: Header("Gun Settings")]
-        [field: SerializeField] public GunType Type { get; private set; }
+        [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public float BulletSpeed { get; private set; }
         [field: SerializeField] public float Accuracy { get; private set; }

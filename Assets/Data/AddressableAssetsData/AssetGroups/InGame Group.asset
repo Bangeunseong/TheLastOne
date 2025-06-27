@@ -43,12 +43,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 73a100272e614dd4d965b1a1963b9462
-    m_Address: Bullet
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3194b8bbc96ef84fab1f98f4b7dae3e
     m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_10.wav
     m_ReadOnly: 0
