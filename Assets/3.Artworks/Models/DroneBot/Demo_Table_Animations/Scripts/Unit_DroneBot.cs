@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Unit_DroneBot : MonoBehaviour
 {
@@ -21,10 +24,17 @@ public class Unit_DroneBot : MonoBehaviour
 	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
 	public LayerMask hittableLayer;
 
+	public BaseNpcAI controller;
+	
 	// Use this for initialization
 	void Start()
 	{
 		m_AudioSource = GetComponent<AudioSource>();
+	}
+
+	private void Awake()
+	{
+		controller = GetComponent<BaseNpcAI>();
 	}
 
 	void f_hit() //hit
@@ -90,7 +100,7 @@ public class Unit_DroneBot : MonoBehaviour
 		}
 		
 		// 목표 방향 계산: 플레이어 위치 기준
-		Transform player = CoreManager.Instance.gameManager.Player.CameraPivot;
+		Transform player = controller.targetTransform;
 		Vector3 directionToPlayer = (player.position - pos_side.position).normalized;
 		
 		// 총알 생성
