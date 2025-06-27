@@ -21,7 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         public bool shouldLookAtPlayer = false;
         
         [Header("Node Information")]
-        protected bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        protected bool currentActionRunning; // 현재 액션 (중첩 방지)
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
 
         [Header("Animation Information")]
@@ -45,18 +45,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Update()
         {
-            if (shouldLookAtPlayer)
+            if (!statController.isDead)
             {
-                LookAtPlayer();
-            }
-            
-            if (currentActionRunning)
-            {
-                return; // 지속실행
-            }
+                if (shouldLookAtPlayer)
+                {
+                    LookAtPlayer();
+                }
+                
+                if (currentActionRunning)
+                {
+                    return; // 지속실행
+                }
 
-            // 아니면 rootNode Evaluate
-            rootNode?.Evaluate(this);
+                // 아니면 rootNode Evaluate
+                rootNode?.Evaluate(this);
+            }
         }
 
         /// <summary>

@@ -15,7 +15,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
         /// </summary>
         public abstract RuntimeEntityStatData RuntimeStatData { get; }
+
         protected Animator animator;
+        
+        public bool isDead = false;
         
         public abstract void OnTakeDamage(int damage); // 데미지 입을 시 
 

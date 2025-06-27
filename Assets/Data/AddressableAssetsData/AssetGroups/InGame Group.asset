@@ -37,12 +37,6 @@ MonoBehaviour:
     - Stage1
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0e39c67ec055ed24e82d58c585d38433
-    m_Address: Assets/1.Scripts/Sound/Data/Test.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b0ab298866360414581b6a182659ff06
     m_Address: Shell
     m_ReadOnly: 0
