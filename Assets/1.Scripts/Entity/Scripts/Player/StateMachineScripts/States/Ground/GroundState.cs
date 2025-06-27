@@ -1,4 +1,6 @@
-﻿using _1.Scripts.Weapon.Scripts;
+﻿using System.Collections;
+using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -51,12 +53,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnReloadStarted(InputAction.CallbackContext context)
         {
             base.OnReloadStarted(context);
-            if (stateMachine.Player.EquippedGunIndex < 0) return;
-            if (stateMachine.Player.Weapons[stateMachine.Player.EquippedGunIndex] is not Gun gun) return;
+            if (playerCondition.EquippedWeaponIndex < 0) return;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
             if (!gun.IsReadyToReload) return;
             
             if(reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
-            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.WeaponData.WeaponStat.ReloadTime));
+            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime));
         }
     }
 }

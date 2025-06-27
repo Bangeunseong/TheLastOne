@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
@@ -37,11 +36,10 @@ namespace _1.Scripts.Manager.Subs
             while (!handle.IsDone)
             {
                 float progress = handle.PercentComplete;
-                
                 coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
-                coreManager.sceneLoadManager.LoadingProgress += 0.2f;
                 await Task.Yield();
             }
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
             
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
@@ -72,9 +70,20 @@ namespace _1.Scripts.Manager.Subs
         {
             if (resources.TryGetValue(name, out Object obj))
                 return obj as T;
-
-            Debug.LogWarning($"Asset not found: {name}");
             return null;
+        }
+        
+        public List<T> GetAllAssetsOfType<T>() where T : Object
+        {
+            var assets = new List<T>();
+            foreach (var resource in resources.Values)
+            {
+                if (resource is T asset)
+                {
+                    assets.Add(asset);
+                }
+            }
+            return assets;
         }
 
         /// <summary>

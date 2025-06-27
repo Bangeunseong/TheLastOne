@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 {
@@ -14,6 +13,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             stateMachine.MovementSpeedModifier = playerCondition.WalkSpeedModifier;
             base.Enter();
             // StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
+            
+            // Start Stamina Recovery Coroutine 
             if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
             staminaCoroutine = stateMachine.Player.StartCoroutine(RecoverStamina_Coroutine(
                 playerCondition.StatData.recoverRateOfStamina_Walk * playerCondition.StatData.interval,
@@ -37,7 +38,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnRunStarted(InputAction.CallbackContext context)
         {
             base.OnRunStarted(context);
-            if (stateMachine.Player.IsAiming) return;
+            if (playerCondition.IsAiming) return;
             stateMachine.ChangeState(stateMachine.RunState);
         }
     }

@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Manager.Core;
+using UnityEditor;
 using UnityEngine;
 
 public static class Service
@@ -111,4 +113,25 @@ public static class Service
         Debug.Log(_log);
 #endif
     }
+    
+    /// <summary>
+    /// NPC 입장에서 플레이어가 보이는 위치인지 검사 , 현재 본인 위치랑 거리 넣어줄것
+    /// </summary>
+    /// <param name="npcPosition"></param>
+    /// <param name="maxViewDistance"></param>
+    /// <returns></returns>
+    public static bool IsPlayerVisible(Vector3 npcPosition, float maxViewDistance)
+    {
+        Vector3 origin = npcPosition;
+        Vector3 direction = (CoreManager.Instance.gameManager.Player.transform.position + Vector3.up - origin).normalized;
+
+        Debug.DrawRay(origin, direction * maxViewDistance, Color.red);
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
+        {
+            return hit.collider.CompareTag("Player");
+        }
+
+        return false;
+    }
 }
+

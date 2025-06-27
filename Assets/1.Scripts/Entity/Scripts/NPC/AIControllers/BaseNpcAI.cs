@@ -16,12 +16,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
     public abstract class BaseNpcAI : MonoBehaviour
     {
         [Header("AI Information")]
-        private NavMeshAgent navMeshAgent;
-        public EntityStatData statData; // 자신이 소유한 스탯데이터
+        public NavMeshAgent navMeshAgent;
+        public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
+        public bool shouldLookAtPlayer = false;
         
         [Header("Node Information")]
-        private bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
+        protected bool currentActionRunning; // 현재 액션 노드 (중첩 방지)
         protected SelectorNode rootNode; // 최상위 셀렉터 노드
+
+        [Header("Animation Information")]
+        public Animator animator;
         
         // 각 NPC가 자신의 행동 트리를 정의하도록 강제
         protected abstract void BuildTree();
@@ -30,6 +34,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             rootNode = new SelectorNode();
             navMeshAgent = GetComponent<NavMeshAgent>();
+            statController = GetComponent<BaseNpcStatController>();
+            animator = GetComponent<Animator>();
         }
 
         protected virtual void Start()
@@ -39,6 +45,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Update()
         {
+            if (shouldLookAtPlayer)
+            {
+                LookAtPlayer();
+            }
+            
             if (currentActionRunning)
             {
                 return; // 지속실행
@@ -52,9 +63,40 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         /// 현재 실행중인 액션노드 있는지 여부 설정
         /// </summary>
         /// <param name="running"></param>
-        public void IsCurrentActionRunning(bool running)
+        public virtual void IsCurrentActionRunning(bool running)
         {
             currentActionRunning = running;
+        }
+        
+        /// <summary>
+        /// BaseNpcAI 말고 자식 클래스 기능이 필요할 때 사용할것
+        /// </summary>
+        /// <param name="result"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool TryGetAIController<T>(out T result) where T : BaseNpcAI
+        {
+            result = null;
+        
+            result = this as T;
+            if (result == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
+        private void LookAtPlayer()
+        {
+            Vector3 direction = CoreManager.Instance.gameManager.Player.transform.position - transform.position;
+            direction.y = 0; // 수평 회전만
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            }
         }
     }
 }

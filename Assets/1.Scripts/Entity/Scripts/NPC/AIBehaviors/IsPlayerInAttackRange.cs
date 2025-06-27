@@ -16,20 +16,32 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (controller.statData is not IAttackable attackable) // 있을 시 변환
+            if (!controller.statController.TryGetRuntimeStatInterface<IAttackable>(out var attackable))
             {
-                Debug.LogWarning($"[IsPlayerInAttackRange] statData가 IAttackable을 구현하지 않음. 컨트롤러: {controller.name}");
+                Debug.LogWarning($"[IsPlayerInAttackRange] {controller.name}이 IAttackable을 구현하지 않음");
                 return INode.State.FAILED;
             }
-                
-            float attackRange = attackable.AttackRange;
-            float sqrAttackRange = attackRange * attackRange;
-            
-            Vector3 pos = controller.transform.position;
+
+            Vector3 npcPos = controller.transform.position;
             Vector3 playerPos = CoreManager.Instance.gameManager.Player.transform.position;
-            float sqrDistance = (pos - playerPos).sqrMagnitude;
-                
-            return sqrDistance <= sqrAttackRange ? INode.State.SUCCESS : INode.State.FAILED;
+
+            float attackRange = attackable.AttackRange;
+            float sqrDist = (npcPos - playerPos).sqrMagnitude;
+            if (sqrDist > attackRange * attackRange)
+            {
+                return INode.State.FAILED;
+            }
+
+            if (Service.IsPlayerVisible(npcPos + Vector3.up, 100f))
+            {
+                // 공격 거리 안이며 플레이어가 보이는 곳에 있음
+                Debug.Log("공격 거리 안이며 플레이어가 보이는 곳에 있음");
+                return INode.State.SUCCESS;
+            }
+            else
+            {
+                return INode.State.FAILED;
+            }
         }
     }
 }

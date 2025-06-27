@@ -16,7 +16,7 @@ namespace _1.Scripts.Static
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "robot1"
+            "Shell" // 드론 총알
         };
     }
 
