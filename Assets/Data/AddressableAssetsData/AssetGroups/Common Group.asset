@@ -23,12 +23,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 73a100272e614dd4d965b1a1963b9462
-    m_Address: Bullet
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7a447ca87ac65d74089aa47e2c046080
     m_Address: SoundPlayer
     m_ReadOnly: 0
@@ -53,77 +47,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a3194b8bbc96ef84fab1f98f4b7dae3e
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_10.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 274649b0e221539409070ebf6c18918b
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_09.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 67c8b33e424ccdc4486edf538ab91c5a
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_08.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dd1af302b8902684d9381de1f2d3a5af
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_07.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 29841e7d5bbfb5b419c9ad16ca8bc4c1
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_06.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 14e8a8d2158bec840b56c54f5266e692
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_05.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1a91fcd19acf1e54bba0945d9f390849
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_04.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 186de84b3207156479abe98f4958fed0
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_03.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 85016e0f2b01da248b9663dd49a161b0
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_02.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 72f526a6a9890f643a88e85a61c86c8a
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Footstep_01.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d33ed68d394a68145b1568c6ace35839
     m_Address: PlayerFootStep
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ff697d3070687ce4583faa0561a145a2
-    m_Address: Assets/4.Extensions/UnityTechnologies/SpaceRobotKyle/Sfx/Player_Land.wav
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2711a9e4c56b3614a974ed52ea47c68e
     m_Address: PlayerLand

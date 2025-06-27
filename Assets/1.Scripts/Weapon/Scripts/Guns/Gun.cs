@@ -96,7 +96,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 }
                     
                 face = user.CameraPivot;
-                HittableLayer &= ~(1 << user.gameObject.layer);
             }
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
@@ -183,9 +182,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private IEnumerator Flicker()
         {
-            gunShotLight.enabled = true;
+            if (gunShotLight != null) gunShotLight.enabled = true;
             yield return new WaitForSeconds(0.08f);
-            gunShotLight.enabled = false;
+            if (gunShotLight != null) gunShotLight.enabled = false;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace _1.Scripts.Static
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "Bullet"
+            
         };
     }
     
@@ -16,7 +16,9 @@ namespace _1.Scripts.Static
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "Shell" // 드론 총알
+            // 드론 총알
+            "Shell", 
+            "Bullet"
         };
     }
 

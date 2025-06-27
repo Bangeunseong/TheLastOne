@@ -25629,7 +25629,7 @@ GameObject:
   - component: {fileID: 5628670126002967865}
   - component: {fileID: 7217061825730023250}
   - component: {fileID: 1500416244500334887}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: ReconDrone
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -25704,6 +25704,9 @@ MonoBehaviour:
   s_hit: {fileID: 8300000, guid: 38dc9afb12a50554fbec3d93deefffdb, type: 3}
   s_dead: {fileID: 8300000, guid: 92bc634a950bde046a12ff66b131ec1f, type: 3}
   s_signal: {fileID: 8300000, guid: 76a98cc2b67b225468ff64d806ac3fa7, type: 3}
+  hittableLayer:
+    serializedVersion: 2
+    m_Bits: 456
 --- !u!82 &2091223851770644466
 AudioSource:
   m_ObjectHideFlags: 0
@@ -25850,6 +25853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf01ddb19bf383246ad1ce9598c23685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
 --- !u!65 &7217061825730023250
 BoxCollider:
   m_ObjectHideFlags: 0

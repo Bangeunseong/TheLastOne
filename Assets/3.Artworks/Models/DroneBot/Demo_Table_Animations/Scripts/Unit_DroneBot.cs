@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 
 public class Unit_DroneBot : MonoBehaviour
@@ -11,13 +12,14 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem[] p_jet;
 	private bool restartRes = true;
-	private float shellSpeed = 500;
+	private float shellSpeed = 5;
 	private Transform pos_side;
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  
 	private AudioSource m_AudioSource;
 
 	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
+	public LayerMask hittableLayer;
 
 	// Use this for initialization
 	void Start()
@@ -86,24 +88,19 @@ public class Unit_DroneBot : MonoBehaviour
 			p_fireL.Play();
 			pos_side = Gun_EndL.transform;
 		}
-
-		// 총알 생성
-		GameObject shell = CoreManager.Instance.objectPoolManager.Get("Shell");
-		shell.transform.position = pos_side.position;
-
+		
 		// 목표 방향 계산: 플레이어 위치 기준
-		Transform player = CoreManager.Instance.gameManager.Player.transform;
+		Transform player = CoreManager.Instance.gameManager.Player.CameraPivot;
 		Vector3 directionToPlayer = (player.position - pos_side.position).normalized;
-
-		// 정확한 방향을 바라보게 회전 설정 (선택)
-		shell.transform.rotation = Quaternion.LookRotation(directionToPlayer);
-
-		// 총알 속도 설정
-		float finalShellSpeed = shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f);
-		Vector3 dir = directionToPlayer * finalShellSpeed;
-
-		// 힘 적용
-		shell.GetComponent<Rigidbody>().velocity = dir;
+		
+		// 총알 생성
+		var shell = CoreManager.Instance.objectPoolManager.Get("Bullet");
+		if (shell.TryGetComponent(out Bullet bullet))
+		{
+			bullet.Initialize(pos_side.position, directionToPlayer, 
+				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
+				10, hittableLayer);
+		}
 
 		m_AudioSource.PlayOneShot(s_Fire);
 	}

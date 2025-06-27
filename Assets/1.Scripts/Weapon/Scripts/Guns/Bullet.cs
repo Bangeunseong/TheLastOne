@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces;
+﻿using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -64,16 +65,18 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             hittableLayer = 0;
             hittableLayer |= hitLayer;
 
-            rigidBody.AddForce(direction * appliedForce, ForceMode.Impulse);
+            rigidBody.AddForce(direction.normalized * appliedForce, ForceMode.Impulse);
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (((1 << other.gameObject.layer) & hittableLayer) != 0)
             {
-                if (other.TryGetComponent(out IDamagable damagable)){ damagable.OnTakeDamage(damage); }
+                Debug.Log(other.gameObject.layer);
+                if (other.TryGetComponent(out Player player)){ player.PlayerCondition.OnTakeDamage(damage); }
+                // else if()
+                CoreManager.Instance.objectPoolManager.Release(gameObject);
             }
-            CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
 }
