@@ -70,8 +70,6 @@ namespace _1.Scripts.Manager.Subs
         {
             if (resources.TryGetValue(name, out Object obj))
                 return obj as T;
-
-            Debug.LogWarning($"Asset not found: {name}");
             return null;
         }
         

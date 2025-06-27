@@ -2,6 +2,7 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
@@ -57,15 +58,19 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private void Start()
         {
-            timeSinceLastShotFired = GunData.GunStat.Rpm / 3600f;
+            timeSinceLastShotFired = 0f;
+            isRecoiling = false;
             MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
         }
 
         private void Update()
         {
             if (!isRecoiling) return;
-            if (timeSinceLastShotFired < GunData.GunStat.Rpm / 3600f) timeSinceLastShotFired += Time.deltaTime;
-            else { timeSinceLastShotFired = 0f; isRecoiling = false;}
+            timeSinceLastShotFired += Time.deltaTime;
+            
+            if (!(timeSinceLastShotFired >= GunData.GunStat.Rpm / 3600f)) return;
+            timeSinceLastShotFired = 0f;
+            isRecoiling = false;
         }
 
         public override void Initialize(GameObject ownerObj)
@@ -97,15 +102,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         public void OnShoot()
         {
             if (!IsReady) return;
-            
-            var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId);
-            if (!obj.TryGetComponent(out Bullet bullet)) return;
-            
-            isRecoiling = true;
-            Debug.Log("Fire Bullet");
-
             if (!isOwnedByPlayer)
             {
+                var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
+                if (!obj.TryGetComponent(out Bullet bullet)) return;
                 bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
                     GunData.GunStat.MaxWeaponRange,
                     GunData.GunStat.BulletSpeed,
@@ -118,13 +118,29 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (hit.collider.TryGetComponent(out IDamagable damagable))
                     {
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
+                    } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
+                    {
+                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                        // bulletHole.transform.position = hit.point;
+                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                    } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+                    {
+                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                        // bulletHole.transform.position = hit.point;
+                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
                     }
                 }
             }
             
+            isRecoiling = true;
+            
+            // Play VFX
             if (gunShotLight != null) StartCoroutine(Flicker());
             if (shellParticles.isPlaying) shellParticles.Stop();
             shellParticles.Play();
+            
+            // Play Randomized Gun Shooting Sound
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
@@ -134,7 +150,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         public void OnReload()
         {
-            var reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
+            int reloadableAmmoCount;
+            if (isOwnedByPlayer) 
+                reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
+            else reloadableAmmoCount = MaxAmmoCountInMagazine - CurrentAmmoCount;
+            
             if (reloadableAmmoCount <= 0) return;
             
             CurrentAmmoCount -= reloadableAmmoCount;

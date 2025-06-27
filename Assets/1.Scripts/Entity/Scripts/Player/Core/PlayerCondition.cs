@@ -68,12 +68,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             Initialize(coreManager.gameManager.SaveData);
         }
 
-        private void LateUpdate()
-        {
-            if (!IsAttacking || EquippedWeaponIndex < 0) return;
-            if (Weapons[EquippedWeaponIndex] is Gun gun) gun.OnShoot();
-        }
-
         public void Initialize(DataTransferObject data)
         {
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
@@ -152,6 +146,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience += exp;
             if (Experience >= Level * 120) { OnLevelUp(); return; } // 조정 필요
+        }
+
+        public void OnAttack()
+        {
+            if (!IsAttacking || EquippedWeaponIndex < 0) return;
+            if (Weapons[EquippedWeaponIndex] is Gun gun) gun.OnShoot();
         }
 
         private void OnLevelUp()

@@ -31,6 +31,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
         public override void OnTakeDamage(int damage)
         {
             runtimeReconDroneStatData.maxHealth -= damage;
+            Service.Log(runtimeReconDroneStatData.maxHealth.ToString());
+            animator.SetTrigger(DroneAnimationHashData.Hit3);
             if (runtimeReconDroneStatData.maxHealth <= 0)
             {
                 animator.SetTrigger(DroneAnimationHashData.Dead3);

@@ -2,6 +2,8 @@
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
@@ -15,6 +17,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
         protected Coroutine reloadCoroutine;
+        protected Coroutine footStepCoroutine;
 
         private float speed;
         

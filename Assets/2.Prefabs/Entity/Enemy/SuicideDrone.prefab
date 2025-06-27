@@ -54651,7 +54651,7 @@ GameObject:
   - component: {fileID: 4525816997865737832}
   - component: {fileID: 8826099805093309600}
   - component: {fileID: 5975465750084141676}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SuicideDrone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
