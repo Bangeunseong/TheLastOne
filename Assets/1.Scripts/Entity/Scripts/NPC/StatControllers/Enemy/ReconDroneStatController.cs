@@ -9,6 +9,7 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
+using Random = System.Random;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
 {
@@ -36,7 +37,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
                 animator.SetTrigger(DroneAnimationHashData.Hit3);
                 if (runtimeReconDroneStatData.maxHealth <= 0)
                 {
-                    animator.SetTrigger(DroneAnimationHashData.Dead3);
+                    int[] deathHashes = new int[]
+                    {
+                        DroneAnimationHashData.Dead1,
+                        DroneAnimationHashData.Dead2,
+                        DroneAnimationHashData.Dead3
+                    };
+
+                    int randomIndex = UnityEngine.Random.Range(0, deathHashes.Length);
+                    animator.SetTrigger(deathHashes[randomIndex]);
+
                     isDead = true;
                 }
             }
