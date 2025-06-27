@@ -9,7 +9,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     public class DummyGun : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
-        [field: SerializeField] public GunType Type { get; private set; }
+        [field: SerializeField] public WeaponType Type { get; private set; }
 
         public event Action OnPicked;
 

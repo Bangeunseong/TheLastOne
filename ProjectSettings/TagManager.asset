@@ -19,16 +19,16 @@ TagManager:
   - Interactable
   - Ally
   - Enemy
-  - Head
-  - Chest
-  - Arm
-  - Leg
-  - Belly
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Head_P
+  - Chest_P
+  - Arm_P
+  - Leg_P
+  - Belly_P
+  - Head_E
+  - Chest_E
+  - Arm_E
+  - Leg_E
+  - Belly_E
   - 
   - 
   - 

@@ -9,7 +9,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [Header("Interaction Settings")]
         [SerializeField] private float checkRate = 0.05f;
-        [SerializeField] private float maxCheckDistance = 5f;
+        [SerializeField] private float maxCheckDistance = 2.5f;
         [SerializeField] private LayerMask interactableLayers;
         [SerializeField] private GameObject detectedObject;
 

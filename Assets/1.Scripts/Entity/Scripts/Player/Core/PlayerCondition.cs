@@ -10,11 +10,12 @@ using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
-    public class PlayerCondition : MonoBehaviour, IDamagable
+    public class PlayerCondition : MonoBehaviour
     {
         [field: Header("Base Condition Data")]
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
@@ -50,6 +51,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
+        
+        [field: Header("Damage Converters")]
+        [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
        
         // Coroutine Fields
         private CoreManager coreManager;
@@ -60,12 +64,25 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
 
+        private void Awake()
+        {
+            if (DamageConverters.Count <= 0) 
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+        }
+
+        private void Reset()
+        {
+            if (DamageConverters.Count <= 0) 
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+        }
+
         private void Start()
         {
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
+            foreach(var converter in DamageConverters) converter.Initialize(this);
             Initialize(coreManager.gameManager.SaveData);
         }
 

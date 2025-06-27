@@ -10,10 +10,11 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
-    public enum GunType
+    public enum WeaponType
     {
         Pistol,
         Rifle,
+        GrenadeThrow,
     }
     
     public class Gun : BaseWeapon, IShootable, IReloadable
@@ -31,6 +32,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
         [SerializeField] private Transform face;
+        [field: SerializeField] public bool IsRayCastGun { get; private set; }
         
         [field: Header("Current Weapon State")]
         [SerializeField] private bool isEmpty;
@@ -103,7 +105,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         public void OnShoot()
         {
             if (!IsReady) return;
-            if (!isOwnedByPlayer)
+            if (!IsRayCastGun)
             {
                 var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
                 if (!obj.TryGetComponent(out Bullet bullet)) return;
@@ -121,14 +123,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
                     } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
                     {
-                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
-                        // bulletHole.transform.position = hit.point;
-                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
                     } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
                     {
-                        // var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
-                        // bulletHole.transform.position = hit.point;
-                        // bulletHole.transform.rotation = Quaternion.LookRotation(hit.normal);
+                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
                     }
                 }
             }
@@ -145,7 +145,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
-            if (GunData.GunStat.Type != GunType.Pistol) return;
+            if (GunData.GunStat.Type != WeaponType.Pistol) return;
             if (player != null) player.PlayerCondition.IsAttacking = false;
         }
 
@@ -163,9 +163,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             isEmpty = CurrentAmmoCountInMagazine <= 0;
         }
 
-        public void OnRefillAmmo(int ammo)
+        public bool OnRefillAmmo(int ammo)
         {
+            if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
+            return true;
         }
 
         private Vector3 GetDirectionOfBullet()
