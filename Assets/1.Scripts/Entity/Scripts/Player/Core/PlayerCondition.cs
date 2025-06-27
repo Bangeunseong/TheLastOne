@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts;

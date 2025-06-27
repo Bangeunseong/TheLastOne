@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Player;
 using Unity.Collections;
 using UnityEngine;
 

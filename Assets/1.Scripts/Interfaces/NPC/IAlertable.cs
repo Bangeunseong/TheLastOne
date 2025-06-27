@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-namespace _1.Scripts.Interfaces
+namespace _1.Scripts.Interfaces.NPC
 {
     public interface IAlertable
     {

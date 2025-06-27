@@ -1,6 +1,7 @@
 ﻿using System;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Player;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
