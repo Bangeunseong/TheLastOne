@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Manager.Core;
 using UnityEditor;
 using UnityEngine;
@@ -115,20 +116,25 @@ public static class Service
     }
     
     /// <summary>
-    /// NPC 입장에서 플레이어가 보이는 위치인지 검사 , 현재 본인 위치랑 거리 넣어줄것
+    /// NPC 입장에서 지정된 타겟이 시야에 있는지 검사
     /// </summary>
-    /// <param name="npcPosition"></param>
-    /// <param name="maxViewDistance"></param>
-    /// <returns></returns>
-    public static bool IsPlayerVisible(Vector3 npcPosition, float maxViewDistance)
+    /// <param name="npcPosition">NPC 위치</param>
+    /// <param name="targetPosition">타겟 위치</param>
+    /// <param name="maxViewDistance">최대 시야 거리</param>
+    /// <param name="isAlly">자신이 아군이면 true, 적군이면 false</param>
+    /// <returns>시야에 타겟이 있고, 올바른 레이어인지 여부</returns>
+    public static bool IsTargetVisible(Vector3 npcPosition, Vector3 targetPosition, float maxViewDistance, bool isAlly)
     {
         Vector3 origin = npcPosition;
-        Vector3 direction = (CoreManager.Instance.gameManager.Player.transform.position + Vector3.up - origin).normalized;
+        Vector3 direction = (targetPosition - origin).normalized;
 
         Debug.DrawRay(origin, direction * maxViewDistance, Color.red);
+
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
         {
-            return hit.collider.CompareTag("Player");
+            int expectedLayer = isAlly ? LayerConstants.Enemy : LayerConstants.Ally;
+
+            return hit.collider.gameObject.layer == expectedLayer;
         }
 
         return false;

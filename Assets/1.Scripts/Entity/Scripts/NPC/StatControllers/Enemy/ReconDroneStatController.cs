@@ -27,6 +27,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
             runtimeReconDroneStatData = new RuntimeReconDroneStatData(reconDroneStatData); // 복사
             baseMoveSpeed = runtimeReconDroneStatData.moveSpeed;
             animator = GetComponent<Animator>();
+            isAlly = runtimeReconDroneStatData.isAlly;
         }
 
         public override void OnTakeDamage(int damage)

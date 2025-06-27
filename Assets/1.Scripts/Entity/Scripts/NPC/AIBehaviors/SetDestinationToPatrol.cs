@@ -41,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             
             do
             {
-                NavMesh.SamplePosition(controller.transform.position + (Random.onUnitSphere * Random.Range(patrolable.MinWanderingDistance, patrolable.MaxWanderingDistance)), out hit, patrolable.MaxWanderingDistance, NavMesh.AllAreas);
+                NavMesh.SamplePosition(controller.targetPos + (Random.onUnitSphere * Random.Range(patrolable.MinWanderingDistance, patrolable.MaxWanderingDistance)), out hit, patrolable.MaxWanderingDistance, NavMesh.AllAreas);
                 i++;
                 if (i == 30) break;
             } 

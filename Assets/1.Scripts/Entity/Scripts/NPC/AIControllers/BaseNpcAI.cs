@@ -19,6 +19,24 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         public NavMeshAgent navMeshAgent;
         public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
         public bool shouldLookAtPlayer = false;
+        public Vector3 targetPos;
+        private Collider _cachedCollider;
+        public Vector3 MyPos
+        {
+            get
+            {
+                if (_cachedCollider == null)
+                {
+                    _cachedCollider = GetComponent<Collider>();
+                    if (_cachedCollider == null)
+                    {
+                        Debug.LogWarning($"{name}에 Collider가 없습니다!");
+                        return transform.position; // 안전하게 fallback
+                    }
+                }
+                return _cachedCollider.bounds.center;
+            }
+        }
         
         [Header("Node Information")]
         protected bool currentActionRunning; // 현재 액션 (중첩 방지)
