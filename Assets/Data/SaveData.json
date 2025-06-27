@@ -11,15 +11,15 @@
   },
   "currentSceneId": 2,
   "currentCharacterPosition": {
-    "x": 0.6513255,
+    "x": -0.16471985,
     "y": -0.0100001693,
-    "z": 2.62080526
+    "z": 0.7626378
   },
   "currentCharacterRotation": {
     "x": 0.0,
-    "y": -0.9965051,
+    "y": -0.08003194,
     "z": 0.0,
-    "w": 0.08353246
+    "w": 0.9967923
   },
   "Weapons": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "AvailableWeapons": [
-    false,
+    true,
     true
   ]
 }
