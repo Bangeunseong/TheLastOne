@@ -8,6 +8,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
     {
         [Header("Extra Stats")]
         public float maxStamina;
+        public float focusGauge;
+        public float instinctGauge;
         
         [Header("Extra Movement")] 
         public float jumpHeight; 

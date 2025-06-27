@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces;
+﻿using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -71,7 +72,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         {
             if (((1 << other.gameObject.layer) & hittableLayer) != 0)
             {
-                if (other.TryGetComponent(out IDamagable damagable)){ damagable.OnTakeDamage(damage); }
+                if (other.TryGetComponent(out Player player)){ player.PlayerCondition.OnTakeDamage(damage); }
+                // else if()
             }
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }

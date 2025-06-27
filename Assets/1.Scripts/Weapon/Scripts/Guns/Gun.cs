@@ -96,7 +96,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 }
                     
                 face = user.CameraPivot;
-                HittableLayer &= ~(1 << user.gameObject.layer);
             }
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }

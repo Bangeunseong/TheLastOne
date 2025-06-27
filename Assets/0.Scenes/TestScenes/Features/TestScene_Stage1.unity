@@ -1717,6 +1717,11 @@ PrefabInstance:
       propertyPath: <ThirdPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 311603909}
+    - target: {fileID: 6731374018442590293, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <HittableLayer>k__BackingField.m_Bits
+      value: 31944
+      objectReference: {fileID: 0}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x

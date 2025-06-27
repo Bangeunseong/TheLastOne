@@ -32310,7 +32310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <HittableLayer>k__BackingField:
     serializedVersion: 2
-    m_Bits: 1992
+    m_Bits: 32712
   owner: {fileID: 0}
   shellParticles: {fileID: 6571928884187005755}
   gunShotLight: {fileID: 6571928884178212733}
