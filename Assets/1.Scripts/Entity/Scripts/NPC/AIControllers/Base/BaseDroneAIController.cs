@@ -23,6 +23,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             isAlerted = alert;
         }
 
+        protected override void Update()
+        {
+            base.Update();
+        }
+
         public virtual void TimerStartIfNull()
         {
             timerCoroutine ??= StartCoroutine(TimerStart());
@@ -30,6 +35,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
 
         public virtual void ResetAll()
         {
+            Debug.Log("Reset All");
             targetPos = Vector3.zero;
             targetTransform = null;
             SetAlert(false);
