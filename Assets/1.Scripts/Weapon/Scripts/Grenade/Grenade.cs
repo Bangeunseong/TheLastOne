@@ -61,7 +61,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (isExploded) return;
             isExploded = true;
 
-            var explosionParticle = coreManager.objectPoolManager.Get("EmpExplode_Particle");
+            var explosionParticle = coreManager.objectPoolManager.Get("EmpExplode");
             if (explosionParticle.TryGetComponent(out EmpExplosionParticle particle))
                 particle.Initialize(transform.position, Quaternion.identity);
 

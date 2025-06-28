@@ -18,9 +18,9 @@ MonoBehaviour:
     <Recoil>k__BackingField: 0
     <Damage>k__BackingField: 10
     <Type>k__BackingField: 2
-    <ThrowForce>k__BackingField: 5
-    <Force>k__BackingField: 10
+    <ThrowForce>k__BackingField: 25
+    <Force>k__BackingField: 15
     <Radius>k__BackingField: 5
     <Delay>k__BackingField: 3
     <Rpm>k__BackingField: 30
-    <GrenadePrefabId>k__BackingField: 
+    <GrenadePrefabId>k__BackingField: Grenade

@@ -54,19 +54,31 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d85fd7eef814904d9f9f170dd542779
-    m_Address: BulletHole_Wall
+    m_Address: BulletHole_Wall_Particle
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6e42ded71bdce4c49a682b2d95248533
-    m_Address: BulletHole_Ground
+    m_Address: BulletHole_Ground_Particle
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73a100272e614dd4d965b1a1963b9462
     m_Address: Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5bfbf94d3051dd44cbf3443bb2c3a4b5
+    m_Address: Grenade
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9071fdf08b063604d9f1ab48f37da3e0
+    m_Address: EmpExplode_Particle
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
