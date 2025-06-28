@@ -29,7 +29,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             {
                 waitTime = Random.Range(minWait, maxWait); // 랜덤으로 지정
                 startTime = Time.time;
-                Debug.Log(startTime);
                 isWaiting = true;
             }
 

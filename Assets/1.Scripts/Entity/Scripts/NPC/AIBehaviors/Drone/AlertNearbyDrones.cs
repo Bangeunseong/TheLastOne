@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
@@ -19,20 +20,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
         {
             if (!controller.statController.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
             {
-                Debug.LogWarning($"[AlertNearbyDrones] statData가 IAlertable 구현하지 않음. 컨트롤러: {controller.name}");
                 return INode.State.FAILED;
             }
             
-            // EnemyReconDroneAIController 타입인지 확인
-            if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
+            if (controller.TryGetAIController<BaseDroneAIController>(out var droneController))
             {
-                reconDrone.SetAlert(true);
-            }
-
-            // EnemySuicideDroneAIController 타입인지 확인
-            if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
-            {
-                suicideDrone.SetAlert(true);
+                droneController.SetAlert(true);
             }
 
             bool isAlly = controller.statController.RuntimeStatData.isAlly;
@@ -50,13 +43,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     if (npc == controller) continue;
 
                     // 경고 가능 드론이면 상태 전달
-                    if (npc is EnemyReconDroneAIController reconDrones)
+                    if (npc is BaseDroneAIController drone)
                     {
-                        reconDrones.SetAlert(true);
-                    }
-                    else if (npc is EnemySuicideDroneAIController suicideDrones)
-                    {
-                        suicideDrones.SetAlert(true);
+                        drone.SetAlert(true);
                     }
                 }
             }

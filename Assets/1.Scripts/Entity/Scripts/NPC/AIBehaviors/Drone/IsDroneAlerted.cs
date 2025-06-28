@@ -1,29 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
 {
     /// <summary>
-    /// 알람 켜졌는지 알려주는 노드
+    /// 알람 켜졌는지 알려주는 노드, 만약 켜져있는데 타겟이 비었다면 알람 비활성화
     /// </summary>
     public class IsDroneAlerted : INode
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
+            if (controller.TryGetAIController<BaseDroneAIController>(out var droneController))
             {
-                return reconDrone.IsAlertedCheck() ? INode.State.SUCCESS : INode.State.FAILED;
-            }
+                if (!droneController.IsAlertedCheck())
+                {
+                    return INode.State.FAILED;
+                }
 
-            if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
-            {
-                return suicideDrone.IsAlertedCheck() ? INode.State.SUCCESS : INode.State.FAILED;
+                if (droneController.targetTransform == null)
+                {
+                    droneController.ResetAll();
+                    return INode.State.FAILED;
+                }
+                
+                if (!droneController.targetTransform.CompareTag("Player"))
+                {
+                    var statController = droneController.targetTransform.GetComponent<BaseNpcStatController>();
+                    if (statController == null || statController.isDead)
+                    {
+                        droneController.ResetAll();
+                        return INode.State.FAILED;
+                    }
+                }
+                
+                return INode.State.SUCCESS;
             }
-
+            
             return INode.State.FAILED;
         }
     }
