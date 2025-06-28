@@ -11,15 +11,15 @@
   },
   "currentSceneId": 2,
   "currentCharacterPosition": {
-    "x": -0.16471985,
+    "x": 0.164121673,
     "y": -0.0100001693,
-    "z": 0.7626378
+    "z": 1.02673662
   },
   "currentCharacterRotation": {
     "x": 0.0,
-    "y": -0.08003194,
+    "y": -0.122229151,
     "z": 0.0,
-    "w": 0.9967923
+    "w": 0.9925019
   },
   "Weapons": [
     {
@@ -28,10 +28,15 @@
     },
     {
       "currentAmmoCount": 12,
-      "currentAmmoCountInMagazine": 29
+      "currentAmmoCountInMagazine": 30
+    },
+    {
+      "currentAmmoCount": 6,
+      "currentAmmoCountInMagazine": 0
     }
   ],
   "AvailableWeapons": [
+    true,
     true,
     true
   ]

@@ -22,6 +22,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ParticleSystem) ParticleSystem = this.TryGetComponent<ParticleSystem>();
         }
 
+        private void Start()
+        {
+            coreManager = CoreManager.Instance;
+        }
+
         public void Initialize(Vector3 position, Quaternion rotation)
         {
             transform.SetPositionAndRotation(position, rotation);

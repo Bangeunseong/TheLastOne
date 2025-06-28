@@ -7,6 +7,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -63,13 +64,22 @@ namespace _1.Scripts.Manager.Subs
             var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
             foreach (var weapon in Player.PlayerCondition.Weapons)
             {
-                if (weapon is Gun gun)
-                    newWeaponInfo.Add(new WeaponInfo
-                    {
-                        currentAmmoCount = gun.CurrentAmmoCount,
-                        currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine
-                    });
-                // else if (weapon is Grenade grenade) ...
+                switch (weapon)
+                {
+                    case Gun gun:
+                        newWeaponInfo.Add(new WeaponInfo
+                        {
+                            currentAmmoCount = gun.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine
+                        });
+                        break;
+                    case GrenadeThrower grenadeThrower:
+                        newWeaponInfo.Add(new WeaponInfo
+                        {
+                            currentAmmoCount = grenadeThrower.CurrentAmmoCount
+                        });
+                        break;
+                }
             }
 
             save.Weapons = newWeaponInfo.ToArray();

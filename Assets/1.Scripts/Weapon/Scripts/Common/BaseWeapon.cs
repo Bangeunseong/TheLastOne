@@ -1,10 +1,18 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces.Weapon;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Common
 {
-    public abstract class BaseWeapon : MonoBehaviour
+    public enum WeaponType
+    {
+        Pistol,
+        Rifle,
+        GrenadeThrow,
+    }
+    
+    public abstract class BaseWeapon : MonoBehaviour, IShootable
     {
         [field: Header("Hittable Layer")]
         [field: SerializeField] public LayerMask HittableLayer { get; protected set; }
@@ -18,5 +26,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
         protected bool isOwnedByPlayer;
         
         public abstract void Initialize(GameObject ownerObj);
+        public abstract void OnShoot();
+        public abstract bool OnRefillAmmo(int ammo);
     }
 }
