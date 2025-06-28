@@ -30,6 +30,9 @@ namespace _1.Scripts.Manager.Subs
         private Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
         private Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
         private Stack<UIPopup> popupStack = new Stack<UIPopup>();
+
+        private Transform uiRoot;
+        private Transform popupRoot;
         
         public LoadingUI LoadingUI => loadingUI;
         
@@ -38,6 +41,20 @@ namespace _1.Scripts.Manager.Subs
         
         public void Start()
         {
+            var mainCanvas = GameObject.Find("MainCanvas");
+            if (mainCanvas != null)
+            {
+                uiRoot = mainCanvas.transform;
+                GameObject.DontDestroyOnLoad(mainCanvas);
+            }
+            
+            var popupCanvas = GameObject.Find("PopupCanvas");
+            if (popupCanvas != null)
+            {
+                popupRoot = popupCanvas.transform;
+                GameObject.DontDestroyOnLoad(popupCanvas);
+            }
+            
             lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");
             loadingUI = FindUIComponent<LoadingUI>("LoadingUI");
             settingUI = FindUIComponent<SettingUI>("SettingUI");
@@ -74,7 +91,6 @@ namespace _1.Scripts.Manager.Subs
                 case CurrentState.Loading:
                     loadingUI?.SetActive(true);
                     break;
-                
                 case CurrentState.InGame:
                     LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
                     break;
@@ -110,16 +126,15 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
-            if (prefab != null)
+            if (prefab != null && uiRoot != null)
             {
-                var canvas = GameObject.Find("MainCanvas").transform;
-                var instance = GameObject.Instantiate(prefab, canvas);
+                var instance = GameObject.Instantiate(prefab, uiRoot, false);
                 var component = instance.GetComponent<T>();
                 if (component != null)
                 {
                     component.Init(this);
-                    loadedUI[state] = component; // 캐시에 저장
-                    component.SetActive(true);
+                    loadedUI[state] = component;
+                    component.SetActive(true);;
                 }
             }
         }
@@ -128,6 +143,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (settingUI == null) return;
             
+            settingUI.transform.SetParent(popupRoot, false);
             settingUI.transform.SetAsLastSibling();
             settingUI.SetActive(true);
             popupStack.Push(settingUI);
@@ -137,6 +153,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (loadedPopup.TryGetValue(address, out UIPopup cachedPopup))
             {
+                cachedPopup.transform.SetParent(popupRoot, false);
                 cachedPopup.transform.SetAsLastSibling();
                 cachedPopup.SetActive(true);
                 popupStack.Push(cachedPopup);
@@ -144,10 +161,9 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
-            if (prefab != null)
+            if (prefab != null && popupRoot != null)
             {
-                var canvas = GameObject.Find("PopupCanvas").transform;
-                var instance = GameObject.Instantiate(prefab, canvas);
+                var instance = GameObject.Instantiate(prefab, popupRoot, false);
                 var component = instance.GetComponent<T>();
                 if (component != null)
                 {

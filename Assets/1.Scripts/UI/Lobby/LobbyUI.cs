@@ -33,6 +33,7 @@ namespace _1.Scripts.UI.Lobby
 
         private void OnStartButtonClicked()
         {
+            Debug.Log("Start Button Clicked");
             CoreManager.Instance.StartGame();
         }
         

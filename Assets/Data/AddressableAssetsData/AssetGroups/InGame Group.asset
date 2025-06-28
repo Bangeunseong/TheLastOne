@@ -30,7 +30,7 @@ MonoBehaviour:
     - Stage1
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 29a9275e7cb2a4e459a2cd0921af92ca
+  - m_GUID: c25f2806abf969d4aa8342237180121f
     m_Address: InGameUI
     m_ReadOnly: 0
     m_SerializedLabels:

@@ -28,23 +28,11 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image weaponImage;
         [SerializeField] private Image ammoImage;
 
-        [Header("설정 버튼")] [SerializeField] private Button settingButton;
-        [Header("인벤토리 버튼")] [SerializeField] private Button inventoryButton;
-
         private PlayerCondition playerCondition;
 
         public override void Init(UIManager manager)
         {
             base.Init(manager);
-            if (settingButton != null)
-            {
-                settingButton.onClick.AddListener(OnSettingButtonClicked);
-            }
-
-            if (inventoryButton != null)
-            {
-                inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
-            }
         }
 
         public override void SetActive(bool active)
