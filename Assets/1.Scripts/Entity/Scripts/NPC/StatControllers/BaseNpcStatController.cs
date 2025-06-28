@@ -16,12 +16,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers
         /// </summary>
         public abstract RuntimeEntityStatData RuntimeStatData { get; }
 
+        public bool isAlly;
+        
         protected Animator animator;
         
         public bool isDead = false;
         
         public abstract void OnTakeDamage(int damage); // 데미지 입을 시 
-
         
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯에 특정 인터페이스가 있는지 검사 후, 그 인터페이스를 반환

@@ -29,6 +29,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
             animator = GetComponent<Animator>();
         }
 
+        private void Update()
+        {
+            runtimeReconDroneStatData.isAlly = isAlly;
+        }
+
         public override void OnTakeDamage(int damage)
         {
             if (!isDead)

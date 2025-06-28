@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
+using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
@@ -34,11 +35,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                 suicideDrone.SetAlert(true);
             }
 
-            Collider[] hits = Physics.OverlapSphere(controller.transform.position, alertable.AlertRadius);
+            bool isAlly = controller.statController.RuntimeStatData.isAlly;
+            Vector3 selfPos = controller.transform.position;
+            float range = alertable.AlertRadius;
+            
+            int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally;
+            Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
 
-            foreach (var hit in hits)
+            foreach (var collider in colliders)
             {
-                if (hit.TryGetComponent(out BaseNpcAI npc))
+                if (collider.TryGetComponent(out BaseNpcAI npc))
                 {
                     // 자신 제외
                     if (npc == controller) continue;
