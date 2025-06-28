@@ -54651,7 +54651,7 @@ GameObject:
   - component: {fileID: 4525816997865737832}
   - component: {fileID: 8826099805093309600}
   - component: {fileID: 5975465750084141676}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: SuicideDrone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54726,6 +54726,9 @@ MonoBehaviour:
   s_hit: {fileID: 8300000, guid: 38dc9afb12a50554fbec3d93deefffdb, type: 3}
   s_dead: {fileID: 8300000, guid: 92bc634a950bde046a12ff66b131ec1f, type: 3}
   s_signal: {fileID: 8300000, guid: 76a98cc2b67b225468ff64d806ac3fa7, type: 3}
+  hittableLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!82 &8826099805093309600
 AudioSource:
   m_ObjectHideFlags: 0

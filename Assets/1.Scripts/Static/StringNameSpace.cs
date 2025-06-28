@@ -11,6 +11,7 @@ namespace _1.Scripts.Static
             "Bullet",
             "BulletHole_Wall",
             "BulletHole_Ground",
+            "Grenade",
         };
     }
     

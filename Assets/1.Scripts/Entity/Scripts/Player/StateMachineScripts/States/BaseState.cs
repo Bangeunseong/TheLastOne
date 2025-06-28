@@ -6,6 +6,7 @@ using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -267,16 +268,25 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
             if (weaponCount == 0) return;
 
-            int nextIndex = currentIndex;
-
-            if (value.y < 0f) { nextIndex = (currentIndex + 2) % (weaponCount + 1) - 1; }
-            else if (value.y > 0f)
+            var nextIndex = currentIndex + 1; // 현재 Weapon Index를 0에서 Weapon Count + 1로 정규화
+            
+            if (value.y < 0f)
             {
-                if (currentIndex < 0) nextIndex = weaponCount - 1;
-                else nextIndex = currentIndex % (weaponCount + 1) - 1;
-                Debug.Log(currentIndex + "," + nextIndex);
+                do
+                {
+                    nextIndex = (nextIndex + 1) % (playerCondition.Weapons.Count + 1) - 1;
+                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
+                } while (nextIndex != -1);
+            } else if (value.y > 0f)
+            {
+                if (nextIndex == 0) nextIndex = playerCondition.Weapons.Count + 1;
+                do
+                {
+                    nextIndex = (nextIndex - 1) % (playerCondition.Weapons.Count + 1) - 1;
+                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
+                } while (nextIndex != -1);
             }
-            if (nextIndex != currentIndex) playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
+            playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
         /* --------------------------- */
         
@@ -287,7 +297,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (stateMachine.Player.PlayerInteraction.Interactable == null) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
-            if (interactable is DummyGun gun)
+            if (interactable is DummyWeapon gun)
             {
                 gun.OnInteract(stateMachine.Player.gameObject);
             }

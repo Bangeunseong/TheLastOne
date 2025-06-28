@@ -43,7 +43,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             attackSequenceNode.Add(isPlayerInAttackRange);
             attackSequenceNode.Add(reconDroneAttack);
             
-            
             // 2-1 추적 시퀀스 등록
             var chaseSequenceNode = new SequenceNode();
             

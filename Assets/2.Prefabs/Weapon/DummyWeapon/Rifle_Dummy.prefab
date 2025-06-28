@@ -2820,7 +2820,7 @@ GameObject:
   - component: {fileID: 7218839403503673559}
   - component: {fileID: 633354372327206671}
   - component: {fileID: 8833155418395444478}
-  m_Layer: 10
+  m_Layer: 7
   m_Name: Rifle_Dummy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2860,9 +2860,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 1
-  OnPicked:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!54 &633354372327206671
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2871,7 +2868,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7316314124499236665}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

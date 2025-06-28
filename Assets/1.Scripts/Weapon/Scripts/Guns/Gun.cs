@@ -10,14 +10,7 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
-    public enum WeaponType
-    {
-        Pistol,
-        Rifle,
-        GrenadeThrow,
-    }
-    
-    public class Gun : BaseWeapon, IShootable, IReloadable
+    public class Gun : BaseWeapon, IReloadable
     {
         [Header("Components")] 
         [SerializeField] private ParticleSystem shellParticles;
@@ -72,7 +65,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!isRecoiling) return;
             timeSinceLastShotFired += Time.deltaTime;
             
-            if (!(timeSinceLastShotFired >= GunData.GunStat.Rpm / 3600f)) return;
+            if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;
             timeSinceLastShotFired = 0f;
             isRecoiling = false;
         }
@@ -102,7 +95,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
 
-        public void OnShoot()
+        public override void OnShoot()
         {
             if (!IsReady) return;
             if (!IsRayCastGun)
@@ -163,7 +156,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             isEmpty = CurrentAmmoCountInMagazine <= 0;
         }
 
-        public bool OnRefillAmmo(int ammo)
+        public override bool OnRefillAmmo(int ammo)
         {
             if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
