@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
 using Unity.Collections;
 using UnityEngine;
@@ -157,7 +158,7 @@ namespace _1.Scripts.Manager.Subs
             player.PlayerCondition.IsPlayerHasControl = true;
 
             var dummyGunList =
-                UnityEngine.Object.FindObjectsByType<DummyGun>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                UnityEngine.Object.FindObjectsByType<DummyWeapon>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var dummyGun in dummyGunList)
             {
                 Service.Log(dummyGun.name);

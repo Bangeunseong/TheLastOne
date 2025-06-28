@@ -1,7 +1,7 @@
 {
   "characterInfo": {
     "maxHealth": 100,
-    "health": 100,
+    "health": 10,
     "maxStamina": 100.0,
     "stamina": 100.0,
     "damage": 10.0,
@@ -11,27 +11,32 @@
   },
   "currentSceneId": 2,
   "currentCharacterPosition": {
-    "x": 0.135867,
+    "x": 0.164121673,
     "y": -0.0100001693,
-    "z": 2.66358566
+    "z": 1.02673662
   },
   "currentCharacterRotation": {
     "x": 0.0,
-    "y": -0.9439888,
+    "y": -0.122229151,
     "z": 0.0,
-    "w": -0.329977542
+    "w": 0.9925019
   },
   "Weapons": [
     {
-      "currentAmmoCount": 6,
-      "currentAmmoCountInMagazine": 0
+      "currentAmmoCount": 12,
+      "currentAmmoCountInMagazine": 6
     },
     {
       "currentAmmoCount": 12,
       "currentAmmoCountInMagazine": 30
+    },
+    {
+      "currentAmmoCount": 6,
+      "currentAmmoCountInMagazine": 0
     }
   ],
   "AvailableWeapons": [
+    true,
     true,
     true
   ]

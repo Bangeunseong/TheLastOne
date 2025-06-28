@@ -73,7 +73,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (((1 << other.gameObject.layer) & hittableLayer) != 0)
             {
                 Debug.Log(other.gameObject.layer);
-                if (other.TryGetComponent(out Player player)){ player.PlayerCondition.OnTakeDamage(damage); }
+                if (other.TryGetComponent(out IDamagable damagable)){ damagable.OnTakeDamage(damage); }
                 // else if()
                 CoreManager.Instance.objectPoolManager.Release(gameObject);
             }

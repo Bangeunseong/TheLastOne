@@ -18,7 +18,26 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         [Header("AI Information")]
         public NavMeshAgent navMeshAgent;
         public BaseNpcStatController statController; // 자신이 소유한 스탯컨트롤러
-        public bool shouldLookAtPlayer = false;
+        public bool shouldLookTarget = false;
+        public Transform targetTransform;
+        public Vector3 targetPos;
+        private Collider _cachedCollider;
+        public Vector3 MyPos
+        {
+            get
+            {
+                if (_cachedCollider == null)
+                {
+                    _cachedCollider = GetComponent<Collider>();
+                    if (_cachedCollider == null)
+                    {
+                        Debug.LogWarning($"{name}에 Collider가 없습니다!");
+                        return transform.position; // 안전하게 fallback
+                    }
+                }
+                return _cachedCollider.bounds.center;
+            }
+        }
         
         [Header("Node Information")]
         protected bool currentActionRunning; // 현재 액션 (중첩 방지)
@@ -47,9 +66,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         {
             if (!statController.isDead)
             {
-                if (shouldLookAtPlayer)
+                if (shouldLookTarget)
                 {
-                    LookAtPlayer();
+                    LookTarget();
                 }
                 
                 if (currentActionRunning)
@@ -90,15 +109,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             return true;
         }
         
-        private void LookAtPlayer()
+        private void LookTarget()
         {
-            Vector3 direction = CoreManager.Instance.gameManager.Player.transform.position - transform.position;
-            direction.y = 0; // 수평 회전만
-
-            if (direction != Vector3.zero)
+            if (targetTransform != null)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+                Vector3 direction = targetTransform.position - transform.position;
+                direction.y = 0; // 수평 회전만
+
+                if (direction != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+                }
             }
         }
     }

@@ -8,13 +8,15 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
-    public class PlayerCondition : MonoBehaviour, IDamagable
+    public class PlayerCondition : MonoBehaviour
     {
         [field: Header("Base Condition Data")]
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
@@ -50,6 +52,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
+        
+        [field: Header("Damage Converters")]
+        [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
        
         // Coroutine Fields
         private CoreManager coreManager;
@@ -60,22 +65,35 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
 
+        private void Awake()
+        {
+            if (DamageConverters.Count <= 0) 
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+        }
+
+        private void Reset()
+        {
+            if (DamageConverters.Count <= 0) 
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+        }
+
         private void Start()
         {
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
+            foreach(var converter in DamageConverters) converter.Initialize(this);
             Initialize(coreManager.gameManager.SaveData);
         }
 
         public void Initialize(DataTransferObject data)
         {
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
-            foreach (var gun in listOfGuns)
+            foreach (var weapon in listOfGuns)
             {
-                gun.Initialize(gameObject);
-                Weapons.Add(gun);
+                weapon.Initialize(gameObject);
+                Weapons.Add(weapon);
                 AvailableWeapons.Add(false);
             }
             
@@ -152,7 +170,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnAttack()
         {
             if (!IsAttacking || EquippedWeaponIndex < 0) return;
-            if (Weapons[EquippedWeaponIndex] is Gun gun) gun.OnShoot();
+            switch (Weapons[EquippedWeaponIndex])
+            {
+                case Gun gun:
+                    gun.OnShoot();
+                    break;
+                case GrenadeThrower grenadeThrower:
+                    grenadeThrower.OnShoot();
+                    break;
+            }
         }
 
         private void OnLevelUp()
@@ -172,7 +198,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
-            if(aimCoroutine != null){StopCoroutine(aimCoroutine);}
+            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); }
             aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
             IsAiming = isAim;
         }
@@ -192,13 +218,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 player.FirstPersonCamera.m_Lens.FieldOfView = value;
-                if(EquippedWeaponIndex >= 0)
+                if(EquippedWeaponIndex is >= 0 and < 2)
                     player.WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
                 yield return null;
             }
 
             player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            if(EquippedWeaponIndex >= 0)
+            if(EquippedWeaponIndex is >= 0 and < 2)
                 player.WeaponPivot.localPosition = targetLocalPosition;
             aimCoroutine = null;
         }
@@ -217,6 +243,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
         {
             IsSwitching = true;
+            
+            Service.Log($"{previousWeaponIndex}, {currentWeaponIndex}");
             
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
             while (IsAiming){}
@@ -242,7 +270,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
 
                 player.WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-                if (Weapons[previousWeaponIndex] is Gun gunToStore){ gunToStore.gameObject.SetActive(false); }
+                Weapons[previousWeaponIndex].gameObject.SetActive(false);
             }
             
             // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
@@ -258,7 +286,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             currentWeaponPivotRotation = player.WeaponPivot.localRotation;
             targetLocalPosition = player.WeaponPoints["WieldPoint"].localPosition;
             targetLocalRotation = player.WeaponPoints["WieldPoint"].localRotation;
-            if (Weapons[EquippedWeaponIndex] is Gun gunToSwitch){ gunToSwitch.gameObject.SetActive(true); }
+            
+            Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             
             float weaponWieldTime = 0f;
             while (weaponWieldTime < duration)
