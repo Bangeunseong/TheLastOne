@@ -45,6 +45,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     // 경고 가능 드론이면 상태 전달
                     if (npc is BaseDroneAIController drone)
                     {
+                        drone.targetTransform = controller.targetTransform;
+                        drone.targetPos = controller.targetPos;
                         drone.SetAlert(true);
                     }
                 }

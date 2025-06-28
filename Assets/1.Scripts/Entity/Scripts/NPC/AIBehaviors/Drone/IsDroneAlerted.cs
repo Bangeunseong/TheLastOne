@@ -4,7 +4,9 @@ using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
+using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
+using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
@@ -23,6 +25,38 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     return INode.State.FAILED;
                 }
 
+                if (!controller.statController.TryGetRuntimeStatInterface<IDetectable>(out var detectable))
+                {
+                    return INode.State.FAILED;
+                }
+                
+                bool isAlly = controller.statController.RuntimeStatData.isAlly;
+                Vector3 selfPos = controller.transform.position;
+                float range = detectable.DetectRange;
+            
+                int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally;
+                Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
+                foreach (Collider collider in colliders)
+                {
+                    if (!collider.CompareTag("Player"))
+                    {
+                        var statController = collider.GetComponent<BaseNpcStatController>();
+                        if (statController == null || statController.isDead)
+                        {
+                            continue;
+                        }
+                    }
+                
+                    Vector3 colliderPos = collider.bounds.center;
+                    if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
+                    {
+                        Debug.Log("Warning : Enemy in DetectRange");
+                        controller.targetTransform = collider.transform;
+                        controller.targetPos = colliderPos;
+                        return INode.State.SUCCESS;
+                    }
+                }
+                
                 if (droneController.targetTransform == null)
                 {
                     droneController.ResetAll();
