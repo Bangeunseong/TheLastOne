@@ -45,14 +45,12 @@ namespace _1.Scripts.Manager.Subs
             if (mainCanvas != null)
             {
                 uiRoot = mainCanvas.transform;
-                GameObject.DontDestroyOnLoad(mainCanvas);
             }
             
             var popupCanvas = GameObject.Find("PopupCanvas");
             if (popupCanvas != null)
             {
                 popupRoot = popupCanvas.transform;
-                GameObject.DontDestroyOnLoad(popupCanvas);
             }
             
             lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");

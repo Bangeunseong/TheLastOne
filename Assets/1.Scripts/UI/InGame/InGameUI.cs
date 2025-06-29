@@ -1,10 +1,11 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
+using Michsky.UI.Shift;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 
 namespace _1.Scripts.UI.InGame
@@ -21,48 +22,44 @@ namespace _1.Scripts.UI.InGame
 
         [Header("인스팅트 게이지")] [SerializeField] private Image instinctGaugeImage;
 
-        [Header("크로스 헤어")] [SerializeField] private Image crossHairImage;
+        [Header("크로스 헤어")] [SerializeField] private Image crosshairImage;
 
-        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponName;
+        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponNameText;
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private Image weaponImage;
         [SerializeField] private Image ammoImage;
 
-        private PlayerCondition playerCondition;
+        [SerializeField] private PressKeyEvent pauseKeyEvent;
+        [SerializeField] private GameObject pauseMenu;
 
+        private PlayerCondition playerCondition;
+        private UIManager uiManager;
+        private bool isPaused = false;
+
+        
         public override void Init(UIManager manager)
         {
             base.Init(manager);
+            
+            playerCondition = FindObjectOfType<PlayerCondition>();
+            if (playerCondition != null)
+            {
+                playerCondition.OnDamage += UpdateStateUI;
+                playerCondition.OnDeath += UpdateStateUI;
+                UpdateStateUI();
+            }
+
+            pauseKeyEvent.hotkey = KeyCode.Escape;
+            pauseKeyEvent.pressAnyKey = false;
+            pauseKeyEvent.invokeAtStart = false;
+            pauseKeyEvent.pressAction.AddListener(TogglePause);
+            
+            pauseMenu.SetActive(false);
         }
 
         public override void SetActive(bool active)
         {
             gameObject.SetActive(active);
-
-            if (active)
-            {
-                if (playerCondition == null)
-                {
-                    playerCondition = FindObjectOfType<PlayerCondition>();
-                }
-
-                if (playerCondition != null)
-                {
-                    //playerCondition.OnHealthChanged += UpdateHealthSlider;
-                    //playerCondition.OnStaminaChanged += UpdateStaminaSlider;
-                    //playerCondition.OnLevelChanged += UpdateLevelUI;
-                    playerCondition.OnDamage += UpdateStateUI;
-                    UpdateStateUI();
-                }
-            }
-            else
-            {
-                if (playerCondition != null)
-                {
-                    playerCondition.OnDamage -= UpdateStateUI;
-                    playerCondition = null;
-                }
-            }
         }
         
         private void UpdateStateUI()
@@ -90,6 +87,18 @@ namespace _1.Scripts.UI.InGame
             if (staminaText != null)
                 staminaText.text = current + "/" + max;
         }
+        
+        public void UpdateInstinct(float value)
+        {
+            if (instinctGaugeImage != null)
+                instinctGaugeImage.fillAmount = Mathf.Clamp01(value);
+        }
+
+        public void UpdateFocus(float value)
+        {
+            if (focusGaugeImage != null)
+                focusGaugeImage.fillAmount = Mathf.Clamp01(value);
+        }
 
         private void UpdateLevelUI(int level)
         {
@@ -100,10 +109,31 @@ namespace _1.Scripts.UI.InGame
         {
             uiManager.ShowSettingPopup();
         }
-
-        private void OnInventoryButtonClicked()
+        
+        public void UpdateCrosshair(Sprite sprite)
         {
-            uiManager.ShowPopup<InventoryUI>("InventoryUI");
+            if (crosshairImage != null && sprite != null)
+                crosshairImage.sprite = sprite;
+        }
+        
+        public void UpdateWeaponInfo(string weaponName, int ammoLeft, int clipSize)
+        {
+            if (weaponNameText != null)
+                weaponNameText.text = weaponName;
+
+            if (ammoText != null)
+                ammoText.text  = $"{ammoLeft} / {clipSize}";
+        }
+        
+        public void TogglePause()
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0f : 1f;
+
+            pauseMenu.SetActive(isPaused);
+
+            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible   = isPaused;
         }
     }
 }
