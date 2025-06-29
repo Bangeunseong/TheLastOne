@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Interfaces;
@@ -17,15 +18,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
     /// <summary>
     /// 드론(Recon Drone) 
     /// </summary>
-    public class EnemyReconDroneAIController : BaseNpcAI
+    public class EnemyReconDroneAIController : BaseDroneAIController
     {
-        [Header("Alert")]
-        private bool isAlerted = false;
-
-        [Header("Timer")] 
-        private Coroutine timerCoroutine = null;
-        private float timer = 0f;
-        
         protected override void Start()
         {
             // 액션노드 추가해서 등장연출 가능
@@ -118,43 +112,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
             rootNode.Add(patrolSelectorNode);
         }
 
-
-        public bool IsAlertedCheck()
-        {
-            return isAlerted;
-        }
-        
-        public void SetAlert(bool alert)
-        {
-            isAlerted = alert;
-        }
-
-        public void TimerStartIfNull()
-        {
-            timerCoroutine ??= StartCoroutine(TimerStart()); // null이면 코루틴 실행
-        }
-
-        public void ResetAll()
-        {
-            SetAlert(false);
-            if (timerCoroutine != null)
-            {
-                StopCoroutine(timerCoroutine);
-                timerCoroutine = null;
-            }
-            ResetTimer();
-        }
-        
-        public void ResetTimer()
-        {
-            timer = 0f;
-        }
-        
-        public float TimerCheck()
-        {
-            return timer;
-        }
-
         public void CurrentActionRunningForAnimationEvent()
         {
             currentActionRunning = true;
@@ -173,15 +130,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
         public void SetDestinationNullForAnimationEvent()
         {
             navMeshAgent.SetDestination(transform.position);
-        }
-        
-        private IEnumerator TimerStart()
-        {
-            while (true)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-            }   
         }
     }
 }

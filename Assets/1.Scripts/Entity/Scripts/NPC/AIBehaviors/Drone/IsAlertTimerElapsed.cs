@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
@@ -22,15 +23,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
             }
             
             // EnemyReconDroneAIController 타입인지 확인
-            if (controller.TryGetAIController<EnemyReconDroneAIController>(out var reconDrone))
+            if (controller.TryGetAIController<BaseDroneAIController>(out var droneController))
             {
-                return reconDrone.TimerCheck() <= alertable.AlertDuration ?  INode.State.SUCCESS : INode.State.FAILED;
-            }
-
-            // EnemySuicideDroneAIController 타입인지 확인
-            if (controller.TryGetAIController<EnemySuicideDroneAIController>(out var suicideDrone))
-            {
-                return suicideDrone.TimerCheck() <= alertable.AlertDuration ?  INode.State.SUCCESS : INode.State.FAILED;
+                if (droneController.TimerCheck() >= alertable.AlertDuration)
+                {
+                    return INode.State.SUCCESS;
+                }
+                else
+                {
+                    return INode.State.FAILED;
+                }
             }
             
             return INode.State.FAILED;

@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
@@ -21,7 +22,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         {
             if (!controller.statController.TryGetRuntimeStatInterface<IDetectable>(out var detectable))
             {
-                Debug.LogWarning($"[IsPlayerInAttackRange] {controller.name}이 IAttackable을 구현하지 않음");
                 return INode.State.FAILED;
             }
             
@@ -33,6 +33,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
             foreach (Collider collider in colliders)
             {
+                if (!collider.CompareTag("Player"))
+                {
+                    var statController = collider.GetComponent<BaseNpcStatController>();
+                    if (statController == null || statController.isDead)
+                    {
+                        continue;
+                    }
+                }
+                
                 Vector3 colliderPos = collider.bounds.center;
                 if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
                 {
