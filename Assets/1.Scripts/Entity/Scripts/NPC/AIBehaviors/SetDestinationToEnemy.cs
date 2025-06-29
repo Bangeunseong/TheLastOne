@@ -21,14 +21,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             {
                 return INode.State.FAILED;
             }
-
-            // 타겟의 스탯 컨트롤러 가져오기
-            var statController = controller.targetTransform.GetComponent<BaseNpcStatController>();
-            if (statController == null || statController.isDead)
-            {
-                return INode.State.FAILED;
-            }
             
+            if (!controller.targetTransform.CompareTag("Player"))
+            {
+                var statController = controller.targetTransform.GetComponent<BaseNpcStatController>();
+                if (statController == null || statController.isDead)
+                {
+                    return INode.State.FAILED;
+                }
+            }
             
             controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed + controller.statController.RuntimeStatData.runMultiplier;
             controller.shouldLookTarget = true;
