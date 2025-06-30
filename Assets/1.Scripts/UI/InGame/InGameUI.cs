@@ -29,18 +29,15 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image weaponImage;
         [SerializeField] private Image ammoImage;
 
-        [SerializeField] private PressKeyEvent pauseKeyEvent;
-        [SerializeField] private GameObject pauseMenu;
 
         private PlayerCondition playerCondition;
-        private UIManager uiManager;
         private bool isPaused = false;
 
-        
+
         public override void Init(UIManager manager)
         {
             base.Init(manager);
-            
+
             playerCondition = FindObjectOfType<PlayerCondition>();
             if (playerCondition != null)
             {
@@ -48,20 +45,21 @@ namespace _1.Scripts.UI.InGame
                 playerCondition.OnDeath += UpdateStateUI;
                 UpdateStateUI();
             }
-
-            pauseKeyEvent.hotkey = KeyCode.Escape;
-            pauseKeyEvent.pressAnyKey = false;
-            pauseKeyEvent.invokeAtStart = false;
-            pauseKeyEvent.pressAction.AddListener(TogglePause);
-            
-            pauseMenu.SetActive(false);
         }
 
         public override void SetActive(bool active)
         {
             gameObject.SetActive(active);
         }
-        
+
+        void Update()
+        {
+            if (playerCondition != null)
+            {
+                UpdateStateUI();
+            }
+        }
+
         private void UpdateStateUI()
         {
             if (playerCondition == null) return;
@@ -74,7 +72,7 @@ namespace _1.Scripts.UI.InGame
         {
             if (healthSlider != null)
                 healthSlider.value = current / max;
-            
+
             if (healthText != null)
                 healthText.text = current + "/" + max;
         }
@@ -83,11 +81,11 @@ namespace _1.Scripts.UI.InGame
         {
             if (staminaSlider != null)
                 staminaSlider.value = current / max;
-            
+
             if (staminaText != null)
                 staminaText.text = current + "/" + max;
         }
-        
+
         public void UpdateInstinct(float value)
         {
             if (instinctGaugeImage != null)
@@ -104,36 +102,25 @@ namespace _1.Scripts.UI.InGame
         {
             levelText.text = level.ToString();
         }
-        
+
         private void OnSettingButtonClicked()
         {
             uiManager.ShowSettingPopup();
         }
-        
+
         public void UpdateCrosshair(Sprite sprite)
         {
             if (crosshairImage != null && sprite != null)
                 crosshairImage.sprite = sprite;
         }
-        
+
         public void UpdateWeaponInfo(string weaponName, int ammoLeft, int clipSize)
         {
             if (weaponNameText != null)
                 weaponNameText.text = weaponName;
 
             if (ammoText != null)
-                ammoText.text  = $"{ammoLeft} / {clipSize}";
-        }
-        
-        public void TogglePause()
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0f : 1f;
-
-            pauseMenu.SetActive(isPaused);
-
-            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible   = isPaused;
+                ammoText.text = $"{ammoLeft} / {clipSize}";
         }
     }
 }

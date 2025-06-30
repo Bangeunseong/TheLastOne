@@ -22,7 +22,7 @@ namespace _1.Scripts.UI.Lobby
             
             startButton.onClick.AddListener(OnStartButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
-            settingButton.onClick.AddListener(OnSettingButtonClicked);
+            //settingButton.onClick.AddListener(OnSettingButtonClicked);
             exitButton.onClick.AddListener(OnQuitButtonClicked);
         }
         
@@ -42,10 +42,10 @@ namespace _1.Scripts.UI.Lobby
             CoreManager.Instance.StartGame();
         }
 
-        private void OnSettingButtonClicked()
+        /*private void OnSettingButtonClicked()
         { 
             uiManager.ShowSettingPopup();
-        }
+        }*/
         
         private void OnQuitButtonClicked()
         {

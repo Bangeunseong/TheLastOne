@@ -20,7 +20,7 @@ namespace Michsky.UI.Shift
         Animator mWindowAnimator;
         bool isOn = false;
 
-        void Start()
+        void Awake()
         {
             mWindowAnimator = gameObject.GetComponent<Animator>();
 
@@ -33,12 +33,16 @@ namespace Michsky.UI.Shift
             gameObject.SetActive(false);
         }
 
+        void OnEnable()
+        {
+            isOn = false;
+        }
         public void ModalWindowIn()
         {
             StopCoroutine("DisableWindow");
             gameObject.SetActive(true);
 
-            if (isOn == false)
+            if (isOn == false && mWindowAnimator != null)
             {
                 if (sharpAnimations == false)
                     mWindowAnimator.CrossFade("Window In", 0.1f);
@@ -51,7 +55,7 @@ namespace Michsky.UI.Shift
 
         public void ModalWindowOut()
         {
-            if (isOn == true)
+            if (isOn == true && mWindowAnimator != null)
             {
                 if (sharpAnimations == false)
                     mWindowAnimator.CrossFade("Window Out", 0.1f);
