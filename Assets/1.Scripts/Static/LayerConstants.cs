@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants
+namespace _1.Scripts.Static
 {
     public static class LayerConstants
     {

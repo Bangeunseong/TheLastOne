@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
-using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
-using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEngine;
 
 

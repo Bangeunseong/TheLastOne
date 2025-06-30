@@ -9,6 +9,9 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
     {
         [field: Header("Grenade Settings")]
         [field: SerializeField] public WeaponType Type { get; private set; }
+        [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
+        [field: SerializeField] public float Accuracy { get; private set; }
+        [field: SerializeField] public float ReloadTime { get; private set; }
         [field: SerializeField] public float ThrowForce { get; private set; }
         [field: SerializeField] public float Force { get; private set; } // 던지는 힘
         [field: SerializeField] public float Radius { get; private set; }

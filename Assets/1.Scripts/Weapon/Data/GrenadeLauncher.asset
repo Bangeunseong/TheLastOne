@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbbd1c2bc54841cd9fa2436f2a3e8aea, type: 3}
-  m_Name: EmpGrenade
+  m_Name: GrenadeLauncher
   m_EditorClassIdentifier: 
   <GrenadeStat>k__BackingField:
     <MaxAmmoCount>k__BackingField: 6
-    <MaxWeaponRange>k__BackingField: 0
+    <MaxWeaponRange>k__BackingField: 375
     <Recoil>k__BackingField: 0
     <Damage>k__BackingField: 10
     <Type>k__BackingField: 2
+    <MaxAmmoCountInMagazine>k__BackingField: 24
     <ThrowForce>k__BackingField: 25
     <Force>k__BackingField: 15
     <Radius>k__BackingField: 5
     <Delay>k__BackingField: 3
-    <Rpm>k__BackingField: 30
+    <Rpm>k__BackingField: 90
     <GrenadePrefabId>k__BackingField: Grenade
