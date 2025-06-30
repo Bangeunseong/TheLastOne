@@ -291,30 +291,52 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = playerCondition.AvailableWeapons.FindAll(val => val).Count;
-            int currentIndex = playerCondition.EquippedWeaponIndex;
-
-            if (weaponCount == 0) return;
-
-            var nextIndex = currentIndex + 1; // 현재 Weapon Index를 0에서 Weapon Count + 1로 정규화
-            
-            if (value.y < 0f)
-            {
-                do
-                {
-                    nextIndex = (nextIndex + 1) % (playerCondition.Weapons.Count + 1) - 1;
-                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
-                } while (nextIndex != -1);
-            } else if (value.y > 0f)
-            {
-                if (nextIndex == 0) nextIndex = playerCondition.Weapons.Count + 1;
-                do
-                {
-                    nextIndex = (nextIndex - 1) % (playerCondition.Weapons.Count + 1) - 1;
-                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
-                } while (nextIndex != -1);
-            }
+            int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
             playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
+        }
+
+        private int GetAvailableWeaponIndex(float direction, int currentIndex)
+        {
+            int nextIndex, originalIndex;
+            switch (direction)
+            {
+                case < 0f:
+                {
+                    // 현재 무기를 쥐고 있질 않을 때 currentIndex = -1 이므로 original과 next를 0으로 초기화
+                    // 무기를 쥐고 있을 경우 
+                    if (currentIndex < 0) { originalIndex = nextIndex = 0; }
+                    else { originalIndex = currentIndex; nextIndex = originalIndex + 1 >= playerCondition.Weapons.Count ? -1 : originalIndex + 1; }
+                    do
+                    {
+                        if (nextIndex == -1 || playerCondition.AvailableWeapons[nextIndex]) break;
+                        nextIndex = (nextIndex + 1) % playerCondition.Weapons.Count;
+                    } while (nextIndex != originalIndex);
+
+                    break;
+                }
+                case > 0f:
+                {
+                    if (currentIndex < 0) { originalIndex = nextIndex = playerCondition.Weapons.Count - 1; }
+                    else { originalIndex = currentIndex; nextIndex = originalIndex - 1 < 0 ? playerCondition.Weapons.Count - 1 : originalIndex - 1; }
+                    do
+                    {
+                        if (playerCondition.AvailableWeapons[nextIndex]) break;
+                        nextIndex = (nextIndex - 1 < 0 ?  playerCondition.Weapons.Count - 1 : nextIndex - 1) % playerCondition.Weapons.Count;
+                    } while(originalIndex != nextIndex);
+
+                    break;
+                }
+                default: return -1;
+            }
+            
+            Service.Log($"{nextIndex}");
+            if (currentIndex == originalIndex)
+            {
+                if (currentIndex == nextIndex) return -1;
+                return nextIndex;
+            }
+            if (playerCondition.AvailableWeapons[nextIndex]) return nextIndex;
+            return -1;
         }
         /* --------------------------- */
         
