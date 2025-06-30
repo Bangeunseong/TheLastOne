@@ -24,7 +24,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
                 if (player.PlayerCondition.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type)
                 {
                     index = i; break;
-                } else if (player.PlayerCondition.Weapons[i] is GrenadeThrower grenadeThrower &&
+                } else if (player.PlayerCondition.Weapons[i] is GrenadeLauncher grenadeThrower &&
                            grenadeThrower.GrenadeData.GrenadeStat.Type == Type)
                 {
                     index = i; break;
@@ -42,7 +42,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             else
             {
                 var result = player.PlayerCondition.Weapons[index].OnRefillAmmo(
-                    player.PlayerCondition.Weapons[index] is GrenadeThrower ? 6 : 
+                    player.PlayerCondition.Weapons[index] is GrenadeLauncher ? 6 : 
                         player.PlayerCondition.Weapons[index] is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol ? 30 : 60);
                 if (!result) return;
             }

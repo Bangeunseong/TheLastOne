@@ -1813,11 +1813,12 @@ GameObject:
   - component: {fileID: 6813290790807052004}
   - component: {fileID: 7058540756104092436}
   - component: {fileID: 7450652038461916066}
-  - component: {fileID: 3698284712353514345}
   - component: {fileID: 4066541975679567171}
+  - component: {fileID: 3698284712353514345}
   - component: {fileID: 71050111894547790}
   - component: {fileID: 722777656224247020}
   - component: {fileID: 691201347177147415}
+  - component: {fileID: 67553279180126853}
   - component: {fileID: 2886271144856313397}
   - component: {fileID: 4970842368283780195}
   m_Layer: 8
@@ -1892,6 +1893,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4066541975679567171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7874159748350873753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb57293db142dc46b68282962f59fc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3698284712353514345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1904,22 +1917,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd66c174c075d4449eb4daeb9553096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AnimationData>k__BackingField:
-    groundParameterName: '@Ground'
-    speedParameterName: Speed
-    crouchParameterName: Crouch
-    crouchWalkParameterName: CrouchWalk
-    airParameterName: '@Air'
-    jumpParameterName: Jump
-    fallParameterName: Fall
-    deathParameterName: Dead
-    hitParameterName: Hit
   <Animator>k__BackingField: {fileID: 7450652038461916066}
   <Controller>k__BackingField: {fileID: 7058540756104092436}
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
   <PlayerGravity>k__BackingField: {fileID: 691201347177147415}
+  <PlayerRecoil>k__BackingField: {fileID: 67553279180126853}
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
   <CameraPoint>k__BackingField: {fileID: 1977320588093521907}
@@ -1934,23 +1938,22 @@ MonoBehaviour:
       Value: {fileID: 476074829050631560}
   <FirstPersonCamera>k__BackingField: {fileID: 0}
   <ThirdPersonCamera>k__BackingField: {fileID: 0}
-  stateMachine:
-    <CurrentStateName>k__BackingField: 
+  <InputProvider>k__BackingField: {fileID: 0}
   <OriginalFoV>k__BackingField: 0
   <ZoomFoV>k__BackingField: 40
   <TransitionTime>k__BackingField: 0.5
---- !u!114 &4066541975679567171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7874159748350873753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccb57293db142dc46b68282962f59fc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  <AnimationData>k__BackingField:
+    groundParameterName: '@Ground'
+    speedParameterName: Speed
+    crouchParameterName: Crouch
+    crouchWalkParameterName: CrouchWalk
+    airParameterName: '@Air'
+    jumpParameterName: Jump
+    fallParameterName: Fall
+    deathParameterName: Dead
+    hitParameterName: Hit
+  stateMachine:
+    <CurrentStateName>k__BackingField: 
 --- !u!114 &71050111894547790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1968,6 +1971,8 @@ MonoBehaviour:
   <CurrentHealth>k__BackingField: 0
   <MaxStamina>k__BackingField: 0
   <CurrentStamina>k__BackingField: 0
+  <CurrentFocusGauge>k__BackingField: 0
+  <CurrentInstinctGauge>k__BackingField: 0
   <Damage>k__BackingField: 0
   <AttackRate>k__BackingField: 0
   <Level>k__BackingField: 0
@@ -1986,6 +1991,8 @@ MonoBehaviour:
   <AvailableWeapons>k__BackingField: 
   <EquippedWeaponIndex>k__BackingField: -1
   <IsAttacking>k__BackingField: 0
+  <IsUsingFocus>k__BackingField: 0
+  <IsUsingInstinct>k__BackingField: 0
   <IsSwitching>k__BackingField: 0
   <IsAiming>k__BackingField: 0
   <DamageConverters>k__BackingField:
@@ -2043,6 +2050,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 201
   <IsGrounded>k__BackingField: 1
+--- !u!114 &67553279180126853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7874159748350873753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3898f85a4267445a89ddd370cbf99cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilReturnSpeed: 5
+  recoilSnappiness: 10
 --- !u!114 &2886271144856313397
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 
@@ -20,9 +21,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
             
             // Stop Reload Coroutine
             if (reloadCoroutine == null) return;
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
             stateMachine.Player.StopCoroutine(reloadCoroutine); 
-            gun.IsReloading = false;
+            switch (playerCondition.Weapons[playerCondition.EquippedWeaponIndex])
+            {
+                case Gun gun:
+                    gun.IsReloading = false;
+                    break;
+                case GrenadeLauncher grenadeLauncher:
+                    grenadeLauncher.IsReloading = false;
+                    break;
+            }
             reloadCoroutine = null;
         }
 

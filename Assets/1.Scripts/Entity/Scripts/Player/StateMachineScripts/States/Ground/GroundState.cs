@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -54,11 +55,18 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             base.OnReloadStarted(context);
             if (playerCondition.EquippedWeaponIndex < 0) return;
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) return;
-            if (!gun.IsReadyToReload) return;
-            
-            if(reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
-            reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime));
+
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is Gun gun)
+            {
+                if (!gun.IsReadyToReload) return;
+                if (reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
+                reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime));
+            } else if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
+            {
+                if (!grenadeLauncher.IsReadyToReload) return;
+                if (reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); grenadeLauncher.IsReloading = false; }
+                reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime));
+            }
         }
     }
 }

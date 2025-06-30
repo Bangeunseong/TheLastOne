@@ -57,5 +57,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers
         {
             
         }
+
+        public abstract void Hacking();
     }
 }

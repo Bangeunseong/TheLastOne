@@ -87,6 +87,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         /// <param name="running"></param>
         public virtual void IsCurrentActionRunning(bool running)
         {
+            Service.Log($"{running}");
             currentActionRunning = running;
         }
         
@@ -122,6 +123,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
                 }
             }
+        }
+
+        public virtual void HackingNpc()
+        {
+            statController.Hacking();
         }
     }
 }

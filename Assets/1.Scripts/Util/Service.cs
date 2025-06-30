@@ -1,6 +1,6 @@
 ﻿using _1.Scripts.Entity.Scripts.NPC.AIControllers;
-using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +15,7 @@ public static class Service
     /// <returns></returns>
     public static T TryGetChildComponent<T>(this MonoBehaviour _this, string _childName) where T : class
     {
-        var child = FindFirstChild(_this.transform, _childName);
+        GameObject child = FindFirstChild(_this.transform, _childName);
         if (child == null) return null;
 
         T component = null;

@@ -73,7 +73,7 @@ namespace _1.Scripts.Manager.Subs
                             currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine
                         });
                         break;
-                    case GrenadeThrower grenadeThrower:
+                    case GrenadeLauncher grenadeThrower:
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = grenadeThrower.CurrentAmmoCount

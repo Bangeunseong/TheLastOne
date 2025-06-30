@@ -1,12 +1,8 @@
 ﻿using System.Collections;
-using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Player;
-using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
-using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected Coroutine footStepCoroutine;
 
         private float speed;
+        private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
         {
@@ -48,7 +45,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void LateUpdate()
         {
-            Rotate(stateMachine.Player.MainCameraTransform.forward);
+            var baseForward = stateMachine.Player.MainCameraTransform.forward;
+            var baseRot = Quaternion.LookRotation(baseForward);
+            var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
+            
+            var rotatedForward = baseRot * recoilRot * Vector3.forward;
+            Rotate(rotatedForward);
         }
 
         public virtual void PhysicsUpdate()
@@ -152,6 +154,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
         }
         
         private void RemoveInputActionCallbacks()
@@ -170,6 +173,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -227,14 +231,28 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) yield break;
-            if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) yield break;
-            
-            // TODO: Play Animation
-            gun.IsReloading = true;
-            yield return new WaitForSeconds(interval);
-            gun.OnReload();
-            gun.IsReloading = false;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is Gun gun)
+            {
+                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine)
+                    yield break;
+
+                // TODO: Play Animation
+                gun.IsReloading = true;
+                yield return new WaitForSeconds(interval);
+                gun.OnReload();
+                gun.IsReloading = false;
+                
+            } else if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
+            {
+                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine == grenadeLauncher.MaxAmmoCountInMagazine) 
+                    yield break;
+
+                // TODO: Play Animation
+                grenadeLauncher.IsReloading = true;
+                yield return new WaitForSeconds(interval);
+                grenadeLauncher.OnReload();
+                grenadeLauncher.IsReloading = false;
+            }
             reloadCoroutine = null;
         }
         /* ---------------------------- */
@@ -258,35 +276,48 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
+        protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsSwitching) return;
+
+            int weaponCount = playerCondition.Weapons.Count;
+
+            if (weaponCount == 0) return;
+            playerCondition.OnSwitchWeapon(2, 0.5f);
+        }
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            int weaponCount = playerCondition.AvailableWeapons.FindAll(val => val).Count;
-            int currentIndex = playerCondition.EquippedWeaponIndex;
-
-            if (weaponCount == 0) return;
-
-            var nextIndex = currentIndex + 1; // 현재 Weapon Index를 0에서 Weapon Count + 1로 정규화
-            
-            if (value.y < 0f)
-            {
-                do
-                {
-                    nextIndex = (nextIndex + 1) % (playerCondition.Weapons.Count + 1) - 1;
-                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
-                } while (nextIndex != -1);
-            } else if (value.y > 0f)
-            {
-                if (nextIndex == 0) nextIndex = playerCondition.Weapons.Count + 1;
-                do
-                {
-                    nextIndex = (nextIndex - 1) % (playerCondition.Weapons.Count + 1) - 1;
-                    if (nextIndex != -1 && playerCondition.AvailableWeapons[nextIndex]) break;
-                } while (nextIndex != -1);
-            }
+            int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
             playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
+        }
+        private int GetAvailableWeaponIndex(float direction, int currentIndex)
+        {
+            int count = playerCondition.Weapons.Count;
+            if (count == 0) return -1;
+            
+            if (playerCondition.AvailableWeapons.Count <= 0) return -1;
+
+            var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
+            if (dir == 0) return -1;
+
+            // 양쪽 끝 무기를 현재 들고 있을 때
+            if (currentIndex == 0) { if (dir == -1) return -1; }
+            if (currentIndex >= count - 1) { if (dir == 1) return -1; }
+            int nextIndex = currentIndex < 0 ? (dir == 1 ? -1 : 0) : currentIndex;
+            
+            for (var i = 0; i < count; i++)
+            {
+                nextIndex = (nextIndex + dir + count) % count;
+                if (playerCondition.AvailableWeapons[nextIndex])
+                {
+                    if (nextIndex == currentIndex) return -1;
+                    return nextIndex;
+                }
+            }
+            return -1;
         }
         /* --------------------------- */
         
@@ -303,5 +334,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             }
         }
         /* ---------------------- */
+        
+        /* - Skill 관련 메소드 - */
+        protected virtual void OnFocusStarted(InputAction.CallbackContext context)
+        {
+            
+        }
+        protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
+        {
+            
+        }
+        /* -------------------- */
     }
 }
