@@ -1,11 +1,6 @@
 ﻿using System.Collections;
-using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Player;
-using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
-using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -23,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected Coroutine footStepCoroutine;
 
         private float speed;
+        private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
         {
@@ -49,7 +45,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void LateUpdate()
         {
-            Rotate(stateMachine.Player.MainCameraTransform.forward);
+            var baseForward = stateMachine.Player.MainCameraTransform.forward;
+            var baseRot = Quaternion.LookRotation(baseForward);
+            var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
+            
+            var rotatedForward = baseRot * recoilRot * Vector3.forward;
+            Rotate(rotatedForward);
         }
 
         public virtual void PhysicsUpdate()
@@ -275,7 +276,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
-
         protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
@@ -285,7 +285,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
-        
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
@@ -294,7 +293,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
             playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
-
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
             int count = playerCondition.Weapons.Count;
