@@ -13,6 +13,7 @@ namespace _1.Scripts.Static
             "BulletHole_Ground",
             "EmpExplode",
             "Grenade",
+            "SoundPlayer"
         };
     }
     
