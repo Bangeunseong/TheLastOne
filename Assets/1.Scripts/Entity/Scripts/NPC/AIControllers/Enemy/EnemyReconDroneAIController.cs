@@ -119,7 +119,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
 
         public void CurrentActionFinishedForAnimationEvent()
         {
-            currentActionRunning = false;
+            if (!isStunned)
+            {
+                currentActionRunning = false;
+            }
         }
 
         public void ShouldLookAtPlayerFalseForAnimationEvent()
