@@ -23,6 +23,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [SerializeField] private float drag;
 
         private bool isAlreadyReached;
+        private bool alreadyAppliedDamage;
 
         private void Awake()
         {

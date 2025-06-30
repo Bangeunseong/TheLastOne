@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
@@ -127,6 +128,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             
             isRecoiling = true;
+            if (player != null) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil);
             
             // Play VFX
             if (gunShotLight != null) StartCoroutine(Flicker());
