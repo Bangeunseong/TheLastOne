@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -25,7 +26,10 @@ public class Unit_DroneBot : MonoBehaviour
 	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
 	public LayerMask hittableLayer;
 
-	public BaseNpcAI controller;
+	public BaseDroneAIController controller;
+
+	private Coroutine gotDamagedCoroutine;
+	private float gotDamagedParticleDuration = 0.5f;
 	
 	// Use this for initialization
 	void Start()
@@ -35,16 +39,29 @@ public class Unit_DroneBot : MonoBehaviour
 
 	private void Awake()
 	{
-		controller = GetComponent<BaseNpcAI>();
+		controller = GetComponent<BaseDroneAIController>();
 	}
 
 	void f_hit() //hit
 	{
-		p_hit.Play();
 		m_AudioSource.PlayOneShot(s_hit);
-
+		if (!controller.CheckStunned())
+		{
+			if (gotDamagedCoroutine != null)
+			{
+				StopCoroutine(gotDamagedCoroutine);
+			}
+			gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
+		}
 	}
 
+	private IEnumerator DamagedParticleCoroutine()
+	{
+		p_hit.Play();
+		yield return new WaitForSeconds(gotDamagedParticleDuration);
+		p_hit.Stop();
+	}
+	
 	public void hitSoundPlay()
 	{
 		m_AudioSource.PlayOneShot(s_hit);

@@ -20,9 +20,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
         [Header("Particle")]
         [SerializeField] protected ParticleSystem p_hit;
         
+        [Header("Stunned")]
+        protected bool isStunned;
+        
         public bool IsAlertedCheck() => isAlerted;
 
         public float TimerCheck() => timer;
+        
+        public bool CheckStunned() => isStunned;
         
         public virtual void SetAlert(bool alert)
         {
@@ -74,25 +79,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
         
         public void OnStunned(float duration)
         {
+            isStunned = true;
             IsCurrentActionRunning(true);
             ResetAll();
             if (stunnedCoroutine != null)
             {
                 StopCoroutine(stunnedCoroutine);
             }
-            animator.SetTrigger(DroneAnimationHashData.Hit2);
             stunnedCoroutine = StartCoroutine(Stunned(duration));
         }
 
         private IEnumerator Stunned(float duration)
         {
-            if (p_hit.IsAlive())
-                p_hit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            
-            var main = p_hit.main;
-            float tempDuration = main.duration;
-            main.duration = duration;
-            
             p_hit.Play();
             yield return new WaitForSeconds(duration); // 원하는 시간만큼 유지
 
@@ -102,6 +100,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
                 p_hit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             }
 
+            isStunned = false;
             IsCurrentActionRunning(false);
             stunnedCoroutine = null;
         }
