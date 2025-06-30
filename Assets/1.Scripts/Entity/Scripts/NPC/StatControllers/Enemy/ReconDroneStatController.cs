@@ -71,5 +71,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
         {
             Destroy(gameObject);
         }
+
+        public override void Hacking()
+        {
+            runtimeReconDroneStatData.isAlly = true;
+        }
     }
 }

@@ -60,5 +60,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
                 yield return null;
             }
         }
+
+        public override void HackingNpc()
+        { 
+            ResetAll();
+            base.HackingNpc();
+        }
     }
 }
