@@ -123,5 +123,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
                 }
             }
         }
+
+        public virtual void HackingNpc()
+        {
+            statController.Hacking();
+        }
     }
 }
