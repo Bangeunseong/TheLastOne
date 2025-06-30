@@ -8,7 +8,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class BulletHoleParticle : MonoBehaviour
     {
-        private static Vector2[] quadUVs = { new(0, 0), new(0, 1), new(1, 0), new(1, 1) };
+        private static readonly Vector2[] quadUVs = { new(0, 0), new(0, 1), new(1, 0), new(1, 1) };
         private static readonly int TintColor = Shader.PropertyToID("_TintColor");
 
         [Header("Components")] 
@@ -20,8 +20,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [SerializeField] private float lifetime = 10f;
         [SerializeField] private float fadeOutPercent = 80;
         [SerializeField] private Vector2 frames;
-        [SerializeField] private bool randomRotation = false;
-        [SerializeField] private bool deactivate = false;
+        [SerializeField] private bool randomRotation;
 
         // Fields
         private float life;

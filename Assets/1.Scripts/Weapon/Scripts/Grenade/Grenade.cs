@@ -1,5 +1,6 @@
 ﻿using System;
 using _1.Scripts.Interfaces.Common;
+using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -18,6 +19,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         [field: SerializeField] public float Radius { get; private set; } = 10f;
         [field: SerializeField] public float Force { get; private set; } = 50f;
         [field: SerializeField] public float Damage { get; private set; } = 10f;
+        [field: SerializeField] public float StunDuration { get; private set; } = 3f;
         [field: SerializeField] public LayerMask HittableLayer { get; private set; }
         
         private CoreManager coreManager;
@@ -43,13 +45,15 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             coreManager = CoreManager.Instance;
         }
 
-        public void Initialize(Vector3 position, Vector3 direction, LayerMask hittableLayer, float damage, float throwForce, float force, float radius, float delay = 3f)
+        public void Initialize(Vector3 position, Vector3 direction, LayerMask hittableLayer, float damage,
+            float throwForce, float force, float radius, float delay, float stunDuration)
         {
             coreManager = CoreManager.Instance;
             HittableLayer = hittableLayer;
             Damage = damage;
             Force = force;
             Radius = radius;
+            StunDuration = stunDuration;
             
             transform.SetPositionAndRotation(position, Quaternion.identity);
             RigidBody.AddForce(direction * throwForce, ForceMode.Impulse);
@@ -75,10 +79,10 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 }
 
                 if (((1 << obj.gameObject.layer) & HittableLayer.value) == 0) continue;
-                if (!obj.TryGetComponent(out IDamagable damagable)) continue;
-                damagable.OnTakeDamage(Mathf.CeilToInt(Damage));
-                
-                // TODO: Add IStunnable Interface to stun enemy
+                if (obj.TryGetComponent(out IDamagable damagable))
+                    damagable.OnTakeDamage(Mathf.CeilToInt(Damage));
+                if (obj.TryGetComponent(out IStunnable stunnable))
+                    stunnable.OnStunned(StunDuration);
             }
             Service.Log("Grenade exploded!");
             coreManager.objectPoolManager.Release(gameObject);

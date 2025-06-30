@@ -86,16 +86,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
 
         private IEnumerator Stunned(float duration)
         {
+            if (p_hit.IsAlive())
+                p_hit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            
             var main = p_hit.main;
             float tempDuration = main.duration;
             main.duration = duration;
-            p_hit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            
             p_hit.Play();
-
             yield return new WaitForSeconds(duration); // 원하는 시간만큼 유지
 
-            main.duration = tempDuration;
-            if (p_hit != null)
+            // main.duration = tempDuration;
+            if (p_hit != null && p_hit.IsAlive())
             {
                 p_hit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             }
