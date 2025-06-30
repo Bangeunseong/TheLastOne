@@ -291,51 +291,33 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
+            
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
             playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
 
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
-            int nextIndex, originalIndex;
-            switch (direction)
-            {
-                case < 0f:
-                {
-                    // 현재 무기를 쥐고 있질 않을 때 currentIndex = -1 이므로 original과 next를 0으로 초기화
-                    // 무기를 쥐고 있을 경우 
-                    if (currentIndex < 0) { originalIndex = nextIndex = 0; }
-                    else { originalIndex = currentIndex; nextIndex = originalIndex + 1 >= playerCondition.Weapons.Count ? -1 : originalIndex + 1; }
-                    do
-                    {
-                        if (nextIndex == -1 || playerCondition.AvailableWeapons[nextIndex]) break;
-                        nextIndex = (nextIndex + 1) % playerCondition.Weapons.Count;
-                    } while (nextIndex != originalIndex);
-
-                    break;
-                }
-                case > 0f:
-                {
-                    if (currentIndex < 0) { originalIndex = nextIndex = playerCondition.Weapons.Count - 1; }
-                    else { originalIndex = currentIndex; nextIndex = originalIndex - 1 < 0 ? playerCondition.Weapons.Count - 1 : originalIndex - 1; }
-                    do
-                    {
-                        if (playerCondition.AvailableWeapons[nextIndex]) break;
-                        nextIndex = (nextIndex - 1 < 0 ?  playerCondition.Weapons.Count - 1 : nextIndex - 1) % playerCondition.Weapons.Count;
-                    } while(originalIndex != nextIndex);
-
-                    break;
-                }
-                default: return -1;
-            }
+            int count = playerCondition.Weapons.Count;
+            if (count == 0) return -1;
             
-            Service.Log($"{nextIndex}");
-            if (currentIndex == originalIndex)
+            if (playerCondition.AvailableWeapons.Count <= 0) return -1;
+
+            var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
+            if (dir == 0) return -1;
+            
+            int originalIndex = currentIndex < 0 ? (dir == 1 ? 0 : count - 1) : currentIndex;
+            int nextIndex = originalIndex;
+            
+            for (var i = 0; i < count; i++)
             {
-                if (currentIndex == nextIndex) return -1;
-                return nextIndex;
+                nextIndex = (nextIndex + dir + count) % count;
+                if (playerCondition.AvailableWeapons[nextIndex])
+                {
+                    if (nextIndex == currentIndex) return -1;
+                    return nextIndex;
+                }
             }
-            if (playerCondition.AvailableWeapons[nextIndex]) return nextIndex;
             return -1;
         }
         /* --------------------------- */
