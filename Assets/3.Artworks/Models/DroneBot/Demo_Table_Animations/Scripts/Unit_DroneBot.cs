@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
-using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -45,6 +45,11 @@ public class Unit_DroneBot : MonoBehaviour
 
 	}
 
+	public void hitSoundPlay()
+	{
+		m_AudioSource.PlayOneShot(s_hit);
+	}	
+	
 	void f_afterFire()
 	{
 		p_fireSmokeL.Play();
