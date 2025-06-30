@@ -214,17 +214,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         /* ----------------- */
         
-        /* - Recoil 관련 메소드 - */
-        public void ApplyRecoil(float recoilX = -2f, float recoilY = 1f, float recoilZ = 0f)
-        {
-            recoilEuler += new Vector3(
-                recoilX,
-                Random.Range(-recoilY, recoilY),
-                Random.Range(-recoilZ, recoilZ)
-            );
-        }
-        /* --------------------- */
-        
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
