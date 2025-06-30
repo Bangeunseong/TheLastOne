@@ -10,6 +10,7 @@ using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using Cinemachine;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -52,6 +53,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
         [field: SerializeField] public int EquippedWeaponIndex { get; private set; } = -1;
         [field: SerializeField] public bool IsAttacking { get; set; }
+        [field: SerializeField] public bool IsUsingFocus { get; set; }
+        [field: SerializeField] public bool IsUsingInstinct { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
         
@@ -223,8 +226,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnDead()
         {
             IsDead = true;
+            if (player.InputProvider != null) player.InputProvider.enabled = false;
             OnDeath?.Invoke();
         }
+        
+        /* - Recoil 관련 메소드 - */
+        
+        /* --------------------- */
         
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
