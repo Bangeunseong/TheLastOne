@@ -291,7 +291,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
-            
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
             playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
@@ -305,9 +304,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
             var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
             if (dir == 0) return -1;
-            
-            int originalIndex = currentIndex < 0 ? (dir == 1 ? 0 : count - 1) : currentIndex;
-            int nextIndex = originalIndex;
+
+            // 양쪽 끝 무기를 현재 들고 있을 때
+            if (currentIndex == 0) { if (dir == -1) return -1; }
+            if (currentIndex >= count - 1) { if (dir == 1) return -1; }
+            int nextIndex = currentIndex < 0 ? (dir == 1 ? -1 : 0) : currentIndex;
             
             for (var i = 0; i < count; i++)
             {
