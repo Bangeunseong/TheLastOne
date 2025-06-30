@@ -20,11 +20,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone
                 return INode.State.FAILED;
             }
 
-            // 타겟의 스탯 컨트롤러 가져오기
-            var statController = controller.targetTransform.GetComponent<BaseNpcStatController>();
-            if (statController == null || statController.isDead)
+            if (!controller.targetTransform.CompareTag("Player"))
             {
-                return INode.State.FAILED;
+                var statController = controller.targetTransform.GetComponent<BaseNpcStatController>();
+                if (statController == null || statController.isDead)
+                {
+                    return INode.State.FAILED;
+                }
             }
             
             controller.shouldLookTarget = true;

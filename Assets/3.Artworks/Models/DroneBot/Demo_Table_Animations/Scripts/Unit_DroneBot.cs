@@ -88,6 +88,8 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_fire(int side) //shot 
 	{
+		if (controller.targetTransform == null) return;
+		
 		if (side == 1)
 		{
 			p_fireR.Play();
