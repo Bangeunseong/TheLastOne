@@ -338,10 +338,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Skill 관련 메소드 - */
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
+            if (!playerCondition.OnConsumeFocusGauge()) return;
             
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
+            if (!playerCondition.OnConsumeInstinctGauge()) return;
             
         }
         /* -------------------- */

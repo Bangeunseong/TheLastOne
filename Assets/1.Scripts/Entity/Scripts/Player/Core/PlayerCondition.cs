@@ -161,12 +161,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
         }
 
-        public void OnConsumeFocusGauge(float value = 1f)
+        public bool OnConsumeFocusGauge(float value = 1f)
         {
-            if (IsDead) return;
-            if (CurrentFocusGauge < value) return;
+            if (IsDead) return false;
+            if (CurrentFocusGauge < value) return false;
+            if (IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
-            // TODO: FocusGauge를 썼을 때 Skill 효과 발동
+            return true;
         }
 
         public void OnRecoverFocusGauge(float value)
@@ -175,11 +176,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CurrentFocusGauge = Mathf.Min(CurrentFocusGauge + value, 1f);
         }
 
-        public void OnConsumeInstinctGauge(float value = 1f)
+        public bool OnConsumeInstinctGauge(float value = 1f)
         {
-            if (IsDead) return;
-            if (CurrentInstinctGauge < value) return; CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
-            // TODO: InstinctGauge를 썼을 때 Skill 효과 발동
+            if (IsDead) return false;
+            if (CurrentInstinctGauge < value) return false;
+            if (IsUsingInstinct) return false;
+            CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            return true;
         }
 
         public void OnRecoverInstinctGauge(float value)
@@ -230,10 +233,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             OnDeath?.Invoke();
         }
         
-        /* - Recoil 관련 메소드 - */
-        
-        /* --------------------- */
-        
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
@@ -241,7 +240,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
             IsAiming = isAim;
         }
-        
         private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
         {
             Vector3 currentPosition = player.WeaponPivot.localPosition;
@@ -278,8 +276,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (switchCoroutine != null){ StopCoroutine(switchCoroutine); }
             switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(previousWeaponIndex, currentWeaponIndex, duration));
         }
-
-        public IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
+        private IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
         {
             IsSwitching = true;
             
