@@ -39,9 +39,7 @@ namespace _1.Scripts.Manager.Subs
         EnemyFootStep,
         
         // Drone SFX
-        DroneDetect,
-        DroneAttack,
-        DroneHit,
+        Drone,
         
         // Item SFX
         ItemPickup,

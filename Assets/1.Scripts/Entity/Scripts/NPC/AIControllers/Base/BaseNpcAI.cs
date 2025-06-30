@@ -87,6 +87,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         /// <param name="running"></param>
         public virtual void IsCurrentActionRunning(bool running)
         {
+            Service.Log($"{running}");
             currentActionRunning = running;
         }
         
