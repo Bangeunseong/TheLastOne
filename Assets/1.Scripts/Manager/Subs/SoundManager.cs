@@ -80,6 +80,9 @@ namespace _1.Scripts.Manager.Subs
             
             bgmSource.playOnAwake = true;
             bgmSource.loop = true;
+
+            if (bgmSource.clip != null)
+                bgmSource.Play();
             
             LoadVolumeSettings(); 
         }
