@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using _1.Scripts.Interfaces.NPC;
@@ -40,7 +41,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 Vector3 colliderPos = collider.bounds.center;
                 if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
                 {
-                    Debug.Log("Warning : Enemy in AttackRange");
+                    if (controller.TryGetAIController<BaseDroneAIController>(out var drone) && controller.targetTransform == null)
+                    {
+                        drone.AlertNearbyDrones();
+                    }
                     controller.targetTransform = collider.transform;
                     controller.targetPos = colliderPos;
                     return INode.State.SUCCESS;

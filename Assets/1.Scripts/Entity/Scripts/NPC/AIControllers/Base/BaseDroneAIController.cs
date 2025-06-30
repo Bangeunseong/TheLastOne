@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Interfaces.NPC;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Static;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
@@ -23,20 +27,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
         [Header("Stunned")]
         protected bool isStunned;
         
+        [Header("Light")]
+        public Light alertLight;
+        
         public bool IsAlertedCheck() => isAlerted;
 
         public float TimerCheck() => timer;
         
         public bool CheckStunned() => isStunned;
-        
+
         public virtual void SetAlert(bool alert)
         {
             isAlerted = alert;
-        }
-
-        protected override void Update()
-        {
-            base.Update();
         }
 
         public virtual void TimerStartIfNull()
@@ -68,6 +70,35 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             {
                 timer += Time.deltaTime;
                 yield return null;
+            }
+        }
+
+        public void AlertNearbyDrones()
+        {
+            if (!statController.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
+            {
+                return;
+            }
+
+            alertLight.enabled = true; // 경고등 On
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, MyPos, 1); // 사운드 출력
+            SetAlert(true); // 알람 활성화
+
+            bool isAlly = statController.RuntimeStatData.isAlly; 
+            Vector3 selfPos = transform.position;
+            float range = alertable.AlertRadius;
+
+            int layerMask = isAlly ? 1 << LayerConstants.Ally : 1 << LayerConstants.Enemy;
+            Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask); // 주변 콜라이더 모음
+
+            foreach (var collider in colliders)
+            {
+                if (collider.TryGetComponent(out BaseDroneAIController drone))
+                {
+                    drone.targetTransform = targetTransform;
+                    drone.targetPos = targetPos;
+                    drone.SetAlert(true);
+                }
             }
         }
 

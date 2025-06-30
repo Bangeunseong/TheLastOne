@@ -64,8 +64,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         
         protected virtual void Update()
         {
-            Debug.Log(currentActionRunning);
-            
             if (!statController.isDead)
             {
                 if (shouldLookTarget)
@@ -75,7 +73,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
                 
                 if (currentActionRunning)
                 {
-                    Service.Log("비헤이비어 트리 중단");
                     return; // 지속실행
                 }
 
