@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
@@ -102,16 +103,32 @@ public class Unit_DroneBot : MonoBehaviour
 		}
 		
 		// 목표 방향 계산: 플레이어 위치 기준
-		Transform player = controller.targetTransform;
-		Vector3 directionToPlayer = (player.position - pos_side.position).normalized;
+		Vector3 target = controller.targetPos;
+		Vector3 directionToPlayer = (target - pos_side.position).normalized;
 		
 		// 총알 생성
 		var shell = CoreManager.Instance.objectPoolManager.Get("Bullet");
 		if (shell.TryGetComponent(out Bullet bullet))
 		{
+			// 레이어 마스크 설정
+			int allyMask = 1 << LayerConstants.Ally;
+			int enemyMask = 1 << LayerConstants.Enemy;
+			int finalLayerMask = hittableLayer;
+
+			if (controller.statController.isAlly)
+			{
+				finalLayerMask &= ~allyMask; // Ally 제거
+				finalLayerMask |= enemyMask; // Enemy 추가
+			}
+			else
+			{
+				finalLayerMask &= ~enemyMask; // Enemy 제거
+				finalLayerMask |= allyMask;   // Ally 추가
+			}
+			
 			bullet.Initialize(pos_side.position, directionToPlayer, 
 				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
-				10, hittableLayer);
+				10, finalLayerMask);
 		}
 
 		m_AudioSource.PlayOneShot(s_Fire);

@@ -627,6 +627,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ReconDrone
       objectReference: {fileID: 0}
+    - target: {fileID: 3461444647498064051, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: hittableLayer.m_Bits
+      value: 32200
+      objectReference: {fileID: 0}
     - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
       propertyPath: m_LocalPosition.x
