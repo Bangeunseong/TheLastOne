@@ -26,6 +26,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public float MaxStamina { get; private set; }
         [field: SerializeField] public float CurrentStamina { get; private set; }
+        [field: SerializeField] public float CurrentFocusGauge { get; private set; }
+        [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
@@ -104,6 +106,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 MaxStamina = CurrentStamina = StatData.maxStamina;
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
+                CurrentFocusGauge = 0f;
+                CurrentInstinctGauge = 0f;
                 Level = 1;
                 Experience = 0;
             }
@@ -154,6 +158,33 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
         }
 
+        public void OnConsumeFocusGauge(float value = 1f)
+        {
+            if (IsDead) return;
+            if (CurrentFocusGauge < value) return;
+            CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
+            // TODO: FocusGauge를 썼을 때 Skill 효과 발동
+        }
+
+        public void OnRecoverFocusGauge(float value)
+        {
+            if (IsDead) return;
+            CurrentFocusGauge = Mathf.Min(CurrentFocusGauge + value, 1f);
+        }
+
+        public void OnConsumeInstinctGauge(float value = 1f)
+        {
+            if (IsDead) return;
+            if (CurrentInstinctGauge < value) return; CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            // TODO: InstinctGauge를 썼을 때 Skill 효과 발동
+        }
+
+        public void OnRecoverInstinctGauge(float value)
+        {
+            if (IsDead) return;
+            CurrentInstinctGauge = Mathf.Min(CurrentInstinctGauge + value, 1f);
+        }
+
         public void OnConsumeStamina(float stamina)
         {
             if (IsDead) return;
@@ -175,7 +206,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 case Gun gun:
                     gun.OnShoot();
                     break;
-                case GrenadeThrower grenadeThrower:
+                case GrenadeLauncher grenadeThrower:
                     grenadeThrower.OnShoot();
                     break;
             }
@@ -218,13 +249,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 player.FirstPersonCamera.m_Lens.FieldOfView = value;
-                if(EquippedWeaponIndex is >= 0 and < 2)
+                if(EquippedWeaponIndex is >= 0 and <= 2)
                     player.WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
                 yield return null;
             }
 
             player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            if(EquippedWeaponIndex is >= 0 and < 2)
+            if(EquippedWeaponIndex is >= 0 and <= 2)
                 player.WeaponPivot.localPosition = targetLocalPosition;
             aimCoroutine = null;
         }

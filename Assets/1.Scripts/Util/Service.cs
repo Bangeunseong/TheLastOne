@@ -1,6 +1,6 @@
 ﻿using _1.Scripts.Entity.Scripts.NPC.AIControllers;
-using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEditor;
 using UnityEngine;
 

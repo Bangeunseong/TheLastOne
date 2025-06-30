@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -152,6 +153,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
         }
         
         private void RemoveInputActionCallbacks()
@@ -170,6 +172,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -227,14 +230,28 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected IEnumerator Reload_Coroutine(float interval)
         {
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is not Gun gun) yield break;
-            if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) yield break;
-            
-            // TODO: Play Animation
-            gun.IsReloading = true;
-            yield return new WaitForSeconds(interval);
-            gun.OnReload();
-            gun.IsReloading = false;
+            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is Gun gun)
+            {
+                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine)
+                    yield break;
+
+                // TODO: Play Animation
+                gun.IsReloading = true;
+                yield return new WaitForSeconds(interval);
+                gun.OnReload();
+                gun.IsReloading = false;
+                
+            } else if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
+            {
+                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine == grenadeLauncher.MaxAmmoCountInMagazine) 
+                    yield break;
+
+                // TODO: Play Animation
+                grenadeLauncher.IsReloading = true;
+                yield return new WaitForSeconds(interval);
+                grenadeLauncher.OnReload();
+                grenadeLauncher.IsReloading = false;
+            }
             reloadCoroutine = null;
         }
         /* ---------------------------- */
@@ -258,6 +275,17 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
+
+        protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsSwitching) return;
+
+            int weaponCount = playerCondition.Weapons.Count;
+
+            if (weaponCount == 0) return;
+            playerCondition.OnSwitchWeapon(2, 0.5f);
+        }
+        
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;

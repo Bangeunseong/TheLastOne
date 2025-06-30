@@ -86,7 +86,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 }
                 else
                 {
-                    CurrentAmmoCount = 12;
+                    CurrentAmmoCount = 0;
                     CurrentAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
                 }
                     
@@ -163,16 +163,49 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             return true;
         }
 
+        private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)
+        {
+            right = Vector3.Cross(forward, Vector3.up);
+            if (right.sqrMagnitude < 0.001f)
+                right = Vector3.Cross(forward, Vector3.right);
+            right.Normalize();
+    
+            up = Vector3.Cross(right, forward).normalized;
+        }
+        
         private Vector3 GetDirectionOfBullet()
         {
             Vector3 targetPoint;
+            Vector2 randomCirclePoint = Random.insideUnitCircle * GunData.GunStat.Accuracy;
+            
             if (Physics.Raycast(face.position, face.forward, out var hit, GunData.GunStat.MaxWeaponRange,
                     HittableLayer))
             {
-                targetPoint = hit.point;
-            } else targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange;
+                GetOrthonormalBasis(hit.normal, out var right, out var up);
+                if (isOwnedByPlayer)
+                {
+                    if (!player!.PlayerCondition.IsAiming)
+                    {
+                        targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
+                    } else targetPoint = hit.point;
+                }
+                else targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
+            }
+            else
+            {
+                GetOrthonormalBasis(face.forward, out var right, out var up);
+                
+                if (isOwnedByPlayer)
+                {
+                    if (!player!.PlayerCondition.IsAiming)
+                    {
+                        targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
+                    } else targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange;
+                }
+                else targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
+            }
 
-            return (targetPoint - BulletSpawnPoint.position).z < 0 ? BulletSpawnPoint.forward : (targetPoint - BulletSpawnPoint.position).normalized;
+            return (targetPoint - BulletSpawnPoint.position).normalized;
         }
 
         private IEnumerator Flicker()
