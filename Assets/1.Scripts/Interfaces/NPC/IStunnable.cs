@@ -2,6 +2,6 @@
 {
     public interface IStunnable
     {
-        void OnStunned();
+        void OnStunned(float duration);
     }
 }
