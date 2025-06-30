@@ -109,6 +109,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c29fbf2fdc6e02a4b81bf5884fff5bca
+    m_Address: DroneSoundGroup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6a071b9f748d0641a911042e60cc317
+    m_Address: robo44_fire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38dc9afb12a50554fbec3d93deefffdb
+    m_Address: bum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 92bc634a950bde046a12ff66b131ec1f
+    m_Address: tankDead
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76a98cc2b67b225468ff64d806ac3fa7
+    m_Address: signal3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
