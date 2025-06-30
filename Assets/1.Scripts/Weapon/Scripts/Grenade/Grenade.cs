@@ -79,10 +79,10 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 }
 
                 if (((1 << obj.gameObject.layer) & HittableLayer.value) == 0) continue;
-                if (obj.TryGetComponent(out IDamagable damagable))
-                    damagable.OnTakeDamage(Mathf.CeilToInt(Damage));
                 if (obj.TryGetComponent(out IStunnable stunnable))
                     stunnable.OnStunned(StunDuration);
+                if (obj.TryGetComponent(out IDamagable damagable))
+                    damagable.OnTakeDamage(Mathf.CeilToInt(Damage));
             }
             Service.Log("Grenade exploded!");
             coreManager.objectPoolManager.Release(gameObject);
