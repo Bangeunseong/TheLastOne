@@ -13,15 +13,18 @@ MonoBehaviour:
   m_Name: GrenadeLauncher
   m_EditorClassIdentifier: 
   <GrenadeStat>k__BackingField:
-    <MaxAmmoCount>k__BackingField: 6
+    <MaxAmmoCount>k__BackingField: 24
     <MaxWeaponRange>k__BackingField: 375
     <Recoil>k__BackingField: 0
     <Damage>k__BackingField: 10
-    <Type>k__BackingField: 2
-    <MaxAmmoCountInMagazine>k__BackingField: 24
-    <ThrowForce>k__BackingField: 25
     <Force>k__BackingField: 15
     <Radius>k__BackingField: 5
     <Delay>k__BackingField: 3
-    <Rpm>k__BackingField: 90
+    <StunDuration>k__BackingField: 3
     <GrenadePrefabId>k__BackingField: Grenade
+    <Type>k__BackingField: 2
+    <MaxAmmoCountInMagazine>k__BackingField: 6
+    <Accuracy>k__BackingField: 0
+    <ReloadTime>k__BackingField: 3
+    <ThrowForce>k__BackingField: 25
+    <Rpm>k__BackingField: 90

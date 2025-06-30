@@ -88,7 +88,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!obj.TryGetComponent(out Grenade grenade)) return;
             grenade.Initialize(ThrowPoint.position, GetDirectionOfBullet(), HittableLayer,
                 GrenadeData.GrenadeStat.Damage, GrenadeData.GrenadeStat.ThrowForce, GrenadeData.GrenadeStat.Force, 
-                GrenadeData.GrenadeStat.Radius, GrenadeData.GrenadeStat.Delay);
+                GrenadeData.GrenadeStat.Radius, GrenadeData.GrenadeStat.Delay, GrenadeData.GrenadeStat.StunDuration);
             
             isRecoiling = true;
             

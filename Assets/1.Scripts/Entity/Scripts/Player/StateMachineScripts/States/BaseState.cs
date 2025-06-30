@@ -331,5 +331,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             }
         }
         /* ---------------------- */
+        
+        /* - Skill 관련 메소드 - */
+        protected virtual void OnFocusStarted(InputAction.CallbackContext context)
+        {
+            
+        }
+        protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
+        {
+            
+        }
+        /* -------------------- */
     }
 }
