@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: PopupOpen
   m_EditorClassIdentifier: 
-  groupName: 
-  audioClips: []
+  groupName: PopupOpen
+  audioClips:
+  - m_AssetGUID: a6473f5264a14804e992a7a4a29cd744
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

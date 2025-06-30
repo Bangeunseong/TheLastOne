@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: ButtonClick
   m_EditorClassIdentifier: 
-  groupName: 
-  audioClips: []
+  groupName: ButtonClick
+  audioClips:
+  - m_AssetGUID: bfc5803fa8fa8924bbeaa34f4f689bb1
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
