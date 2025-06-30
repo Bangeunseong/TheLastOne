@@ -8,8 +8,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
     {
         [Header("Extra Stats")]
         public float maxStamina;
-        public float focusGauge;
-        public float instinctGauge;
+        public float focusGaugeRefillRate_OnKill;
+        public float focusGaugeRefillRate_OnHeadShot;
+        public float focusGaugeRefillRate_OnHacked;
+        public float focusSkillTime;
+        
+        public float instinctGaugeRefillRate_OnHit;
+        public float instinctGaugeRefillRate_OnDodge;
+        public float instinctSkillTime;
         
         [Header("Extra Movement")] 
         public float jumpHeight; 

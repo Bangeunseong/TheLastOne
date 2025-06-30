@@ -4,10 +4,10 @@ using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
-using _1.Scripts.Entity.Scripts.NPC.Data.LayerConstants;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
