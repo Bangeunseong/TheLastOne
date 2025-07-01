@@ -18,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         public void OnTakeDamage(int damage)
         {
+            Service.Log($"플레이어 데미지 입음 {damage}");
             condition.OnTakeDamage(Mathf.CeilToInt(damage *  DamageMultiplier));
         }
     }
