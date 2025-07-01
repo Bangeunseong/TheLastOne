@@ -2868,6 +2868,9 @@ MonoBehaviour:
   <AnimationData>k__BackingField:
     groundParameterName: '@Ground'
     speedParameterName: Speed
+    idleParameterName: Idle
+    walkParameterName: Walk
+    runParameterName: Run
     aniSpeedMultiplierName: AniSpeedMultiplier
     normalAttackParameterName: Attack
     aimParameterName: Aim

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,7 +31,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead) return;
             ReadMovementInput();
         }
 
@@ -42,6 +43,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void LateUpdate()
         {
+            if (playerCondition.IsDead) return;
+            
             var baseForward = stateMachine.Player.MainCameraTransform.forward;
             var baseRot = Quaternion.LookRotation(baseForward);
             var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
@@ -124,7 +127,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void Rotate(Vector3 direction)
         {
-            if (playerCondition.IsDead) return;
             if (direction == Vector3.zero) return;
             
             var unitTransform = stateMachine.Player.transform;
@@ -132,7 +134,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var unitDirection = new Vector3(direction.x, 0, direction.z);
             var targetRotation = Quaternion.LookRotation(unitDirection);
-            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.unscaledDeltaTime);
+            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
