@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.Player.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using _1.Scripts.Manager.Subs;
+using UnityEngine.InputSystem;
+using PlayerInput = _1.Scripts.Entity.Scripts.Player.Core.PlayerInput;
 
 namespace _1.Scripts.UI.InGame
 {
@@ -15,6 +16,8 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float crosshairSize = 1.2f;
         [SerializeField] private float sizeModifyDuration = 0.1f;
 
+        private InputAction aimAction;
+        private InputAction fireAction;
         private PlayerInput playerInput;
         private Vector3 originalScale;
 
@@ -24,61 +27,79 @@ namespace _1.Scripts.UI.InGame
             originalScale = crosshairImage.rectTransform.localScale;
         }
 
-        void Start()
+        void OnEnable()
         {
-            playerInput = FindObjectOfType<PlayerInput>();
             if (playerInput == null)
             {
-                Debug.LogError("PlayerInput is null");
-                enabled = false;
-                return;
+                playerInput = FindObjectOfType<PlayerInput>();
+
+                playerInput.PlayerActions.Enable();
+                aimAction = playerInput.PlayerActions.Aim;
+                fireAction = playerInput.PlayerActions.Fire;
             }
-            var actions = playerInput.PlayerActions;
-            actions.Enable();
+            aimAction.performed += OnAimPerformed;
+            aimAction.canceled  += OnAimCanceled;
+            fireAction.started += OnFirePerformed;
+            fireAction.canceled += OnFireCanceled;
+        }
 
-            actions.Aim.performed += _ => crosshairImage.enabled = false;
-            actions.Aim.canceled += _ => crosshairImage.enabled = true;
+        private void OnDisable()
+        {
+            if (playerInput == null) return;
+            aimAction.performed -= OnAimPerformed;
+            aimAction.canceled  -= OnAimCanceled;
+            fireAction.started -= OnFirePerformed;
+            fireAction.canceled -= OnFireCanceled;
+        }
 
-            actions.Fire.performed += _ =>
-            {
-                StopAllCoroutines();
-                StartCoroutine(ModifyCrosshairSize());
-            };
+        private void OnAimPerformed(InputAction.CallbackContext context)
+        {
+            crosshairImage.enabled = false;
         }
         
+        private void OnAimCanceled(InputAction.CallbackContext context)
+        {
+            crosshairImage.enabled = true;
+        }
+
+        private void OnFirePerformed(InputAction.CallbackContext context)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ModifyCrosshairSize());
+        }
+        private void OnFireCanceled(InputAction.CallbackContext context)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ShrinkCrosshairSize());
+        }
+
         private IEnumerator ModifyCrosshairSize()
         {
-            var rt = crosshairImage.rectTransform;
-            float half = sizeModifyDuration / 2;
+            var rectTransform = crosshairImage.rectTransform;
             Vector3 target = originalScale * crosshairSize;
             float t = 0;
 
-            while (t < half)
+            while (t < sizeModifyDuration)
             {
                 t += Time.unscaledDeltaTime;
-                rt.localScale = Vector3.Lerp(originalScale, target, t / half);
+                rectTransform.localScale = Vector3.Lerp(originalScale, target, t / sizeModifyDuration);
                 yield return null;
             }
-
-            t = 0f;
-            while (t < half)
-            {
-                t += Time.unscaledDeltaTime;
-                rt.localScale = Vector3.Lerp(target, originalScale, t / half);
-                yield return null;
-            }
-            rt.localScale = originalScale;
         }
-        private void OnDestroy()
+
+        private IEnumerator ShrinkCrosshairSize()
         {
-            var actions = playerInput.PlayerActions;
-            actions.Aim.performed -= _ => crosshairImage.enabled = false;
-            actions.Aim.canceled  -= _ => crosshairImage.enabled = true;
-            actions.Fire.performed -= _ =>
+            var rectTransform = crosshairImage.rectTransform;
+            Vector3 startSize = rectTransform.localScale;
+            float t = 0;
+
+            while (t < sizeModifyDuration)
             {
-                StopAllCoroutines();
-                StartCoroutine(ModifyCrosshairSize());
-            };
+                t += Time.unscaledDeltaTime;
+                rectTransform.localScale = Vector3.Lerp(startSize, originalScale, t / sizeModifyDuration);
+                yield return null;
+            }
+            rectTransform.localScale = originalScale;
         }
     }
 }
