@@ -645,7 +645,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 712
   owner: {fileID: 0}
-  muzzleFlashParticle: {fileID: 0}
+  muzzleFlashParticle: {fileID: 7539291160357789401}
   <GrenadeData>k__BackingField: {fileID: 11400000, guid: 147e6ace0df1ddb41b80ef608a7ee1e1,
     type: 2}
   <ThrowPoint>k__BackingField: {fileID: 5218462969636652075}

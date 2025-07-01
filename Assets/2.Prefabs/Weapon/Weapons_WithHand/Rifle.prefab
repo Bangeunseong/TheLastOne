@@ -2344,7 +2344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &909723812170082791
 Transform:
   m_ObjectHideFlags: 0
@@ -2353,7 +2353,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907321416183772357}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.678634, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2408,7 +2408,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1016520
   owner: {fileID: 0}
-  muzzleFlashParticle: {fileID: 0}
+  muzzleFlashParticle: {fileID: 9128831582619590869}
   lightCurves: {fileID: 9072545907312558355}
   <GunData>k__BackingField: {fileID: 11400000, guid: ea541e8e32829864fb06b06b69d2c126,
     type: 2}

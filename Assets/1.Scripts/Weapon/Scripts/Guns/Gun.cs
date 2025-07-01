@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {

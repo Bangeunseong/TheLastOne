@@ -2864,7 +2864,7 @@ MonoBehaviour:
   <InputProvider>k__BackingField: {fileID: 0}
   <OriginalFoV>k__BackingField: 0
   <ZoomFoV>k__BackingField: 40
-  <TransitionTime>k__BackingField: 0.5
+  <TransitionTime>k__BackingField: 0.3
   <AnimationData>k__BackingField:
     groundParameterName: '@Ground'
     speedParameterName: Speed
@@ -2884,6 +2884,11 @@ MonoBehaviour:
     pistolReloadClipTime: 1.333
     rifleReloadClipTime: 2.667
     grenadeLauncherReloadClipTime: 10.333
+    handToOtherWeaponClipTime: 1
+    pistolToOtherWeaponClipTime: 0.667
+    rifleToOtherWeaponClipTime: 1
+    grenadeLauncherToOtherWeaponClipTime: 0.867
+    weaponWieldClipTime: 1
   stateMachine:
     <CurrentStateName>k__BackingField: 
 --- !u!114 &71050111894547790
@@ -3912,16 +3917,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol
       objectReference: {fileID: 0}
-    - target: {fileID: 4694229733402829506, guid: e8c4d4a72d924ab4cbaa68ae20dfeb34,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8974061973659311626, guid: e8c4d4a72d924ab4cbaa68ae20dfeb34,
-        type: 3}
-      propertyPath: lightCurves
-      value: 
-      objectReference: {fileID: 3472870727905913749}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3939,18 +3934,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1150733641596716037}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3472870727905913749 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4596529940347350928, guid: e8c4d4a72d924ab4cbaa68ae20dfeb34,
-    type: 3}
-  m_PrefabInstance: {fileID: 1150733641596716037}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fb9b9ea5474f04dbab136c8585d48e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1331392631718963439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4048,11 +4031,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Rifle
-      objectReference: {fileID: 0}
-    - target: {fileID: 907321416183772357, guid: c28ccd588251dcf45a6e9fe75b693c2b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 909723812170082791, guid: c28ccd588251dcf45a6e9fe75b693c2b,
         type: 3}

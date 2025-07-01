@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
+using Unity.Collections;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -35,7 +36,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: Header("Camera Settings")]
         [field: SerializeField] public float OriginalFoV { get; private set; }
         [field: SerializeField] public float ZoomFoV { get; private set; } = 40f;
-        [field: SerializeField] public float TransitionTime { get; private set; } = 0.5f;
+        [field: SerializeField] public float TransitionTime { get; private set; } = 0.3f;
         
         [field: Header("Animation Data")] 
         [field: SerializeField] public AnimationData AnimationData { get; private set; } 
