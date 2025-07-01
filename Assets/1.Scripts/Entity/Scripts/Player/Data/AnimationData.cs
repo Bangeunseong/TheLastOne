@@ -9,6 +9,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         [Header("Animation Parameters on ground")]
         [SerializeField, ReadOnly] private string groundParameterName = "@Ground";
         [SerializeField, ReadOnly] private string speedParameterName = "Speed";
+        [SerializeField, ReadOnly] private string idleParameterName = "Idle";
+        [SerializeField, ReadOnly] private string walkParameterName = "Walk";
+        [SerializeField, ReadOnly] private string runParameterName = "Run";
 
         [Header("Animation Parameters on attack")] 
         [SerializeField, ReadOnly] private string aniSpeedMultiplierName = "AniSpeedMultiplier";
@@ -41,6 +44,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         
         // Properties of parameter hash
         public int GroundParameterHash { get; private set; }
+        public int IdleParameterHash { get; private set; }
+        public int WalkParameterHash { get; private set; }
+        public int RunParameterHash { get; private set; }
         public int SpeedParameterHash { get; private set; }
         public int AniSpeedMultiplierHash { get; private set; }
         public int NormalAttackParameterHash { get; private set; }
@@ -68,6 +74,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         {
             GroundParameterHash = Animator.StringToHash(groundParameterName);
             SpeedParameterHash = Animator.StringToHash(speedParameterName);
+            IdleParameterHash = Animator.StringToHash(idleParameterName);
+            WalkParameterHash = Animator.StringToHash(walkParameterName);
+            RunParameterHash = Animator.StringToHash(runParameterName);
             AniSpeedMultiplierHash = Animator.StringToHash(aniSpeedMultiplierName);
 
             NormalAttackParameterHash = Animator.StringToHash(normalAttackParameterName);

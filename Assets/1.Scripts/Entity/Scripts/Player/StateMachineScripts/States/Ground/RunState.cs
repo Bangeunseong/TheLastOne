@@ -30,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             base.Exit();
             // StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);
+            
             if (staminaCoroutine == null) return;
             stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
         }
