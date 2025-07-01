@@ -8,11 +8,12 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity/Enemy/SuicideDroneData")]
-    public class SuicideDroneStatData : EntityStatData, IAttackable, IAlertable, IBoomable
+    public class SuicideDroneStatData : EntityStatData, IAttackable, IAlertable, IBoomable, IDetectable
     {
         [Header("Range")] 
         [SerializeField] private float attackRange;
         [SerializeField] private float boomRange;
+        [SerializeField] private float detectRange;
         
         [Header("Alert")]
         [SerializeField] private float alertDuration;
@@ -22,5 +23,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
         public float AlertDuration => alertDuration;
         public float AlertRadius => alertRadius;
         public float BoomRange => boomRange;
+        public float DetectRange => detectRange;
     }
 }
