@@ -27,5 +27,28 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone
         protected override void BuildTree()
         {
         }
+        
+        public void CurrentActionRunningForAnimationEvent()
+        {
+            currentActionRunning = true;
+        }
+
+        public void CurrentActionFinishedForAnimationEvent()
+        {
+            if (!isStunned)
+            {
+                currentActionRunning = false;
+            }
+        }
+
+        public void ShouldLookAtPlayerFalseForAnimationEvent()
+        {
+            shouldLookTarget = false;
+        }
+
+        public void SetDestinationNullForAnimationEvent()
+        {
+            navMeshAgent.SetDestination(transform.position);
+        }
     }
 }

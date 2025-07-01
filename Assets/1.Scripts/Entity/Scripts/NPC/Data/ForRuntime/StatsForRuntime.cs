@@ -73,17 +73,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         }
     }
 
-    public class RuntimeSuicideDroneStatData : RuntimeEntityStatData, IAlertable, IAttackable
+    public class RuntimeSuicideDroneStatData : RuntimeEntityStatData, IAlertable, IAttackable, IBoomable
     {
         public float AttackRange { get; set; }
         public float AlertDuration { get; set; }
         public float AlertRadius { get; set; }
+        public float BoomRange { get; set; }
 
         public RuntimeSuicideDroneStatData(SuicideDroneStatData so) : base(so)
         {
             AttackRange = so.AttackRange;
             AlertDuration = so.AlertDuration;
             AlertRadius = so.AlertRadius;
+            BoomRange = so.BoomRange;
         }
     }
 }
