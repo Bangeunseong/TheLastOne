@@ -6073,14 +6073,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4165134632281264858}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
   m_LocalPosition: {x: -0.09458573, y: 0.22922148, z: 0.00059991283}
   m_LocalScale: {x: 1.0389807, y: 1.0389807, z: 1.0389808}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7974069229740848118}
   m_Father: {fileID: 5552847566848984070}
-  m_LocalEulerAnglesHint: {x: 90, y: -90, z: -180}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: -180}
 --- !u!1 &4298965926594042725
 GameObject:
   m_ObjectHideFlags: 0
@@ -6251,7 +6251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2747951890075098099
 Transform:
   m_ObjectHideFlags: 0
@@ -6316,7 +6316,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1016520
   owner: {fileID: 0}
-  muzzleFlashParticle: {fileID: 0}
+  muzzleFlashParticle: {fileID: 5967386481276156690}
   lightCurves: {fileID: 4596529940347350928}
   <GunData>k__BackingField: {fileID: 11400000, guid: 76fcd57fdcdd2a94ba188ff4b3aa7095,
     type: 2}
@@ -6514,7 +6514,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5150733667670532737}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

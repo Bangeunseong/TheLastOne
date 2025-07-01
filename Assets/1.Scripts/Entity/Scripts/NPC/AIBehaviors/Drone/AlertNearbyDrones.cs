@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
@@ -14,7 +12,7 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
 {
     /// <summary>
-    /// 알람 타이머 시작 노드
+    /// 주변에 알람 전파
     /// </summary>
     public class AlertNearbyDrones : INode
     {

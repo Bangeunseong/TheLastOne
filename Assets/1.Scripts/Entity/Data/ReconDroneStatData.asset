@@ -24,8 +24,8 @@ MonoBehaviour:
   footStepSounds: []
   hitSounds: []
   deathSounds: []
-  detectRange: 10
-  attackRange: 5
+  detectRange: 15
+  attackRange: 10
   alertDuration: 3
   alertRadius: 10
   minWaitingDuration: 5
