@@ -287,7 +287,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
-            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); }
+            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); IsAiming = !isAim; }
             aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
             
         }
@@ -330,7 +330,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
-                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.3f));
+                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.1f));
                     break;
                 }
                 case GrenadeLauncher { IsReadyToReload: false }:
@@ -353,7 +353,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         public bool TryCancelReload()
         {
-            if (IsDead || IsSwitching || EquippedWeaponIndex <= 0) return false;
+            if (IsDead || EquippedWeaponIndex <= 0) return false;
             
             if (reloadCoroutine == null) return false;
             StopCoroutine(reloadCoroutine); 
@@ -368,6 +368,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
             }
+
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             reloadCoroutine = null;
             IsReloading = false;
             return true;
@@ -430,6 +432,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnSwitchWeapon(int currentWeaponIndex, float duration)
         {
             IsAttacking = false;
+            if (IsReloading) TryCancelReload();
             int previousWeaponIndex = EquippedWeaponIndex;
             EquippedWeaponIndex = currentWeaponIndex;
             
@@ -443,16 +446,34 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             Service.Log($"{previousWeaponIndex}, {currentWeaponIndex}");
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
-            while (IsAiming){}
             
             Service.Log("Switch Weapon");
             // 무기를 밑으로 먼저 내리기
+
+            switch (previousWeaponIndex)
+            {
+                case 0: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.HandToOtherWeaponClipTime / duration); break; 
+                case 1: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.PistolToOtherWeaponClipTime / duration); break; 
+                case 2: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.RifleToOtherWeaponClipTime / duration); break;
+                case 3: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
+            }
+            
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             yield return new WaitForSeconds(duration);
+            WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             yield return new WaitForSeconds(duration);
             switchCoroutine = null;
             IsSwitching = false;

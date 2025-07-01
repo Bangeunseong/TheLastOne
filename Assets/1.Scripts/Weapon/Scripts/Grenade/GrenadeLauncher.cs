@@ -114,7 +114,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             {
                 isEmpty = true;
                 if (player)
-                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex + 1]
+                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
             if (player != null) player.PlayerCondition.IsAttacking = false;
