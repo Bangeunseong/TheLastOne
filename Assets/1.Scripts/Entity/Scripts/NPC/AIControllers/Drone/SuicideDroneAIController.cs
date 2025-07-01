@@ -10,7 +10,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
+namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone
 {
     /// <summary>
     /// 드론(Suicide Drone) 

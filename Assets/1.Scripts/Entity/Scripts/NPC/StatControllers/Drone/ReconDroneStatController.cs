@@ -11,7 +11,7 @@ using _1.Scripts.Manager.Core;
 using UnityEngine;
 using Random = System.Random;
 
-namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
+namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 {
     public class ReconDroneStatController : BaseNpcStatController
     {
