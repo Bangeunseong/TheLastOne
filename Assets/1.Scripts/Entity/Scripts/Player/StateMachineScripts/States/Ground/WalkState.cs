@@ -12,6 +12,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = playerCondition.WalkSpeedModifier;
             base.Enter();
+            // StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
             
             // Start Stamina Recovery Coroutine 
             if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
@@ -23,6 +24,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
+            // StopAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
             if (staminaCoroutine == null) return;
             stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
         }
