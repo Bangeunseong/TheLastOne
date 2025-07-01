@@ -19,17 +19,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone
     /// </summary>
     public class SuicideDroneAIController : BaseDroneAIController
     {
-        protected override void Start()
-        {
-            // 액션노드 추가해서 등장연출 가능
-            base.Start();
-        }
+        public ParticleSystem explosionParticle;
 
-        protected override void Update()
+        protected override void Awake()
         {
-            base.Update();
+            base.Awake();
+            explosionParticle = Service.TryGetChildComponent<ParticleSystem>(this,"Explosion");
         }
-    
+        
         protected override void BuildTree()
         {
             // 1-1 알람 상태 체크 시퀀스 등록
@@ -56,8 +53,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone
             
             // 3-2 타이머 컨트롤, 적 추적 액션노드 등록
             var timerControlSequenceNode = new SequenceNode();
+            var lightOn = new ActionNode(new LightOnForSuicideDrone().Evaluate);
             var chasingEnemy = new ActionNode(new SetDestinationToEnemy().Evaluate);
             chaseSequenceNode.Add(timerControlSequenceNode);
+            chaseSequenceNode.Add(lightOn);
             chaseSequenceNode.Add(chasingEnemy);
             
             // 3-3 알람 상태인지 확인 후 타겟 사거리 내에서 계속 갱신하는 액션노드 & 타이머 실행 액션노드 & 타이머 갱신 또는 초기화 셀렉터

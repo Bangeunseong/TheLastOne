@@ -35,7 +35,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
         public float TimerCheck() => timer;
         
         public bool CheckStunned() => isStunned;
-
+        
         public virtual void SetAlert(bool alert)
         {
             isAlerted = alert;

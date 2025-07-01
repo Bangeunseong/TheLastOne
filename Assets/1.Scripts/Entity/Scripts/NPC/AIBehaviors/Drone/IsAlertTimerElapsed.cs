@@ -21,7 +21,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                 return INode.State.FAILED;
             }
             
-            // EnemyReconDroneAIController 타입인지 확인
             if (controller.TryGetAIController<BaseDroneAIController>(out var droneController))
             {
                 if (droneController.TimerCheck() >= alertable.AlertDuration)
