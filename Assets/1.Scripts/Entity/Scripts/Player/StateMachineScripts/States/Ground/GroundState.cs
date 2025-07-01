@@ -54,19 +54,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnReloadStarted(InputAction.CallbackContext context)
         {
             base.OnReloadStarted(context);
-            if (playerCondition.EquippedWeaponIndex < 0) return;
-
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is Gun gun)
-            {
-                if (!gun.IsReadyToReload) return;
-                if (reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); gun.IsReloading = false; }
-                reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime));
-            } else if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
-            {
-                if (!grenadeLauncher.IsReadyToReload) return;
-                if (reloadCoroutine != null) { stateMachine.Player.StopCoroutine(reloadCoroutine); grenadeLauncher.IsReloading = false; }
-                reloadCoroutine = stateMachine.Player.StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime));
-            }
+            playerCondition.TryStartReload();
         }
     }
 }

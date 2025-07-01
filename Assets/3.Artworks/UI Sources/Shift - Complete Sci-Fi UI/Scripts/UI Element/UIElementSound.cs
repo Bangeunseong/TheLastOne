@@ -1,42 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Manager.Core;
 
 namespace Michsky.UI.Shift
 {
     [ExecuteInEditMode]
     public class UIElementSound : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
-        [Header("Resources")]
-        public UIManager UIManagerAsset;
-        public AudioSource audioObject;
-
-        [Header("Custom SFX")]
-        public AudioClip hoverSFX;
-        public AudioClip clickSFX;
-
+        public SfxType hoverSfxType = SfxType.PopupOpen;
+        public int hoverIndex = 0;
+        public SfxType clickSfxType = SfxType.ButtonClick;
+        public int clickIndex = 0;
+        
         [Header("Settings")]
         public bool enableHoverSound = true;
         public bool enableClickSound = true;
         public bool checkForInteraction = true;
 
         private Button sourceButton;
+        private SoundManager soundManager;
 
         void OnEnable()
         {
-            if (UIManagerAsset == null)
-            {
-                try { UIManagerAsset = Resources.Load<UIManager>("Shift UI Manager"); }
-                catch { Debug.Log("<b>[UI Element Sound]</b> No UI Manager found.", this); this.enabled = false; }
-            }
-
-            if (Application.isPlaying == true && audioObject == null)
-            {
-                try { audioObject = GameObject.Find("UI Audio").GetComponent<AudioSource>(); }
-                catch { Debug.Log("<b>[UI Element Sound]</b> No Audio Source found.", this); }
-            }
-
-            if (checkForInteraction == true) { sourceButton = gameObject.GetComponent<Button>(); }
+            if (Application.isPlaying)
+                soundManager = CoreManager.Instance.soundManager;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -46,8 +35,7 @@ namespace Michsky.UI.Shift
 
             if (enableHoverSound == true)
             {
-                if (hoverSFX == null) { audioObject.PlayOneShot(UIManagerAsset.hoverSound); }
-                else { audioObject.PlayOneShot(hoverSFX); }
+                soundManager?.PlayUISFX(hoverSfxType, hoverIndex);
             }
         }
 
@@ -58,8 +46,7 @@ namespace Michsky.UI.Shift
 
             if (enableClickSound == true)
             {
-                if (clickSFX == null) { audioObject.PlayOneShot(UIManagerAsset.clickSound); }
-                else { audioObject.PlayOneShot(clickSFX); }
+                soundManager?.PlayUISFX(clickSfxType, clickIndex);
             }
         }
     }

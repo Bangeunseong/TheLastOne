@@ -18,7 +18,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem[] p_jet;
 	private bool restartRes = true;
-	private float shellSpeed = 5;
+	private float shellSpeed = 70f;
 	private Transform pos_side;
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  

@@ -28,8 +28,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
         [field: SerializeField] public Transform CameraPivot { get; private set; }
         [field: SerializeField] public Transform CameraPoint { get; private set; }
-        [field: SerializeField] public Transform WeaponPivot  { get; private set; }
-        [field: SerializeField] public SerializedDictionary<string, Transform> WeaponPoints = new();
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
@@ -60,11 +58,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
-            if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
-            
-            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
-            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
-            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
 
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
@@ -85,11 +78,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
-            if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
-            
-            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
-            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
-            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();

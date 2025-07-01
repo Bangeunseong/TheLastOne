@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -128,6 +129,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
         public virtual void HackingNpc()
         {
             statController.Hacking();
+            SetLayerRecursively(gameObject, LayerConstants.Ally);
+        }
+
+        private void SetLayerRecursively(GameObject obj, int layer)
+        {
+            obj.layer = layer;
+            foreach (Transform child in obj.transform)
+            {
+                SetLayerRecursively(child.gameObject, layer);
+            }
         }
     }
 }

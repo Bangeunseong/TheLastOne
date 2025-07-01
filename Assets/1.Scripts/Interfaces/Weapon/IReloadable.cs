@@ -2,6 +2,6 @@
 {
     public interface IReloadable
     {
-        void OnReload();
+        bool OnReload();
     }
 }

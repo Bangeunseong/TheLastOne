@@ -128,8 +128,6 @@ public static class Service
         Vector3 origin = npcPosition;
         Vector3 direction = (targetPosition - origin).normalized;
 
-        Debug.DrawRay(origin, direction * maxViewDistance, Color.red);
-
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
         {
             int expectedLayer = isAlly ? LayerConstants.Enemy : LayerConstants.Ally;
