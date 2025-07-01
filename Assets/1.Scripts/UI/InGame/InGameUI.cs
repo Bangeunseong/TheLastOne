@@ -1,6 +1,9 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
+using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
+using _1.Scripts.Weapon.Scripts.Guns;
 using Michsky.UI.Shift;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,8 +44,6 @@ namespace _1.Scripts.UI.InGame
             playerCondition = FindObjectOfType<PlayerCondition>();
             if (playerCondition != null)
             {
-                playerCondition.OnDamage += UpdateStateUI;
-                playerCondition.OnDeath += UpdateStateUI;
                 UpdateStateUI();
             }
         }
@@ -66,6 +67,9 @@ namespace _1.Scripts.UI.InGame
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
             UpdateLevelUI(playerCondition.Level);
+            UpdateInstinct(playerCondition.CurrentInstinctGauge);
+            UpdateFocus(playerCondition.CurrentFocusGauge);
+            UpdateWeaponInfo();
         }
 
         public void UpdateHealthSlider(float current, float max)
@@ -103,24 +107,41 @@ namespace _1.Scripts.UI.InGame
             levelText.text = level.ToString();
         }
 
-        private void OnSettingButtonClicked()
+        public void UpdateWeaponInfo()
         {
-            uiManager.ShowSettingPopup();
-        }
+            int idx = playerCondition.EquippedWeaponIndex;
+            if (idx >= 0 && idx < playerCondition.Weapons.Count && playerCondition.AvailableWeapons[idx])
+            {
+                BaseWeapon baseWeapon = playerCondition.Weapons[idx];
+                string name;
+                int left = 0;
+                int max = 0;
 
-        public void UpdateCrosshair(Sprite sprite)
-        {
-            if (crosshairImage != null && sprite != null)
-                crosshairImage.sprite = sprite;
-        }
-
-        public void UpdateWeaponInfo(string weaponName, int ammoLeft, int clipSize)
-        {
-            if (weaponNameText != null)
-                weaponNameText.text = weaponName;
-
-            if (ammoText != null)
-                ammoText.text = $"{ammoLeft} / {clipSize}";
+                if (baseWeapon is Gun gun)
+                {
+                    name = gun.GunData.GunStat.Type.ToString();
+                    left = gun.CurrentAmmoCountInMagazine;
+                    max = gun.GunData.GunStat.MaxAmmoCountInMagazine;
+                }
+                else if (baseWeapon is GrenadeLauncher grenadeLauncher)
+                {
+                    name = grenadeLauncher.GrenadeData.GrenadeStat.Type.ToString();
+                    left = grenadeLauncher.CurrentAmmoCountInMagazine;
+                    max = grenadeLauncher.GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
+                }
+                else
+                {
+                    name = baseWeapon.GetType().Name;
+                }
+                
+                weaponNameText.text = name;
+                ammoText.text = $"{left}/{max}";
+            }
+            else
+            {
+                weaponNameText.text = "empty";
+                ammoText.text = "empty";
+            }
         }
     }
 }
