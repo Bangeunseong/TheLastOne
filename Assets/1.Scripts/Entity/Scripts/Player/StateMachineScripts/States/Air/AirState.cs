@@ -20,18 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
             if (footStepCoroutine != null) { stateMachine.Player.StopCoroutine(footStepCoroutine); footStepCoroutine = null; }
             
             // Stop Reload Coroutine
-            if (reloadCoroutine == null) return;
-            stateMachine.Player.StopCoroutine(reloadCoroutine); 
-            switch (playerCondition.Weapons[playerCondition.EquippedWeaponIndex])
-            {
-                case Gun gun:
-                    gun.IsReloading = false;
-                    break;
-                case GrenadeLauncher grenadeLauncher:
-                    grenadeLauncher.IsReloading = false;
-                    break;
-            }
-            reloadCoroutine = null;
+            playerCondition.TryCancelReload();
         }
 
         public override void Exit()

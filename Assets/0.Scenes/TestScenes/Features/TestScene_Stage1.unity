@@ -551,6 +551,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 525050879}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &545285071 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6054772671777319384, guid: d1ad11f456aebf14297be286489d8ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 900053060764606494}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &572935995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1991,6 +1997,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 71050111894547790, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <WeaponAnimators>k__BackingField.Array.data[2]
+      value: 
+      objectReference: {fileID: 545285071}
+    - target: {fileID: 617721415745222715, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3043556055560079772, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: muzzleFlashParticle
+      value: 
+      objectReference: {fileID: 900053060764606496}
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: <FirstPersonCamera>k__BackingField
@@ -2001,6 +2022,16 @@ PrefabInstance:
       propertyPath: <ThirdPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 311603909}
+    - target: {fileID: 5682833769086297799, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6147775841769250792, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2051,6 +2082,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7717795663314861696, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7874159748350873753, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_Name
@@ -2064,6 +2100,12 @@ PrefabInstance:
 --- !u!4 &900053060764606495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1977320588093521907, guid: d1ad11f456aebf14297be286489d8ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 900053060764606494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &900053060764606496 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8852669316054660662, guid: d1ad11f456aebf14297be286489d8ec9,
     type: 3}
   m_PrefabInstance: {fileID: 900053060764606494}
   m_PrefabAsset: {fileID: 0}
