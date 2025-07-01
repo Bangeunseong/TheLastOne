@@ -39,7 +39,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
             if (!isDead)
             {
                 runtimeReconDroneStatData.maxHealth -= damage;
-                animator.SetTrigger(DroneAnimationHashData.Hit3);
                 if (runtimeReconDroneStatData.maxHealth <= 0)
                 {
                     int[] deathHashes = new int[]
@@ -53,6 +52,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Enemy
                     animator.SetTrigger(deathHashes[randomIndex]);
 
                     isDead = true;
+                }
+                else
+                {
+                    animator.SetTrigger(DroneAnimationHashData.Hit3);
                 }
             }
         }

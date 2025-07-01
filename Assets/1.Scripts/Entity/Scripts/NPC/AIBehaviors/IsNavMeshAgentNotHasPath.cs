@@ -33,8 +33,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             }
 
             controller.shouldLookTarget = false; // 보통 노드구조 맨 끝자락에 배회할때 쓰니까 추가
+
+            if (controller.navMeshAgent.remainingDistance < 0.1f || !controller.navMeshAgent.hasPath)
+            {
+                return INode.State.SUCCESS;
+            }
             
-            return controller.navMeshAgent.hasPath ? INode.State.FAILED : INode.State.SUCCESS;
+            return INode.State.FAILED;
         }
     }
 }
