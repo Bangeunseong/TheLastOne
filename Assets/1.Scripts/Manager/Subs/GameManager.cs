@@ -27,6 +27,7 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
         [field: SerializeField] public SettingDTO SettingData { get; private set; }
         [field: SerializeField] public Player Player { get; private set; }
+        [field: SerializeField] public bool IsGamePaused { get; set; }
 
         private CoreManager coreManager;
 
@@ -124,6 +125,16 @@ namespace _1.Scripts.Manager.Subs
                 SettingData = JsonConvert.DeserializeObject<SettingDTO>(str);
             }
             else SettingData = null;
+        }
+
+        public void PauseGame()
+        {
+            if (Player) { Player.InputProvider.enabled = false; }
+        }
+
+        public void ResumeGame()
+        {
+            if (Player) { Player.InputProvider.enabled = true; }
         }
     }
 }

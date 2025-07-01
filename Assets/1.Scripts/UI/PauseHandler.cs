@@ -1,3 +1,5 @@
+using System;
+using _1.Scripts.Manager.Core;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -15,6 +17,12 @@ namespace _1.Scripts.UI
         [SerializeField] private Animator settingsAnimator;
         
         bool isPaused;
+        private CoreManager coreManager;
+
+        private void Start()
+        {
+            coreManager = CoreManager.Instance;
+        }
 
         public void TogglePause()
         {
@@ -25,6 +33,7 @@ namespace _1.Scripts.UI
 
         private void Pause()
         {
+            coreManager.gameManager.PauseGame();
             Time.timeScale = 0f;
             blurMgr.BlurInAnim();
             pauseCanvas.SetActive(true);
@@ -43,6 +52,7 @@ namespace _1.Scripts.UI
 
         private void Resume()
         {
+            coreManager.gameManager.ResumeGame();
             Time.timeScale = 1f;
             blurMgr.BlurOutAnim();
             if (settingsCanvas.alpha > 0f)
