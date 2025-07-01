@@ -25,7 +25,7 @@ MonoBehaviour:
   hitSounds: []
   deathSounds: []
   attackRange: 4
-  boomRange: 5
+  boomRange: 10
   detectRange: 20
   alertDuration: 3
   alertRadius: 0

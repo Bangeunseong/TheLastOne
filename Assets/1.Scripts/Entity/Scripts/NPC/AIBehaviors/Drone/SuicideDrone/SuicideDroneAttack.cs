@@ -45,17 +45,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.SuicideDrone
                 Vector3 selfPos = controller.transform.position;
                 float range = boomable.BoomRange;
             
-                int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally;
+                int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally | 1 << LayerConstants.Chest;
                 Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
                 foreach (Collider collider in colliders)
                 {
+                    Service.Log($"{collider.gameObject.name}");
                     if (collider.gameObject == droneController.gameObject)
                     {
-                        continue;
+                        Service.Log("콘티뉴");
+                        continue;   
                     }
                     
-                    if (collider.TryGetComponent<IDamagable>(out var damagable))
+                    if (collider.TryGetComponent(out IDamagable damagable))
                     {
+                        Service.Log("데미지 입히기 실행");
+                        Service.Log($"{droneController.statController.RuntimeStatData.baseDamage}");
                         damagable.OnTakeDamage(droneController.statController.RuntimeStatData.baseDamage);
                     }
                 }
