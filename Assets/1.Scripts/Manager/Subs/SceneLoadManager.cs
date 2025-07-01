@@ -85,6 +85,7 @@ namespace _1.Scripts.Manager.Subs
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+                coreManager.soundManager.StopBGM();
                 coreManager.soundManager.CacheSoundGroup();
                 await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
