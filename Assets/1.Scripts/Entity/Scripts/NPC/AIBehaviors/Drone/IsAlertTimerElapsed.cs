@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
@@ -22,7 +21,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                 return INode.State.FAILED;
             }
             
-            // EnemyReconDroneAIController 타입인지 확인
             if (controller.TryGetAIController<BaseDroneAIController>(out var droneController))
             {
                 if (droneController.TimerCheck() >= alertable.AlertDuration)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
