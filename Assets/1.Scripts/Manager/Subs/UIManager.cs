@@ -143,13 +143,6 @@ namespace _1.Scripts.Manager.Subs
             list.Add(component);
             return component;
         }        
-        public void ShowSettingPopup()
-        {
-            if (settingUI == null) return;
-            
-            settingUI.transform.SetParent(popupRoot, false);
-            settingUI.transform.SetAsLastSibling();
-        }
         
         public T ShowPopup<T>(string address) where T : UIPopup
         {
