@@ -130,10 +130,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 3480672881302241518}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -493,10 +493,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 7991345820954682599}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -3398,10 +3398,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 1641551713324939360}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -3647,10 +3647,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 3797095487256271102}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -5515,10 +5515,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 237399354994466074}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -6331,10 +6331,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 8791270042430338993}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -6965,10 +6965,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 3629372926448855782}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -7492,10 +7492,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 5632533167207427246}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -8415,10 +8415,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 1944162941682563184}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -9274,10 +9274,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 2155253023760191094}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -10028,10 +10028,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 6376307142260461620}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -10772,7 +10772,6 @@ MonoBehaviour:
   blurMgr: {fileID: 6359292368684233295}
   settingsCanvas: {fileID: 1613738615336076884}
   settingsAnimator: {fileID: 8536151642032165770}
-  aniDuration: 0.25
 --- !u!1 &5483792194094656334
 GameObject:
   m_ObjectHideFlags: 0
@@ -15009,10 +15008,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 1649148759962202076}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -16319,10 +16318,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 4834240930090176252}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
@@ -17690,10 +17689,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad88e459dfc77c4dbcbaff69c5e05a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerAsset: {fileID: 11400000, guid: ed935159a86a1be4cbc1c44848b24daf, type: 2}
-  audioObject: {fileID: 5158130893731959729}
-  hoverSFX: {fileID: 0}
-  clickSFX: {fileID: 0}
+  hoverSfxType: 2
+  hoverIndex: 0
+  clickSfxType: 1
+  clickIndex: 0
   enableHoverSound: 1
   enableClickSound: 1
   checkForInteraction: 1
