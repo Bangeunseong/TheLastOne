@@ -468,10 +468,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             yield return new WaitForSeconds(duration);
+            WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             yield return new WaitForSeconds(duration);
             switchCoroutine = null;
             IsSwitching = false;
