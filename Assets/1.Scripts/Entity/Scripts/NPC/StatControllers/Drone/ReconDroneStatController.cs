@@ -5,7 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
-using _1.Scripts.Entity.Scripts.Npc.StatControllers;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
 using UnityEngine;

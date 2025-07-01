@@ -15,7 +15,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Enemy
     /// <summary>
     /// 드론(Suicide Drone) 
     /// </summary>
-    public class EnemySuicideDroneAIController : BaseDroneAIController
+    public class SuicideDroneAIController : BaseDroneAIController
     {
         protected override void Start()
         {

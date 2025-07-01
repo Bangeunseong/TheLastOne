@@ -72,4 +72,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MaxWanderingDistance = so.MaxWanderingDistance;
         }
     }
+
+    public class RuntimeSuicideDroneStatData : RuntimeEntityStatData, IAlertable, IAttackable
+    {
+        public float AttackRange { get; set; }
+        public float AlertDuration { get; set; }
+        public float AlertRadius { get; set; }
+
+        public RuntimeSuicideDroneStatData(SuicideDroneStatData so) : base(so)
+        {
+            AttackRange = so.AttackRange;
+            AlertDuration = so.AlertDuration;
+            AlertRadius = so.AlertRadius;
+        }
+    }
 }

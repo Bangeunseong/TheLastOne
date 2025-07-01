@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
-using _1.Scripts.Entity.Scripts.Npc.StatControllers;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
+namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
 {
     /// <summary>
     /// Npc 공통 동작 정의
@@ -132,6 +132,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers
             SetLayerRecursively(gameObject, LayerConstants.Ally);
         }
 
+        /// <summary>
+        /// 자식들 전부 레이어 변환
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="layer"></param>
         private void SetLayerRecursively(GameObject obj, int layer)
         {
             obj.layer = layer;

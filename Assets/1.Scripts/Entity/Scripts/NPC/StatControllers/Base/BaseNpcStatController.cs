@@ -4,7 +4,7 @@ using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.Npc.StatControllers
+namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
     /// <summary>
     /// Npc 스텟 공통로직 정의
