@@ -26,7 +26,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         public override void Update()
         {
             base.Update();
-            if (stateMachine.Player.PlayerGravity.IsGrounded) stateMachine.ChangeState(stateMachine.IdleState);
+            if (stateMachine.Player.PlayerGravity.IsGrounded) 
+                stateMachine.ChangeState(stateMachine.IdleState);
         }
     }
 }
