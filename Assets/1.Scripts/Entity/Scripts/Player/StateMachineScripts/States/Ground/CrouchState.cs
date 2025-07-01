@@ -13,13 +13,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = playerCondition.CrouchSpeedModifier;
             base.Enter();
-            StartAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
+            // StartAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
         }
 
         public override void Exit()
         {
             base.Exit();
-            StopAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
+            // StopAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
         }
 
         protected override void OnCrouchStarted(InputAction.CallbackContext context)

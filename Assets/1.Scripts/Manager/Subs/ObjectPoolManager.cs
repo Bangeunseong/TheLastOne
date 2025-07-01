@@ -104,17 +104,12 @@ namespace _1.Scripts.Manager.Subs
                 activeObjects[prefabName].Add(obj);
                 return obj;
             }
-            else
-            {
-                // 2. 풀 없으면 Instantiate로 새로 생성만 해서 리턴
-                var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
-                if (prefab == null)
-                {
-                    Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
-                    return null;
-                }
-                return UnityEngine.Object.Instantiate(prefab);
-            }
+
+            // 2. 풀 없으면 Instantiate로 새로 생성만 해서 리턴
+            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
+            if (prefab) return UnityEngine.Object.Instantiate(prefab);
+            Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
+            return null;
         }
         
         /// <summary>
