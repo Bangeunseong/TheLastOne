@@ -129,12 +129,20 @@ namespace _1.Scripts.Manager.Subs
 
         public void PauseGame()
         {
-            if (Player) { Player.InputProvider.enabled = false; }
+            if (!Player) return;
+            
+            Player.Pov.m_HorizontalAxis.Reset();
+            Player.Pov.m_VerticalAxis.Reset();
+            Player.InputProvider.enabled = false;
+            Player.PlayerInput.enabled = false;
         }
 
         public void ResumeGame()
         {
-            if (Player) { Player.InputProvider.enabled = true; }
+            if (!Player) return;
+            
+            Player.InputProvider.enabled = true;
+            Player.PlayerInput.enabled = true;
         }
     }
 }

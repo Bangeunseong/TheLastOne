@@ -31,20 +31,17 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) return;
+            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
         public virtual void Update()
         {
-            if (playerCondition.IsDead) { return; }
             Move();
         }
 
         public virtual void LateUpdate()
         {
-            if (playerCondition.IsDead) return;
-            
             var baseForward = stateMachine.Player.MainCameraTransform.forward;
             var baseRot = Quaternion.LookRotation(baseForward);
             var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
@@ -55,7 +52,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void PhysicsUpdate()
         {
-            
+            if (CoreManager.Instance.gameManager.IsGamePaused) return;
         }
 
         public virtual void Exit()
