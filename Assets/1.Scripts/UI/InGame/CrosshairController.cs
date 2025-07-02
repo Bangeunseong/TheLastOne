@@ -37,7 +37,7 @@ namespace _1.Scripts.UI.InGame
                 aimAction = playerInput.PlayerActions.Aim;
                 fireAction = playerInput.PlayerActions.Fire;
             }
-            aimAction.performed += OnAimPerformed;
+            aimAction.started += OnAimStarted;
             aimAction.canceled  += OnAimCanceled;
             fireAction.started += OnFirePerformed;
             fireAction.canceled += OnFireCanceled;
@@ -46,13 +46,13 @@ namespace _1.Scripts.UI.InGame
         private void OnDisable()
         {
             if (playerInput == null) return;
-            aimAction.performed -= OnAimPerformed;
+            aimAction.started -= OnAimStarted;
             aimAction.canceled  -= OnAimCanceled;
             fireAction.started -= OnFirePerformed;
             fireAction.canceled -= OnFireCanceled;
         }
 
-        private void OnAimPerformed(InputAction.CallbackContext context)
+        private void OnAimStarted(InputAction.CallbackContext context)
         {
             crosshairImage.enabled = false;
         }

@@ -17,8 +17,10 @@ namespace _1.Scripts.UI.InGame
     {
         [Header("플레이어 상태")] [SerializeField] private Slider healthSlider;
         [SerializeField] private Slider staminaSlider;
+        [SerializeField] private Slider armorSlider;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI staminaText;
+        [SerializeField] private TextMeshProUGUI armorText;
         [SerializeField] private TextMeshProUGUI levelText;
 
         [Header("포커스 게이지")] [SerializeField] private Image focusGaugeImage;
@@ -66,6 +68,7 @@ namespace _1.Scripts.UI.InGame
             if (playerCondition == null) return;
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
+            //UpdateArmorSlider(playerCondition.CurrentArmor, playerCondition.MaxArmor);
             UpdateLevelUI(playerCondition.Level);
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
@@ -90,6 +93,14 @@ namespace _1.Scripts.UI.InGame
                 staminaText.text = current + "/" + max;
         }
 
+        private void UpdateArmorSlider(float current, float max)
+        {
+            if (armorSlider != null)
+                armorSlider.value = current / max;
+            if (armorText != null)
+                armorText.text = current + "/" + max;
+        }
+
         public void UpdateInstinct(float value)
         {
             if (instinctGaugeImage != null)
@@ -104,7 +115,7 @@ namespace _1.Scripts.UI.InGame
 
         private void UpdateLevelUI(int level)
         {
-            levelText.text = level.ToString();
+            levelText.text = $"Lvl. {level}";
         }
 
         public void UpdateWeaponInfo()
@@ -139,8 +150,8 @@ namespace _1.Scripts.UI.InGame
             }
             else
             {
-                weaponNameText.text = "empty";
-                ammoText.text = "empty";
+                weaponNameText.text = "PUNCH";
+                ammoText.text = "NONE";
             }
         }
     }
