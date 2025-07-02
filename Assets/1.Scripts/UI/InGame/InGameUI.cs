@@ -20,7 +20,6 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Slider armorSlider;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI staminaText;
-        [SerializeField] private TextMeshProUGUI armorText;
         [SerializeField] private TextMeshProUGUI levelText;
 
         [Header("포커스 게이지")] [SerializeField] private Image focusGaugeImage;
@@ -29,10 +28,7 @@ namespace _1.Scripts.UI.InGame
 
         [Header("크로스 헤어")] [SerializeField] private Image crosshairImage;
 
-        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponNameText;
-        [SerializeField] private TextMeshProUGUI ammoText;
-        [SerializeField] private Image weaponImage;
-        [SerializeField] private Image ammoImage;
+        [Header("무기 정보")] [SerializeField] private WeaponUI weaponUI;
 
 
         private PlayerCondition playerCondition;
@@ -95,10 +91,13 @@ namespace _1.Scripts.UI.InGame
 
         private void UpdateArmorSlider(float current, float max)
         {
-            if (armorSlider != null)
+            if (armorSlider != null && max > 0)
+            {
+                armorSlider.enabled = true;
                 armorSlider.value = current / max;
-            if (armorText != null)
-                armorText.text = current + "/" + max;
+            }
+            else if (armorSlider == null || max == 0)
+                armorSlider.enabled = false;
         }
 
         public void UpdateInstinct(float value)
@@ -120,39 +119,11 @@ namespace _1.Scripts.UI.InGame
 
         public void UpdateWeaponInfo()
         {
-            int idx = playerCondition.EquippedWeaponIndex;
-            if (idx >= 0 && idx < playerCondition.Weapons.Count && playerCondition.AvailableWeapons[idx])
-            {
-                BaseWeapon baseWeapon = playerCondition.Weapons[idx];
-                string name;
-                int left = 0;
-                int max = 0;
-
-                if (baseWeapon is Gun gun)
-                {
-                    name = gun.GunData.GunStat.Type.ToString();
-                    left = gun.CurrentAmmoCountInMagazine;
-                    max = gun.GunData.GunStat.MaxAmmoCountInMagazine;
-                }
-                else if (baseWeapon is GrenadeLauncher grenadeLauncher)
-                {
-                    name = grenadeLauncher.GrenadeData.GrenadeStat.Type.ToString();
-                    left = grenadeLauncher.CurrentAmmoCountInMagazine;
-                    max = grenadeLauncher.GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
-                }
-                else
-                {
-                    name = baseWeapon.GetType().Name;
-                }
-                
-                weaponNameText.text = name;
-                ammoText.text = $"{left}/{max}";
-            }
-            else
-            {
-                weaponNameText.text = "PUNCH";
-                ammoText.text = "NONE";
-            }
+           var weapons = playerCondition.Weapons;
+           var available = playerCondition.AvailableWeapons;
+           int idx = playerCondition.EquippedWeaponIndex;
+           
+           weaponUI.Refresh(weapons, available, idx);
         }
     }
 }
