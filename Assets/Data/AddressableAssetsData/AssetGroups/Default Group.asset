@@ -112,6 +112,57 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7736ebd0e468eb843a27e996b7c014a1
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/8Pistol/Shot_1.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 00d6c854d736b274692325c410bbdcc7
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/8Pistol/Shot_2.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 57be9f76b7fd1914fbb8a53e7ad41c53
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/8Pistol/Shot_4.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5352c7bdf44b11141ba87d35e6e5a45a
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/8Pistol/Reload_Full.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc988050393583047ad560d1ce931d72
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/1Assault_Rifle_Set/Reload.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8018acccaecddce498259f8e5a93b440
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/1Assault_Rifle_Set/Rifle_Shot_1.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9fac002407092764e8936cb3d0387616
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/1Assault_Rifle_Set/Rifle_Shot_2.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73e3ceb9aff1022448528283abfd07c3
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/1Assault_Rifle_Set/Rifle_Shot_3.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e47e6a3fc7e2a81459f76244208a1cd5
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/3Grenade_Gun_Set/GL_pomp_bar_full
+      shot.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aeb5e01a260114f4391089be7ca23888
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/3Grenade_Gun_Set/Reload_Full.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:

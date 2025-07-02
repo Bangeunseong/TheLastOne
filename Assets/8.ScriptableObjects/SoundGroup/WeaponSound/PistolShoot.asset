@@ -14,7 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groupName: PistolShoot
   audioClips:
-  - m_AssetGUID: 
+  - m_AssetGUID: 7736ebd0e468eb843a27e996b7c014a1
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 00d6c854d736b274692325c410bbdcc7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 57be9f76b7fd1914fbb8a53e7ad41c53
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

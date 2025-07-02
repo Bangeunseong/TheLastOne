@@ -89,6 +89,42 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c619e2eabaec05408d84f83f5735dc2
+    m_Address: RifleShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ea5f65916022df4fb05b286b70c3fde
+    m_Address: PistolShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c82a1ba85ccf70459ab25ef65afc761
+    m_Address: PistolReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 012b5232482ec1b4b8af3c3d867eb0a0
+    m_Address: RifleReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d54ba0762311aa047845225fe011d3cc
+    m_Address: GrenadeLauncherShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab7d0c36bf7a79d48a91d533c4d27447
+    m_Address: GrenadeLauncherReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
