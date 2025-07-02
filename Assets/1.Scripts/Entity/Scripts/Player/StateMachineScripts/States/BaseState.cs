@@ -15,6 +15,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected Coroutine staminaCoroutine;
 
         private float speed;
+        private float smoothVelocity;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -101,12 +102,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
             
-            if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            {
-                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.unscaledDeltaTime * 5f);
-            }
-            else speed = targetSpeed;
+            // Deprecated Mechanism (Damping이 훨씬 자연스러움)
+            // if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
+            // {
+            //     speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+            //         ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // }
+            // else speed = targetSpeed;
+            
+            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+                ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
