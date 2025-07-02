@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
@@ -38,7 +36,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
+        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
 
         private void Awake()
         {
@@ -136,7 +134,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, BulletSpawnPoint.position, -1);
+            CoreManager.Instance.soundManager
+                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolShoot : SfxType.RifleShoot, 
+                BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0)

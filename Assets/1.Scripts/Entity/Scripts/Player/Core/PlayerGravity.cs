@@ -32,7 +32,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             CheckCharacterIsGrounded();
             if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
-            else verticalVelocity += Gravity * Time.unscaledDeltaTime;
+            else verticalVelocity += Gravity * Time.deltaTime;
         }
 
         private void CheckCharacterIsGrounded()

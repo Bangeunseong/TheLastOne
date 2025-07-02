@@ -5,6 +5,8 @@ using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Sound;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -30,8 +32,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
         [field: SerializeField] public bool IsUsingFocus { get; set; }
-        [field: SerializeField] public bool IsUsingInstinct { get; set; } 
-        [field: SerializeField] public bool IsPlayerHasControl { get; set; }
+        [field: SerializeField] public bool IsUsingInstinct { get; set; }
+        [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
         [field: Header("Current Physics Data")]
@@ -68,6 +70,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Coroutine switchCoroutine;
         private Coroutine aimCoroutine;
         private Coroutine reloadCoroutine;
+        private SoundPlayer reloadPlayer;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -264,8 +267,21 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnDead()
         {
             IsDead = true;
-            if (player.InputProvider != null) player.InputProvider.enabled = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
+            player.PlayerInput.enabled = false;
+            
             OnDeath?.Invoke();
+        }
+
+        public void OnReset()
+        {
+            IsDead = false;
+            CurrentHealth = MaxHealth;
+            CurrentStamina = MaxStamina;
+            player.InputProvider.enabled = true;
+            player.PlayerInput.enabled = true;
         }
 
         public void OnAttack()
@@ -287,7 +303,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
-            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); }
+            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); IsAiming = !isAim; }
             aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
             
         }
@@ -330,7 +346,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
-                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.3f));
+                    
+                    // Play Reload AudioClip
+                    float clipLength = gun.GunData.GunStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(
+                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, clipLength);
+                    
+                    // Start Reload Coroutine
+                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.1f));
                     break;
                 }
                 case GrenadeLauncher { IsReadyToReload: false }:
@@ -344,6 +367,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
+
+                    // Player Reload AudioClip
+                    float clipLength = grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, clipLength);
+                    
+                    // Start Reload Coroutine
                     reloadCoroutine = StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime + 0.3f));
                     break;
                 }
@@ -353,10 +382,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         public bool TryCancelReload()
         {
-            if (IsDead || IsSwitching || EquippedWeaponIndex <= 0) return false;
+            if (IsDead || EquippedWeaponIndex <= 0 || reloadCoroutine == null) return false;
             
-            if (reloadCoroutine == null) return false;
-            StopCoroutine(reloadCoroutine); 
+            StopCoroutine(reloadCoroutine);
             switch (Weapons[EquippedWeaponIndex])
             {
                 case Gun gun:
@@ -368,6 +396,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
             }
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            
+            if (reloadPlayer) reloadPlayer.Stop();
+            reloadPlayer = null;
             reloadCoroutine = null;
             IsReloading = false;
             return true;
@@ -422,6 +454,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             }
+            reloadPlayer = null;
             reloadCoroutine = null;
         }
         /* --------------------- */
@@ -430,6 +463,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnSwitchWeapon(int currentWeaponIndex, float duration)
         {
             IsAttacking = false;
+            if (IsReloading) TryCancelReload();
             int previousWeaponIndex = EquippedWeaponIndex;
             EquippedWeaponIndex = currentWeaponIndex;
             
@@ -443,16 +477,35 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             Service.Log($"{previousWeaponIndex}, {currentWeaponIndex}");
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
-            while (IsAiming){}
             
             Service.Log("Switch Weapon");
             // 무기를 밑으로 먼저 내리기
+
+            switch (previousWeaponIndex)
+            {
+                case 0: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.HandToOtherWeaponClipTime / duration); break; 
+                case 1: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.PistolToOtherWeaponClipTime / duration); break; 
+                case 2: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.RifleToOtherWeaponClipTime / duration); break;
+                case 3: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
+            }
+            
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             yield return new WaitForSeconds(duration);
+            WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
+            yield return new WaitForEndOfFrame();
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             yield return new WaitForSeconds(duration);
             switchCoroutine = null;
             IsSwitching = false;

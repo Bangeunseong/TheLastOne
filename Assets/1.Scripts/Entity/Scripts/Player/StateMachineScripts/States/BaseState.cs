@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +13,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
-        protected Coroutine footStepCoroutine;
 
         private float speed;
         private Vector3 recoilEuler;
@@ -36,7 +36,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void Update()
         {
-            if (playerCondition.IsDead) { return; }
             Move();
         }
 
@@ -52,7 +51,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void PhysicsUpdate()
         {
-            
+            if (CoreManager.Instance.gameManager.IsGamePaused) return;
         }
 
         public virtual void Exit()
@@ -105,7 +104,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * 10f);
+                    Time.deltaTime * 5f);
             }
             else speed = targetSpeed;
             
@@ -113,6 +112,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
         }
         
@@ -124,7 +124,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void Rotate(Vector3 direction)
         {
-            if (playerCondition.IsDead) return;
             if (direction == Vector3.zero) return;
             
             var unitTransform = stateMachine.Player.transform;
@@ -132,7 +131,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var unitDirection = new Vector3(direction.x, 0, direction.z);
             var targetRotation = Quaternion.LookRotation(unitDirection);
-            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.unscaledDeltaTime);
+            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;

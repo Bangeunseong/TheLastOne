@@ -29,12 +29,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e7350b1515d0e2d418e77380a02475c8
-    m_Address: LobbyBGM
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 021fa873ab7a4db4eab29c778d0a632a
     m_Address: Lobby
     m_ReadOnly: 0
@@ -83,26 +77,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bfc5803fa8fa8924bbeaa34f4f689bb1
-    m_Address: Click
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
     m_Address: ButtonClick
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a6473f5264a14804e992a7a4a29cd744
-    m_Address: Popup
+  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
+    m_Address: PopupOpen
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
-    m_Address: PopupOpen
+  - m_GUID: 9c619e2eabaec05408d84f83f5735dc2
+    m_Address: RifleShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ea5f65916022df4fb05b286b70c3fde
+    m_Address: PistolShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c82a1ba85ccf70459ab25ef65afc761
+    m_Address: PistolReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 012b5232482ec1b4b8af3c3d867eb0a0
+    m_Address: RifleReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d54ba0762311aa047845225fe011d3cc
+    m_Address: GrenadeLauncherShoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab7d0c36bf7a79d48a91d533c4d27447
+    m_Address: GrenadeLauncherReload
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

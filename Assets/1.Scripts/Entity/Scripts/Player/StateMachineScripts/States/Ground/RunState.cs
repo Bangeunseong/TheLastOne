@@ -12,7 +12,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = playerCondition.RunSpeedModifier;
             base.Enter();
-            // StartAnimation(stateMachine.Player.AnimationData.RunParameterHash);
             
             if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
             staminaCoroutine = stateMachine.Player.StartCoroutine(ConsumeStamina_Coroutine(
@@ -29,7 +28,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
-            // StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);
+            
             if (staminaCoroutine == null) return;
             stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
         }

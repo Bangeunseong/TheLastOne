@@ -23,6 +23,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
+            
             if (staminaCoroutine == null) return;
             stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
         }
