@@ -1993,6 +1993,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
+      propertyPath: <Pov>k__BackingField
+      value: 
+      objectReference: {fileID: 1677548167}
+    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <InputProvider>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
       propertyPath: <FirstPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 1917048629}

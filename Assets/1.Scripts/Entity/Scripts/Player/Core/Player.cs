@@ -32,6 +32,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
+        [field: SerializeField] public CinemachinePOV Pov { get; private set; }
         
         [field: Header("Camera Settings")]
         [field: SerializeField] public float OriginalFoV { get; private set; }
@@ -62,7 +63,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
         }
@@ -82,7 +84,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
         }
