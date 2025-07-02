@@ -29,12 +29,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e7350b1515d0e2d418e77380a02475c8
-    m_Address: LobbyBGM
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 021fa873ab7a4db4eab29c778d0a632a
     m_Address: Lobby
     m_ReadOnly: 0
@@ -83,20 +77,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bfc5803fa8fa8924bbeaa34f4f689bb1
-    m_Address: Click
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
     m_Address: ButtonClick
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a6473f5264a14804e992a7a4a29cd744
-    m_Address: Popup
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

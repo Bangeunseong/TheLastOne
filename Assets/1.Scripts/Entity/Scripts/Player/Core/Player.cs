@@ -130,7 +130,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position, -1);
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position);
             }
         }
 
@@ -142,7 +142,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position, -1);
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position);
             }
         }
     }

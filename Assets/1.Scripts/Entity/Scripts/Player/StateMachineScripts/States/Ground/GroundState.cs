@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using _1.Scripts.Weapon.Scripts;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground

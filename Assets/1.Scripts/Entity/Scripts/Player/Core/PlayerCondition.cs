@@ -5,6 +5,8 @@ using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Sound;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -68,6 +70,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Coroutine switchCoroutine;
         private Coroutine aimCoroutine;
         private Coroutine reloadCoroutine;
+        private SoundPlayer reloadPlayer;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -343,6 +346,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
+                    
+                    // Play Reload AudioClip
+                    float clipLength = gun.GunData.GunStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(
+                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, clipLength);
+                    
+                    // Start Reload Coroutine
                     reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.1f));
                     break;
                 }
@@ -357,6 +367,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
+
+                    // Player Reload AudioClip
+                    float clipLength = grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, clipLength);
+                    
+                    // Start Reload Coroutine
                     reloadCoroutine = StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime + 0.3f));
                     break;
                 }
@@ -366,10 +382,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         public bool TryCancelReload()
         {
-            if (IsDead || EquippedWeaponIndex <= 0) return false;
+            if (IsDead || EquippedWeaponIndex <= 0 || reloadCoroutine == null) return false;
             
-            if (reloadCoroutine == null) return false;
-            StopCoroutine(reloadCoroutine); 
+            StopCoroutine(reloadCoroutine);
             switch (Weapons[EquippedWeaponIndex])
             {
                 case Gun gun:
@@ -381,8 +396,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
             }
-
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            
+            if (reloadPlayer) reloadPlayer.Stop();
+            reloadPlayer = null;
             reloadCoroutine = null;
             IsReloading = false;
             return true;
@@ -437,6 +454,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             }
+            reloadPlayer = null;
             reloadCoroutine = null;
         }
         /* --------------------- */

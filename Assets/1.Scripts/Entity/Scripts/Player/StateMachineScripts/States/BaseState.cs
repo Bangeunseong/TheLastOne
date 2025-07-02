@@ -13,7 +13,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
-        protected Coroutine footStepCoroutine;
 
         private float speed;
         private Vector3 recoilEuler;
@@ -105,7 +104,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * 10f);
+                    Time.deltaTime * 5f);
             }
             else speed = targetSpeed;
             
@@ -113,6 +112,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
         }
         

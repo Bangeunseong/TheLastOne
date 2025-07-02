@@ -13,9 +13,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = 0f;
             base.Enter();
-            // StartAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
             
-            if (footStepCoroutine != null) { stateMachine.Player.StopCoroutine(footStepCoroutine); footStepCoroutine = null; }
             if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
             staminaCoroutine = stateMachine.Player.StartCoroutine(RecoverStamina_Coroutine(
                 playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval,
@@ -25,7 +23,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
-            // StopAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
+            
             if (staminaCoroutine == null) return;
             stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
         }
