@@ -1,6 +1,5 @@
 ﻿using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {

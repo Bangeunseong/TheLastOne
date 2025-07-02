@@ -28,10 +28,14 @@ namespace _1.Scripts.Manager.Subs
         PopupClose,
         
         // Player SFX
-        PlayerAttack,
         PlayerHit,
         PlayerFootStep,
         PlayerLand,
+        
+        // Gun SFX
+        Pistol,
+        Rifle,
+        GrenadeLauncher,
         
         // Enemy SFX
         EnemyAttack,

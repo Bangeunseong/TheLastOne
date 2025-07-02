@@ -134,7 +134,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, BulletSpawnPoint.position, -1);
+            CoreManager.Instance.soundManager
+                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.Pistol : SfxType.Rifle, 
+                BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0)

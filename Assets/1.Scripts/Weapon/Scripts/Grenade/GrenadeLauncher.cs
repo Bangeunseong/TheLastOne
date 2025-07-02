@@ -107,7 +107,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, ThrowPoint.position, -1);
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncher, ThrowPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0)

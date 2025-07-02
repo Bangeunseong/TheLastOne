@@ -25,6 +25,6 @@ MonoBehaviour:
     <Type>k__BackingField: 2
     <MaxAmmoCountInMagazine>k__BackingField: 6
     <Accuracy>k__BackingField: 0
-    <ReloadTime>k__BackingField: 3
+    <ReloadTime>k__BackingField: 6
     <ThrowForce>k__BackingField: 25
     <Rpm>k__BackingField: 90
