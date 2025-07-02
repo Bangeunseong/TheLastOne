@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
@@ -15,20 +17,31 @@ namespace _1.Scripts.UI.InGame
 {
     public class InGameUI : UIBase
     {
-        [Header("플레이어 상태")] [SerializeField] private Slider healthSlider;
+        [Header("플레이어 상태")] 
+        [SerializeField] private Slider healthSlider;
         [SerializeField] private Slider staminaSlider;
         [SerializeField] private Slider armorSlider;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI staminaText;
         [SerializeField] private TextMeshProUGUI levelText;
 
-        [Header("포커스 게이지")] [SerializeField] private Image focusGaugeImage;
+        [Header("게이지")] 
+        [SerializeField] private Image focusGaugeImage;
+        [SerializeField] private Image focusGaugeFrame;
+        [SerializeField] private Image instinctGaugeImage;
+        [SerializeField] private Image instinctGaugeFrame;
+        [SerializeField] private Image instinctGaugeEffect;
+        [SerializeField] private Image focusGaugeEffect;
+        [SerializeField] private Animator instinctEffectAnimator;
+        [SerializeField] private Animator focusEffectAnimator;
+        private Coroutine focusEffectCoroutine;
+        private Coroutine instinctEffectCoroutine;
 
-        [Header("인스팅트 게이지")] [SerializeField] private Image instinctGaugeImage;
+        [Header("크로스 헤어")] 
+        [SerializeField] private Image crosshairImage;
 
-        [Header("크로스 헤어")] [SerializeField] private Image crosshairImage;
-
-        [Header("무기 정보")] [SerializeField] private WeaponUI weaponUI;
+        [Header("무기 정보")] 
+        [SerializeField] private WeaponUI weaponUI;
 
 
         private PlayerCondition playerCondition;
@@ -71,7 +84,7 @@ namespace _1.Scripts.UI.InGame
             UpdateWeaponInfo();
         }
 
-        public void UpdateHealthSlider(float current, float max)
+        private void UpdateHealthSlider(float current, float max)
         {
             if (healthSlider != null)
                 healthSlider.value = current / max;
@@ -100,16 +113,40 @@ namespace _1.Scripts.UI.InGame
                 armorSlider.enabled = false;
         }
 
-        public void UpdateInstinct(float value)
+        private void UpdateInstinct(float value)
         {
+            float instinct = Mathf.Clamp01(value);
+
             if (instinctGaugeImage != null)
-                instinctGaugeImage.fillAmount = Mathf.Clamp01(value);
+                instinctGaugeImage.fillAmount = instinct;
+
+            if (instinct >= 1f && instinctEffectCoroutine == null)
+            {
+                instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
+            }
+            else if (instinct < 1f && instinctEffectCoroutine != null)
+            {
+                StopCoroutine(instinctEffectCoroutine);
+                instinctEffectCoroutine = null;
+            }
         }
 
-        public void UpdateFocus(float value)
+        private void UpdateFocus(float value)
         {
+            float focus = Mathf.Clamp01(value);
+
             if (focusGaugeImage != null)
-                focusGaugeImage.fillAmount = Mathf.Clamp01(value);
+                focusGaugeImage.fillAmount = focus;
+            
+            if (focus >= 1f && focusEffectCoroutine == null)
+            {
+                focusEffectCoroutine = StartCoroutine(FocusEffectCoroutine());
+            }
+            else if (focus < 1f && focusEffectCoroutine != null)
+            {
+                StopCoroutine(focusEffectCoroutine);
+                focusEffectCoroutine = null;
+            }
         }
 
         private void UpdateLevelUI(int level)
@@ -117,13 +154,33 @@ namespace _1.Scripts.UI.InGame
             levelText.text = $"Lvl. {level}";
         }
 
-        public void UpdateWeaponInfo()
+        private void UpdateWeaponInfo()
         {
            var weapons = playerCondition.Weapons;
            var available = playerCondition.AvailableWeapons;
            int idx = playerCondition.EquippedWeaponIndex;
            
            weaponUI.Refresh(weapons, available, idx);
+        }
+
+        private IEnumerator FocusEffectCoroutine()
+        {
+            while (true)
+            {
+                focusEffectAnimator.SetTrigger("Full");
+                focusEffectAnimator.ResetTrigger("Full");
+                yield return new WaitForSeconds(2f);
+            }
+        }
+
+        private IEnumerator InstinctEffectCoroutine()
+        {
+            while (true)
+            {
+                instinctEffectAnimator.ResetTrigger("Full");
+                instinctEffectAnimator.SetTrigger("Full");
+                yield return new WaitForSeconds(2f);
+            }
         }
     }
 }

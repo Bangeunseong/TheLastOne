@@ -11,8 +11,9 @@ namespace _1.Scripts.UI.InGame
 {
     public class CrosshairController : MonoBehaviour
     {
-        [SerializeField] private Image crosshairImage;
-        
+        [SerializeField] private GameObject crosshair;
+        [SerializeField] private Image[] crosshairImage;
+        [SerializeField] private RectTransform crosshairRectTransform;
         [SerializeField] private float crosshairSize = 1.2f;
         [SerializeField] private float sizeModifyDuration = 0.1f;
 
@@ -24,10 +25,9 @@ namespace _1.Scripts.UI.InGame
         private Coroutine modifyCoroutine;
         private Coroutine shrinkCoroutine;
 
-        private void Awake()
+        private void Start()
         {
-            if (crosshairImage == null) crosshairImage = GetComponent<Image>();
-            originalScale = crosshairImage.rectTransform.localScale;
+            originalScale = crosshairRectTransform.localScale;
         }
 
         void OnEnable()
@@ -57,12 +57,18 @@ namespace _1.Scripts.UI.InGame
 
         private void OnAimStarted(InputAction.CallbackContext context)
         {
-            crosshairImage.enabled = false;
+            for (int i = 0; i < crosshairImage.Length; i++)
+            {
+                crosshairImage[i].enabled = false;
+            }
         }
         
         private void OnAimCanceled(InputAction.CallbackContext context)
         {
-            crosshairImage.enabled = true;
+            for (int i = 0; i < crosshairImage.Length; i++)
+            {
+                crosshairImage[i].enabled = true;
+            }
         }
 
         private void OnFirePerformed(InputAction.CallbackContext context)
@@ -92,7 +98,7 @@ namespace _1.Scripts.UI.InGame
 
         private IEnumerator ModifyCrosshairSize()
         {
-            var rectTransform = crosshairImage.rectTransform;
+            var rectTransform = crosshairRectTransform;
             Vector3 target = originalScale * crosshairSize;
             float t = 0;
 
@@ -108,7 +114,7 @@ namespace _1.Scripts.UI.InGame
 
         private IEnumerator ShrinkCrosshairSize()
         {
-            var rectTransform = crosshairImage.rectTransform;
+            var rectTransform = crosshairRectTransform;
             Vector3 startSize = rectTransform.localScale;
             float t = 0;
 
