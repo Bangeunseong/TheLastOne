@@ -526,7 +526,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* --------------------- */
         
         /* - Skill 관련 메소드 - */
-        public void OnFocusEngaged()
+        private void OnFocusEngaged()
         {
             StartCoroutine(Focus_Coroutine(StatData.focusSkillTime));
         }
