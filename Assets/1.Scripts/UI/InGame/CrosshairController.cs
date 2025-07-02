@@ -20,6 +20,9 @@ namespace _1.Scripts.UI.InGame
         private InputAction fireAction;
         private PlayerInput playerInput;
         private Vector3 originalScale;
+        
+        private Coroutine modifyCoroutine;
+        private Coroutine shrinkCoroutine;
 
         private void Awake()
         {
@@ -64,13 +67,27 @@ namespace _1.Scripts.UI.InGame
 
         private void OnFirePerformed(InputAction.CallbackContext context)
         {
-            StopAllCoroutines();
-            StartCoroutine(ModifyCrosshairSize());
+            if (shrinkCoroutine != null)
+            {
+                StopCoroutine(shrinkCoroutine);
+                shrinkCoroutine = null;
+            }
+            if (modifyCoroutine == null)
+            {
+                modifyCoroutine = StartCoroutine(ModifyCrosshairSize());
+            }
         }
         private void OnFireCanceled(InputAction.CallbackContext context)
         {
-            StopAllCoroutines();
-            StartCoroutine(ShrinkCrosshairSize());
+            if (modifyCoroutine != null)
+            {
+                StopCoroutine(modifyCoroutine);
+                modifyCoroutine = null;
+            }
+            if (shrinkCoroutine == null)
+            {
+                shrinkCoroutine = StartCoroutine(ShrinkCrosshairSize());
+            }
         }
 
         private IEnumerator ModifyCrosshairSize()
@@ -85,6 +102,8 @@ namespace _1.Scripts.UI.InGame
                 rectTransform.localScale = Vector3.Lerp(originalScale, target, t / sizeModifyDuration);
                 yield return null;
             }
+
+            modifyCoroutine = null;
         }
 
         private IEnumerator ShrinkCrosshairSize()
@@ -100,6 +119,7 @@ namespace _1.Scripts.UI.InGame
                 yield return null;
             }
             rectTransform.localScale = originalScale;
+            shrinkCoroutine = null;
         }
     }
 }
