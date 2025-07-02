@@ -2862,6 +2862,7 @@ MonoBehaviour:
   <FirstPersonCamera>k__BackingField: {fileID: 0}
   <ThirdPersonCamera>k__BackingField: {fileID: 0}
   <InputProvider>k__BackingField: {fileID: 0}
+  <Pov>k__BackingField: {fileID: 0}
   <OriginalFoV>k__BackingField: 0
   <ZoomFoV>k__BackingField: 40
   <TransitionTime>k__BackingField: 0.3
@@ -2919,7 +2920,7 @@ MonoBehaviour:
   <Experience>k__BackingField: 0
   <IsUsingFocus>k__BackingField: 0
   <IsUsingInstinct>k__BackingField: 0
-  <IsPlayerHasControl>k__BackingField: 0
+  <IsPlayerHasControl>k__BackingField: 1
   <IsDead>k__BackingField: 0
   <Speed>k__BackingField: 0
   <JumpForce>k__BackingField: 0

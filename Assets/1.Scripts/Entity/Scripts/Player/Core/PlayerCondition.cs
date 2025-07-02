@@ -30,8 +30,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
         [field: SerializeField] public bool IsUsingFocus { get; set; }
-        [field: SerializeField] public bool IsUsingInstinct { get; set; } 
-        [field: SerializeField] public bool IsPlayerHasControl { get; set; }
+        [field: SerializeField] public bool IsUsingInstinct { get; set; }
+        [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
         [field: Header("Current Physics Data")]
@@ -264,8 +264,21 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnDead()
         {
             IsDead = true;
-            if (player.InputProvider != null) player.InputProvider.enabled = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
+            player.PlayerInput.enabled = false;
+            
             OnDeath?.Invoke();
+        }
+
+        public void OnReset()
+        {
+            IsDead = false;
+            CurrentHealth = MaxHealth;
+            CurrentStamina = MaxStamina;
+            player.InputProvider.enabled = true;
+            player.PlayerInput.enabled = true;
         }
 
         public void OnAttack()
@@ -473,6 +486,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
+            yield return new WaitForEndOfFrame();
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             yield return new WaitForSeconds(duration);
             switchCoroutine = null;
