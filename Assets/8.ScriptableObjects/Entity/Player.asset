@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa785c2ddabe49038e43db19de7c9158, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  entityName: Sam
+  isPlayer: 1
+  isAlly: 0
+  maxHealth: 100
+  baseDamage: 10
+  baseAttackRate: 1
+  moveSpeed: 6
+  runMultiplier: 1
+  walkMultiplier: 0.25
+  footStepSounds: []
+  hitSounds: []
+  deathSounds: []
+  maxStamina: 100
+  jumpHeight: 1.2
+  crouchMultiplier: 0.1
+  consumeRateOfStamina: 10
+  recoverRateOfStamina_Idle: 20
+  recoverRateOfStamina_Walk: 5
+  interval: 0.1

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using _1.Scripts.Weapon.Scripts;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
@@ -30,7 +26,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.PhysicsUpdate();
 
             if (!stateMachine.Player.PlayerGravity.IsGrounded &&
-                stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.deltaTime)
+                stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.unscaledDeltaTime)
             {
                 stateMachine.ChangeState(stateMachine.FallState);
             }
