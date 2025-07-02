@@ -104,7 +104,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * 5f);
+                    Time.unscaledDeltaTime * 5f);
             }
             else speed = targetSpeed;
             
@@ -113,12 +113,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
+            stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -131,7 +131,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var unitDirection = new Vector3(direction.x, 0, direction.z);
             var targetRotation = Quaternion.LookRotation(unitDirection);
-            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
+            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.unscaledDeltaTime);
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
@@ -180,7 +180,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
                 playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
             }
         }
         
@@ -189,7 +189,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             while (playerCondition.CurrentStamina > 0)
             {
                 playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
             }
         }
 
