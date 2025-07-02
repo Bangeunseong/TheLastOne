@@ -33,7 +33,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         private float timeSinceLastShotFired;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
+        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
 
         private void Awake()
         {
@@ -107,7 +107,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncher, ThrowPoint.position, -1);
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncherShoot, ThrowPoint.position);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0)

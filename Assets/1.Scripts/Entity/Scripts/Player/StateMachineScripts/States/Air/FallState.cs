@@ -19,7 +19,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         {
             base.Exit();
             StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, stateMachine.Player.transform.position, -1);
         }
 
         public override void Update()

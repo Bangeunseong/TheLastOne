@@ -33,9 +33,12 @@ namespace _1.Scripts.Manager.Subs
         PlayerLand,
         
         // Gun SFX
-        Pistol,
-        Rifle,
-        GrenadeLauncher,
+        PistolShoot,
+        RifleShoot,
+        GrenadeLauncherShoot,
+        PistolReload,
+        RifleReload,
+        GrenadeLauncherReload,
         
         // Enemy SFX
         EnemyAttack,
@@ -125,47 +128,52 @@ namespace _1.Scripts.Manager.Subs
             bgmSource.Play();
         }
 
-        public void PlayUISFX(SfxType sfxType, int index)
+        public SoundPlayer PlayUISFX(SfxType sfxType, float duration = -1, int index = -1)
         {
             string groupName = sfxType.ToString();
 
             if (!soundGroups.TryGetValue(groupName, out var group))
             {
                 Debug.LogWarning($"[PlayUISFX] 사운드 그룹 '{groupName}' 없음");
-                return;
+                return null;
             }
 
             var clipRef = (index < 0) ? group.GetRandomClip() : group.GetClip(index);
             if (clipRef?.Asset is not AudioClip clip)
             {
                 Debug.LogWarning($"[PlayUISFX] '{groupName}' 클립 미로딩. 선로딩 필요.");
-                return;
+                return null;
             }
 
             var obj = poolManager.Get("SoundPlayer");
-            obj?.GetComponent<SoundPlayer>()?.Play2D(clip, masterVolume * sfxVolume);
+            if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
+            
+            soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
+            return soundPlayer;
         }
         
-        public void PlaySFX(SfxType sfxType, Vector3 position, int index)
+        public SoundPlayer PlaySFX(SfxType sfxType, Vector3 position, float duration = -1, int index = -1)
         {
             string groupName = sfxType.ToString();
 
             if (!soundGroups.TryGetValue(groupName, out var group))
             {
                 Debug.LogWarning($"[PlaySFX] 사운드 그룹 '{groupName}' 없음");
-                return;
+                return null;
             }
 
             var clipRef = (index < 0) ? group.GetRandomClip() : group.GetClip(index);
             if (clipRef?.Asset is not AudioClip clip)
             {
                 Debug.LogWarning($"[PlaySFX] '{groupName}' 클립 미로딩. 선로딩 필요.");
-                return;
+                return null;
             }
 
             var obj = poolManager.Get("SoundPlayer");
-            if (obj.TryGetComponent(out SoundPlayer soundPlayer))
-                soundPlayer.Play3D(clip, masterVolume * sfxVolume, position);
+            if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
+            
+            soundPlayer.Play3D(clip, duration, masterVolume * sfxVolume, position);
+            return soundPlayer;
         }
         
         public void StopBGM()
