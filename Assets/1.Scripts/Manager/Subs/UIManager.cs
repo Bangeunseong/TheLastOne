@@ -27,28 +27,41 @@ namespace _1.Scripts.Manager.Subs
         private LoadingUI loadingUI;
         private SettingUI settingUI;
         
-        private Dictionary<CurrentState, UIBase> loadedUI = new Dictionary<CurrentState, UIBase>();
+        private Dictionary<CurrentState, List<UIBase>> loadedUI = new Dictionary<CurrentState, List<UIBase>>();
         private Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
         private Stack<UIPopup> popupStack = new Stack<UIPopup>();
+
+        private Transform uiRoot;
+        private Transform popupRoot;
         
         public LoadingUI LoadingUI => loadingUI;
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
+        private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
         public void Start()
         {
+            var mainCanvas = GameObject.Find("MainCanvas");
+            if (mainCanvas != null)
+            {
+                uiRoot = mainCanvas.transform;
+            }
+            
+            var popupCanvas = GameObject.Find("PopupCanvas");
+            if (popupCanvas != null)
+            {
+                popupRoot = popupCanvas.transform;
+            }
+            
             lobbyUI = FindUIComponent<LobbyUI>("LobbyUI");
             loadingUI = FindUIComponent<LoadingUI>("LoadingUI");
-            settingUI = FindUIComponent<SettingUI>("SettingUI");
             
             lobbyUI?.Init(this);
             loadingUI?.Init(this);
-            settingUI?.Init(this);
             
             lobbyUI?.SetActive(false);
             loadingUI?.SetActive(false);
-            settingUI?.SetActive(false);
             
             ChangeState(CurrentState.Lobby);
         }
@@ -74,9 +87,8 @@ namespace _1.Scripts.Manager.Subs
                 case CurrentState.Loading:
                     loadingUI?.SetActive(true);
                     break;
-                
                 case CurrentState.InGame:
-                    LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
+                    var inGameUI  = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS); ;
                     break;
             }
         }
@@ -93,50 +105,57 @@ namespace _1.Scripts.Manager.Subs
                     break;
                 
                 case CurrentState.InGame:
-                    if (loadedUI.TryGetValue(state, out var ui))
+                    if (loadedUI.TryGetValue(state, out var list))
                     {
-                        ui.SetActive(false);
+                        foreach (var ui in list)
+                            ui.SetActive(false);
                     }
                     break;
             }
         }
         
-        private void LoadUI<T>(CurrentState state, string address) where T : UIBase
+        private T LoadUI<T>(CurrentState state, string address) where T : UIBase
         {
-            if (loadedUI.TryGetValue(state, out var ui))
+            if (loadedUI.TryGetValue(state, out var list))
             {
-                ui.SetActive(true);
-                return;
+                foreach (var existing in list)
+                    if (existing is T found)
+                    {
+                        found.SetActive(true);
+                        return found;
+                    }
+            }
+            else
+            {
+                list = new List<UIBase>();
+                loadedUI[state] = list;
             }
 
-            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
-            if (prefab != null)
-            {
-                var canvas = GameObject.Find("MainCanvas").transform;
-                var instance = GameObject.Instantiate(prefab, canvas);
-                var component = instance.GetComponent<T>();
-                if (component != null)
-                {
-                    component.Init(this);
-                    loadedUI[state] = component; // 캐시에 저장
-                    component.SetActive(true);
-                }
-            }
-        }
-        
+            var prefab    = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
+            if (prefab == null || uiRoot == null) return null;
+
+            var instance  = GameObject.Instantiate(prefab, uiRoot, false);
+            var component = instance.GetComponent<T>();
+            if (component == null) return null;
+
+            component.Init(this);
+            component.SetActive(true);
+            list.Add(component);
+            return component;
+        }        
         public void ShowSettingPopup()
         {
             if (settingUI == null) return;
             
+            settingUI.transform.SetParent(popupRoot, false);
             settingUI.transform.SetAsLastSibling();
-            settingUI.SetActive(true);
-            popupStack.Push(settingUI);
         }
         
         public T ShowPopup<T>(string address) where T : UIPopup
         {
             if (loadedPopup.TryGetValue(address, out UIPopup cachedPopup))
             {
+                cachedPopup.transform.SetParent(popupRoot, false);
                 cachedPopup.transform.SetAsLastSibling();
                 cachedPopup.SetActive(true);
                 popupStack.Push(cachedPopup);
@@ -144,10 +163,9 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
-            if (prefab != null)
+            if (prefab != null && popupRoot != null)
             {
-                var canvas = GameObject.Find("PopupCanvas").transform;
-                var instance = GameObject.Instantiate(prefab, canvas);
+                var instance = GameObject.Instantiate(prefab, popupRoot, false);
                 var component = instance.GetComponent<T>();
                 if (component != null)
                 {

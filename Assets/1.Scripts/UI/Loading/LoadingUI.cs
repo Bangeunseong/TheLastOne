@@ -14,7 +14,6 @@ namespace _1.Scripts.UI.Loading
         [Header("Loading UI")]
         public Slider progressSlider;
         public TextMeshProUGUI progressText;
-
         
         public override void Init(UIManager manager)
         {

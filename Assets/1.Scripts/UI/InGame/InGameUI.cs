@@ -1,10 +1,11 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
+using Michsky.UI.Shift;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 
 namespace _1.Scripts.UI.InGame
@@ -21,62 +22,44 @@ namespace _1.Scripts.UI.InGame
 
         [Header("인스팅트 게이지")] [SerializeField] private Image instinctGaugeImage;
 
-        [Header("크로스 헤어")] [SerializeField] private Image crossHairImage;
+        [Header("크로스 헤어")] [SerializeField] private Image crosshairImage;
 
-        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponName;
+        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponNameText;
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private Image weaponImage;
         [SerializeField] private Image ammoImage;
 
-        [Header("설정 버튼")] [SerializeField] private Button settingButton;
-        [Header("인벤토리 버튼")] [SerializeField] private Button inventoryButton;
 
         private PlayerCondition playerCondition;
+        private bool isPaused = false;
+
 
         public override void Init(UIManager manager)
         {
             base.Init(manager);
-            if (settingButton != null)
-            {
-                settingButton.onClick.AddListener(OnSettingButtonClicked);
-            }
 
-            if (inventoryButton != null)
+            playerCondition = FindObjectOfType<PlayerCondition>();
+            if (playerCondition != null)
             {
-                inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
+                playerCondition.OnDamage += UpdateStateUI;
+                playerCondition.OnDeath += UpdateStateUI;
+                UpdateStateUI();
             }
         }
 
         public override void SetActive(bool active)
         {
             gameObject.SetActive(active);
+        }
 
-            if (active)
+        void Update()
+        {
+            if (playerCondition != null)
             {
-                if (playerCondition == null)
-                {
-                    playerCondition = FindObjectOfType<PlayerCondition>();
-                }
-
-                if (playerCondition != null)
-                {
-                    //playerCondition.OnHealthChanged += UpdateHealthSlider;
-                    //playerCondition.OnStaminaChanged += UpdateStaminaSlider;
-                    //playerCondition.OnLevelChanged += UpdateLevelUI;
-                    playerCondition.OnDamage += UpdateStateUI;
-                    UpdateStateUI();
-                }
-            }
-            else
-            {
-                if (playerCondition != null)
-                {
-                    playerCondition.OnDamage -= UpdateStateUI;
-                    playerCondition = null;
-                }
+                UpdateStateUI();
             }
         }
-        
+
         private void UpdateStateUI()
         {
             if (playerCondition == null) return;
@@ -89,7 +72,7 @@ namespace _1.Scripts.UI.InGame
         {
             if (healthSlider != null)
                 healthSlider.value = current / max;
-            
+
             if (healthText != null)
                 healthText.text = current + "/" + max;
         }
@@ -98,24 +81,46 @@ namespace _1.Scripts.UI.InGame
         {
             if (staminaSlider != null)
                 staminaSlider.value = current / max;
-            
+
             if (staminaText != null)
                 staminaText.text = current + "/" + max;
+        }
+
+        public void UpdateInstinct(float value)
+        {
+            if (instinctGaugeImage != null)
+                instinctGaugeImage.fillAmount = Mathf.Clamp01(value);
+        }
+
+        public void UpdateFocus(float value)
+        {
+            if (focusGaugeImage != null)
+                focusGaugeImage.fillAmount = Mathf.Clamp01(value);
         }
 
         private void UpdateLevelUI(int level)
         {
             levelText.text = level.ToString();
         }
-        
+
         private void OnSettingButtonClicked()
         {
             uiManager.ShowSettingPopup();
         }
 
-        private void OnInventoryButtonClicked()
+        public void UpdateCrosshair(Sprite sprite)
         {
-            uiManager.ShowPopup<InventoryUI>("InventoryUI");
+            if (crosshairImage != null && sprite != null)
+                crosshairImage.sprite = sprite;
+        }
+
+        public void UpdateWeaponInfo(string weaponName, int ammoLeft, int clipSize)
+        {
+            if (weaponNameText != null)
+                weaponNameText.text = weaponName;
+
+            if (ammoText != null)
+                ammoText.text = $"{ammoLeft} / {clipSize}";
         }
     }
 }

@@ -2,8 +2,6 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +12,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected Coroutine staminaCoroutine;
-        protected Coroutine reloadCoroutine;
         protected Coroutine footStepCoroutine;
 
         private float speed;
@@ -111,8 +108,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                     Time.deltaTime * 10f);
             }
             else speed = targetSpeed;
-            // Service.Log(speed.ToString());
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+            
+            // Set Animator Speed Parameter (Only Applied to Activated Animator)
+            if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
+                playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
         }
         
@@ -196,9 +196,9 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
-        protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
-        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (playerCondition.IsDead) return; }
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+        protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
+        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { }
         /* -------------------- */
         
         /* - Aim 관련 메소드 - */
@@ -214,17 +214,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         /* ----------------- */
         
-        /* - Recoil 관련 메소드 - */
-        public void ApplyRecoil(float recoilX = -2f, float recoilY = 1f, float recoilZ = 0f)
-        {
-            recoilEuler += new Vector3(
-                recoilX,
-                Random.Range(-recoilY, recoilY),
-                Random.Range(-recoilZ, recoilZ)
-            );
-        }
-        /* --------------------- */
-        
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
@@ -238,33 +227,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
-        }
-        protected IEnumerator Reload_Coroutine(float interval)
-        {
-            if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is Gun gun)
-            {
-                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine)
-                    yield break;
-
-                // TODO: Play Animation
-                gun.IsReloading = true;
-                yield return new WaitForSeconds(interval);
-                gun.OnReload();
-                gun.IsReloading = false;
-                
-            } else if (playerCondition.Weapons[playerCondition.EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
-            {
-                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine == grenadeLauncher.MaxAmmoCountInMagazine) 
-                    yield break;
-
-                // TODO: Play Animation
-                grenadeLauncher.IsReloading = true;
-                yield return new WaitForSeconds(interval);
-                grenadeLauncher.OnReload();
-                grenadeLauncher.IsReloading = false;
-            }
-            reloadCoroutine = null;
+            
         }
         /* ---------------------------- */
         
@@ -276,7 +239,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             int weaponCount = playerCondition.Weapons.Count;
             
             if (weaponCount == 0) return;
-            playerCondition.OnSwitchWeapon(0, 0.5f);
+            playerCondition.OnSwitchWeapon(1, 0.5f);
         }
         protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
@@ -285,7 +248,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             int weaponCount = playerCondition.Weapons.Count;
             
             if (weaponCount == 0) return;
-            playerCondition.OnSwitchWeapon(1, 0.5f);
+            playerCondition.OnSwitchWeapon(2, 0.5f);
         }
         protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
@@ -294,7 +257,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             int weaponCount = playerCondition.Weapons.Count;
 
             if (weaponCount == 0) return;
-            playerCondition.OnSwitchWeapon(2, 0.5f);
+            playerCondition.OnSwitchWeapon(3, 1f);
         }
         protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
         {
@@ -302,33 +265,28 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var value = context.ReadValue<Vector2>();
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
-            playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
+            playerCondition.OnSwitchWeapon(nextIndex, nextIndex > 1 ? 1f : 0.5f);
         }
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
             int count = playerCondition.Weapons.Count;
-            if (count == 0) return -1;
+            if (count == 0) return 0;
             
-            if (playerCondition.AvailableWeapons.Count <= 0) return -1;
+            if (playerCondition.AvailableWeapons.Count <= 0) return 0;
 
             var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
-            if (dir == 0) return -1;
+            if (dir == 0) return 0;
 
-            // 양쪽 끝 무기를 현재 들고 있을 때
-            if (currentIndex == 0) { if (dir == -1) return -1; }
-            if (currentIndex >= count - 1) { if (dir == 1) return -1; }
-            int nextIndex = currentIndex < 0 ? (dir == 1 ? -1 : 0) : currentIndex;
-            
+            int nextIndex = currentIndex;
             for (var i = 0; i < count; i++)
             {
                 nextIndex = (nextIndex + dir + count) % count;
                 if (playerCondition.AvailableWeapons[nextIndex])
                 {
-                    if (nextIndex == currentIndex) return -1;
                     return nextIndex;
                 }
             }
-            return -1;
+            return 0;
         }
         /* --------------------------- */
         
@@ -349,10 +307,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Skill 관련 메소드 - */
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
+            if (!playerCondition.OnConsumeFocusGauge()) return;
             
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
+            if (!playerCondition.OnConsumeInstinctGauge()) return;
             
         }
         /* -------------------- */

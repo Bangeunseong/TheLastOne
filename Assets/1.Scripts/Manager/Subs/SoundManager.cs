@@ -78,6 +78,9 @@ namespace _1.Scripts.Manager.Subs
             
             bgmSource.playOnAwake = true;
             bgmSource.loop = true;
+
+            if (bgmSource.clip != null)
+                bgmSource.Play();
             
             LoadVolumeSettings(); 
         }
@@ -157,7 +160,8 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var obj = poolManager.Get("SoundPlayer");
-            obj?.GetComponent<SoundPlayer>()?.Play3D(clip, masterVolume * sfxVolume, position);
+            if (obj.TryGetComponent(out SoundPlayer soundPlayer))
+                soundPlayer.Play3D(clip, masterVolume * sfxVolume, position);
         }
         
         public void StopBGM()
