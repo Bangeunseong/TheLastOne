@@ -2816,7 +2816,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: cd9b8931d280a7149bfa865a96f9480f, type: 3}
   m_Controller: {fileID: 9100000, guid: f159e0da2b147a340b88e92df9006191, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2893,7 +2893,7 @@ MonoBehaviour:
     rifleToOtherWeaponClipTime: 1
     grenadeLauncherToOtherWeaponClipTime: 0.867
     weaponWieldClipTime: 1
-  stateMachine:
+  <StateMachine>k__BackingField:
     <CurrentStateName>k__BackingField: 
 --- !u!114 &71050111894547790
 MonoBehaviour:
@@ -2914,6 +2914,7 @@ MonoBehaviour:
   <CurrentStamina>k__BackingField: 0
   <CurrentFocusGauge>k__BackingField: 0
   <CurrentInstinctGauge>k__BackingField: 0
+  <CurrentSpeedMultiplier>k__BackingField: 1
   <Damage>k__BackingField: 0
   <AttackRate>k__BackingField: 0
   <Level>k__BackingField: 0
@@ -3951,11 +3952,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrenadeLauncher
       objectReference: {fileID: 0}
-    - target: {fileID: 1938967666044391636, guid: 23d6eede26f10b24d9b3bc8949eed0b8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8035344384111674640, guid: 23d6eede26f10b24d9b3bc8949eed0b8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4115,11 +4111,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hand
-      objectReference: {fileID: 0}
-    - target: {fileID: 1556690003787875055, guid: 55c497bd38c4e734fa58d765b2e9eb30,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1587384213491538809, guid: 55c497bd38c4e734fa58d765b2e9eb30,
         type: 3}

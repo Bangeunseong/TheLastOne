@@ -149,7 +149,7 @@ public class Unit_DroneBot : MonoBehaviour
 				10, finalLayerMask);
 		}
 
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 0);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);
 	}
 }
  

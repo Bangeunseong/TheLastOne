@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: RifleReload
   m_EditorClassIdentifier: 
-  groupName: RifleShoot
+  groupName: RifleReload
   audioClips:
-  - m_AssetGUID: 
+  - m_AssetGUID: cc988050393583047ad560d1ce931d72
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

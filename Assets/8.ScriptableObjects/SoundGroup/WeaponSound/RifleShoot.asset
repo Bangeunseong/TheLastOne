@@ -14,7 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groupName: RifleShoot
   audioClips:
-  - m_AssetGUID: 
+  - m_AssetGUID: 8018acccaecddce498259f8e5a93b440
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 9fac002407092764e8936cb3d0387616
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 73e3ceb9aff1022448528283abfd07c3
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

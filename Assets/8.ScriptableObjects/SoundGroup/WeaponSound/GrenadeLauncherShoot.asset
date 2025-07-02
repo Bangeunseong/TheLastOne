@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groupName: GrenadeLauncherShoot
   audioClips:
-  - m_AssetGUID: 
+  - m_AssetGUID: e47e6a3fc7e2a81459f76244208a1cd5
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

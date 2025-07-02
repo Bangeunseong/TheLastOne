@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: GrenadeLauncherReload
   m_EditorClassIdentifier: 
-  groupName: RifleShoot
+  groupName: GrenadeLauncherReload
   audioClips:
-  - m_AssetGUID: 
+  - m_AssetGUID: aeb5e01a260114f4391089be7ca23888
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

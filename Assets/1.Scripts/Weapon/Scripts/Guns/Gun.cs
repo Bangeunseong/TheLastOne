@@ -62,7 +62,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void Update()
         {
             if (!IsRecoiling) return;
-            timeSinceLastShotFired += Time.deltaTime;
+            timeSinceLastShotFired += Time.unscaledDeltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;
             timeSinceLastShotFired = 0f;
@@ -221,7 +221,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private IEnumerator Flicker()
         {
             lightCurves.gameObject.SetActive(true);
-            yield return new WaitForSeconds(lightCurves.GraphTimeMultiplier);
+            yield return new WaitForSecondsRealtime(lightCurves.GraphTimeMultiplier);
             lightCurves.gameObject.SetActive(false);
         }
     }

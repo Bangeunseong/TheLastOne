@@ -15,6 +15,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected Coroutine staminaCoroutine;
 
         private float speed;
+        private float smoothVelocity;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -101,24 +102,28 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
             
-            if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            {
-                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * 5f);
-            }
-            else speed = targetSpeed;
+            // Deprecated Mechanism (Damping이 훨씬 자연스러움)
+            // if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
+            // {
+            //     speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+            //         ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // }
+            // else speed = targetSpeed;
+            
+            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+                ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
+            stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -131,7 +136,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var unitDirection = new Vector3(direction.x, 0, direction.z);
             var targetRotation = Quaternion.LookRotation(unitDirection);
-            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
+            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.unscaledDeltaTime);
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
@@ -180,7 +185,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
                 playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
             }
         }
         
@@ -189,7 +194,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             while (playerCondition.CurrentStamina > 0)
             {
                 playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
             }
         }
 
