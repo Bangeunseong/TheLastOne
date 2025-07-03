@@ -32,15 +32,18 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead || CoreManager.Instance.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
-        public void Start() { }
-
         public virtual void Update()
         {
-            Move();
+            var baseForward = stateMachine.Player.MainCameraTransform.forward;
+            var baseRot = Quaternion.LookRotation(baseForward);
+            var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
+            
+            var rotatedForward = baseRot * recoilRot * Vector3.forward;
+            Rotate(rotatedForward);
         }
 
         public virtual void LateUpdate()
@@ -55,7 +58,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void PhysicsUpdate()
         {
-            if (CoreManager.Instance.gameManager.IsGamePaused) return;
+            Move();
         }
 
         public virtual void Exit()
@@ -89,40 +92,33 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var forward = stateMachine.MainCameraTransform.forward;
             var right = stateMachine.MainCameraTransform.right;
-
-
+            
             forward.y = 0;
             right.y = 0;
             
             forward.Normalize();
             right.Normalize();
             
-            return forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x;
+            return (forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x).normalized;
         }
 
         private void Move(Vector3 direction)
         {
+            // var currentHorizontalSpeed = new Vector3(stateMachine.Player.Rigidbody.velocity.x, 0f,  stateMachine.Player.Rigidbody.velocity.z).magnitude;
+            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
+                     
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
-            
-            // Deprecated Mechanism (Damping이 훨씬 자연스러움)
-            // if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            // {
-            //     speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-            //         ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
-            // }
-            // else speed = targetSpeed;
-            
-            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-                ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
-            Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
+            speed = Mathf.SmoothDamp(speed, targetSpeed,
+                ref smoothVelocity, 0.2f, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
+
+            // Set Velocity of Player Rigidbody
+            stateMachine.Player.Rigidbody.velocity = direction * speed + stateMachine.Player.PlayerGravity.ExtraMovement;
         }
         
         private float GetMovementSpeed()

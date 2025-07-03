@@ -19,7 +19,7 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
             CurrentTimeScale = Time.timeScale;
-            OriginalFixedDeltaTime = Time.fixedDeltaTime;
+            Time.fixedDeltaTime = OriginalFixedDeltaTime = 0.01f;
         }
 
         public void Update()

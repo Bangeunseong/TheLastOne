@@ -159,7 +159,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             
-            coreManager.gameManager.Player.Controller.enabled = true;
+            // coreManager.gameManager.Player.Controller.enabled = true;
         }
         
         private void OnDestroy()

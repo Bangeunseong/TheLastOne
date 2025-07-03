@@ -8,7 +8,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts
     {
         public void Enter();
         public void HandleInput();
-        public void Start();
         public void Update();
         public void PhysicsUpdate();
         public void LateUpdate();
@@ -33,11 +32,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts
         public void HandleInput()
         {
             CurrentState?.HandleInput();
-        }
-
-        public void Start()
-        {
-            CurrentState?.Start();
         }
 
         public void Update()

@@ -26,7 +26,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.PhysicsUpdate();
 
             if (!stateMachine.Player.PlayerGravity.IsGrounded &&
-                stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.unscaledDeltaTime)
+                stateMachine.Player.Rigidbody.velocity.y < Physics.gravity.y * Time.fixedUnscaledDeltaTime)
             {
                 stateMachine.ChangeState(stateMachine.FallState);
             }

@@ -11,14 +11,14 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
-    [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
+    [RequireComponent(typeof(Rigidbody), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
     
     public class Player : MonoBehaviour
     {
         [field: Header("Components")]
         [field: SerializeField] public Animator Animator { get; private set; }
-        [field: SerializeField] public CharacterController Controller { get; private set; }
+        [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public PlayerInput PlayerInput { get; private set; }
         [field: SerializeField] public PlayerCondition PlayerCondition { get; private set; }
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
@@ -51,7 +51,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Awake()
         {
             if (!Animator) Animator = this.TryGetComponent<Animator>();
-            if (!Controller) Controller = this.TryGetComponent<CharacterController>();
+            if (!Rigidbody) Rigidbody = this.TryGetComponent<Rigidbody>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
@@ -72,7 +72,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Reset()
         {
             if (!Animator) Animator = this.TryGetComponent<Animator>();
-            if (!Controller) Controller = this.TryGetComponent<CharacterController>();
+            if (!Rigidbody) Rigidbody = this.TryGetComponent<Rigidbody>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
@@ -100,7 +100,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
             StateMachine = new PlayerStateMachine(this);
-            StateMachine.Start();
             StateMachine.ChangeState(StateMachine.IdleState);
         }
 
