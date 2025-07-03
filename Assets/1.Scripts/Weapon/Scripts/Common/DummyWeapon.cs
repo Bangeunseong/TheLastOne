@@ -36,7 +36,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
             if (!player.PlayerCondition.AvailableWeapons[index])
             {
                 player.PlayerCondition.AvailableWeapons[index] = true;
-                if (index == (int)WeaponType.GrenadeThrow) player.PlayerCondition.Weapons[index].OnRefillAmmo(6);
                 player.PlayerCondition.OnSwitchWeapon(index, 0.5f);
             }
             else
