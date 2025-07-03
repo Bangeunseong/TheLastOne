@@ -440,6 +440,10 @@ MonoBehaviour:
   soundManager:
     soundGroups:
       _serializedList: []
+  timeScaleManager:
+    <OriginalFixedDeltaTime>k__BackingField: 0
+    <CurrentTimeScale>k__BackingField: 1
+    <TargetTimeScale>k__BackingField: 1
   <IsDebug>k__BackingField: 1
   <DebugPrefix>k__BackingField: TestScene_
 --- !u!4 &1367050390

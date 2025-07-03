@@ -19,6 +19,8 @@ namespace _1.Scripts.UI.InGame
     }
     public class WeaponUI : MonoBehaviour
     {
+        [SerializeField] private AmmoUI ammoUI;
+        
         [Header("SlotType")]
         [SerializeField] private SlotType[] slotType;
         
@@ -156,7 +158,16 @@ namespace _1.Scripts.UI.InGame
                 
                 targetScales[i] = isSelected ? selectedScale : normalScale;
             }
+            BaseWeapon sel = (selectedIndex >= 0 && selectedIndex < weapons.Count && available[selectedIndex])
+                ? weapons[selectedIndex] : null;
 
+            if (sel is Gun gun)
+                ammoUI.UpdateAmmoUI(gun.CurrentAmmoCountInMagazine);
+            else if (sel is GrenadeLauncher gl)
+                ammoUI.UpdateAmmoUI(gl.CurrentAmmoCountInMagazine);
+            else
+                ammoUI.UpdateAmmoUI(0);
+            
             if (selectionChanged)
             {
                 if (currentSlot >= 0 && currentSlot < slotAnimator.Length && slotAnimator[currentSlot] != null)
