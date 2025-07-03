@@ -196,6 +196,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 {
                     if (!player!.PlayerCondition.IsAiming)
                     {
+                        var distance = Vector3.Distance(hit.point, face.position);
+                        randomCirclePoint *= distance / GunData.GunStat.MaxWeaponRange;
                         targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
                     } else targetPoint = hit.point;
                 }

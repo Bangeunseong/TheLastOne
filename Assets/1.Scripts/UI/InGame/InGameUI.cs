@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
@@ -15,22 +17,31 @@ namespace _1.Scripts.UI.InGame
 {
     public class InGameUI : UIBase
     {
-        [Header("플레이어 상태")] [SerializeField] private Slider healthSlider;
+        [Header("플레이어 상태")] 
+        [SerializeField] private Slider healthSlider;
         [SerializeField] private Slider staminaSlider;
+        [SerializeField] private Slider armorSlider;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI staminaText;
         [SerializeField] private TextMeshProUGUI levelText;
 
-        [Header("포커스 게이지")] [SerializeField] private Image focusGaugeImage;
+        [Header("게이지")] 
+        [SerializeField] private Image focusGaugeImage;
+        [SerializeField] private Image focusGaugeFrame;
+        [SerializeField] private Image instinctGaugeImage;
+        [SerializeField] private Image instinctGaugeFrame;
+        [SerializeField] private Image instinctGaugeEffect;
+        [SerializeField] private Image focusGaugeEffect;
+        [SerializeField] private Animator instinctEffectAnimator;
+        [SerializeField] private Animator focusEffectAnimator;
+        private Coroutine focusEffectCoroutine;
+        private Coroutine instinctEffectCoroutine;
 
-        [Header("인스팅트 게이지")] [SerializeField] private Image instinctGaugeImage;
+        [Header("크로스 헤어")] 
+        [SerializeField] private Image crosshairImage;
 
-        [Header("크로스 헤어")] [SerializeField] private Image crosshairImage;
-
-        [Header("무기 정보")] [SerializeField] private TextMeshProUGUI weaponNameText;
-        [SerializeField] private TextMeshProUGUI ammoText;
-        [SerializeField] private Image weaponImage;
-        [SerializeField] private Image ammoImage;
+        [Header("무기 정보")] 
+        [SerializeField] private WeaponUI weaponUI;
 
 
         private PlayerCondition playerCondition;
@@ -66,13 +77,14 @@ namespace _1.Scripts.UI.InGame
             if (playerCondition == null) return;
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
+            //UpdateArmorSlider(playerCondition.CurrentArmor, playerCondition.MaxArmor);
             UpdateLevelUI(playerCondition.Level);
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
             UpdateWeaponInfo();
         }
 
-        public void UpdateHealthSlider(float current, float max)
+        private void UpdateHealthSlider(float current, float max)
         {
             if (healthSlider != null)
                 healthSlider.value = current / max;
@@ -90,57 +102,84 @@ namespace _1.Scripts.UI.InGame
                 staminaText.text = current + "/" + max;
         }
 
-        public void UpdateInstinct(float value)
+        private void UpdateArmorSlider(float current, float max)
         {
-            if (instinctGaugeImage != null)
-                instinctGaugeImage.fillAmount = Mathf.Clamp01(value);
+            if (armorSlider != null && max > 0)
+            {
+                armorSlider.enabled = true;
+                armorSlider.value = current / max;
+            }
+            else if (armorSlider == null || max == 0)
+                armorSlider.enabled = false;
         }
 
-        public void UpdateFocus(float value)
+        private void UpdateInstinct(float value)
         {
+            float instinct = Mathf.Clamp01(value);
+
+            if (instinctGaugeImage != null)
+                instinctGaugeImage.fillAmount = instinct;
+
+            if (instinct >= 1f && instinctEffectCoroutine == null)
+            {
+                instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
+            }
+            else if (instinct < 1f && instinctEffectCoroutine != null)
+            {
+                StopCoroutine(instinctEffectCoroutine);
+                instinctEffectCoroutine = null;
+            }
+        }
+
+        private void UpdateFocus(float value)
+        {
+            float focus = Mathf.Clamp01(value);
+
             if (focusGaugeImage != null)
-                focusGaugeImage.fillAmount = Mathf.Clamp01(value);
+                focusGaugeImage.fillAmount = focus;
+            
+            if (focus >= 1f && focusEffectCoroutine == null)
+            {
+                focusEffectCoroutine = StartCoroutine(FocusEffectCoroutine());
+            }
+            else if (focus < 1f && focusEffectCoroutine != null)
+            {
+                StopCoroutine(focusEffectCoroutine);
+                focusEffectCoroutine = null;
+            }
         }
 
         private void UpdateLevelUI(int level)
         {
-            levelText.text = level.ToString();
+            levelText.text = $"Lvl. {level}";
         }
 
-        public void UpdateWeaponInfo()
+        private void UpdateWeaponInfo()
         {
-            int idx = playerCondition.EquippedWeaponIndex;
-            if (idx >= 0 && idx < playerCondition.Weapons.Count && playerCondition.AvailableWeapons[idx])
-            {
-                BaseWeapon baseWeapon = playerCondition.Weapons[idx];
-                string name;
-                int left = 0;
-                int max = 0;
+           var weapons = playerCondition.Weapons;
+           var available = playerCondition.AvailableWeapons;
+           int idx = playerCondition.EquippedWeaponIndex;
+           
+           weaponUI.Refresh(weapons, available, idx);
+        }
 
-                if (baseWeapon is Gun gun)
-                {
-                    name = gun.GunData.GunStat.Type.ToString();
-                    left = gun.CurrentAmmoCountInMagazine;
-                    max = gun.GunData.GunStat.MaxAmmoCountInMagazine;
-                }
-                else if (baseWeapon is GrenadeLauncher grenadeLauncher)
-                {
-                    name = grenadeLauncher.GrenadeData.GrenadeStat.Type.ToString();
-                    left = grenadeLauncher.CurrentAmmoCountInMagazine;
-                    max = grenadeLauncher.GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
-                }
-                else
-                {
-                    name = baseWeapon.GetType().Name;
-                }
-                
-                weaponNameText.text = name;
-                ammoText.text = $"{left}/{max}";
-            }
-            else
+        private IEnumerator FocusEffectCoroutine()
+        {
+            while (true)
             {
-                weaponNameText.text = "empty";
-                ammoText.text = "empty";
+                focusEffectAnimator.SetTrigger("Full");
+                focusEffectAnimator.ResetTrigger("Full");
+                yield return new WaitForSeconds(2f);
+            }
+        }
+
+        private IEnumerator InstinctEffectCoroutine()
+        {
+            while (true)
+            {
+                instinctEffectAnimator.ResetTrigger("Full");
+                instinctEffectAnimator.SetTrigger("Full");
+                yield return new WaitForSeconds(2f);
             }
         }
     }
