@@ -39,7 +39,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				navMeshAgent.Value.SetDestination(hit.position);
 			}
 
-			return TaskStatus.Running;
+			return TaskStatus.Success;
 		}
 	}
 }

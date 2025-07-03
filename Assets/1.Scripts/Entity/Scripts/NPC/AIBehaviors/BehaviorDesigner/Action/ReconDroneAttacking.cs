@@ -33,7 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			if (animator.Value.GetCurrentAnimatorStateInfo(0).IsName("DroneBot_Fire"))
 			{
-				return TaskStatus.Running;
+				return TaskStatus.Failure;
 			}
 			
 			animator.Value.SetTrigger(DroneAnimationHashData.Fire);

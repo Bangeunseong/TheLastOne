@@ -18,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		
+		public SharedCollider myCollider;
 		public SharedBaseNpcStatController statController;
 		public SharedLight light;
 		public SharedCollider collider;
@@ -25,6 +26,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		
 		public override TaskStatus OnUpdate()
 		{            
+			Debug.Log("알람 ON");
+			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
 			{
 				return TaskStatus.Failure;
@@ -35,7 +38,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			isAlerted.Value = true;
 
 			bool isAlly = statController.Value.RuntimeStatData.isAlly; 
-			Vector3 selfPos = transform.position;
+			Vector3 selfPos = selfTransform.Value.position;
 			float range = alertable.AlertRadius;
 
 			int layerMask = isAlly ? 1 << LayerConstants.Ally : 1 << LayerConstants.Enemy;
@@ -43,6 +46,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			foreach (var col in colliders)
 			{
+				if (col == myCollider.Value)
+				{
+					continue;
+				}
+				
 				var BT = col.GetComponent<global::BehaviorDesigner.Runtime.BehaviorTree>();
 				if (BT != null)
 				{
