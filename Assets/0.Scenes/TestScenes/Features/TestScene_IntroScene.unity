@@ -427,6 +427,7 @@ MonoBehaviour:
       bgmVolume: 0
       sfxVolume: 0
     <Player>k__BackingField: {fileID: 0}
+    <IsGamePaused>k__BackingField: 0
   sceneLoadManager:
     <PreviousScene>k__BackingField: 0
     <CurrentScene>k__BackingField: 0
@@ -439,6 +440,10 @@ MonoBehaviour:
   soundManager:
     soundGroups:
       _serializedList: []
+  timeScaleManager:
+    <OriginalFixedDeltaTime>k__BackingField: 0
+    <CurrentTimeScale>k__BackingField: 1
+    <TargetTimeScale>k__BackingField: 1
   <IsDebug>k__BackingField: 1
   <DebugPrefix>k__BackingField: TestScene_
 --- !u!4 &1367050390
