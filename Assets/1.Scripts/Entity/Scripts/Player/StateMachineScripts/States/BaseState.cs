@@ -5,6 +5,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngineInternal;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 {
@@ -31,8 +32,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead || CoreManager.Instance.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
+        }
+
+        public virtual void PhysicsUpdate()
+        {
+            
         }
 
         public virtual void Update()
@@ -48,11 +54,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var rotatedForward = baseRot * recoilRot * Vector3.forward;
             Rotate(rotatedForward);
-        }
-
-        public virtual void PhysicsUpdate()
-        {
-            if (CoreManager.Instance.gameManager.IsGamePaused) return;
         }
 
         public virtual void Exit()
@@ -86,38 +87,31 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var forward = stateMachine.MainCameraTransform.forward;
             var right = stateMachine.MainCameraTransform.right;
-
-
+            
             forward.y = 0;
             right.y = 0;
             
             forward.Normalize();
             right.Normalize();
             
-            return forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x;
+            return (forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x).normalized;
         }
 
         private void Move(Vector3 direction)
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
-            
-            // Deprecated Mechanism (Damping이 훨씬 자연스러움)
-            // if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            // {
-            //     speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-            //         ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
-            // }
-            // else speed = targetSpeed;
+            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
             
             speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-                ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
+                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            
             stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
@@ -159,6 +153,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started += OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
         }
         
         private void RemoveInputActionCallbacks()
@@ -178,6 +174,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started -= OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -312,12 +310,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeFocusGauge()) return;
-            
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeInstinctGauge()) return;
-            
         }
         /* -------------------- */
     }

@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9789ae1cac1a4e829156435e0c5cf0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Type>k__BackingField: 0
+  <Type>k__BackingField: 1
 --- !u!54 &633354372327206671
 Rigidbody:
   m_ObjectHideFlags: 0

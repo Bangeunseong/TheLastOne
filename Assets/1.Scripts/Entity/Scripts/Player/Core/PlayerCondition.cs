@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -38,12 +37,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsDead { get; private set; }
         
         [field: Header("Current Physics Data")]
+        [field: SerializeField] public GameObject StepRayUpper { get; private set; }
+        [field: SerializeField] public GameObject StepRayLower { get; private set; }
+        [field: SerializeField] public float StepHeight { get; private set; } = 0.3f;
+        [field: SerializeField] public float StepSmooth { get; private set; } = 0.1f; 
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
+        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
+
+        [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
-        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
         
         [field: Header("Damage Converters")]
         [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
@@ -60,6 +65,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         [field: Header("Weapon States")]
         [field: SerializeField] public int EquippedWeaponIndex { get; private set; }
+        [field: SerializeField] public float RecoilMultiplier { get; private set; } = 1f;
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
@@ -102,9 +108,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
+            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
             
             foreach(var converter in DamageConverters) converter.Initialize(this);
             Initialize(coreManager.gameManager.SaveData);
+            StartCoroutine(InstinctRecover_Coroutine(1));
         }
 
         /// <summary>
@@ -156,8 +164,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
-            
-            coreManager.gameManager.Player.Controller.enabled = true;
+        }
+        
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         /// <summary>
@@ -229,6 +240,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 FocusGainType.Kill => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnKill, 1f),
                 FocusGainType.HeadShot => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHeadShot, 1f),
                 FocusGainType.Hack => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHacked, 1f),
+                FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
         }
@@ -257,7 +269,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CurrentInstinctGauge = value switch
             {
                 InstinctGainType.Idle => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnIdle, 1f),
-                InstinctGainType.Hit => Mathf.Min(CurrentFocusGauge + StatData.instinctGaugeRefillRate_OnHit, 1f),
+                InstinctGainType.Hit => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnHit, 1f),
+                InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
         }
@@ -533,9 +546,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private IEnumerator Focus_Coroutine(float duration)
         {
             IsUsingFocus = true;
-            
+            coreManager.timeScaleManager.ChangeTimeScale(0.5f);
+            RecoilMultiplier = 0.5f;
             yield return new WaitForSecondsRealtime(duration);
-            
+            RecoilMultiplier = 1f;
+            coreManager.timeScaleManager.ChangeTimeScale(1f);
             IsUsingFocus = false;
         }
         private void OnInstinctEngaged()
@@ -553,6 +568,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             // TODO: Turn Off Enemy Silhouette
             
             IsUsingInstinct = false;
+        }
+
+        private IEnumerator InstinctRecover_Coroutine(float delay)
+        {
+            while (!IsDead)
+            {
+                yield return new WaitForSecondsRealtime(delay);
+                OnRecoverInstinctGauge(InstinctGainType.Idle);
+            }
         }
         /* -------------------- */
     }

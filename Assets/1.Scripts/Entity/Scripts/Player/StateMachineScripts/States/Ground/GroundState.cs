@@ -20,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.Exit();
             StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
         }
-        
+
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
