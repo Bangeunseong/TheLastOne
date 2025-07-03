@@ -5,6 +5,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngineInternal;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 {
@@ -16,7 +17,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private float speed;
         private float smoothVelocity;
-        private Vector3 previousPosition;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -36,14 +36,14 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             ReadMovementInput();
         }
 
+        public virtual void PhysicsUpdate()
+        {
+            
+        }
+
         public virtual void Update()
         {
-            var baseForward = stateMachine.Player.MainCameraTransform.forward;
-            var baseRot = Quaternion.LookRotation(baseForward);
-            var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
-            
-            var rotatedForward = baseRot * recoilRot * Vector3.forward;
-            Rotate(rotatedForward);
+            Move();
         }
 
         public virtual void LateUpdate()
@@ -54,11 +54,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var rotatedForward = baseRot * recoilRot * Vector3.forward;
             Rotate(rotatedForward);
-        }
-
-        public virtual void PhysicsUpdate()
-        {
-            Move();
         }
 
         public virtual void Exit()
@@ -104,21 +99,20 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void Move(Vector3 direction)
         {
-            // var currentHorizontalSpeed = new Vector3(stateMachine.Player.Rigidbody.velocity.x, 0f,  stateMachine.Player.Rigidbody.velocity.z).magnitude;
-            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
-                     
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            speed = Mathf.SmoothDamp(speed, targetSpeed,
-                ref smoothVelocity, 0.2f, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
+            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
+            
+            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-
-            // Set Velocity of Player Rigidbody
-            stateMachine.Player.Rigidbody.velocity = direction * speed + stateMachine.Player.PlayerGravity.ExtraMovement;
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            
+            stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
         private float GetMovementSpeed()

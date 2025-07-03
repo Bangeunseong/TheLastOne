@@ -16,15 +16,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         public Vector3 ExtraMovement => Vector3.up * verticalVelocity;
 
-        private void FixedUpdate()
-        {
-            if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
-            else verticalVelocity += Gravity * Time.fixedUnscaledDeltaTime;
-        }
-
         private void Update()
         {
             CheckCharacterIsGrounded();
+            if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -1f;
+            else verticalVelocity += Gravity * Time.unscaledDeltaTime;
         }
 
         private void CheckCharacterIsGrounded()

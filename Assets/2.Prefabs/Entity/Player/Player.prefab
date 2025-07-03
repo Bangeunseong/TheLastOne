@@ -2746,8 +2746,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6813290790807052004}
-  - component: {fileID: 3172234855251419656}
-  - component: {fileID: 9133827749510100528}
+  - component: {fileID: 5119663800062279553}
   - component: {fileID: 7450652038461916066}
   - component: {fileID: 4066541975679567171}
   - component: {fileID: 3698284712353514345}
@@ -2779,35 +2778,8 @@ Transform:
   - {fileID: 8155339996397314302}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &3172234855251419656
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7874159748350873753}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 1
---- !u!136 &9133827749510100528
-CapsuleCollider:
+--- !u!143 &5119663800062279553
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2824,10 +2796,13 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
+  serializedVersion: 3
   m_Height: 1.86
-  m_Direction: 1
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.025
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.96, z: 0}
 --- !u!95 &7450652038461916066
 Animator:
@@ -2875,7 +2850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Animator>k__BackingField: {fileID: 7450652038461916066}
-  <Rigidbody>k__BackingField: {fileID: 3172234855251419656}
+  <Controller>k__BackingField: {fileID: 0}
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
@@ -2948,12 +2923,16 @@ MonoBehaviour:
   <IsUsingInstinct>k__BackingField: 0
   <IsPlayerHasControl>k__BackingField: 1
   <IsDead>k__BackingField: 0
+  <StepRayUpper>k__BackingField: {fileID: 0}
+  <StepRayLower>k__BackingField: {fileID: 0}
+  <StepHeight>k__BackingField: 0.3
+  <StepSmooth>k__BackingField: 0.1
   <Speed>k__BackingField: 0
   <JumpForce>k__BackingField: 0
+  <RotationDamping>k__BackingField: 10
   <CrouchSpeedModifier>k__BackingField: 0
   <WalkSpeedModifier>k__BackingField: 0
   <RunSpeedModifier>k__BackingField: 0
-  <RotationDamping>k__BackingField: 10
   <DamageConverters>k__BackingField:
   - {fileID: 5213505891759285764}
   - {fileID: 2502646783318653544}
@@ -3014,7 +2993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Gravity>k__BackingField: -9.81
   <GroundedOffset>k__BackingField: -0.14
-  <GroundedRadius>k__BackingField: 0.4
+  <GroundedRadius>k__BackingField: 0.3
   <GroundLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 73

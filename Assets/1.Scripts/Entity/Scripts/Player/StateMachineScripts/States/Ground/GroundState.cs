@@ -20,13 +20,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.Exit();
             StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
         }
-        
+
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
 
             if (!stateMachine.Player.PlayerGravity.IsGrounded &&
-                stateMachine.Player.Rigidbody.velocity.y < Physics.gravity.y * Time.fixedUnscaledDeltaTime)
+                stateMachine.Player.Controller.velocity.y < Physics.gravity.y * Time.unscaledDeltaTime)
             {
                 stateMachine.ChangeState(stateMachine.FallState);
             }

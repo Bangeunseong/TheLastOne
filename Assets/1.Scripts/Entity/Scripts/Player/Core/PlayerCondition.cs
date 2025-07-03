@@ -37,12 +37,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsDead { get; private set; }
         
         [field: Header("Current Physics Data")]
+        [field: SerializeField] public GameObject StepRayUpper { get; private set; }
+        [field: SerializeField] public GameObject StepRayLower { get; private set; }
+        [field: SerializeField] public float StepHeight { get; private set; } = 0.3f;
+        [field: SerializeField] public float StepSmooth { get; private set; } = 0.1f; 
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
+        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
+
+        [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
-        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
         
         [field: Header("Damage Converters")]
         [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
@@ -158,8 +164,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
-            
-            // coreManager.gameManager.Player.Controller.enabled = true;
         }
         
         private void OnDestroy()

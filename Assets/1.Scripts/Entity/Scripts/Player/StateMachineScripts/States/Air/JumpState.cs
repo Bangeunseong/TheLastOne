@@ -20,11 +20,11 @@
             StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
         }
 
-        public override void PhysicsUpdate()
+        public override void Update()
         {
-            base.PhysicsUpdate();
-            if(stateMachine.Player.Rigidbody.velocity.y <= 0) 
-                            stateMachine.ChangeState(stateMachine.FallState);
+            base.Update();
+            if(stateMachine.Player.Controller.velocity.y <= 0) 
+                stateMachine.ChangeState(stateMachine.FallState);
         }
     }
 }
