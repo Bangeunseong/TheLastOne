@@ -15,8 +15,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
         /// </summary>
         public abstract RuntimeEntityStatData RuntimeStatData { get; }
-
-        public bool isAlly;
         
         protected Animator animator;
         

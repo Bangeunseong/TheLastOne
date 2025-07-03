@@ -63,24 +63,24 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             BuildTree();
         }
         
-        protected virtual void Update()
-        {
-            if (!statController.isDead)
-            {
-                if (shouldLookTarget)
-                {
-                    LookTarget();
-                }
-                
-                if (currentActionRunning)
-                {
-                    return; // 지속실행
-                }
-
-                // 아니면 rootNode Evaluate
-                rootNode?.Evaluate(this);
-            }
-        }
+        // protected virtual void Update()
+        // {
+        //     if (!statController.isDead)
+        //     {
+        //         if (shouldLookTarget)
+        //         {
+        //             LookTarget();
+        //         }
+        //         
+        //         if (currentActionRunning)
+        //         {
+        //             return; // 지속실행
+        //         }
+        //
+        //         // 아니면 rootNode Evaluate
+        //         rootNode?.Evaluate(this);
+        //     }
+        // }
 
         /// <summary>
         /// 현재 실행중인 액션노드 있는지 여부 설정

@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
 using _1.Scripts.Weapon.Scripts.Guns;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -31,6 +33,9 @@ public class Unit_DroneBot : MonoBehaviour
 
 	private Coroutine gotDamagedCoroutine;
 	private float gotDamagedParticleDuration = 0.5f;
+
+	private BehaviorTree behaviorTree;
+	private BaseNpcStatController statController;
 	
 	// Use this for initialization
 	void Start()
@@ -41,6 +46,8 @@ public class Unit_DroneBot : MonoBehaviour
 	private void Awake()
 	{
 		controller = GetComponent<BaseDroneAIController>();
+		behaviorTree = GetComponent<BehaviorTree>();
+		statController = GetComponent<BaseNpcStatController>();
 	}
 
 	void f_hit() //hit
@@ -107,7 +114,11 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_fire(int side) //shot 
 	{
-		if (controller.targetTransform == null) return;
+		var targetTransform = behaviorTree.GetVariable("target_Transform") as SharedTransform;
+		var targetPos = behaviorTree.GetVariable("target_Pos") as SharedVector3;
+		bool isAlly = statController.RuntimeStatData.isAlly;
+
+		if (targetTransform == null || targetTransform.Value == null) return;
 		
 		if (side == 1)
 		{
@@ -120,9 +131,7 @@ public class Unit_DroneBot : MonoBehaviour
 			pos_side = Gun_EndL.transform;
 		}
 		
-		// 목표 방향 계산: 플레이어 위치 기준
-		Vector3 target = controller.targetPos;
-		Vector3 directionToPlayer = (target - pos_side.position).normalized;
+		Vector3 directionToTarget = (targetPos.Value - pos_side.position).normalized;
 		
 		// 총알 생성
 		var shell = CoreManager.Instance.objectPoolManager.Get("Bullet");
@@ -133,7 +142,7 @@ public class Unit_DroneBot : MonoBehaviour
 			int enemyMask = 1 << LayerConstants.Enemy;
 			int finalLayerMask = hittableLayer;
 
-			if (controller.statController.isAlly)
+			if (isAlly)
 			{
 				finalLayerMask &= ~allyMask; // Ally 제거
 				finalLayerMask |= enemyMask; // Enemy 추가
@@ -144,7 +153,7 @@ public class Unit_DroneBot : MonoBehaviour
 				finalLayerMask |= allyMask;   // Ally 추가
 			}
 			
-			bullet.Initialize(pos_side.position, directionToPlayer, 
+			bullet.Initialize(pos_side.position, directionToTarget, 
 				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
 				10, finalLayerMask);
 		}

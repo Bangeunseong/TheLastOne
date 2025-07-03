@@ -17,7 +17,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (Service.IsTargetVisible(controller.MyPos, controller.targetPos, 100f, controller.statController.RuntimeStatData.isAlly))
+            if (Service.IsTargetVisible(controller.MyPos, 
+                    controller.targetPos, 100f, 
+                    controller.statController.RuntimeStatData.isAlly))
             {
                 return INode.State.SUCCESS;
             }

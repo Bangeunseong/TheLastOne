@@ -25,11 +25,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             animator = GetComponent<Animator>();
         }
 
-        private void Update()
-        {
-            runtimeSuicideDroneStatData.isAlly = isAlly;
-        }
-
         public override void OnTakeDamage(int damage)
         {
             if (!isDead)

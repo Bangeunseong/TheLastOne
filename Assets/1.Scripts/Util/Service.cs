@@ -137,5 +137,25 @@ public static class Service
 
         return false;
     }
+    
+    /// <summary>
+    /// 타겟 바라보게 설정하는 메소드
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="target"></param>
+    /// <param name="turnSpeed"></param>
+    public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 5f)
+    {
+        if (target == null || self == null)
+            return;
+
+        Vector3 dir = target.position - self.position;
+        dir.y = 0;
+
+        if (dir == Vector3.zero) return;
+
+        Quaternion rot = Quaternion.LookRotation(dir);
+        self.rotation = Quaternion.Slerp(self.rotation, rot, Time.deltaTime * turnSpeed);
+    }
 }
 
