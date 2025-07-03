@@ -36,10 +36,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             ReadMovementInput();
         }
 
-        public void Start()
-        {
-            previousPosition = stateMachine.Player.transform.position;
-        }
+        public void Start() { }
 
         public virtual void Update()
         {
@@ -48,8 +45,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void LateUpdate()
         {
-            previousPosition = stateMachine.Player.transform.position;
-            
             var baseForward = stateMachine.Player.MainCameraTransform.forward;
             var baseRot = Quaternion.LookRotation(baseForward);
             var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
@@ -108,8 +103,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         private void Move(Vector3 direction)
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            var unscaledVelocity = (stateMachine.Player.transform.position - previousPosition) / Time.unscaledDeltaTime;
-            Service.Log($"Unscaled Velocity : {unscaledVelocity}\n");
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
             
             // Deprecated Mechanism (Damping이 훨씬 자연스러움)
