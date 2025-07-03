@@ -100,7 +100,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 GrenadeData.GrenadeStat.Radius, GrenadeData.GrenadeStat.Delay, GrenadeData.GrenadeStat.StunDuration);
             
             isRecoiling = true;
-            if (player) player.PlayerRecoil.ApplyRecoil(-GrenadeData.GrenadeStat.Recoil);
+            if (player) player.PlayerRecoil.ApplyRecoil(-GrenadeData.GrenadeStat.Recoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
             if (muzzleFlashParticle.isPlaying) muzzleFlashParticle.Stop();

@@ -25,6 +25,14 @@ MonoBehaviour:
   hitSounds: []
   deathSounds: []
   maxStamina: 100
+  focusGaugeRefillRate_OnKill: 0.05
+  focusGaugeRefillRate_OnHeadShot: 0.05
+  focusGaugeRefillRate_OnHacked: 0.1
+  focusSkillTime: 5
+  instinctGaugeRefillRate_OnHit: 0.15
+  instinctGaugeRefillRate_OnIdle: 0.001
+  instinctSkillMultiplier: 1.5
+  instinctSkillTime: 3
   jumpHeight: 1.2
   crouchMultiplier: 0.1
   consumeRateOfStamina: 10

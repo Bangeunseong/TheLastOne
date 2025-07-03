@@ -16,6 +16,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private float speed;
         private float smoothVelocity;
+        private Vector3 previousPosition;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -35,6 +36,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             ReadMovementInput();
         }
 
+        public void Start()
+        {
+            previousPosition = stateMachine.Player.transform.position;
+        }
+
         public virtual void Update()
         {
             Move();
@@ -42,6 +48,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void LateUpdate()
         {
+            previousPosition = stateMachine.Player.transform.position;
+            
             var baseForward = stateMachine.Player.MainCameraTransform.forward;
             var baseRot = Quaternion.LookRotation(baseForward);
             var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
@@ -100,6 +108,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         private void Move(Vector3 direction)
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
+            var unscaledVelocity = (stateMachine.Player.transform.position - previousPosition) / Time.unscaledDeltaTime;
+            Service.Log($"Unscaled Velocity : {unscaledVelocity}\n");
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
             
             // Deprecated Mechanism (Damping이 훨씬 자연스러움)
@@ -112,6 +122,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
                 ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
+            Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
@@ -159,6 +170,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started += OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
         }
         
         private void RemoveInputActionCallbacks()
@@ -178,6 +191,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started -= OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -312,12 +327,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeFocusGauge()) return;
-            
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeInstinctGauge()) return;
-            
         }
         /* -------------------- */
     }

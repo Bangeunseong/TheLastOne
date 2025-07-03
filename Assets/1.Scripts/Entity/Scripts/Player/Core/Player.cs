@@ -100,6 +100,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
             StateMachine = new PlayerStateMachine(this);
+            StateMachine.Start();
             StateMachine.ChangeState(StateMachine.IdleState);
         }
 
@@ -120,6 +121,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void LateUpdate()
         {
             StateMachine.LateUpdate();
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         /// <summary>

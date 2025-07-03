@@ -2752,8 +2752,8 @@ GameObject:
   - component: {fileID: 3698284712353514345}
   - component: {fileID: 71050111894547790}
   - component: {fileID: 722777656224247020}
-  - component: {fileID: 691201347177147415}
   - component: {fileID: 67553279180126853}
+  - component: {fileID: 884554410609251424}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -2854,7 +2854,7 @@ MonoBehaviour:
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
-  <PlayerGravity>k__BackingField: {fileID: 691201347177147415}
+  <PlayerGravity>k__BackingField: {fileID: 884554410609251424}
   <PlayerRecoil>k__BackingField: {fileID: 67553279180126853}
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
@@ -2951,6 +2951,7 @@ MonoBehaviour:
   <Weapons>k__BackingField: []
   <AvailableWeapons>k__BackingField: 
   <EquippedWeaponIndex>k__BackingField: 0
+  <RecoilMultiplier>k__BackingField: 1
   <IsAttacking>k__BackingField: 0
   <IsSwitching>k__BackingField: 0
   <IsAiming>k__BackingField: 0
@@ -2974,26 +2975,6 @@ MonoBehaviour:
     m_Bits: 128
   detectedObject: {fileID: 0}
   timeSinceLastCheck: 0
---- !u!114 &691201347177147415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7874159748350873753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f11b8f3241e6497694b35ea2bdf04f75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterController: {fileID: 7058540756104092436}
-  <Gravity>k__BackingField: -9.81
-  <GroundedOffset>k__BackingField: -0.14
-  <GroundedRadius>k__BackingField: 0.28
-  <GroundLayers>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 201
-  <IsGrounded>k__BackingField: 1
 --- !u!114 &67553279180126853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3008,6 +2989,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recoilReturnSpeed: 5
   recoilSnappiness: 10
+--- !u!114 &884554410609251424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7874159748350873753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f11b8f3241e6497694b35ea2bdf04f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 7058540756104092436}
+  <Gravity>k__BackingField: -9.81
+  <GroundedOffset>k__BackingField: -0.14
+  <GroundedRadius>k__BackingField: 0.4
+  <GroundLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 73
+  <IsGrounded>k__BackingField: 1
 --- !u!1 &7892139384327641888
 GameObject:
   m_ObjectHideFlags: 0
