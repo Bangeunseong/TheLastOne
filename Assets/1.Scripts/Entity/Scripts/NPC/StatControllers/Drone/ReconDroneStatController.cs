@@ -50,7 +50,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 }
                 else
                 {
-                    animator.SetTrigger(DroneAnimationHashData.Hit3);
+                    int[] HitHashes = new int[]
+                    {
+                        DroneAnimationHashData.Hit1,
+                        DroneAnimationHashData.Hit2,
+                        DroneAnimationHashData.Hit3,
+                        DroneAnimationHashData.Hit4
+                    };
+
+                    int randomIndex = UnityEngine.Random.Range(0, HitHashes.Length);
+                    animator.SetTrigger(HitHashes[randomIndex]);
                 }
             }
         }

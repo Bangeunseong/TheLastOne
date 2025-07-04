@@ -25,11 +25,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  
 	private AudioSource m_AudioSource;
-
-	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
 	public LayerMask hittableLayer;
-
-	public BaseDroneAIController controller;
 
 	private Coroutine gotDamagedCoroutine;
 	private float gotDamagedParticleDuration = 0.5f;
@@ -45,7 +41,6 @@ public class Unit_DroneBot : MonoBehaviour
 
 	private void Awake()
 	{
-		controller = GetComponent<BaseDroneAIController>();
 		behaviorTree = GetComponent<BehaviorTree>();
 		statController = GetComponent<BaseNpcStatController>();
 	}
@@ -53,15 +48,12 @@ public class Unit_DroneBot : MonoBehaviour
 	void f_hit() //hit
 	{
 		// 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 3);
-		if (!controller.CheckStunned())
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:3);
+		if (gotDamagedCoroutine != null)
 		{
-			if (gotDamagedCoroutine != null)
-			{
-				StopCoroutine(gotDamagedCoroutine);
-			}
-			gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
+			StopCoroutine(gotDamagedCoroutine);
 		}
+		gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
 	}
 
 	private IEnumerator DamagedParticleCoroutine()
@@ -94,7 +86,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_prevDead()
 	{
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 1);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
 	}
 
 	void f_dead() //dead
@@ -107,7 +99,7 @@ public class Unit_DroneBot : MonoBehaviour
 		p_dead.Play();
 		p_smoke.Play();
 		m_AudioSource.Stop();
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 2);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
 		m_AudioSource.loop = false;
 		restartRes = false;
 	}

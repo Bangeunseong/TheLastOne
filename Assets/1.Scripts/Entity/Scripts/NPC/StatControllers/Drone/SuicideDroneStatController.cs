@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
@@ -13,7 +14,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
     {
         private RuntimeSuicideDroneStatData runtimeSuicideDroneStatData;
         public override RuntimeEntityStatData RuntimeStatData => runtimeSuicideDroneStatData; // 부모에게 자신의 스탯 전송
-
+        
+        [Header("AI 참조")]
+        public BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
+        public SharedBool canRun;
+        
         [Header("속도 저장용")]
         private float baseMoveSpeed;
         
@@ -23,6 +28,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData); // 복사
             baseMoveSpeed = runtimeSuicideDroneStatData.moveSpeed;
             animator = GetComponent<Animator>();
+            behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
+            canRun = behaviorTree.GetVariable("CanRun") as SharedBool;
         }
 
         public override void OnTakeDamage(int damage)
@@ -32,6 +39,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 runtimeSuicideDroneStatData.maxHealth -= damage;
                 if (runtimeSuicideDroneStatData.maxHealth <= 0)
                 {
+                    isDead = true;
+                    canRun = false;
+                    
                     int[] deathHashes = new int[]
                     {
                         DroneAnimationHashData.Dead1,
@@ -40,9 +50,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                     };
 
                     int randomIndex = UnityEngine.Random.Range(0, deathHashes.Length);
-                    animator.SetTrigger(deathHashes[randomIndex]);
-
-                    isDead = true;
+                    animator.SetTrigger(deathHashes[randomIndex]);  
                 }
                 else
                 {
