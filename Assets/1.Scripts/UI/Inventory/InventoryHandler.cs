@@ -1,5 +1,6 @@
 using System;
 using _1.Scripts.Manager.Core;
+using Cinemachine;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace _1.Scripts.UI
         [SerializeField] private Animator pauseAnimator;
         [SerializeField] private BlurManager blurMgr;
         [SerializeField] private GameObject inventoryPanel;
+        private CinemachineVirtualCamera inventoryCamera;
         
         bool isPaused;
         private CoreManager coreManager;
@@ -22,6 +24,7 @@ namespace _1.Scripts.UI
         {
             coreManager = CoreManager.Instance;
             pauseHandler = FindObjectOfType<PauseHandler>();
+            inventoryCamera = GameObject.Find("Inventory Camera").GetComponent<CinemachineVirtualCamera>();
         }
 
         public void ToggleInventory()
@@ -43,6 +46,8 @@ namespace _1.Scripts.UI
             pauseAnimator.Play("Panel In");
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            inventoryCamera.Priority = 100;
+            inventoryCamera.gameObject.SetActive(true);
         }
 
         private void Resume()
@@ -57,6 +62,8 @@ namespace _1.Scripts.UI
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            inventoryCamera.Priority = 0;
+            inventoryCamera.gameObject.SetActive(false);
         }
     }
 }
