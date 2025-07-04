@@ -31,16 +31,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
+        [field: SerializeField] public bool IsCrouching { get; set; }
         [field: SerializeField] public bool IsUsingFocus { get; set; }
         [field: SerializeField] public bool IsUsingInstinct { get; set; }
         [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
-        [field: Header("Current Physics Data")]
-        [field: SerializeField] public GameObject StepRayUpper { get; private set; }
-        [field: SerializeField] public GameObject StepRayLower { get; private set; }
-        [field: SerializeField] public float StepHeight { get; private set; } = 0.3f;
-        [field: SerializeField] public float StepSmooth { get; private set; } = 0.1f; 
+        [field: Header("Current Physics Data")] 
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
         [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
@@ -164,6 +161,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
+            
+            player.Controller.enabled = true;
         }
         
         private void OnDestroy()

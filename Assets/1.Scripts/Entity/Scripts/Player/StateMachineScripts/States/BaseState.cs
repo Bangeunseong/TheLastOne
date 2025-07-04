@@ -5,7 +5,6 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngineInternal;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 {
@@ -13,8 +12,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
     {
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
+        protected readonly CoreManager coreManager;
+        
         protected Coroutine staminaCoroutine;
-
+        protected Coroutine crouchCoroutine;
+        
         private float speed;
         private float smoothVelocity;
         private Vector3 recoilEuler;
@@ -22,6 +24,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         public BaseState(PlayerStateMachine machine)
         {
             stateMachine = machine;
+            coreManager = CoreManager.Instance;
             playerCondition = stateMachine.Player.PlayerCondition;
         }
         
@@ -32,7 +35,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead || CoreManager.Instance.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead || coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
@@ -136,6 +139,44 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             cameraPivotTransform.rotation = cameraTargetRotation;
         }
 
+        protected IEnumerator Crouch_Coroutine(bool isCrouch, float duration)
+        {
+            var currentPosition = stateMachine.Player.CameraPivot.localPosition;
+            var targetPosition = !isCrouch
+                ? stateMachine.Player.IdlePivot.localPosition
+                : stateMachine.Player.CrouchPivot.localPosition;
+
+            float t = 0;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float elapsed = t / duration;
+                stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
+                yield return null;
+            }
+            
+            stateMachine.Player.CameraPivot.localPosition = targetPosition;
+            crouchCoroutine = null;
+        }
+
+        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
+        {
+            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
+            {
+                playerCondition.OnRecoverStamina(recoverRate);
+                yield return new WaitForSecondsRealtime(interval);
+            }
+        }
+        
+        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
+        {
+            while (playerCondition.CurrentStamina > 0)
+            {
+                playerCondition.OnConsumeStamina(consumeRate);
+                yield return new WaitForSecondsRealtime(interval);
+            }
+        }
+        
         private void AddInputActionCallbacks()
         {
             var playerInput = stateMachine.Player.PlayerInput;
@@ -177,25 +218,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Focus.started -= OnFocusStarted;
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
         }
-
-        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
-        {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
-            {
-                playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSecondsRealtime(interval);
-            }
-        }
         
-        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
-        {
-            while (playerCondition.CurrentStamina > 0)
-            {
-                playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSecondsRealtime(interval);
-            }
-        }
-
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
         protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
@@ -226,7 +249,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             playerCondition.IsAttacking = false;
         }
-        
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
             
@@ -234,7 +256,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* ---------------------------- */
         
         /* - Weapon Switch 관련 메소드 - */
-        protected virtual void OnSwitchToMain(InputAction.CallbackContext context)
+        private void OnSwitchToMain(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -243,7 +265,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
-        protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
+        private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -252,7 +274,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
-        protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
+        private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
 
@@ -261,7 +283,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
-        protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
+        private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             

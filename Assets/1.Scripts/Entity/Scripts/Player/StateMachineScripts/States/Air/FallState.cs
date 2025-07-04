@@ -1,7 +1,4 @@
-﻿using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
-
-namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
+﻿namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
     public class FallState : AirState
     {

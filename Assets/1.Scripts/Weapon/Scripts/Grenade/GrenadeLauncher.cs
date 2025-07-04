@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using _1.Scripts.Entity.Scripts.Player.Core;
+﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Grenade

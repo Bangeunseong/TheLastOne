@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -15,13 +14,11 @@ namespace _1.Scripts.Manager.Subs
         private Coroutine timeScaleCoroutine;
         private CoreManager coreManager;
         
-        public bool SkipVelocityOnce { get; set; }
-        
         public void Start()
         {
             coreManager = CoreManager.Instance;
             CurrentTimeScale = Time.timeScale;
-            Time.fixedDeltaTime = OriginalFixedDeltaTime = 0.01f;
+            OriginalFixedDeltaTime = Time.fixedDeltaTime;
         }
 
         public void Update()
