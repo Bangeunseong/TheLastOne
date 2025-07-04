@@ -20,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		public SharedVector3 targetPos;
 		
 		public SharedBaseNpcStatController statController;
+		public SharedLight light;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -82,7 +83,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					return TaskStatus.Failure;
 				}
 			}
-			
+
+			light.Value.enabled = true;
 			return TaskStatus.Success;
 		}
 	}

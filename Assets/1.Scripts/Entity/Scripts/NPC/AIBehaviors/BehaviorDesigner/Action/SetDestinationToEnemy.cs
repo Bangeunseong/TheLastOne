@@ -16,11 +16,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedNavMeshAgent navMeshAgent;
 		public SharedBaseNpcStatController statController;
 		public SharedBool shouldLookTarget;
-
+		public SharedBool shouldInterruptible;
+		
 		public override TaskStatus OnUpdate()
 		{
 			if (targetTransform.Value == null || targetPos.Value == Vector3.zero)
+			{
+				shouldLookTarget.Value = false;
 				return TaskStatus.Failure;
+			}
 
 			if (!targetTransform.Value.CompareTag("Player"))
 			{
@@ -36,6 +40,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			if (NavMesh.SamplePosition(targetTransform.Value.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
 			{
+				shouldInterruptible.Value = true;
 				navMeshAgent.Value.SetDestination(hit.position);
 			}
 

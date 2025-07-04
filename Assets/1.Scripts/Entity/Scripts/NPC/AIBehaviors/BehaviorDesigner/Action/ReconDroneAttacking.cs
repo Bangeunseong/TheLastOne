@@ -14,9 +14,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		public SharedAnimator animator;
-
+		public SharedLight light;
+		
 		public override TaskStatus OnUpdate()
 		{
+			light.Value.enabled = true;
+			
 			if (targetTransform.Value == null || targetPos.Value == Vector3.zero)
 			{
 				return TaskStatus.Failure;
