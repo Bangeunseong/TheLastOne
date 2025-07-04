@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -21,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             // 반동 점점 줄어들게
             targetRotation = Vector3.SmoothDamp(targetRotation, Vector3.zero, ref velocity, 1f / recoilReturnSpeed);
-            CurrentRotation = Vector3.Lerp(CurrentRotation, targetRotation, recoilSnappiness * Time.deltaTime);
+            CurrentRotation = Vector3.Lerp(CurrentRotation, targetRotation, recoilSnappiness * Time.unscaledDeltaTime);
         }
 
         public void ApplyRecoil(float recoilX = -2f, float recoilY = 2f)

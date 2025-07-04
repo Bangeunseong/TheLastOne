@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -41,30 +40,12 @@ namespace _1.Scripts.Manager.Subs
             TargetTimeScale = 1f;
         }
 
-        public void ChangeTimeScale(float target, float duration)
+        public void ChangeTimeScale(float target)
         {
-            if (timeScaleCoroutine != null){ coreManager.StopCoroutine(timeScaleCoroutine); }
             TargetTimeScale = target;
-            timeScaleCoroutine = coreManager.StartCoroutine(ChangeTimeScale_Coroutine(duration));
-        }
-
-        private IEnumerator ChangeTimeScale_Coroutine(float duration)
-        {
-            float startScale = Time.timeScale;
-            float t = 0f;
-
-            while (t < duration)
-            {
-                t += Time.unscaledDeltaTime;
-                float elapsed = Mathf.Clamp01(t / duration);
-                Time.timeScale = Mathf.Lerp(startScale, TargetTimeScale, elapsed);
-                Time.fixedDeltaTime = OriginalFixedDeltaTime * Time.timeScale;
-                yield return null;
-            }
-            
-            Time.timeScale = TargetTimeScale;
-            Time.fixedDeltaTime = TargetTimeScale * OriginalFixedDeltaTime;
-            timeScaleCoroutine = null;
+            Time.timeScale = target;
+            Time.fixedDeltaTime = OriginalFixedDeltaTime * target;
+            CurrentTimeScale = Time.timeScale;
         }
     }
 }

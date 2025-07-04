@@ -126,7 +126,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             
             IsRecoiling = true;
-            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil);
+            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
             if (lightCurves) StartCoroutine(Flicker());

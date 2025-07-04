@@ -1,6 +1,4 @@
-﻿using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
-using _1.Scripts.Interfaces.Common;
+﻿using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
