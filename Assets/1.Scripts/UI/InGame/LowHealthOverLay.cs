@@ -27,7 +27,7 @@ namespace _1.Scripts.UI.InGame
 
         private Color lastColor = Color.clear;
 
-        private float flashStrength = 0.1f;
+        [SerializeField] private float flashStrength = 0.3f;
         public float flashDuration = 0.2f;
         private float flashAlpha;
         private Coroutine flashCoroutine;

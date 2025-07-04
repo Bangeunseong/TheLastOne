@@ -16,8 +16,12 @@ namespace _1.Scripts.UI
         [SerializeField] private CanvasGroup settingsCanvas;
         [SerializeField] private Animator settingsAnimator;
         
+        [SerializeField] private InventoryHandler inventoryHandler;
+        
         bool isPaused;
         private CoreManager coreManager;
+        
+        public bool IsPaused => isPaused;
 
         private void Start()
         {
@@ -26,6 +30,11 @@ namespace _1.Scripts.UI
 
         public void TogglePause()
         {
+            if (inventoryHandler != null && inventoryHandler.IsInventoryOpen)
+            {
+                inventoryHandler.ToggleInventory();
+                return;
+            }
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();
