@@ -20,7 +20,7 @@ MonoBehaviour:
     <Type>k__BackingField: 0
     <MaxAmmoCountInMagazine>k__BackingField: 10
     <BulletSpeed>k__BackingField: 2
-    <Accuracy>k__BackingField: 1
+    <Accuracy>k__BackingField: 5
     <ReloadTime>k__BackingField: 1.5
     <Rpm>k__BackingField: 400
     <BulletPrefabId>k__BackingField: Bullet
