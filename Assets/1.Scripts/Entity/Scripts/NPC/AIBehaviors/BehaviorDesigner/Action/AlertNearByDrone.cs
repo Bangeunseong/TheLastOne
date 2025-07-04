@@ -34,6 +34,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			}
 
 			light.Value.enabled = true; // 경고등 On
+			Debug.Log("경고등 켜짐");
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, collider.Value.bounds.center, index:1); // 사운드 출력
 			isAlerted.Value = true;
 

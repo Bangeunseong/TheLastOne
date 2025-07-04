@@ -16,7 +16,7 @@ MonoBehaviour:
   isPlayer: 0
   isAlly: 0
   maxHealth: 100
-  baseDamage: 0
+  baseDamage: 1
   baseAttackRate: 2
   moveSpeed: 3
   runMultiplier: 1

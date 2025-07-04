@@ -147,7 +147,7 @@ public class Unit_DroneBot : MonoBehaviour
 			
 			bullet.Initialize(pos_side.position, directionToTarget, 
 				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
-				10, finalLayerMask);
+				statController.RuntimeStatData.baseDamage, finalLayerMask);
 		}
 
 		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);
