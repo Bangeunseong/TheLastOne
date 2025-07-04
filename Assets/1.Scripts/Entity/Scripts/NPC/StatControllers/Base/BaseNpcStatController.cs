@@ -19,6 +19,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected Animator animator;
         
         public bool isDead = false;
+        public bool isAlly;
         
         public abstract void OnTakeDamage(int damage); // 데미지 입을 시 
         

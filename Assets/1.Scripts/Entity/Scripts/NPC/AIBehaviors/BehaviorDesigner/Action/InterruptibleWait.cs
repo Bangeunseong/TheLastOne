@@ -17,9 +17,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		private float waitingTime;
 		
 		public SharedTransform selfTransform;
+		public SharedBool isAlerted;
 		public SharedFloat maxViewDistance;
 		public SharedBaseNpcStatController statController;
-
+		
 		public override void OnStart()
 		{
 			startTime = Time.time;
@@ -75,6 +76,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				{
 					return TaskStatus.Failure;
 				}
+			}
+
+			if (isAlerted.Value)
+			{
+				return TaskStatus.Failure;
 			}
 			
 			return TaskStatus.Running;
