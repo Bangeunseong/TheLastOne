@@ -15,11 +15,13 @@ namespace _1.Scripts.Manager.Subs
         private Coroutine timeScaleCoroutine;
         private CoreManager coreManager;
         
+        public bool SkipVelocityOnce { get; set; }
+        
         public void Start()
         {
             coreManager = CoreManager.Instance;
             CurrentTimeScale = Time.timeScale;
-            OriginalFixedDeltaTime = Time.fixedDeltaTime;
+            Time.fixedDeltaTime = OriginalFixedDeltaTime = 0.01f;
         }
 
         public void Update()
@@ -41,30 +43,12 @@ namespace _1.Scripts.Manager.Subs
             TargetTimeScale = 1f;
         }
 
-        public void ChangeTimeScale(float target, float duration)
+        public void ChangeTimeScale(float target)
         {
-            if (timeScaleCoroutine != null){ coreManager.StopCoroutine(timeScaleCoroutine); }
             TargetTimeScale = target;
-            timeScaleCoroutine = coreManager.StartCoroutine(ChangeTimeScale_Coroutine(duration));
-        }
-
-        private IEnumerator ChangeTimeScale_Coroutine(float duration)
-        {
-            float startScale = Time.timeScale;
-            float t = 0f;
-
-            while (t < duration)
-            {
-                t += Time.unscaledDeltaTime;
-                float elapsed = Mathf.Clamp01(t / duration);
-                Time.timeScale = Mathf.Lerp(startScale, TargetTimeScale, elapsed);
-                Time.fixedDeltaTime = OriginalFixedDeltaTime * Time.timeScale;
-                yield return null;
-            }
-            
-            Time.timeScale = TargetTimeScale;
-            Time.fixedDeltaTime = TargetTimeScale * OriginalFixedDeltaTime;
-            timeScaleCoroutine = null;
+            Time.timeScale = target;
+            Time.fixedDeltaTime = OriginalFixedDeltaTime * target;
+            CurrentTimeScale = Time.timeScale;
         }
     }
 }

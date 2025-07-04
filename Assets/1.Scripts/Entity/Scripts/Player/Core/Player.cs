@@ -122,6 +122,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             StateMachine.LateUpdate();
         }
 
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
+        }
+
         /// <summary>
         /// Play Foot Step Sound
         /// </summary>
