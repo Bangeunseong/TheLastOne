@@ -2,17 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Data;
-using _1.Scripts.Interfaces;
-using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
-using _1.Scripts.Weapon.Scripts;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Sound;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
-using Cinemachine;
 using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -29,57 +26,78 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CurrentStamina { get; private set; }
         [field: SerializeField] public float CurrentFocusGauge { get; private set; }
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
+        [field: SerializeField] public float CurrentSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
-        [field: SerializeField] public bool IsPlayerHasControl { get; set; }
+        [field: SerializeField] public bool IsCrouching { get; set; }
+        [field: SerializeField] public bool IsUsingFocus { get; set; }
+        [field: SerializeField] public bool IsUsingInstinct { get; set; }
+        [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
-        [field: Header("Current Physics Data")]
+        [field: Header("Current Physics Data")] 
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
+        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
+
+        [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
-        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
-
-        [field: Header("Saved Position & Rotation")]
-        [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
-        [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
-        
-        [field: Header("Guns")]
-        [field: SerializeField] public List<BaseWeapon> Weapons { get; private set; } = new();
-        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
-        [field: SerializeField] public int EquippedWeaponIndex { get; private set; } = -1;
-        [field: SerializeField] public bool IsAttacking { get; set; }
-        [field: SerializeField] public bool IsUsingFocus { get; set; }
-        [field: SerializeField] public bool IsUsingInstinct { get; set; }
-        [field: SerializeField] public bool IsSwitching { get; private set; }
-        [field: SerializeField] public bool IsAiming { get; private set; }
         
         [field: Header("Damage Converters")]
         [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
        
+        [field: Header("Saved Position & Rotation")]
+        [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
+        [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
+
+        [field: Header("Weapons")]
+        [field: SerializeField] public GameObject ArmPivot { get; private set; }
+        [field: SerializeField] public List<Animator> WeaponAnimators { get; private set; } = new();
+        [field: SerializeField] public List<BaseWeapon> Weapons { get; private set; } = new();
+        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
+
+        [field: Header("Weapon States")]
+        [field: SerializeField] public int EquippedWeaponIndex { get; private set; }
+        [field: SerializeField] public float RecoilMultiplier { get; private set; } = 1f;
+        [field: SerializeField] public bool IsAttacking { get; set; }
+        [field: SerializeField] public bool IsSwitching { get; private set; }
+        [field: SerializeField] public bool IsAiming { get; private set; }
+        [field: SerializeField] public bool IsReloading { get; private set; }
+        
         // Coroutine Fields
         private CoreManager coreManager;
         private Player player;
-        private Coroutine switchCoroutine;
-        private Coroutine aimCoroutine;
+        private SoundPlayer reloadPlayer;
+        
+        private Coroutine switchCoroutine; 
+        private Coroutine aimCoroutine; 
+        private Coroutine reloadCoroutine;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
 
         private void Awake()
         {
+            if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            
             if (DamageConverters.Count <= 0) 
-                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
+            if (WeaponAnimators.Count <= 0)
+                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         private void Reset()
         {
+            if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            
             if (DamageConverters.Count <= 0) 
-                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>());
+                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
+            if (WeaponAnimators.Count <= 0)
+                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         private void Start()
@@ -87,11 +105,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
+            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
             
             foreach(var converter in DamageConverters) converter.Initialize(this);
             Initialize(coreManager.gameManager.SaveData);
+            StartCoroutine(InstinctRecover_Coroutine(1));
         }
 
+        /// <summary>
+        /// Initialize Player Stat., using Saved data if exists.
+        /// </summary>
+        /// <param name="data">DataTransferObject of Saved Data</param>
         public void Initialize(DataTransferObject data)
         {
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
@@ -101,6 +125,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Weapons.Add(weapon);
                 AvailableWeapons.Add(false);
             }
+            if (AvailableWeapons.Count > 0) AvailableWeapons[0] = true;
             
             if (data == null)
             {
@@ -137,15 +162,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             
-            coreManager.gameManager.Player.Controller.enabled = true;
+            player.Controller.enabled = true;
         }
-
-        public void OnRecoverHealth(int value)
+        
+        private void OnDestroy()
         {
-            if (IsDead) return;
-            CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+            StopAllCoroutines();
         }
 
+        /// <summary>
+        /// Reduce Health Point, Can customize event when player got damage using 'OnDamage' event
+        /// </summary>
+        /// <param name="damage">Value of damage</param>
         public void OnTakeDamage(int damage)
         {
             if (IsDead) return;
@@ -155,43 +183,95 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (CurrentHealth <= 0) { OnDead(); }
         }
 
+        /// <summary>
+        /// Recover Health Point
+        /// </summary>
+        /// <param name="value">Value of hp to recover</param>
+        public void OnRecoverHealth(int value)
+        {
+            if (IsDead) return;
+            CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+        }
+
+        /// <summary>
+        /// Consume Stamina Point
+        /// </summary>
+        /// <param name="stamina">Value to consume from player stamina point</param>
+        public void OnConsumeStamina(float stamina) 
+        { 
+            if (IsDead) return; 
+            CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
+        }
+
+        /// <summary>
+        /// Recover Stamina Point
+        /// </summary>
+        /// <param name="stamina">Value of stamina to recover</param>
         public void OnRecoverStamina(float stamina)
         {
             if (IsDead) return;
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
         }
-
-        public void OnConsumeFocusGauge(float value = 1f)
+        
+        /// <summary>
+        /// Consume Focus Gauge
+        /// </summary>
+        /// <param name="value">Value to consume focus</param>
+        /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
+        public bool OnConsumeFocusGauge(float value = 1f)
         {
-            if (IsDead) return;
-            if (CurrentFocusGauge < value) return;
+            if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
-            // TODO: FocusGauge를 썼을 때 Skill 효과 발동
+            OnFocusEngaged();
+            return true;
         }
 
-        public void OnRecoverFocusGauge(float value)
+        /// <summary>
+        /// Recover Focus Point
+        /// </summary>
+        /// <param name="value">Value to recover focus</param>
+        public void OnRecoverFocusGauge(FocusGainType value)
         {
-            if (IsDead) return;
-            CurrentFocusGauge = Mathf.Min(CurrentFocusGauge + value, 1f);
+            if (IsDead || IsUsingFocus || IsUsingInstinct) return;
+            
+            CurrentFocusGauge = value switch
+            {
+                FocusGainType.Kill => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnKill, 1f),
+                FocusGainType.HeadShot => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHeadShot, 1f),
+                FocusGainType.Hack => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHacked, 1f),
+                FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
 
-        public void OnConsumeInstinctGauge(float value = 1f)
+        /// <summary>
+        /// Consume Instinct Gauge
+        /// </summary>
+        /// <param name="value">Value to consume instinct</param>
+        /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
+        public bool OnConsumeInstinctGauge(float value = 1f)
         {
-            if (IsDead) return;
-            if (CurrentInstinctGauge < value) return; CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
-            // TODO: InstinctGauge를 썼을 때 Skill 효과 발동
+            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct) return false;
+            CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            OnInstinctEngaged();
+            return true;
         }
-
-        public void OnRecoverInstinctGauge(float value)
+        
+        /// <summary>
+        /// Recover Instinct Point
+        /// </summary>
+        /// <param name="value">Value to recover instinct</param>
+        public void OnRecoverInstinctGauge(InstinctGainType value)
         {
-            if (IsDead) return;
-            CurrentInstinctGauge = Mathf.Min(CurrentInstinctGauge + value, 1f);
-        }
+            if (IsDead || IsUsingInstinct || IsUsingFocus) return;
 
-        public void OnConsumeStamina(float stamina)
-        {
-            if (IsDead) return;
-            CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
+            CurrentInstinctGauge = value switch
+            {
+                InstinctGainType.Idle => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnIdle, 1f),
+                InstinctGainType.Hit => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnHit, 1f),
+                InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
         
         public void OnTakeExp(int exp)
@@ -199,20 +279,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience += exp;
             if (Experience >= Level * 120) { OnLevelUp(); return; } // 조정 필요
-        }
-
-        public void OnAttack()
-        {
-            if (!IsAttacking || EquippedWeaponIndex < 0) return;
-            switch (Weapons[EquippedWeaponIndex])
-            {
-                case Gun gun:
-                    gun.OnShoot();
-                    break;
-                case GrenadeLauncher grenadeThrower:
-                    grenadeThrower.OnShoot();
-                    break;
-            }
         }
 
         private void OnLevelUp()
@@ -226,123 +292,291 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnDead()
         {
             IsDead = true;
-            if (player.InputProvider != null) player.InputProvider.enabled = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
+            player.PlayerInput.enabled = false;
+            
             OnDeath?.Invoke();
         }
-        
-        /* - Recoil 관련 메소드 - */
-        
-        /* --------------------- */
+
+        public void OnReset()
+        {
+            IsDead = false;
+            CurrentHealth = MaxHealth;
+            CurrentStamina = MaxStamina;
+            player.InputProvider.enabled = true;
+            player.PlayerInput.enabled = true;
+        }
+
+        public void OnAttack()
+        {
+            if (!IsAttacking) return;
+            switch (Weapons[EquippedWeaponIndex])
+            {
+                case Gun gun:
+                    if (gun.OnShoot())
+                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                    break;
+                case GrenadeLauncher grenadeThrower:
+                    if (grenadeThrower.OnShoot())
+                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                    break;
+            }
+        }
         
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
-            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); }
+            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); IsAiming = !isAim; }
             aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
-            IsAiming = isAim;
+            
         }
-        
         private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
         {
-            Vector3 currentPosition = player.WeaponPivot.localPosition;
-            Vector3 targetLocalPosition = isAim
-                ? player.WeaponPoints["AimPoint"].localPosition
-                : player.WeaponPoints["WieldPoint"].localPosition;
             float currentFoV = player.FirstPersonCamera.m_Lens.FieldOfView;
-
+            WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.AimParameterHash, isAim);
+            
             var time = 0f;
             while (time < transitionTime)
             {
-                time += Time.deltaTime;
+                time += Time.unscaledDeltaTime;
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 player.FirstPersonCamera.m_Lens.FieldOfView = value;
-                if(EquippedWeaponIndex is >= 0 and <= 2)
-                    player.WeaponPivot.localPosition = Vector3.Lerp(currentPosition, targetLocalPosition, t);
                 yield return null;
             }
-
+            
+            IsAiming = isAim;
             player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            if(EquippedWeaponIndex is >= 0 and <= 2)
-                player.WeaponPivot.localPosition = targetLocalPosition;
             aimCoroutine = null;
         }
         /* ----------------- */
+        
+        /* - Reload 관련 메소드 - */
+        public bool TryStartReload()
+        {
+            if (IsDead || IsSwitching || EquippedWeaponIndex <= 0) return false;
+            
+            switch (Weapons[EquippedWeaponIndex])
+            {
+                case Gun { IsReadyToReload: false }:
+                    return false;
+                case Gun gun:
+                {
+                    if (reloadCoroutine != null)
+                    {
+                        StopCoroutine(reloadCoroutine); 
+                        gun.IsReloading = false;
+                        IsReloading = false;
+                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    }
+                    
+                    // Play Reload AudioClip
+                    float clipLength = gun.GunData.GunStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(
+                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, clipLength);
+                    
+                    // Start Reload Coroutine
+                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.1f));
+                    break;
+                }
+                case GrenadeLauncher { IsReadyToReload: false }:
+                    return false;
+                case GrenadeLauncher grenadeLauncher:
+                {
+                    if (reloadCoroutine != null)
+                    {
+                        StopCoroutine(reloadCoroutine);
+                        grenadeLauncher.IsReloading = false;
+                        IsReloading = false;
+                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    }
+
+                    // Player Reload AudioClip
+                    float clipLength = grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, clipLength);
+                    
+                    // Start Reload Coroutine
+                    reloadCoroutine = StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime + 0.3f));
+                    break;
+                }
+            }
+
+            return true;
+        }
+        public bool TryCancelReload()
+        {
+            if (IsDead || EquippedWeaponIndex <= 0 || reloadCoroutine == null) return false;
+            
+            StopCoroutine(reloadCoroutine);
+            switch (Weapons[EquippedWeaponIndex])
+            {
+                case Gun gun:
+                    gun.IsReloading = false;
+                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    break;
+                case GrenadeLauncher grenadeLauncher:
+                    grenadeLauncher.IsReloading = false;
+                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    break;
+            }
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            
+            if (reloadPlayer) reloadPlayer.Stop();
+            reloadPlayer = null;
+            reloadCoroutine = null;
+            IsReloading = false;
+            return true;
+        }
+        private IEnumerator Reload_Coroutine(float interval)
+        {
+            var currentAnimator = WeaponAnimators[EquippedWeaponIndex];
+            
+            if (Weapons[EquippedWeaponIndex] is Gun gun)
+            {
+                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine)
+                    yield break;
+
+                // Animation Control (Reload Start)
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash,
+                        gun.GunData.GunStat.Type == WeaponType.Pistol
+                            ? player.AnimationData.PistolReloadClipTime / gun.GunData.GunStat.ReloadTime
+                            : player.AnimationData.RifleReloadClipTime / gun.GunData.GunStat.ReloadTime);
+                
+                gun.IsReloading = true;
+                IsReloading = true;
+                yield return new WaitForSecondsRealtime(interval);
+                gun.OnReload();
+                IsReloading = false;
+                gun.IsReloading = false;
+                
+                // Animation Control (Reload End)
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
+                currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
+            } else if (Weapons[EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
+            {
+                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine == grenadeLauncher.MaxAmmoCountInMagazine) 
+                    yield break;
+
+                // Animation Control (Reload Start)
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash,
+                    player.AnimationData.GrenadeLauncherReloadClipTime /
+                    grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime);
+                
+                grenadeLauncher.IsReloading = true;
+                IsReloading = true;
+                yield return new WaitForSecondsRealtime(interval);
+                grenadeLauncher.OnReload();
+                IsReloading = false;
+                grenadeLauncher.IsReloading = false;
+                
+                // Animation Control (Reload End)
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
+                currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
+            }
+            reloadPlayer = null;
+            reloadCoroutine = null;
+        }
+        /* --------------------- */
         
         /* - Weapon Switch 메소드 - */
         public void OnSwitchWeapon(int currentWeaponIndex, float duration)
         {
             IsAttacking = false;
+            if (IsReloading) TryCancelReload();
             int previousWeaponIndex = EquippedWeaponIndex;
             EquippedWeaponIndex = currentWeaponIndex;
-            if (switchCoroutine != null){ StopCoroutine(switchCoroutine); }
+            
+            if (switchCoroutine != null){ StopCoroutine(switchCoroutine); IsSwitching = false; }
             switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(previousWeaponIndex, currentWeaponIndex, duration));
         }
-
-        public IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
+        private IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
         {
+            if (previousWeaponIndex == currentWeaponIndex) { switchCoroutine = null; yield break; }
             IsSwitching = true;
             
             Service.Log($"{previousWeaponIndex}, {currentWeaponIndex}");
-            
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
-            while (IsAiming){}
             
-            Vector3 currentWeaponPivotPosition = player.WeaponPivot.localPosition;
-            Quaternion currentWeaponPivotRotation = player.WeaponPivot.localRotation;
-            Vector3 targetLocalPosition = player.WeaponPoints["SwitchPoint"].localPosition;
-            Quaternion targetLocalRotation = player.WeaponPoints["SwitchPoint"].localRotation;
-            
-            if (previousWeaponIndex >= 0)
-            {
-                Service.Log("Switch Weapon");
-                // 무기를 밑으로 먼저 내리기
-                var time = 0f;
-                while (time < duration)
-                {
-                    time += Time.deltaTime;
-                    float t = time / duration;
-                    player.WeaponPivot.SetLocalPositionAndRotation(
-                        Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
-                        Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
-                    yield return null;
-                }
+            Service.Log("Switch Weapon");
+            // 무기를 밑으로 먼저 내리기
 
-                player.WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
-                Weapons[previousWeaponIndex].gameObject.SetActive(false);
+            switch (previousWeaponIndex)
+            {
+                case 0: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.HandToOtherWeaponClipTime / duration); break; 
+                case 1: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.PistolToOtherWeaponClipTime / duration); break; 
+                case 2: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.RifleToOtherWeaponClipTime / duration); break;
+                case 3: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash, 
+                    player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
             }
             
-            // 만약 들어온 weaponIndex에 해당하는 무기 혹은 weaponIndex가 0보다 작을 경우 예외처리
-            if (currentWeaponIndex < 0 || !AvailableWeapons[currentWeaponIndex])
-            {
-                switchCoroutine = null;
-                IsSwitching = false;
-                yield break;
-            }
+            WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
+            yield return new WaitForSecondsRealtime(duration);
+            WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             Service.Log("Wield Weapon");
-            currentWeaponPivotPosition = player.WeaponPivot.localPosition;
-            currentWeaponPivotRotation = player.WeaponPivot.localRotation;
-            targetLocalPosition = player.WeaponPoints["WieldPoint"].localPosition;
-            targetLocalRotation = player.WeaponPoints["WieldPoint"].localRotation;
-            
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
-            
-            float weaponWieldTime = 0f;
-            while (weaponWieldTime < duration)
-            {
-                weaponWieldTime += Time.deltaTime;
-                float t = weaponWieldTime / duration;
-                player.WeaponPivot.SetLocalPositionAndRotation(
-                    Vector3.Lerp(currentWeaponPivotPosition, targetLocalPosition, t), 
-                    Quaternion.Lerp(currentWeaponPivotRotation, targetLocalRotation, t));
-                yield return null;
-            }
-            
-            player.WeaponPivot.transform.SetLocalPositionAndRotation(targetLocalPosition, targetLocalRotation);
+            yield return new WaitForEndOfFrame();
+            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            yield return new WaitForSecondsRealtime(duration);
             switchCoroutine = null;
             IsSwitching = false;
         }
         /* --------------------- */
+        
+        /* - Skill 관련 메소드 - */
+        private void OnFocusEngaged()
+        {
+            StartCoroutine(Focus_Coroutine(StatData.focusSkillTime));
+        }
+        private IEnumerator Focus_Coroutine(float duration)
+        {
+            IsUsingFocus = true;
+            coreManager.timeScaleManager.ChangeTimeScale(0.5f);
+            RecoilMultiplier = 0.5f;
+            yield return new WaitForSecondsRealtime(duration);
+            RecoilMultiplier = 1f;
+            coreManager.timeScaleManager.ChangeTimeScale(1f);
+            IsUsingFocus = false;
+        }
+        private void OnInstinctEngaged()
+        {
+            StartCoroutine(Instinct_Coroutine(StatData.instinctSkillTime));
+        }
+        private IEnumerator Instinct_Coroutine(float duration)
+        {
+            IsUsingInstinct = true;
+            
+            // TODO: Turn On Enemy Silhouette (By using spawn manager)
+            CurrentSpeedMultiplier = StatData.instinctSkillMultiplier;
+            yield return new WaitForSecondsRealtime(duration);
+            CurrentSpeedMultiplier = 1f;
+            // TODO: Turn Off Enemy Silhouette
+            
+            IsUsingInstinct = false;
+        }
+
+        private IEnumerator InstinctRecover_Coroutine(float delay)
+        {
+            while (!IsDead)
+            {
+                yield return new WaitForSecondsRealtime(delay);
+                OnRecoverInstinctGauge(InstinctGainType.Idle);
+            }
+        }
+        /* -------------------- */
     }
 }

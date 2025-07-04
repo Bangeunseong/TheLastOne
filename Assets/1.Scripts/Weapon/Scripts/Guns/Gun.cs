@@ -1,21 +1,19 @@
 ﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class Gun : BaseWeapon, IReloadable
     {
         [Header("Components")] 
-        [SerializeField] private ParticleSystem shellParticles;
-        [SerializeField] private Light gunShotLight;
+        [SerializeField] private ParticleSystem muzzleFlashParticle;
+        [SerializeField] private LightCurves lightCurves;
      
         [field: Header("Gun Data")]
         [field: SerializeField] public GunData GunData { get; protected set; }
@@ -29,46 +27,46 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [field: SerializeField] public bool IsRayCastGun { get; private set; }
         
         [field: Header("Current Weapon State")]
-        [SerializeField] private bool isEmpty;
-        [SerializeField] private bool isRecoiling;
+        [field: SerializeField] public bool IsRecoiling { get; private set; }
+        [field: SerializeField] public bool IsEmpty { get; private set; }
         [field: SerializeField] public bool IsReloading { get; set; }
         
         // Fields
         private float timeSinceLastShotFired;
         
         // Properties
-        public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
+        public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
+        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
 
         private void Awake()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
-            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
-            if (!gunShotLight) gunShotLight = GetComponentInChildren<Light>(true);
+            if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
         private void Reset()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
-            if (!shellParticles) shellParticles = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
-            if (!gunShotLight) gunShotLight = GetComponentInChildren<Light>(true);
+            if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
         private void Start()
         {
             timeSinceLastShotFired = 0f;
-            isRecoiling = false;
+            IsRecoiling = false;
             MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
         }
 
         private void Update()
         {
-            if (!isRecoiling) return;
-            timeSinceLastShotFired += Time.deltaTime;
+            if (!IsRecoiling) return;
+            timeSinceLastShotFired += Time.unscaledDeltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;
             timeSinceLastShotFired = 0f;
-            isRecoiling = false;
+            IsRecoiling = false;
         }
 
         public override void Initialize(GameObject ownerObj)
@@ -83,7 +81,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)GunData.GunStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
-                    if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
+                    if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
                 }
                 else
                 {
@@ -96,13 +94,13 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
 
-        public override void OnShoot()
+        public override bool OnShoot()
         {
-            if (!IsReady) return;
+            if (!IsReady) return false;
             if (!IsRayCastGun)
             {
                 var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
-                if (!obj.TryGetComponent(out Bullet bullet)) return;
+                if (!obj.TryGetComponent(out Bullet bullet)) return false;
                 bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
                     GunData.GunStat.MaxWeaponRange,
                     GunData.GunStat.BulletSpeed,
@@ -127,35 +125,45 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 }
             }
             
-            isRecoiling = true;
-            if (player != null) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil);
+            IsRecoiling = true;
+            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
-            if (gunShotLight != null) StartCoroutine(Flicker());
-            if (shellParticles.isPlaying) shellParticles.Stop();
-            shellParticles.Play();
+            if (lightCurves) StartCoroutine(Flicker());
+            if (muzzleFlashParticle.isPlaying) muzzleFlashParticle.Stop();
+            muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerAttack, BulletSpawnPoint.position, -1);
+            CoreManager.Instance.soundManager
+                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolShoot : SfxType.RifleShoot, 
+                BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
-            if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
-            if (GunData.GunStat.Type != WeaponType.Pistol) return;
-            if (player != null) player.PlayerCondition.IsAttacking = false;
+            if (CurrentAmmoCountInMagazine <= 0)
+            {
+                IsEmpty = true;
+                if (player)
+                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                        .SetBool(player.AnimationData.EmptyParameterHash, true);
+            }
+            if (GunData.GunStat.Type != WeaponType.Pistol) return true;
+            if (player) player.PlayerCondition.IsAttacking = false;
+            return true;
         }
 
-        public void OnReload()
+        public bool OnReload()
         {
             int reloadableAmmoCount;
-            if (isOwnedByPlayer) 
+            if (isOwnedByPlayer)
                 reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
             else reloadableAmmoCount = MaxAmmoCountInMagazine - CurrentAmmoCount;
             
-            if (reloadableAmmoCount <= 0) return;
+            if (reloadableAmmoCount <= 0) return false;
             
             CurrentAmmoCount -= reloadableAmmoCount;
             CurrentAmmoCountInMagazine += reloadableAmmoCount;
-            isEmpty = CurrentAmmoCountInMagazine <= 0;
+            IsEmpty = CurrentAmmoCountInMagazine <= 0;
+            return true;
         }
 
         public override bool OnRefillAmmo(int ammo)
@@ -188,6 +196,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 {
                     if (!player!.PlayerCondition.IsAiming)
                     {
+                        var distance = Vector3.Distance(hit.point, face.position);
+                        randomCirclePoint *= distance / GunData.GunStat.MaxWeaponRange;
                         targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
                     } else targetPoint = hit.point;
                 }
@@ -212,9 +222,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private IEnumerator Flicker()
         {
-            if (gunShotLight != null) gunShotLight.enabled = true;
-            yield return new WaitForSeconds(0.08f);
-            if (gunShotLight != null) gunShotLight.enabled = false;
+            lightCurves.gameObject.SetActive(true);
+            yield return new WaitForSecondsRealtime(lightCurves.GraphTimeMultiplier);
+            lightCurves.gameObject.SetActive(false);
         }
     }
 }

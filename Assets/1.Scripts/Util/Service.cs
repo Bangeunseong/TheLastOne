@@ -15,7 +15,7 @@ public static class Service
     /// <returns></returns>
     public static T TryGetChildComponent<T>(this MonoBehaviour _this, string _childName) where T : class
     {
-        var child = FindFirstChild(_this.transform, _childName);
+        GameObject child = FindFirstChild(_this.transform, _childName);
         if (child == null) return null;
 
         T component = null;
@@ -127,8 +127,6 @@ public static class Service
     {
         Vector3 origin = npcPosition;
         Vector3 direction = (targetPosition - origin).normalized;
-
-        Debug.DrawRay(origin, direction * maxViewDistance, Color.red);
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
         {

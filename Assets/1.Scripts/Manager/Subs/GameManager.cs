@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
-using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
@@ -27,6 +26,7 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public DataTransferObject SaveData { get; private set; }
         [field: SerializeField] public SettingDTO SettingData { get; private set; }
         [field: SerializeField] public Player Player { get; private set; }
+        [field: SerializeField] public bool IsGamePaused { get; set; }
 
         private CoreManager coreManager;
 
@@ -124,6 +124,24 @@ namespace _1.Scripts.Manager.Subs
                 SettingData = JsonConvert.DeserializeObject<SettingDTO>(str);
             }
             else SettingData = null;
+        }
+
+        public void PauseGame()
+        {
+            if (!Player) return;
+            
+            Player.Pov.m_HorizontalAxis.Reset();
+            Player.Pov.m_VerticalAxis.Reset();
+            Player.InputProvider.enabled = false;
+            Player.PlayerInput.enabled = false;
+        }
+
+        public void ResumeGame()
+        {
+            if (!Player) return;
+            
+            Player.InputProvider.enabled = true;
+            Player.PlayerInput.enabled = true;
         }
     }
 }

@@ -1,4 +1,4 @@
-using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 
 namespace _1.Scripts.Entity.Scripts.NPC.BehaviorTree
 {

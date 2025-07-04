@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
@@ -16,7 +18,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem[] p_jet;
 	private bool restartRes = true;
-	private float shellSpeed = 5;
+	private float shellSpeed = 70f;
 	private Transform pos_side;
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  
@@ -25,7 +27,10 @@ public class Unit_DroneBot : MonoBehaviour
 	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
 	public LayerMask hittableLayer;
 
-	public BaseNpcAI controller;
+	public BaseDroneAIController controller;
+
+	private Coroutine gotDamagedCoroutine;
+	private float gotDamagedParticleDuration = 0.5f;
 	
 	// Use this for initialization
 	void Start()
@@ -35,20 +40,29 @@ public class Unit_DroneBot : MonoBehaviour
 
 	private void Awake()
 	{
-		controller = GetComponent<BaseNpcAI>();
+		controller = GetComponent<BaseDroneAIController>();
 	}
 
 	void f_hit() //hit
 	{
-		p_hit.Play();
-		m_AudioSource.PlayOneShot(s_hit);
-
+		// 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 3);
+		if (!controller.CheckStunned())
+		{
+			if (gotDamagedCoroutine != null)
+			{
+				StopCoroutine(gotDamagedCoroutine);
+			}
+			gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
+		}
 	}
 
-	public void hitSoundPlay()
+	private IEnumerator DamagedParticleCoroutine()
 	{
-		m_AudioSource.PlayOneShot(s_hit);
-	}	
+		p_hit.Play();
+		yield return new WaitForSeconds(gotDamagedParticleDuration);
+		p_hit.Stop();
+	}
 	
 	void f_afterFire()
 	{
@@ -73,8 +87,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_prevDead()
 	{
-
-		m_AudioSource.PlayOneShot(s_signal);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 1);
 	}
 
 	void f_dead() //dead
@@ -87,7 +100,7 @@ public class Unit_DroneBot : MonoBehaviour
 		p_dead.Play();
 		p_smoke.Play();
 		m_AudioSource.Stop();
-		m_AudioSource.PlayOneShot(s_dead);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 2);
 		m_AudioSource.loop = false;
 		restartRes = false;
 	}
@@ -136,7 +149,7 @@ public class Unit_DroneBot : MonoBehaviour
 				10, finalLayerMask);
 		}
 
-		m_AudioSource.PlayOneShot(s_Fire);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);
 	}
 }
  

@@ -1,14 +1,17 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Grenade
 {
     public class GrenadeLauncher : BaseWeapon, IReloadable
     {
+        [Header("Components")] 
+        [SerializeField] private ParticleSystem muzzleFlashParticle;
+        
         [field: Header("Gun Data")]
         [field: SerializeField] public GrenadeData GrenadeData { get; protected set; }
         
@@ -28,16 +31,20 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         private float timeSinceLastShotFired;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading;
+        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
 
         private void Awake()
         {
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
+            if (!muzzleFlashParticle)
+                muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
         }
 
         private void Reset()
         {
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
+            if (!muzzleFlashParticle)
+                muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
         }
 
         private void Start()
@@ -80,21 +87,36 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             face = user.CameraPivot;
         }
 
-        public override void OnShoot()
+        public override bool OnShoot()
         {
-            if (!IsReady) return;
+            if (!IsReady) return false;
             
             var obj = CoreManager.Instance.objectPoolManager.Get(GrenadeData.GrenadeStat.GrenadePrefabId); 
-            if (!obj.TryGetComponent(out Grenade grenade)) return;
+            if (!obj.TryGetComponent(out Grenade grenade)) return false;
             grenade.Initialize(ThrowPoint.position, GetDirectionOfBullet(), HittableLayer,
                 GrenadeData.GrenadeStat.Damage, GrenadeData.GrenadeStat.ThrowForce, GrenadeData.GrenadeStat.Force, 
                 GrenadeData.GrenadeStat.Radius, GrenadeData.GrenadeStat.Delay, GrenadeData.GrenadeStat.StunDuration);
             
             isRecoiling = true;
+            if (player) player.PlayerRecoil.ApplyRecoil(-GrenadeData.GrenadeStat.Recoil * player.PlayerCondition.RecoilMultiplier);
+            
+            // Play VFX
+            if (muzzleFlashParticle.isPlaying) muzzleFlashParticle.Stop();
+            muzzleFlashParticle.Play();
+            
+            // Play Randomized Gun Shooting Sound
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncherShoot, ThrowPoint.position);
             
             CurrentAmmoCountInMagazine--;
-            if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
+            if (CurrentAmmoCountInMagazine <= 0)
+            {
+                isEmpty = true;
+                if (player)
+                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                        .SetBool(player.AnimationData.EmptyParameterHash, true);
+            }
             if (player != null) player.PlayerCondition.IsAttacking = false;
+            return true;
         }
 
         public override bool OnRefillAmmo(int ammo)
@@ -104,18 +126,19 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             return true;
         }
 
-        public void OnReload()
+        public bool OnReload()
         {
             int reloadableAmmoCount;
             if (isOwnedByPlayer) 
                 reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
             else reloadableAmmoCount = MaxAmmoCountInMagazine - CurrentAmmoCount;
             
-            if (reloadableAmmoCount <= 0) return;
+            if (reloadableAmmoCount <= 0) return false;
             
             if (isOwnedByPlayer) CurrentAmmoCount -= reloadableAmmoCount;
             CurrentAmmoCountInMagazine += reloadableAmmoCount;
             isEmpty = CurrentAmmoCountInMagazine <= 0;
+            return true;
         }
 
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)

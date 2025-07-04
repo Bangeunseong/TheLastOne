@@ -2,9 +2,7 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Weapon.Scripts;
 using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Guns;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -85,6 +83,7 @@ namespace _1.Scripts.Manager.Subs
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+                coreManager.soundManager.StopBGM();
                 coreManager.soundManager.CacheSoundGroup();
                 await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");

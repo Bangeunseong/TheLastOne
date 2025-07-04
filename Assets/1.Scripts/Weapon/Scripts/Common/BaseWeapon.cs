@@ -26,7 +26,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
         protected bool isOwnedByPlayer;
         
         public abstract void Initialize(GameObject ownerObj);
-        public abstract void OnShoot();
+        public abstract bool OnShoot();
         public abstract bool OnRefillAmmo(int ammo);
     }
 }

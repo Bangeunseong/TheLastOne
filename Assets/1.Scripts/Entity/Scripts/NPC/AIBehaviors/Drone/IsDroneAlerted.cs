@@ -1,7 +1,7 @@
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
-using _1.Scripts.Entity.Scripts.Npc.StatControllers;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Static;
 using UnityEngine;

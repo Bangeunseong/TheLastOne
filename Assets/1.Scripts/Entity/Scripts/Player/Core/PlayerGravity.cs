@@ -4,9 +4,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class PlayerGravity : MonoBehaviour
     {
-        [Header("Components")]
-        [SerializeField] private CharacterController characterController;
-
         [field: Header("Gravity Settings")]
         [field: SerializeField] public float Gravity { get; private set; } = -9.81f;
         [field: SerializeField] public float GroundedOffset { get; private set; } = -0.14f;
@@ -18,20 +15,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         public Vector3 ExtraMovement => Vector3.up * verticalVelocity;
 
-        private void Awake()
-        {
-            if(!characterController) characterController = this.TryGetComponent<CharacterController>();
-        }
-
-        private void Reset()
-        {
-            if(!characterController) characterController = this.TryGetComponent<CharacterController>();
-        }
-
         private void Update()
         {
             CheckCharacterIsGrounded();
-            if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
+            if (IsGrounded && verticalVelocity < 0f) verticalVelocity = -1f;
             else verticalVelocity += Gravity * Time.unscaledDeltaTime;
         }
 

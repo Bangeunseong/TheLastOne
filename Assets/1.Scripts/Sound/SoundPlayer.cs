@@ -8,32 +8,39 @@ namespace _1.Scripts.Sound
     public class SoundPlayer : MonoBehaviour
     {
         private AudioSource audioSource;
+        private Coroutine returnCoroutine;
 
         private void Awake()
         {
             audioSource = GetComponent<AudioSource>();
         }
 
-        public void Play(AudioClip clip, float volume = 1.0f, float spatialBlend = 0)
+        public void Play(AudioClip clip, float length = -1f, float volume = 1.0f, float spatialBlend = 0)
         {
             audioSource.clip = clip;
+            if (length >= 0f) { float speed = clip.length / length; audioSource.pitch = speed; }
             audioSource.volume = volume;
             audioSource.spatialBlend = spatialBlend;
             audioSource.Play();
             
-            StartCoroutine(ReturnToPool());
+            returnCoroutine = StartCoroutine(ReturnToPool());
         }
 
-        public void Play2D(AudioClip clip, float volume)
+        public void Play2D(AudioClip clip, float duration, float volume)
         {
             transform.position = Vector3.zero;
-            Play(clip, volume, 0.0f);
+            Play(clip, duration, volume, 0.0f);
         }
 
-        public void Play3D(AudioClip clip, float volume, Vector3 position)
+        public void Play3D(AudioClip clip, float duration, float volume, Vector3 position)
         {
             transform.position = position;
-            Play(clip, volume, 1.0f);
+            Play(clip, duration, volume, 1.0f);
+        }
+
+        public void Stop()
+        {
+            audioSource.Stop();
         }
 
         private IEnumerator ReturnToPool()

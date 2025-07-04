@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
@@ -44,7 +45,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             
             do
             {
-                NavMesh.SamplePosition(controller.targetPos + (Random.onUnitSphere * Random.Range(patrolable.MinWanderingDistance, patrolable.MaxWanderingDistance)), out hit, patrolable.MaxWanderingDistance, NavMesh.AllAreas);
+                NavMesh.SamplePosition(controller.transform.position + (Random.onUnitSphere * Random.Range(patrolable.MinWanderingDistance, patrolable.MaxWanderingDistance)), out hit, patrolable.MaxWanderingDistance, NavMesh.AllAreas);
                 i++;
                 if (i == 30) break;
             } 

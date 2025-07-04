@@ -1,10 +1,7 @@
-using System;
-using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
 
@@ -28,22 +25,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
         [field: SerializeField] public Transform CameraPivot { get; private set; }
         [field: SerializeField] public Transform CameraPoint { get; private set; }
-        [field: SerializeField] public Transform WeaponPivot  { get; private set; }
-        [field: SerializeField] public SerializedDictionary<string, Transform> WeaponPoints = new();
+        [field: SerializeField] public Transform IdlePivot { get; private set; }
+        [field: SerializeField] public Transform CrouchPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
+        [field: SerializeField] public CinemachinePOV Pov { get; private set; }
         
         [field: Header("Camera Settings")]
         [field: SerializeField] public float OriginalFoV { get; private set; }
         [field: SerializeField] public float ZoomFoV { get; private set; } = 40f;
-        [field: SerializeField] public float TransitionTime { get; private set; } = 0.5f;
+        [field: SerializeField] public float TransitionTime { get; private set; } = 0.3f;
         
         [field: Header("Animation Data")] 
         [field: SerializeField] public AnimationData AnimationData { get; private set; } 
         
-        [Header("StateMachine")] 
-        [SerializeField] private PlayerStateMachine stateMachine;
+        [field: Header("StateMachine")] 
+        [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
         
         // Properties
         public Camera cam { get; private set; }
@@ -60,15 +58,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
-            if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
+            if (!IdlePivot) IdlePivot = this.TryGetChildComponent<Transform>("IdlePivot");
+            if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
-            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
-            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
-            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
-
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
         }
@@ -85,15 +81,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
-            if (!WeaponPivot) WeaponPivot = this.TryGetChildComponent<Transform>("WeaponPivot");
-            
-            WeaponPoints["WieldPoint"] = this.TryGetChildComponent<Transform>("WieldPoint");
-            WeaponPoints["AimPoint"] = this.TryGetChildComponent<Transform>("AimPoint");
-            WeaponPoints["SwitchPoint"] = this.TryGetChildComponent<Transform>("SwitchPoint");
+            if (!IdlePivot) IdlePivot = this.TryGetChildComponent<Transform>("IdlePivot");
+            if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
         }
@@ -107,27 +101,32 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
-            stateMachine = new PlayerStateMachine(this);
-            stateMachine.ChangeState(stateMachine.IdleState);
+            StateMachine = new PlayerStateMachine(this);
+            StateMachine.ChangeState(StateMachine.IdleState);
         }
 
         private void FixedUpdate()
         {
-            stateMachine.PhysicsUpdate();
+            StateMachine.PhysicsUpdate();
         }
 
         // Update is called once per frame
         private void Update()
         {
-            stateMachine.HandleInput();
-            stateMachine.Update();
+            StateMachine.HandleInput();
+            StateMachine.Update();
             
             PlayerCondition.OnAttack();
         }
 
         private void LateUpdate()
         {
-            stateMachine.LateUpdate();
+            StateMachine.LateUpdate();
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position, -1);
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position);
             }
         }
 
@@ -150,7 +149,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position, -1);
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position);
             }
         }
     }
