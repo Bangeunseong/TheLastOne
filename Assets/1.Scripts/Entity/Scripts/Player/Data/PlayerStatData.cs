@@ -3,6 +3,21 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Data
 {
+    public enum FocusGainType
+    {
+        Kill,
+        HeadShot,
+        Hack,
+        Debug,
+    }
+
+    public enum InstinctGainType
+    {
+        Hit,
+        Idle,
+        Debug,
+    }
+    
     [CreateAssetMenu(fileName = "New PlayerData", menuName = "ScriptableObjects/Player", order = 0)]
     public class PlayerStatData : EntityStatData
     {
@@ -14,7 +29,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         public float focusSkillTime;
         
         public float instinctGaugeRefillRate_OnHit;
-        public float instinctGaugeRefillRate_OnDodge;
+        public float instinctGaugeRefillRate_OnIdle;
+        public float instinctSkillMultiplier;
         public float instinctSkillTime;
         
         [Header("Extra Movement")] 

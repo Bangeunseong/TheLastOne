@@ -1610,6 +1610,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8155339996397314302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4505315414103627003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4248442530935454826}
+  m_Layer: 8
+  m_Name: IdlePivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4248442530935454826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4505315414103627003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.678634, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6813290790807052004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4560392267096973846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1702,6 +1733,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4301125496992665280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4800157250568128466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7435609342157695372}
+  m_Layer: 8
+  m_Name: CrouchPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7435609342157695372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4800157250568128466}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6813290790807052004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4996008669840209236
 GameObject:
@@ -2746,14 +2808,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6813290790807052004}
-  - component: {fileID: 7058540756104092436}
+  - component: {fileID: 5119663800062279553}
   - component: {fileID: 7450652038461916066}
   - component: {fileID: 4066541975679567171}
   - component: {fileID: 3698284712353514345}
   - component: {fileID: 71050111894547790}
   - component: {fileID: 722777656224247020}
-  - component: {fileID: 691201347177147415}
-  - component: {fileID: 67553279180126853}
+  - component: {fileID: 884554410609251424}
+  - component: {fileID: 4498054374752332944}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -2775,10 +2837,12 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7885459064947503510}
+  - {fileID: 4248442530935454826}
+  - {fileID: 7435609342157695372}
   - {fileID: 8155339996397314302}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &7058540756104092436
+--- !u!143 &5119663800062279553
 CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2791,19 +2855,19 @@ CharacterController:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 31744
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Height: 1.8
-  m_Radius: 0.28
+  m_Height: 1.86
+  m_Radius: 0.3
   m_SlopeLimit: 45
-  m_StepOffset: 0.25
-  m_SkinWidth: 0.02
-  m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0.93, z: 0}
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.025
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.96, z: 0}
 --- !u!95 &7450652038461916066
 Animator:
   serializedVersion: 5
@@ -2816,7 +2880,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: cd9b8931d280a7149bfa865a96f9480f, type: 3}
   m_Controller: {fileID: 9100000, guid: f159e0da2b147a340b88e92df9006191, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2850,15 +2914,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Animator>k__BackingField: {fileID: 7450652038461916066}
-  <Controller>k__BackingField: {fileID: 7058540756104092436}
+  <Controller>k__BackingField: {fileID: 5119663800062279553}
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
-  <PlayerGravity>k__BackingField: {fileID: 691201347177147415}
-  <PlayerRecoil>k__BackingField: {fileID: 67553279180126853}
+  <PlayerGravity>k__BackingField: {fileID: 884554410609251424}
+  <PlayerRecoil>k__BackingField: {fileID: 4498054374752332944}
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
   <CameraPoint>k__BackingField: {fileID: 1977320588093521907}
+  <IdlePivot>k__BackingField: {fileID: 4248442530935454826}
+  <CrouchPivot>k__BackingField: {fileID: 7435609342157695372}
   <FirstPersonCamera>k__BackingField: {fileID: 0}
   <ThirdPersonCamera>k__BackingField: {fileID: 0}
   <InputProvider>k__BackingField: {fileID: 0}
@@ -2872,6 +2938,7 @@ MonoBehaviour:
     idleParameterName: Idle
     walkParameterName: Walk
     runParameterName: Run
+    crouchParameterName: Crouch
     aniSpeedMultiplierName: AniSpeedMultiplier
     normalAttackParameterName: Attack
     aimParameterName: Aim
@@ -2893,7 +2960,7 @@ MonoBehaviour:
     rifleToOtherWeaponClipTime: 1
     grenadeLauncherToOtherWeaponClipTime: 0.867
     weaponWieldClipTime: 1
-  stateMachine:
+  <StateMachine>k__BackingField:
     <CurrentStateName>k__BackingField: 
 --- !u!114 &71050111894547790
 MonoBehaviour:
@@ -2914,20 +2981,22 @@ MonoBehaviour:
   <CurrentStamina>k__BackingField: 0
   <CurrentFocusGauge>k__BackingField: 0
   <CurrentInstinctGauge>k__BackingField: 0
+  <CurrentSpeedMultiplier>k__BackingField: 1
   <Damage>k__BackingField: 0
   <AttackRate>k__BackingField: 0
   <Level>k__BackingField: 0
   <Experience>k__BackingField: 0
+  <IsCrouching>k__BackingField: 0
   <IsUsingFocus>k__BackingField: 0
   <IsUsingInstinct>k__BackingField: 0
   <IsPlayerHasControl>k__BackingField: 1
   <IsDead>k__BackingField: 0
   <Speed>k__BackingField: 0
   <JumpForce>k__BackingField: 0
+  <RotationDamping>k__BackingField: 10
   <CrouchSpeedModifier>k__BackingField: 0
   <WalkSpeedModifier>k__BackingField: 0
   <RunSpeedModifier>k__BackingField: 0
-  <RotationDamping>k__BackingField: 10
   <DamageConverters>k__BackingField:
   - {fileID: 5213505891759285764}
   - {fileID: 2502646783318653544}
@@ -2950,6 +3019,7 @@ MonoBehaviour:
   <Weapons>k__BackingField: []
   <AvailableWeapons>k__BackingField: 
   <EquippedWeaponIndex>k__BackingField: 0
+  <RecoilMultiplier>k__BackingField: 1
   <IsAttacking>k__BackingField: 0
   <IsSwitching>k__BackingField: 0
   <IsAiming>k__BackingField: 0
@@ -2973,7 +3043,7 @@ MonoBehaviour:
     m_Bits: 128
   detectedObject: {fileID: 0}
   timeSinceLastCheck: 0
---- !u!114 &691201347177147415
+--- !u!114 &884554410609251424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2985,15 +3055,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11b8f3241e6497694b35ea2bdf04f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 7058540756104092436}
   <Gravity>k__BackingField: -9.81
   <GroundedOffset>k__BackingField: -0.14
-  <GroundedRadius>k__BackingField: 0.28
+  <GroundedRadius>k__BackingField: 0.3
   <GroundLayers>k__BackingField:
     serializedVersion: 2
-    m_Bits: 201
+    m_Bits: 73
   <IsGrounded>k__BackingField: 1
---- !u!114 &67553279180126853
+--- !u!114 &4498054374752332944
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3951,11 +4020,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrenadeLauncher
       objectReference: {fileID: 0}
-    - target: {fileID: 1938967666044391636, guid: 23d6eede26f10b24d9b3bc8949eed0b8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8035344384111674640, guid: 23d6eede26f10b24d9b3bc8949eed0b8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4115,11 +4179,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hand
-      objectReference: {fileID: 0}
-    - target: {fileID: 1556690003787875055, guid: 55c497bd38c4e734fa58d765b2e9eb30,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1587384213491538809, guid: 55c497bd38c4e734fa58d765b2e9eb30,
         type: 3}

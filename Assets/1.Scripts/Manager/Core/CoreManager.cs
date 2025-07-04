@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Core
@@ -20,6 +19,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public ResourceManager resourceManager;
         [SerializeField] public ObjectPoolManager objectPoolManager;
         [SerializeField] public SoundManager soundManager;
+        [SerializeField] public TimeScaleManager timeScaleManager;
         
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
@@ -44,6 +44,7 @@ namespace _1.Scripts.Manager.Core
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
             soundManager = new SoundManager();
+            timeScaleManager = new TimeScaleManager();
         }
 
         private void Reset()
@@ -68,6 +69,7 @@ namespace _1.Scripts.Manager.Core
             objectPoolManager.Start();
             resourceManager.Start();
             soundManager.Start(audioSource);
+            timeScaleManager.Start();
 
             // gameManager.TryLoadSettingData().Wait();
             // if (gameManager.SettingData != null) { }
@@ -77,6 +79,7 @@ namespace _1.Scripts.Manager.Core
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
+            timeScaleManager.Update();
         }
 
         /// <summary>

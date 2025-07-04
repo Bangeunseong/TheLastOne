@@ -12,14 +12,19 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
     {
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
+        protected readonly CoreManager coreManager;
+        
         protected Coroutine staminaCoroutine;
-
+        protected Coroutine crouchCoroutine;
+        
         private float speed;
+        private float smoothVelocity;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
         {
             stateMachine = machine;
+            coreManager = CoreManager.Instance;
             playerCondition = stateMachine.Player.PlayerCondition;
         }
         
@@ -30,8 +35,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead || coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
+        }
+
+        public virtual void PhysicsUpdate()
+        {
+            
         }
 
         public virtual void Update()
@@ -47,11 +57,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var rotatedForward = baseRot * recoilRot * Vector3.forward;
             Rotate(rotatedForward);
-        }
-
-        public virtual void PhysicsUpdate()
-        {
-            if (CoreManager.Instance.gameManager.IsGamePaused) return;
         }
 
         public virtual void Exit()
@@ -85,40 +90,37 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var forward = stateMachine.MainCameraTransform.forward;
             var right = stateMachine.MainCameraTransform.right;
-
-
+            
             forward.y = 0;
             right.y = 0;
             
             forward.Normalize();
             right.Normalize();
             
-            return forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x;
+            return (forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x).normalized;
         }
 
         private void Move(Vector3 direction)
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
+            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
             
-            if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            {
-                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * 5f);
-            }
-            else speed = targetSpeed;
+            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
+                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Controller.Move(direction * (speed * Time.deltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.deltaTime);
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            
+            stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -131,12 +133,50 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var unitDirection = new Vector3(direction.x, 0, direction.z);
             var targetRotation = Quaternion.LookRotation(unitDirection);
-            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
+            unitTransform.rotation = Quaternion.Slerp(unitTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.unscaledDeltaTime);
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
         }
 
+        protected IEnumerator Crouch_Coroutine(bool isCrouch, float duration)
+        {
+            var currentPosition = stateMachine.Player.CameraPivot.localPosition;
+            var targetPosition = !isCrouch
+                ? stateMachine.Player.IdlePivot.localPosition
+                : stateMachine.Player.CrouchPivot.localPosition;
+
+            float t = 0;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float elapsed = t / duration;
+                stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
+                yield return null;
+            }
+            
+            stateMachine.Player.CameraPivot.localPosition = targetPosition;
+            crouchCoroutine = null;
+        }
+
+        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
+        {
+            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
+            {
+                playerCondition.OnRecoverStamina(recoverRate);
+                yield return new WaitForSecondsRealtime(interval);
+            }
+        }
+        
+        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
+        {
+            while (playerCondition.CurrentStamina > 0)
+            {
+                playerCondition.OnConsumeStamina(consumeRate);
+                yield return new WaitForSecondsRealtime(interval);
+            }
+        }
+        
         private void AddInputActionCallbacks()
         {
             var playerInput = stateMachine.Player.PlayerInput;
@@ -154,6 +194,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started += OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
         }
         
         private void RemoveInputActionCallbacks()
@@ -173,26 +215,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
-        }
-
-        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
-        {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
-            {
-                playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSeconds(interval);
-            }
+            playerInput.PlayerActions.Focus.started -= OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
         }
         
-        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
-        {
-            while (playerCondition.CurrentStamina > 0)
-            {
-                playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSeconds(interval);
-            }
-        }
-
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
         protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
@@ -223,7 +249,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             playerCondition.IsAttacking = false;
         }
-        
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
             
@@ -231,7 +256,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* ---------------------------- */
         
         /* - Weapon Switch 관련 메소드 - */
-        protected virtual void OnSwitchToMain(InputAction.CallbackContext context)
+        private void OnSwitchToMain(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -240,7 +265,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
-        protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
+        private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -249,7 +274,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
-        protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
+        private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
 
@@ -258,7 +283,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
-        protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
+        private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -307,12 +332,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeFocusGauge()) return;
-            
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeInstinctGauge()) return;
-            
         }
         /* -------------------- */
     }
