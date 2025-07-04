@@ -8,12 +8,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         Kill,
         HeadShot,
         Hack,
+        Debug,
     }
 
     public enum InstinctGainType
     {
         Hit,
         Idle,
+        Debug,
     }
     
     [CreateAssetMenu(fileName = "New PlayerData", menuName = "ScriptableObjects/Player", order = 0)]

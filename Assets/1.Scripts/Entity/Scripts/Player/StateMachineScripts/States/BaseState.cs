@@ -12,8 +12,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
     {
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
+        protected readonly CoreManager coreManager;
+        
         protected Coroutine staminaCoroutine;
-
+        protected Coroutine crouchCoroutine;
+        
         private float speed;
         private float smoothVelocity;
         private Vector3 recoilEuler;
@@ -21,6 +24,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         public BaseState(PlayerStateMachine machine)
         {
             stateMachine = machine;
+            coreManager = CoreManager.Instance;
             playerCondition = stateMachine.Player.PlayerCondition;
         }
         
@@ -31,8 +35,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (playerCondition.IsDead || coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
+        }
+
+        public virtual void PhysicsUpdate()
+        {
+            
         }
 
         public virtual void Update()
@@ -48,11 +57,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var rotatedForward = baseRot * recoilRot * Vector3.forward;
             Rotate(rotatedForward);
-        }
-
-        public virtual void PhysicsUpdate()
-        {
-            if (CoreManager.Instance.gameManager.IsGamePaused) return;
         }
 
         public virtual void Exit()
@@ -86,38 +90,31 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var forward = stateMachine.MainCameraTransform.forward;
             var right = stateMachine.MainCameraTransform.right;
-
-
+            
             forward.y = 0;
             right.y = 0;
             
             forward.Normalize();
             right.Normalize();
             
-            return forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x;
+            return (forward * stateMachine.MovementDirection.y + right * stateMachine.MovementDirection.x).normalized;
         }
 
         private void Move(Vector3 direction)
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
-            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f,  stateMachine.Player.Controller.velocity.z).magnitude;
-            
-            // Deprecated Mechanism (Damping이 훨씬 자연스러움)
-            // if (!Mathf.Approximately(currentHorizontalSpeed, targetSpeed))
-            // {
-            //     speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-            //         ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
-            // }
-            // else speed = targetSpeed;
+            var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
             
             speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-                ref smoothVelocity, 0.15f, Mathf.Infinity, Time.unscaledDeltaTime);
+                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+            
             stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
         
@@ -142,42 +139,24 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             cameraPivotTransform.rotation = cameraTargetRotation;
         }
 
-        private void AddInputActionCallbacks()
+        protected IEnumerator Crouch_Coroutine(bool isCrouch, float duration)
         {
-            var playerInput = stateMachine.Player.PlayerInput;
-            playerInput.PlayerActions.Move.canceled += OnMoveCanceled;
-            playerInput.PlayerActions.Jump.started += OnJumpStarted;
-            playerInput.PlayerActions.Run.started += OnRunStarted;
-            playerInput.PlayerActions.Crouch.started += OnCrouchStarted;
-            playerInput.PlayerActions.Reload.started += OnReloadStarted;
-            playerInput.PlayerActions.Interact.started += OnInteractStarted;
-            playerInput.PlayerActions.Aim.started += OnAimStarted;
-            playerInput.PlayerActions.Aim.canceled += OnAimCanceled;
-            playerInput.PlayerActions.Fire.started += OnFireStarted;
-            playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
-            playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
-            playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
-            playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
-            playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
-        }
-        
-        private void RemoveInputActionCallbacks()
-        {
-            var playerInput = stateMachine.Player.PlayerInput;
-            playerInput.PlayerActions.Move.canceled -= OnMoveCanceled;
-            playerInput.PlayerActions.Jump.started -= OnJumpStarted;
-            playerInput.PlayerActions.Run.started -= OnRunStarted;
-            playerInput.PlayerActions.Crouch.started -= OnCrouchStarted;
-            playerInput.PlayerActions.Reload.started -= OnReloadStarted;
-            playerInput.PlayerActions.Interact.started -= OnInteractStarted;
-            playerInput.PlayerActions.Aim.started -= OnAimStarted;
-            playerInput.PlayerActions.Aim.canceled -= OnAimCanceled;
-            playerInput.PlayerActions.Fire.started -= OnFireStarted;
-            playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
-            playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
-            playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
-            playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
-            playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            var currentPosition = stateMachine.Player.CameraPivot.localPosition;
+            var targetPosition = !isCrouch
+                ? stateMachine.Player.IdlePivot.localPosition
+                : stateMachine.Player.CrouchPivot.localPosition;
+
+            float t = 0;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float elapsed = t / duration;
+                stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
+                yield return null;
+            }
+            
+            stateMachine.Player.CameraPivot.localPosition = targetPosition;
+            crouchCoroutine = null;
         }
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
@@ -197,7 +176,49 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
-
+        
+        private void AddInputActionCallbacks()
+        {
+            var playerInput = stateMachine.Player.PlayerInput;
+            playerInput.PlayerActions.Move.canceled += OnMoveCanceled;
+            playerInput.PlayerActions.Jump.started += OnJumpStarted;
+            playerInput.PlayerActions.Run.started += OnRunStarted;
+            playerInput.PlayerActions.Crouch.started += OnCrouchStarted;
+            playerInput.PlayerActions.Reload.started += OnReloadStarted;
+            playerInput.PlayerActions.Interact.started += OnInteractStarted;
+            playerInput.PlayerActions.Aim.started += OnAimStarted;
+            playerInput.PlayerActions.Aim.canceled += OnAimCanceled;
+            playerInput.PlayerActions.Fire.started += OnFireStarted;
+            playerInput.PlayerActions.Fire.canceled += OnFireCanceled;
+            playerInput.PlayerActions.SwitchWeapon.performed += OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started += OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
+        }
+        
+        private void RemoveInputActionCallbacks()
+        {
+            var playerInput = stateMachine.Player.PlayerInput;
+            playerInput.PlayerActions.Move.canceled -= OnMoveCanceled;
+            playerInput.PlayerActions.Jump.started -= OnJumpStarted;
+            playerInput.PlayerActions.Run.started -= OnRunStarted;
+            playerInput.PlayerActions.Crouch.started -= OnCrouchStarted;
+            playerInput.PlayerActions.Reload.started -= OnReloadStarted;
+            playerInput.PlayerActions.Interact.started -= OnInteractStarted;
+            playerInput.PlayerActions.Aim.started -= OnAimStarted;
+            playerInput.PlayerActions.Aim.canceled -= OnAimCanceled;
+            playerInput.PlayerActions.Fire.started -= OnFireStarted;
+            playerInput.PlayerActions.Fire.canceled -= OnFireCanceled;
+            playerInput.PlayerActions.SwitchWeapon.performed -= OnSwitchByScroll;
+            playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
+            playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
+            playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            playerInput.PlayerActions.Focus.started -= OnFocusStarted;
+            playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
+        }
+        
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
         protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
@@ -228,7 +249,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             playerCondition.IsAttacking = false;
         }
-        
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
             
@@ -236,7 +256,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* ---------------------------- */
         
         /* - Weapon Switch 관련 메소드 - */
-        protected virtual void OnSwitchToMain(InputAction.CallbackContext context)
+        private void OnSwitchToMain(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -245,7 +265,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
-        protected virtual void OnSwitchToSecondary(InputAction.CallbackContext context)
+        private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -254,7 +274,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
-        protected virtual void OnSwitchToGrenade(InputAction.CallbackContext context)
+        private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
 
@@ -263,7 +283,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
-        protected virtual void OnSwitchByScroll(InputAction.CallbackContext context)
+        private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
@@ -312,12 +332,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeFocusGauge()) return;
-            
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
             if (!playerCondition.OnConsumeInstinctGauge()) return;
-            
         }
         /* -------------------- */
     }
