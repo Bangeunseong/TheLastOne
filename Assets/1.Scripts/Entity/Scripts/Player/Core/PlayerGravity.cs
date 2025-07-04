@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {

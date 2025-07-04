@@ -1,5 +1,4 @@
-﻿using System;
-using _1.Scripts.Interfaces.Common;
+﻿using _1.Scripts.Interfaces.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
