@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -27,22 +26,26 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CurrentStamina { get; private set; }
         [field: SerializeField] public float CurrentFocusGauge { get; private set; }
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
+        [field: SerializeField] public float CurrentSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
+        [field: SerializeField] public bool IsCrouching { get; set; }
         [field: SerializeField] public bool IsUsingFocus { get; set; }
         [field: SerializeField] public bool IsUsingInstinct { get; set; }
         [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
-        [field: Header("Current Physics Data")]
+        [field: Header("Current Physics Data")] 
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
+        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
+
+        [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
-        [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
         
         [field: Header("Damage Converters")]
         [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
@@ -59,6 +62,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         [field: Header("Weapon States")]
         [field: SerializeField] public int EquippedWeaponIndex { get; private set; }
+        [field: SerializeField] public float RecoilMultiplier { get; private set; } = 1f;
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
@@ -67,10 +71,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Coroutine Fields
         private CoreManager coreManager;
         private Player player;
-        private Coroutine switchCoroutine;
-        private Coroutine aimCoroutine;
-        private Coroutine reloadCoroutine;
         private SoundPlayer reloadPlayer;
+        
+        private Coroutine switchCoroutine; 
+        private Coroutine aimCoroutine; 
+        private Coroutine reloadCoroutine;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -100,9 +105,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
+            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
             
             foreach(var converter in DamageConverters) converter.Initialize(this);
             Initialize(coreManager.gameManager.SaveData);
+            StartCoroutine(InstinctRecover_Coroutine(1));
         }
 
         /// <summary>
@@ -155,7 +162,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             
-            coreManager.gameManager.Player.Controller.enabled = true;
+            player.Controller.enabled = true;
+        }
+        
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         /// <summary>
@@ -208,10 +220,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
         public bool OnConsumeFocusGauge(float value = 1f)
         {
-            if (IsDead) return false;
-            if (CurrentFocusGauge < value) return false;
-            if (IsUsingFocus) return false;
+            if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
+            OnFocusEngaged();
             return true;
         }
 
@@ -219,10 +230,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// Recover Focus Point
         /// </summary>
         /// <param name="value">Value to recover focus</param>
-        public void OnRecoverFocusGauge(float value)
+        public void OnRecoverFocusGauge(FocusGainType value)
         {
-            if (IsDead) return;
-            CurrentFocusGauge = Mathf.Min(CurrentFocusGauge + value, 1f);
+            if (IsDead || IsUsingFocus || IsUsingInstinct) return;
+            
+            CurrentFocusGauge = value switch
+            {
+                FocusGainType.Kill => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnKill, 1f),
+                FocusGainType.HeadShot => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHeadShot, 1f),
+                FocusGainType.Hack => Mathf.Min(CurrentFocusGauge + StatData.focusGaugeRefillRate_OnHacked, 1f),
+                FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
 
         /// <summary>
@@ -232,10 +251,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
         public bool OnConsumeInstinctGauge(float value = 1f)
         {
-            if (IsDead) return false;
-            if (CurrentInstinctGauge < value) return false;
-            if (IsUsingInstinct) return false;
+            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            OnInstinctEngaged();
             return true;
         }
         
@@ -243,10 +261,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// Recover Instinct Point
         /// </summary>
         /// <param name="value">Value to recover instinct</param>
-        public void OnRecoverInstinctGauge(float value)
+        public void OnRecoverInstinctGauge(InstinctGainType value)
         {
-            if (IsDead) return;
-            CurrentInstinctGauge = Mathf.Min(CurrentInstinctGauge + value, 1f);
+            if (IsDead || IsUsingInstinct || IsUsingFocus) return;
+
+            CurrentInstinctGauge = value switch
+            {
+                InstinctGainType.Idle => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnIdle, 1f),
+                InstinctGainType.Hit => Mathf.Min(CurrentInstinctGauge + StatData.instinctGaugeRefillRate_OnHit, 1f),
+                InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
         
         public void OnTakeExp(int exp)
@@ -315,7 +340,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             var time = 0f;
             while (time < transitionTime)
             {
-                time += Time.deltaTime;
+                time += Time.unscaledDeltaTime;
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 player.FirstPersonCamera.m_Lens.FieldOfView = value;
@@ -422,7 +447,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 gun.IsReloading = true;
                 IsReloading = true;
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
                 gun.OnReload();
                 IsReloading = false;
                 gun.IsReloading = false;
@@ -444,7 +469,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 grenadeLauncher.IsReloading = true;
                 IsReloading = true;
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSecondsRealtime(interval);
                 grenadeLauncher.OnReload();
                 IsReloading = false;
                 grenadeLauncher.IsReloading = false;
@@ -498,7 +523,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
-            yield return new WaitForSeconds(duration);
+            yield return new WaitForSecondsRealtime(duration);
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
@@ -506,10 +531,52 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             yield return new WaitForEndOfFrame();
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
-            yield return new WaitForSeconds(duration);
+            yield return new WaitForSecondsRealtime(duration);
             switchCoroutine = null;
             IsSwitching = false;
         }
         /* --------------------- */
+        
+        /* - Skill 관련 메소드 - */
+        private void OnFocusEngaged()
+        {
+            StartCoroutine(Focus_Coroutine(StatData.focusSkillTime));
+        }
+        private IEnumerator Focus_Coroutine(float duration)
+        {
+            IsUsingFocus = true;
+            coreManager.timeScaleManager.ChangeTimeScale(0.5f);
+            RecoilMultiplier = 0.5f;
+            yield return new WaitForSecondsRealtime(duration);
+            RecoilMultiplier = 1f;
+            coreManager.timeScaleManager.ChangeTimeScale(1f);
+            IsUsingFocus = false;
+        }
+        private void OnInstinctEngaged()
+        {
+            StartCoroutine(Instinct_Coroutine(StatData.instinctSkillTime));
+        }
+        private IEnumerator Instinct_Coroutine(float duration)
+        {
+            IsUsingInstinct = true;
+            
+            // TODO: Turn On Enemy Silhouette (By using spawn manager)
+            CurrentSpeedMultiplier = StatData.instinctSkillMultiplier;
+            yield return new WaitForSecondsRealtime(duration);
+            CurrentSpeedMultiplier = 1f;
+            // TODO: Turn Off Enemy Silhouette
+            
+            IsUsingInstinct = false;
+        }
+
+        private IEnumerator InstinctRecover_Coroutine(float delay)
+        {
+            while (!IsDead)
+            {
+                yield return new WaitForSecondsRealtime(delay);
+                OnRecoverInstinctGauge(InstinctGainType.Idle);
+            }
+        }
+        /* -------------------- */
     }
 }

@@ -1,12 +1,8 @@
-using System;
-using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using AYellowpaper.SerializedCollections;
 using Cinemachine;
-using Unity.Collections;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -29,6 +25,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
         [field: SerializeField] public Transform CameraPivot { get; private set; }
         [field: SerializeField] public Transform CameraPoint { get; private set; }
+        [field: SerializeField] public Transform IdlePivot { get; private set; }
+        [field: SerializeField] public Transform CrouchPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
         [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
@@ -42,8 +40,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: Header("Animation Data")] 
         [field: SerializeField] public AnimationData AnimationData { get; private set; } 
         
-        [Header("StateMachine")] 
-        [SerializeField] private PlayerStateMachine stateMachine;
+        [field: Header("StateMachine")] 
+        [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
         
         // Properties
         public Camera cam { get; private set; }
@@ -60,7 +58,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
-
+            if (!IdlePivot) IdlePivot = this.TryGetChildComponent<Transform>("IdlePivot");
+            if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
+            
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
@@ -81,6 +81,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
+            if (!IdlePivot) IdlePivot = this.TryGetChildComponent<Transform>("IdlePivot");
+            if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
@@ -99,27 +101,32 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
-            stateMachine = new PlayerStateMachine(this);
-            stateMachine.ChangeState(stateMachine.IdleState);
+            StateMachine = new PlayerStateMachine(this);
+            StateMachine.ChangeState(StateMachine.IdleState);
         }
 
         private void FixedUpdate()
         {
-            stateMachine.PhysicsUpdate();
+            StateMachine.PhysicsUpdate();
         }
 
         // Update is called once per frame
         private void Update()
         {
-            stateMachine.HandleInput();
-            stateMachine.Update();
+            StateMachine.HandleInput();
+            StateMachine.Update();
             
             PlayerCondition.OnAttack();
         }
 
         private void LateUpdate()
         {
-            stateMachine.LateUpdate();
+            StateMachine.LateUpdate();
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         /// <summary>

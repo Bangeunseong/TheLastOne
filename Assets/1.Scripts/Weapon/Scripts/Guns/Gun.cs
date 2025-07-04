@@ -62,7 +62,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void Update()
         {
             if (!IsRecoiling) return;
-            timeSinceLastShotFired += Time.deltaTime;
+            timeSinceLastShotFired += Time.unscaledDeltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;
             timeSinceLastShotFired = 0f;
@@ -126,7 +126,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             
             IsRecoiling = true;
-            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil);
+            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
             if (lightCurves) StartCoroutine(Flicker());
@@ -196,6 +196,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 {
                     if (!player!.PlayerCondition.IsAiming)
                     {
+                        var distance = Vector3.Distance(hit.point, face.position);
+                        randomCirclePoint *= distance / GunData.GunStat.MaxWeaponRange;
                         targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
                     } else targetPoint = hit.point;
                 }
@@ -221,7 +223,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private IEnumerator Flicker()
         {
             lightCurves.gameObject.SetActive(true);
-            yield return new WaitForSeconds(lightCurves.GraphTimeMultiplier);
+            yield return new WaitForSecondsRealtime(lightCurves.GraphTimeMultiplier);
             lightCurves.gameObject.SetActive(false);
         }
     }
