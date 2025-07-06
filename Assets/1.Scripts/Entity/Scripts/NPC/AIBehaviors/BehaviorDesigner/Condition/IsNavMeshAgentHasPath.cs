@@ -12,10 +12,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 	public class IsNavMeshAgentHasPath : Conditional
 	{
 		public SharedNavMeshAgent agent;
+		public SharedVector3 targetPosition;
 		
 		public override TaskStatus OnUpdate()
 		{
-			if (agent.Value.remainingDistance < 0.1f || !agent.Value.hasPath)
+			if (!agent.Value.hasPath && targetPosition.Value == Vector3.zero)
 			{
 				return TaskStatus.Success;
 			}
