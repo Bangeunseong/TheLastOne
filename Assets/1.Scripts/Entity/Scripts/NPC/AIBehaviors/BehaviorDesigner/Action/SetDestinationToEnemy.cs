@@ -11,12 +11,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 	[TaskDescription("SetDestinationToEnemy")]
 	public class SetDestinationToEnemy : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
+		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		public SharedNavMeshAgent navMeshAgent;
 		public SharedBaseNpcStatController statController;
 		public SharedBool shouldLookTarget;
 		public SharedBool shouldInterruptible;
+		public SharedFloat stoppingDistance;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -37,8 +39,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			navMeshAgent.Value.speed = statController.Value.RuntimeStatData.moveSpeed + statController.Value.RuntimeStatData.runMultiplier;
 			shouldLookTarget.Value = true;
-
-			if (NavMesh.SamplePosition(targetTransform.Value.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+			
+			Vector3 directionToEnemy = (targetTransform.Value.position - selfTransform.Value.position).normalized;
+			Vector3 targetSpot = targetTransform.Value.position - directionToEnemy * stoppingDistance.Value;
+			
+			if (NavMesh.SamplePosition(targetSpot, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
 			{
 				shouldInterruptible.Value = true;
 				navMeshAgent.Value.SetDestination(hit.position);
