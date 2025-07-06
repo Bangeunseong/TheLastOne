@@ -1610,6 +1610,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8155339996397314302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4505315414103627003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4248442530935454826}
+  m_Layer: 8
+  m_Name: IdlePivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4248442530935454826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4505315414103627003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.678634, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6813290790807052004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4560392267096973846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1702,6 +1733,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4301125496992665280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4800157250568128466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7435609342157695372}
+  m_Layer: 8
+  m_Name: CrouchPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7435609342157695372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4800157250568128466}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6813290790807052004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4996008669840209236
 GameObject:
@@ -2775,6 +2837,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7885459064947503510}
+  - {fileID: 4248442530935454826}
+  - {fileID: 7435609342157695372}
   - {fileID: 8155339996397314302}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2795,7 +2859,7 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Height: 1.86
   m_Radius: 0.3
@@ -2850,7 +2914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Animator>k__BackingField: {fileID: 7450652038461916066}
-  <Controller>k__BackingField: {fileID: 0}
+  <Controller>k__BackingField: {fileID: 5119663800062279553}
   <PlayerInput>k__BackingField: {fileID: 4066541975679567171}
   <PlayerCondition>k__BackingField: {fileID: 71050111894547790}
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
@@ -2859,6 +2923,8 @@ MonoBehaviour:
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
   <CameraPoint>k__BackingField: {fileID: 1977320588093521907}
+  <IdlePivot>k__BackingField: {fileID: 4248442530935454826}
+  <CrouchPivot>k__BackingField: {fileID: 7435609342157695372}
   <FirstPersonCamera>k__BackingField: {fileID: 0}
   <ThirdPersonCamera>k__BackingField: {fileID: 0}
   <InputProvider>k__BackingField: {fileID: 0}
@@ -2872,6 +2938,7 @@ MonoBehaviour:
     idleParameterName: Idle
     walkParameterName: Walk
     runParameterName: Run
+    crouchParameterName: Crouch
     aniSpeedMultiplierName: AniSpeedMultiplier
     normalAttackParameterName: Attack
     aimParameterName: Aim
@@ -2919,14 +2986,11 @@ MonoBehaviour:
   <AttackRate>k__BackingField: 0
   <Level>k__BackingField: 0
   <Experience>k__BackingField: 0
+  <IsCrouching>k__BackingField: 0
   <IsUsingFocus>k__BackingField: 0
   <IsUsingInstinct>k__BackingField: 0
   <IsPlayerHasControl>k__BackingField: 1
   <IsDead>k__BackingField: 0
-  <StepRayUpper>k__BackingField: {fileID: 0}
-  <StepRayLower>k__BackingField: {fileID: 0}
-  <StepHeight>k__BackingField: 0.3
-  <StepSmooth>k__BackingField: 0.1
   <Speed>k__BackingField: 0
   <JumpForce>k__BackingField: 0
   <RotationDamping>k__BackingField: 10

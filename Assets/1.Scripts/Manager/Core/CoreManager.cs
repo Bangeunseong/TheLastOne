@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Core

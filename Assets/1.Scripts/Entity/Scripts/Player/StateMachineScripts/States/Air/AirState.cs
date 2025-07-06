@@ -11,6 +11,14 @@
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             
+            // Cancel Crouch
+            if (playerCondition.IsCrouching)
+            {
+                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
+                crouchCoroutine =
+                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching = false, 0.1f));
+            }
+            
             // Stop Reload Coroutine
             playerCondition.TryCancelReload();
         }
