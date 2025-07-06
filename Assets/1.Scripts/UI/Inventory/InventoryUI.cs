@@ -17,10 +17,10 @@ namespace _1.Scripts.UI.Inventory
         [Header("Slot Buttons")]
         public List<Button> slotButtons;
         
-        [Header("Preview")]
+        /*[Header("Preview")]
         public Transform previewContainer;
         public RawImage previewRawImage;
-        public RenderTexture previewTexture;
+        public RenderTexture previewTexture;*/
 
         [Header("StatsUI")] public Slider damageSlider;
         public Slider rpmSlider;
@@ -56,7 +56,7 @@ namespace _1.Scripts.UI.Inventory
         private void Start()
         {
             playerCondition = FindObjectOfType<PlayerCondition>();
-            if (previewContainer == null)
+            /*if (previewContainer == null)
             {
                 var containerGO = GameObject.Find("PreviewContainer");
                 if (containerGO != null)
@@ -79,7 +79,7 @@ namespace _1.Scripts.UI.Inventory
             else
             {
                 Service.Log("InventoryUI: Texture가 할당되지 않음");
-            }
+            }*/
             CalculateMaxStats();
             InitializeSlots();
         }
@@ -155,7 +155,7 @@ namespace _1.Scripts.UI.Inventory
             if (weapon == null || weapon.name == "Hand")
                 return;
             
-            if (currentPreview != null) Destroy(currentPreview);
+            /*if (currentPreview != null) Destroy(currentPreview);
 
             if (previewContainer == null)
             {
@@ -169,7 +169,7 @@ namespace _1.Scripts.UI.Inventory
             currentPreview.SetActive(true);
             
             int layer = LayerMask.NameToLayer(PreviewLayerName);
-            SetLayerRecursively(currentPreview, layer);
+            SetLayerRecursively(currentPreview, layer);*/
 
             if (weapon is Gun gun)
                 UpdateStats(gun.GunData.GunStat, gun.MaxAmmoCountInMagazine, gun.GunData.GunStat.Rpm,
