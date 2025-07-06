@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
@@ -48,12 +50,21 @@ public class Unit_DroneBot : MonoBehaviour
 	void f_hit() //hit
 	{
 		// 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:3);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
 		if (gotDamagedCoroutine != null)
 		{
 			StopCoroutine(gotDamagedCoroutine);
 		}
-		gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
+
+		var statController = behaviorTree.GetVariable("statController") as SharedBaseNpcStatController;
+
+		if (statController != null && statController.Value is IStunnable stunnable)
+		{
+			if (!stunnable.IsStunned)
+			{
+				gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
+			}
+		}
 	}
 
 	private IEnumerator DamagedParticleCoroutine()

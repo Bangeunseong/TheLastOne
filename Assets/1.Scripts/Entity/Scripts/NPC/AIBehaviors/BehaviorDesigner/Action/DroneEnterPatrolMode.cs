@@ -10,9 +10,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 	[TaskDescription("DroneEnterPatrolMode")]
 	public class DroneEnterPatrolMode : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
-		public SharedLight enemyLight;
-		public SharedLight allyLight;
-		
 		public SharedBool shouldLookTarget;
 		public SharedAnimator animator;
 		
@@ -27,9 +24,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			{
 				animator.Value.SetTrigger(DroneAnimationHashData.Idle1);
 			}
-
-			enemyLight.Value.enabled = false;
-			allyLight.Value.enabled = false;
 			
 			shouldLookTarget.Value = false; // 보통 노드구조 맨 끝자락에 배회할때 쓰니까 추가
 			

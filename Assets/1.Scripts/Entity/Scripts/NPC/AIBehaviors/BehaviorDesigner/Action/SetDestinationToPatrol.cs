@@ -15,6 +15,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedBaseNpcStatController statController;
 		public SharedNavMeshAgent agent;
 		
+		public SharedLight enemyLight;
+		public SharedLight allyLight;
+
 		public override TaskStatus OnUpdate()
 		{
 			agent.Value.speed = statController.Value.RuntimeStatData.moveSpeed;
@@ -23,6 +26,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			Vector3 targetPosition = GetWanderLocation();
 			
 			agent.Value.SetDestination(targetPosition);
+			
+			enemyLight.Value.enabled = false;
+			allyLight.Value.enabled = false;
 			
 			return TaskStatus.Success;
 		}

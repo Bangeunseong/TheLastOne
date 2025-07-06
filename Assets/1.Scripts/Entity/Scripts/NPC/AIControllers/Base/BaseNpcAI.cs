@@ -128,7 +128,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
 
         public virtual void HackingNpc()
         {
-            statController.Hacking();
             SetLayerRecursively(gameObject, LayerConstants.Ally);
         }
 

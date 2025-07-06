@@ -10,7 +10,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     /// <summary>
     /// Npc 스텟 공통로직 정의
     /// </summary>
-    public abstract class BaseNpcStatController : MonoBehaviour, IDamagable, IHackable
+    public abstract class BaseNpcStatController : MonoBehaviour
     {
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
@@ -21,9 +21,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         
         public bool isDead = false;
         public bool isAlly;
-        
-        public abstract void OnTakeDamage(int damage); // 데미지 입을 시 
-        public abstract void Hacking(); // 해킹당할 시
         
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯에 특정 인터페이스가 있는지 검사 후, 그 인터페이스를 반환

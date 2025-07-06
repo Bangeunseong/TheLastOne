@@ -4,13 +4,15 @@ using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Interfaces.Common;
+using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 {
-    public class SuicideDroneStatController : BaseNpcStatController
+    public class SuicideDroneStatController : BaseNpcStatController, IDamagable, IHackable
     {
         private RuntimeSuicideDroneStatData runtimeSuicideDroneStatData;
         public override RuntimeEntityStatData RuntimeStatData => runtimeSuicideDroneStatData; // 부모에게 자신의 스탯 전송
@@ -32,7 +34,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             canRun = behaviorTree.GetVariable("CanRun") as SharedBool;
         }
 
-        public override void OnTakeDamage(int damage)
+        public void OnTakeDamage(int damage)
         {
             if (!isDead)
             {
@@ -74,7 +76,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             Destroy(gameObject);
         }
 
-        public override void Hacking()
+        public void Hacking()
         {
             runtimeSuicideDroneStatData.isAlly = true;
         }

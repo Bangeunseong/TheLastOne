@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace  _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
+namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 {
     public class AIControlWithAnimationEvent : MonoBehaviour
     {
-        public BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
+        private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
 
         private void Awake()
         {
@@ -23,7 +24,19 @@ namespace  _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void AIOnForAnimationEvent()
         {
-            behaviorTree.SetVariableValue("CanRun", true);
+            var statController = behaviorTree.GetVariable("statController") as SharedBaseNpcStatController;
+
+            if (statController != null && statController.Value is IStunnable stunnable)
+            {
+                if (!stunnable.IsStunned)
+                {
+                    behaviorTree.SetVariableValue("CanRun", true);
+                }
+            }
+            else
+            {
+                behaviorTree.SetVariableValue("CanRun", true);
+            }
         }
 
         public void SetDestinationNullForAnimationEvent()
