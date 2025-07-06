@@ -11,7 +11,7 @@ namespace _1.Scripts.Item.Items
         public override void Initialize(CoreManager coreManager, DataTransferObject dto = null)
         {
             ItemData = coreManager.resourceManager.GetAsset<ItemData>("Medkit");
-            // TODO: Initialize Current Count of item
+            if (dto != null) { CurrentItemCount = dto.Items[(int)ItemData.ItemType]; }
         }
         public override void OnUse(GameObject interactor)
         {

@@ -12,7 +12,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [field: Header("Items")]
         [field: SerializeField] public SerializedDictionary<ItemType, BaseItem> Items { get; private set; }
-
+        [field: SerializeField] public ItemType CurrentItem { get; private set; }
+        
         private CoreManager coreManager;
         
         private void Start()
@@ -38,6 +39,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 item.Initialize(coreManager, dto);
                 if (Items.TryAdd(type, item)) Service.Log($"Successfully added {type}.");
             }
+        }
+
+        public void OnSelectItem(ItemType itemType)
+        {
+            CurrentItem = itemType;
+        }
+        
+        public void OnUseItem()
+        {
+            Items[CurrentItem].OnUse(gameObject);
         }
     }
 }

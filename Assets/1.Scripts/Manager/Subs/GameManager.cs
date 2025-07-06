@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
@@ -46,6 +47,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
 
+            // Save Current Character Info.
             var save = new DataTransferObject
             {
                 characterInfo = new CharacterInfo
@@ -54,12 +56,14 @@ namespace _1.Scripts.Manager.Subs
                     maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
                     attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
                     level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
+                    focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
                 currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
                 currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
             };
 
+            // Save Current Weapon Infos
             var newWeaponInfo = new List<WeaponInfo>();
             var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
             foreach (var weapon in Player.PlayerCondition.Weapons)
@@ -81,10 +85,13 @@ namespace _1.Scripts.Manager.Subs
                         break;
                 }
             }
-
             save.Weapons = newWeaponInfo.ToArray();
             save.AvailableWeapons = newAvailableWeapons.ToArray();
 
+            // Save Current Item Infos
+            var newItemCountList = (from ItemType type in Enum.GetValues(typeof(ItemType)) select Player.PlayerInventory.Items[type].CurrentItemCount).ToList();
+            save.Items = newItemCountList.ToArray();
+            
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
             await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);
         }

@@ -157,6 +157,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 AttackRate = data.characterInfo.attackRate; Damage = data.characterInfo.damage;
                 LastSavedPosition = data.currentCharacterPosition.ToVector3();
                 LastSavedRotation = data.currentCharacterRotation.ToQuaternion();
+                CurrentFocusGauge = data.characterInfo.focusGauge;
+                CurrentInstinctGauge = data.characterInfo.instinctGauge;
                 
                 Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
