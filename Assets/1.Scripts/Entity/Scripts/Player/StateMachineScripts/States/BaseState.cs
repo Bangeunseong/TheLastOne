@@ -120,7 +120,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.SkillSpeedMultiplier * playerCondition.ItemSpeedMultiplier;
             return movementSpeed;
         }
 

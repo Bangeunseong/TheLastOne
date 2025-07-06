@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Data;
+using _1.Scripts.Item.Common;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -26,14 +28,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CurrentStamina { get; private set; }
         [field: SerializeField] public float CurrentFocusGauge { get; private set; }
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
-        [field: SerializeField] public float CurrentSpeedMultiplier { get; private set; } = 1f;
+        [field: SerializeField] public float SkillSpeedMultiplier { get; private set; } = 1f;
+        [field: SerializeField] public float ItemSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public int Experience { get; private set; }
         [field: SerializeField] public bool IsCrouching { get; set; }
-        [field: SerializeField] public bool IsUsingFocus { get; set; }
-        [field: SerializeField] public bool IsUsingInstinct { get; set; }
+        [field: SerializeField] public bool IsUsingFocus { get; private set; }
+        [field: SerializeField] public bool IsUsingInstinct { get; private set; }
         [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
@@ -76,6 +79,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Coroutine switchCoroutine; 
         private Coroutine aimCoroutine; 
         private Coroutine reloadCoroutine;
+        public Coroutine itemCoroutine;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -105,11 +109,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
-            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
             
-            foreach(var converter in DamageConverters) converter.Initialize(this);
+            // Initialize Player Stat.
             Initialize(coreManager.gameManager.SaveData);
-            StartCoroutine(InstinctRecover_Coroutine(1));
         }
 
         /// <summary>
@@ -118,6 +120,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <param name="data">DataTransferObject of Saved Data</param>
         public void Initialize(DataTransferObject data)
         {
+            // Initialize Weapons
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
             foreach (var weapon in listOfGuns)
             {
@@ -126,6 +129,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 AvailableWeapons.Add(false);
             }
             if (AvailableWeapons.Count > 0) AvailableWeapons[0] = true;
+            
+            // Set Damage Event
+            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
+
+            // Initialize Damage Converters
+            foreach (var converter in DamageConverters) converter.Initialize(this);
             
             if (data == null)
             {
@@ -162,6 +171,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             
+            StartCoroutine(InstinctRecover_Coroutine(1));
             player.Controller.enabled = true;
         }
         
@@ -561,9 +571,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsUsingInstinct = true;
             
             // TODO: Turn On Enemy Silhouette (By using spawn manager)
-            CurrentSpeedMultiplier = StatData.instinctSkillMultiplier;
+            SkillSpeedMultiplier = StatData.instinctSkillMultiplier;
             yield return new WaitForSecondsRealtime(duration);
-            CurrentSpeedMultiplier = 1f;
+            SkillSpeedMultiplier = 1f;
             // TODO: Turn Off Enemy Silhouette
             
             IsUsingInstinct = false;
@@ -578,5 +588,31 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
         }
         /* -------------------- */
+        
+        /* - Item 관련 메소드 - */
+        public void OnItemUsed(BaseItem usedItem)
+        {
+            if (itemCoroutine != null) return;
+            itemCoroutine = StartCoroutine(Item_Coroutine(usedItem.ItemData));
+        }
+
+        private IEnumerator Item_Coroutine(ItemData itemData)
+        {
+            // TODO: Animation 재생
+            if (!itemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
+            yield return new WaitForSecondsRealtime(itemData.Delay);
+            switch (itemData.ItemType)
+            {
+                case ItemType.Medkit: 
+                case ItemType.NanoAmple:
+                    OnRecoverHealth(itemData.Value); break;
+                case ItemType.EnergyBar: OnRecoverStamina(itemData.Value); break;
+                case ItemType.Shield: // TODO: Recover Defense Point -> Character Stat에 Defense 추가필요 
+                    break;
+            }
+            ItemSpeedMultiplier = 1f;
+            itemCoroutine = null;
+        }
+        /* ------------------- */
     }
 }

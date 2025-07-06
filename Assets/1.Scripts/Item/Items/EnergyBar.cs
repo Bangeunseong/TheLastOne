@@ -1,0 +1,21 @@
+﻿using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Item.Common;
+using _1.Scripts.Manager.Data;
+using UnityEngine;
+
+namespace _1.Scripts.Item.Items
+{
+    public class EnergyBar : BaseItem
+    {
+        public override void Initialize(DataTransferObject dto = null)
+        {
+            // TODO: Initialize Current Count of item
+        }
+
+        public override void OnUse(GameObject interactor)
+        {
+            if (CurrentItemCount <= 0 || !interactor.TryGetComponent(out Player player)) return;
+            player.PlayerCondition.OnItemUsed(this);
+        }
+    }
+}
