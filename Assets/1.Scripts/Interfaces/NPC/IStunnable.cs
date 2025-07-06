@@ -2,6 +2,7 @@
 {
     public interface IStunnable
     {
-        void OnStunned(float duration);
+        public bool IsStunned { get; }
+        public void OnStunned(float duration);
     }
 }
