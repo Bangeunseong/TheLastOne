@@ -1,3 +1,4 @@
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -21,7 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			if (shouldLookTarget.Value)
 			{
-				Service.LookAtTarget(selfTransform.Value, targetTransform.Value);
+				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value);
 			}
 			return TaskStatus.Success;
 		}

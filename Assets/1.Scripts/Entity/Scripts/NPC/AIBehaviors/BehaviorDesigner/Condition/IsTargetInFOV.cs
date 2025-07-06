@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -16,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		
 		public override TaskStatus OnUpdate()
 		{
-			if (Service.IsTargetVisible(myCollider.Value.bounds.center, targetPos.Value, maxViewDistance.Value, statController.Value.RuntimeStatData.isAlly))
+			if (NpcUtil.IsTargetVisible(myCollider.Value.bounds.center, targetPos.Value, maxViewDistance.Value, statController.Value.RuntimeStatData.isAlly))
 			{
 				return TaskStatus.Success;
 			}

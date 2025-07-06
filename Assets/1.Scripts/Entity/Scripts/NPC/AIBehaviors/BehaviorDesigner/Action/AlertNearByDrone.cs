@@ -20,7 +20,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		
 		public SharedCollider myCollider;
 		public SharedBaseNpcStatController statController;
-		public SharedLight light;
+		public SharedLight enemylight;
+		public SharedLight allyLight;
 		public SharedCollider collider;
 		public SharedBool isAlerted;
 		
@@ -32,9 +33,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			{
 				return TaskStatus.Failure;
 			}
-
-			light.Value.enabled = true; // 경고등 On
-			Debug.Log("경고등 켜짐");
+			
+			(statController.Value.RuntimeStatData.isAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, collider.Value.bounds.center, index:1); // 사운드 출력
 			isAlerted.Value = true;
 

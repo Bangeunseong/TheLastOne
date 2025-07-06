@@ -8,6 +8,8 @@ using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 using Random = System.Random;
 
@@ -20,6 +22,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 
         [Header("속도 저장용")]
         private float baseMoveSpeed;
+        
+        [Header("Behavior Tree")]
+        private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         
         private void Awake()
         {
@@ -86,7 +91,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 
         public override void Hacking()
         {
-            runtimeReconDroneStatData.isAlly = true;
+            if (!runtimeReconDroneStatData.isAlly)
+            {
+                runtimeReconDroneStatData.isAlly = true;
+                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                
+                behaviorTree.SetVariableValue("target_Transform", null);
+                behaviorTree.SetVariableValue("target_Pos", Vector3.zero);
+                behaviorTree.SetVariableValue("shouldLookTarget", false);
+                behaviorTree.SetVariableValue("IsAlerted", false);
+                behaviorTree.SetVariableValue("timer", 0f);
+                behaviorTree.SetVariableValue("light", false);
+            }
         }
     }
 }

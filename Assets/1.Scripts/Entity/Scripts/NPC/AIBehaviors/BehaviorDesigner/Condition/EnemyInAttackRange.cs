@@ -2,6 +2,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -54,7 +55,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 
 				Vector3 colliderPos = collider.bounds.center;
 
-				if (Service.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
+				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
 				{
 					shouldLookTarget.Value = true;
 					// 주변에 알람 울리기

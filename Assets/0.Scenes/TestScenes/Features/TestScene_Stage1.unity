@@ -551,6 +551,124 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 525050879}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &562033920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 562033921}
+  - component: {fileID: 562033923}
+  - component: {fileID: 562033922}
+  m_Layer: 9
+  m_Name: Ally_Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &562033921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562033920}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.023, y: 1.965, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 824313762}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &562033922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562033920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+--- !u!108 &562033923
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562033920}
+  m_Enabled: 0
+  serializedVersion: 10
+  m_Type: 2
+  m_Shape: 0
+  m_Color: {r: 0.10104789, g: 0, b: 0.990566, a: 1}
+  m_Intensity: 12
+  m_Range: 20
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &572935995
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +795,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1286536099412623203, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_Name
+      value: Enemy_Light
       objectReference: {fileID: 0}
     - target: {fileID: 1376571231188604612, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
@@ -1107,7 +1230,11 @@ PrefabInstance:
     - {fileID: 9036871332465399523, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6119513362642419743, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 562033921}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
@@ -1166,12 +1293,12 @@ MonoBehaviour:
         Reset All","Instant":true,"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.ReturnSuccessOnly","NodeData":{"Offset":"(204.276611,172.559082)"},"ID":22,"Name":"Return
         Success Only","Instant":true}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(208.064438,160)"},"ID":23,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInDetectRange","NodeData":{"Offset":"(-79.59429,132.2367)"},"ID":24,"Name":"Is
         Target In Detect Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":10},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":11}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.AlertNearBy","NodeData":{"Offset":"(115.5669,133.849609)"},"ID":25,"Name":"Alert
-        Near By","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":13},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":14},"SharedLightlight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"light","IsShared":true,"LightmValue":15},"SharedCollidercollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":16},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToEnemy","NodeData":{"Offset":"(196.212219,163.526367)"},"ID":26,"Name":"Set
-        Destination To Enemy","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":17},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNavMeshAgentnavMeshAgent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":18},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":19},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolshouldInterruptible":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},"SharedFloatstoppingDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(620,140)"},"ID":27,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsNavMeshAgentHasPath","NodeData":{"Offset":"(-162.214142,151.359146)"},"ID":28,"Name":"Is
-        Nav Mesh Agent Has Path","Instant":true,"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":20}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneEnterPatrolMode","NodeData":{"Offset":"(39.2769775,164.864624)"},"ID":29,"Name":"Drone
-        Enter Patrol Mode","Instant":true,"SharedLightlight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"light","IsShared":true,"LightmValue":21},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":22}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.InterruptibleWait","NodeData":{"Offset":"(208.654053,170.133789)"},"ID":30,"Name":"Interruptible
-        Wait","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":23},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":24}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToPatrol","NodeData":{"Offset":"(382.330658,161.782654)"},"ID":31,"Name":"Set
-        Destination To Patrol","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":25},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":26},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":27}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":28},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":29},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":30},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":31},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":32},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"light","IsShared":true,"LightmValue":33},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":3}]}'
+        Near By","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":13},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":14},"SharedLightenemylight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":15},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":16},"SharedCollidercollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":17},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToEnemy","NodeData":{"Offset":"(196.212219,163.526367)"},"ID":26,"Name":"Set
+        Destination To Enemy","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":18},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNavMeshAgentnavMeshAgent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":19},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":20},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolshouldInterruptible":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},"SharedFloatstoppingDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(620,140)"},"ID":27,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsNavMeshAgentHasPath","NodeData":{"Offset":"(-162.214142,151.359146)"},"ID":28,"Name":"Is
+        Nav Mesh Agent Has Path","Instant":true,"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":21}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneEnterPatrolMode","NodeData":{"Offset":"(39.2769775,164.864624)"},"ID":29,"Name":"Drone
+        Enter Patrol Mode","Instant":true,"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":22},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":23},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":24}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.InterruptibleWait","NodeData":{"Offset":"(208.654053,170.133789)"},"ID":30,"Name":"Interruptible
+        Wait","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":25},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":26}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToPatrol","NodeData":{"Offset":"(382.330658,161.782654)"},"ID":31,"Name":"Set
+        Destination To Patrol","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":27},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":28},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":29}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":30},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"baseNpcStatController","IsShared":true,"BaseNpcStatControllermValue":31},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":32},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":33},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":34},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":3},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":35},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":36}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -1194,12 +1321,14 @@ MonoBehaviour:
         - {fileID: 824313755}
         - {fileID: 824313757}
         - {fileID: 708599494}
+        - {fileID: 562033923}
         - {fileID: 824313755}
         - {fileID: 824313762}
         - {fileID: 824313758}
         - {fileID: 824313757}
         - {fileID: 824313758}
         - {fileID: 708599494}
+        - {fileID: 562033923}
         - {fileID: 824313761}
         - {fileID: 824313762}
         - {fileID: 824313757}
@@ -1212,6 +1341,7 @@ MonoBehaviour:
         - {fileID: 824313758}
         - {fileID: 824313755}
         - {fileID: 708599494}
+        - {fileID: 562033923}
         byteData: 
         byteDataArray: 
       Version: 1.7.10
