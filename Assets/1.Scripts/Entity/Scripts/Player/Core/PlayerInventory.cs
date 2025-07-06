@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -10,16 +11,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     public class PlayerInventory : MonoBehaviour
     {
         [field: Header("Items")]
-        [field: SerializeField] public List<BaseItem> Items { get; private set; }
+        [field: SerializeField] public SerializedDictionary<ItemType, BaseItem> Items { get; private set; }
 
+        private CoreManager coreManager;
+        
         private void Start()
         {
+            coreManager = CoreManager.Instance;
             
+            Initialize(coreManager.gameManager.SaveData);
         }
 
         private void Initialize(DataTransferObject dto = null)
         {
-            Items = new List<BaseItem>();
+            Items = new SerializedDictionary<ItemType, BaseItem>();
             foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
             {
                 BaseItem item = type switch
@@ -30,7 +35,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     ItemType.Shield => new Shield(),
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                item.Initialize(dto);
+                item.Initialize(coreManager, dto);
+                if (Items.TryAdd(type, item)) Service.Log($"Successfully added {type}.");
             }
         }
     }

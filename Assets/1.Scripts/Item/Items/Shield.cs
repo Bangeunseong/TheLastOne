@@ -1,5 +1,6 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Item.Common;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using UnityEngine;
 
@@ -7,8 +8,9 @@ namespace _1.Scripts.Item.Items
 {
     public class Shield : BaseItem
     {
-        public override void Initialize(DataTransferObject dto = null)
+        public override void Initialize(CoreManager coreManager, DataTransferObject dto = null)
         {
+            ItemData = coreManager.resourceManager.GetAsset<ItemData>("Shield");
             // TODO: Initialize Current Count of item
         }
 

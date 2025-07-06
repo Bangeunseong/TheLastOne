@@ -1,5 +1,6 @@
 ﻿using System;
 using _1.Scripts.Interfaces.Item;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace _1.Scripts.Item.Common
         [field: Header("Current Item Stat.")]
         [field: SerializeField] public int CurrentItemCount { get; protected set; }
         
-        public virtual void Initialize(DataTransferObject dto = null) { }
+        public virtual void Initialize(CoreManager coreManager, DataTransferObject dto = null) { }
         public virtual void OnUse(GameObject interactor) { }
     }
 }
