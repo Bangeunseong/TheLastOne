@@ -16,9 +16,9 @@ MonoBehaviour:
   isPlayer: 0
   isAlly: 0
   maxHealth: 100
-  baseDamage: 10
+  baseDamage: 1
   baseAttackRate: 2
-  moveSpeed: 1
+  moveSpeed: 3
   runMultiplier: 1
   walkMultiplier: 0
   footStepSounds: []
@@ -27,7 +27,7 @@ MonoBehaviour:
   detectRange: 15
   attackRange: 10
   alertDuration: 3
-  alertRadius: 10
+  alertRadius: 50
   minWaitingDuration: 5
   maxWaitingDuration: 10
   minWanderingDistance: 10
