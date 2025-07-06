@@ -24,7 +24,6 @@ namespace _1.Scripts.UI
         {
             coreManager = CoreManager.Instance;
             pauseHandler = FindObjectOfType<PauseHandler>();
-            inventoryCamera = GameObject.Find("Inventory Camera").GetComponent<CinemachineVirtualCamera>();
         }
 
         public void ToggleInventory()
