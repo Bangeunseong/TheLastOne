@@ -19,9 +19,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
     {
         private RuntimeReconDroneStatData runtimeReconDroneStatData;
         public override RuntimeEntityStatData RuntimeStatData => runtimeReconDroneStatData; // 부모에게 자신의 스탯 전송
-
-        [Header("속도 저장용")]
-        private float baseMoveSpeed;
         
         [Header("Behavior Tree")]
         private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
@@ -30,8 +27,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         {
             var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneStatData"); // 자신만의 데이터 가져오기
             runtimeReconDroneStatData = new RuntimeReconDroneStatData(reconDroneStatData); // 복사
-            baseMoveSpeed = runtimeReconDroneStatData.moveSpeed;
             animator = GetComponent<Animator>();
+            behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
         }
 
         private void Update()
@@ -77,11 +74,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         public override void ModifySpeed(float percent)
         {
             runtimeReconDroneStatData.moveSpeed *= percent;
-        }
-
-        public override void Running(bool isRunning)
-        {
-            runtimeReconDroneStatData.moveSpeed = isRunning ? baseMoveSpeed + runtimeReconDroneStatData.runMultiplier : baseMoveSpeed;
         }
 
         public void DestroyObjectForAnimationEvent()
