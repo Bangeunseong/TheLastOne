@@ -33,6 +33,8 @@ namespace _1.Scripts.Manager.Data
         public int health;
         public float maxStamina;
         public float stamina;
+        public int maxShield;
+        public int shield;
         public float damage;
         public float attackRate;
         public int level;
