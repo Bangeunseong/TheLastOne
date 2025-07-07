@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Glow_GL
-  m_Shader: {fileID: -6465566751694194690, guid: 61f7719e8cc1e49459598489439a785c,
+  m_Shader: {fileID: -6465566751694194690, guid: 26da32c6c88ef8648b8fc16d936c76b6,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -78,19 +78,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_1d934dbd7da84c9e8e8fb00a58b88011_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 23ac4dff5668064448cd1909dc61cd06, type: 3}
+        m_Texture: {fileID: 2800000, guid: 11bebe5cf29de1a44a87bd17958c53df, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_4a0daedd65ba4f1fb914f56f60bb574e_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 8b86662347811614cb44c0b1bca2c6da, type: 3}
+        m_Texture: {fileID: 2800000, guid: c06247be5e199a44a966d21ab46ad124, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_b6fadfa410284ae699003e0d4f25497a_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 96db0cbc8f670374f81f562357ba70c5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 54f0d03715e8ca546862e9955ecb3586, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_fa978578ad584d6da5f5d7d8675232f3_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 88591ccd2a26272469e538db40ec7edc, type: 3}
+        m_Texture: {fileID: 2800000, guid: ef3f18e9e633e2844acc3acbac937f2a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
