@@ -136,7 +136,8 @@ namespace _1.Scripts.Manager.Subs
         public void PauseGame()
         {
             if (!Player) return;
-            
+
+            IsGamePaused = true;
             Player.Pov.m_HorizontalAxis.Reset();
             Player.Pov.m_VerticalAxis.Reset();
             Player.InputProvider.enabled = false;
@@ -146,7 +147,8 @@ namespace _1.Scripts.Manager.Subs
         public void ResumeGame()
         {
             if (!Player) return;
-            
+
+            IsGamePaused = false;
             Player.InputProvider.enabled = true;
             Player.PlayerInput.enabled = true;
         }

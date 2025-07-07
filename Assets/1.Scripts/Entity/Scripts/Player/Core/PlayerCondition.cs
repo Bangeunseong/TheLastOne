@@ -452,14 +452,30 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
-                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash,
-                        gun.GunData.GunStat.Type == WeaponType.Pistol
-                            ? player.AnimationData.PistolReloadClipTime / gun.GunData.GunStat.ReloadTime
-                            : player.AnimationData.RifleReloadClipTime / gun.GunData.GunStat.ReloadTime);
+                var animationSpeed = gun.GunData.GunStat.Type == WeaponType.Pistol
+                    ? player.AnimationData.PistolReloadClipTime / gun.GunData.GunStat.ReloadTime
+                    : player.AnimationData.RifleReloadClipTime / gun.GunData.GunStat.ReloadTime;
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                 
                 gun.IsReloading = true;
                 IsReloading = true;
-                yield return new WaitForSecondsRealtime(interval);
+
+                var t = 0f;
+                while (t < interval)
+                {
+                    if (coreManager.gameManager.IsGamePaused)
+                    {
+                        if(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash) != 0f)
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 0f);
+                    }
+                    else
+                    {
+                        if (!Mathf.Approximately(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash), animationSpeed))
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
+                        t += Time.unscaledDeltaTime;
+                    }
+                    yield return null;
+                }
                 gun.OnReload();
                 IsReloading = false;
                 gun.IsReloading = false;
@@ -475,13 +491,28 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
-                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash,
-                    player.AnimationData.GrenadeLauncherReloadClipTime /
-                    grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime);
+                var animationSpeed = player.AnimationData.GrenadeLauncherReloadClipTime /
+                                     grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                 
                 grenadeLauncher.IsReloading = true;
                 IsReloading = true;
-                yield return new WaitForSecondsRealtime(interval);
+                var t = 0f;
+                while (t < interval)
+                {
+                    if (coreManager.gameManager.IsGamePaused)
+                    {
+                        if(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash) != 0f)
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 0f);
+                    }
+                    else
+                    {
+                        if (!Mathf.Approximately(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash), animationSpeed))
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
+                        t += Time.unscaledDeltaTime;
+                    }
+                    yield return null;
+                }
                 grenadeLauncher.OnReload();
                 IsReloading = false;
                 grenadeLauncher.IsReloading = false;
@@ -559,7 +590,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsUsingFocus = true;
             coreManager.timeScaleManager.ChangeTimeScale(0.5f);
             RecoilMultiplier = 0.5f;
-            yield return new WaitForSecondsRealtime(duration);
+            var t = 0f;
+            while (t < duration)
+            {
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                yield return null;
+            }
             RecoilMultiplier = 1f;
             coreManager.timeScaleManager.ChangeTimeScale(1f);
             IsUsingFocus = false;
@@ -574,7 +610,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             // TODO: Turn On Enemy Silhouette (By using spawn manager)
             SkillSpeedMultiplier = StatData.instinctSkillMultiplier;
-            yield return new WaitForSecondsRealtime(duration);
+            var t = 0f;
+            while (t < duration)
+            {
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                yield return null;
+            }
             SkillSpeedMultiplier = 1f;
             // TODO: Turn Off Enemy Silhouette
             
@@ -585,8 +626,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             while (!IsDead)
             {
-                yield return new WaitForSecondsRealtime(delay);
-                OnRecoverInstinctGauge(InstinctGainType.Idle);
+                if (coreManager.gameManager.IsGamePaused) { yield return null; }
+                else
+                {
+                    yield return new WaitForSecondsRealtime(delay);
+                    OnRecoverInstinctGauge(InstinctGainType.Idle);
+                }
             }
         }
         /* -------------------- */
@@ -602,7 +647,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             // TODO: Animation 재생
             if (!itemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
-            yield return new WaitForSecondsRealtime(itemData.Delay);
+            var t = 0f;
+            while (t < itemData.Delay)
+            {
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                yield return null;
+            }
             switch (itemData.ItemType)
             {
                 case ItemType.Medkit: 
@@ -611,6 +661,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 case ItemType.EnergyBar: OnRecoverStamina(itemData.Value); break;
                 case ItemType.Shield: // TODO: Recover Defense Point -> Character Stat에 Defense 추가필요 
                     break;
+                default: throw new ArgumentOutOfRangeException();
             }
             ItemSpeedMultiplier = 1f;
             itemCoroutine = null;

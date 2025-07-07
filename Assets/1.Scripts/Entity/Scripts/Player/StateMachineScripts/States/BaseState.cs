@@ -149,7 +149,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             float t = 0;
             while (t < duration)
             {
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 float elapsed = t / duration;
                 stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
                 yield return null;
@@ -161,7 +161,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
         {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
+            while (playerCondition.CurrentStamina < playerCondition.MaxStamina && !coreManager.gameManager.IsGamePaused)
             {
                 playerCondition.OnRecoverStamina(recoverRate);
                 yield return new WaitForSecondsRealtime(interval);
@@ -170,7 +170,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
         {
-            while (playerCondition.CurrentStamina > 0)
+            while (playerCondition.CurrentStamina > 0 && !coreManager.gameManager.IsGamePaused)
             {
                 playerCondition.OnConsumeStamina(consumeRate);
                 yield return new WaitForSecondsRealtime(interval);
