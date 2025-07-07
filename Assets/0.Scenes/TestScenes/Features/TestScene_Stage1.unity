@@ -123,6 +123,74 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &160143783
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5188686575903550678, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_Name
+      value: SuicideDrone
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576045121637450387, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1d7631e67b59a9a46b7bea54c29461a4, type: 3}
 --- !u!1 &311603908
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,124 +619,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 525050879}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &562033920
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 562033921}
-  - component: {fileID: 562033923}
-  - component: {fileID: 562033922}
-  m_Layer: 9
-  m_Name: Ally_Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &562033921
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562033920}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.023, y: 1.965, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 824313762}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &562033922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562033920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
---- !u!108 &562033923
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562033920}
-  m_Enabled: 0
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 0.10104789, g: 0, b: 0.990566, a: 1}
-  m_Intensity: 12
-  m_Range: 20
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!1 &572935995
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,12 +682,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2746698291153894638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &708599494 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 8470211306173647419, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &735032937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -746,215 +690,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 237693248094772082, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 266099075047610543, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 268668951670788952, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 307137326600247121, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 386050380602235615, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400687732381316397, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 413577226816213534, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 609246455171992429, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 800888566073689535, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 802342026336993817, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1286536099412623203, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Name
-      value: Enemy_Light
-      objectReference: {fileID: 0}
-    - target: {fileID: 1376571231188604612, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1488037746134976163, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1679942112513337063, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1679942112513337063, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: lengthInSec
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1679942112513337063, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: EmissionModule.m_Bursts.Array.data[1].time
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1850940429756036803, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978049667156774212, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993527981674877656, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2109919638244205919, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2253621108046335893, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2374343391902271404, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2459365966934715813, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2492700560415582706, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2548399784565931788, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835450607853188749, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835450607853188749, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: lengthInSec
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835450607853188749, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835450607853188749, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: EmissionModule.m_Bursts.Array.data[1].time
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835450607853188749, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: EmissionModule.m_Bursts.Array.data[2].time
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2906643443760916984, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3006283460113688535, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011584799038237321, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
       propertyPath: m_Name
       value: ReconDrone
-      objectReference: {fileID: 0}
-    - target: {fileID: 3101397479425126370, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3122164081169459585, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3212933101379582740, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3363092404030655675, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3388333945512557559, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3595237596157310167, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3762868915432829399, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3775210924679217102, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
@@ -1006,409 +745,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3917491528758121255, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4011503976911091307, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: alertLight
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4506094740747773557, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4506259543899331446, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4510114710304001634, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4565779930615061214, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4869057291403245508, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5118700892624676868, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: lengthInSec
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: ShapeModule.type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: ShapeModule.radiusThickness
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: InitialModule.startSpeed.scalar
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: InitialModule.startLifetime.minScalar
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5519781024591311793, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5618896437657105273, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5628670126002967865, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: onStunParticle
-      value: 
-      objectReference: {fileID: 735032938}
-    - target: {fileID: 5671297126790983534, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5765422136857736305, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5866302133867116103, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6058928789808539867, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6285100462476447828, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6288865481581042398, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6846644618451606442, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6915123388490970024, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6967385831810574244, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7096424454446013534, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7195413238856096910, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7216161110795034648, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7498563460741021718, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7506612267108132018, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7654999087581030410, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7843552647400995310, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7881781894108035360, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7895573320596488096, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8090335393845425505, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8238210836502214563, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8269279478770391812, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8470211306173647419, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8515433201055937258, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8565411665175877395, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8624406300300462515, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8675807994770003685, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179147644737765738, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9036871332465399523, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
-    m_RemovedGameObjects:
-    - {fileID: 6119513362642419743, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 562033921}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 824313753}
-    - targetCorrespondingSourceObject: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 824313763}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
---- !u!198 &735032938 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5142870068060888459, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &824313752 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &824313753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 824313752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startWhenEnabled: 1
-  asynchronousLoad: 0
-  pauseWhenDisabled: 0
-  restartWhenComplete: 0
-  logTaskChanges: 0
-  group: 0
-  resetValuesOnRestart: 1
-  externalBehavior: {fileID: 0}
-  mBehaviorSource:
-    behaviorName: ReconDroneBehavior
-    behaviorDescription: 
-    mTaskData:
-      types: []
-      parentIndex: 
-      startIndex: 
-      variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(297,75)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-3,115)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":5},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-2,141)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"Self","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlive","NodeData":{"Offset":"(-443.896973,132.839691)"},"ID":3,"Name":"Is
-        Alive","Instant":true,"SharedBoolisDead":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAICanRun","NodeData":{"Offset":"(-247.930115,137.867249)"},"ID":4,"Name":"Is
-        AI Can Run","Instant":true,"SharedBoolcanRun":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.ParallelSelector","NodeData":{"Offset":"(-7.05905151,161.734558)"},"ID":5,"Name":"Parallel
-        Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-510,130)"},"ID":6,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.LookAtTarget","NodeData":{"Offset":"(-329.398254,155.924622)"},"ID":7,"Name":"Look
-        At Target","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":0},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.EnemyInAttackRange","NodeData":{"Offset":"(-124.139824,145.9538)"},"ID":8,"Name":"Enemy
-        In Attack Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":1},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":2}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.ReconDroneAttacking","NodeData":{"Offset":"(152.996948,156.386414)"},"ID":9,"Name":"Recon
-        Drone Attacking","Instant":true,"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(10,130)"},"ID":10,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-157.013489,163.526367)"},"ID":11,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-201.852081,166.429443)"},"ID":12,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlerted","NodeData":{"Offset":"(-159.594269,120.623047)"},"ID":13,"Name":"Is
-        Alerted","Instant":true,"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":4},"SharedColliderselfCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":5},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":6}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(169.43779,141.5907)"},"ID":14,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-308.707336,163.204468)"},"ID":15,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInFOV","NodeData":{"Offset":"(-103.464943,139.9784)"},"ID":16,"Name":"Is
-        Target In FOV","Instant":true,"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":7},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":8}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerReset","NodeData":{"Offset":"(78.79303,149.655762)"},"ID":17,"Name":"Timer
-        Reset","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-3.22577477,170)"},"ID":18,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerIncrease","NodeData":{"Offset":"(-71.75933,147.3357)"},"ID":19,"Name":"Timer
-        Increase","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(85.75754,146.3634)"},"ID":20,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTimerPassed","NodeData":{"Offset":"(-100.909035,111.211929)"},"ID":21,"Name":"Is
-        Timer Passed","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":9}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneResetAll","NodeData":{"Offset":"(98.7879,115.757462)"},"ID":22,"Name":"Drone
-        Reset All","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":10},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":11}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.ReturnSuccessOnly","NodeData":{"Offset":"(204.276611,172.559082)"},"ID":23,"Name":"Return
-        Success Only","Instant":true}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(208.064438,160)"},"ID":24,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInDetectRange","NodeData":{"Offset":"(-79.59429,132.2367)"},"ID":25,"Name":"Is
-        Target In Detect Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":13}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.AlertNearBy","NodeData":{"Offset":"(115.5669,133.849609)"},"ID":26,"Name":"Alert
-        Near By","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":14},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":15},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":16},"SharedLightenemylight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":17},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":18},"SharedCollidercollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":19},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToEnemy","NodeData":{"Offset":"(196.212219,163.526367)"},"ID":27,"Name":"Set
-        Destination To Enemy","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":20},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNavMeshAgentnavMeshAgent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":21},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":22},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolshouldInterruptible":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},"SharedFloatstoppingDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":1.5}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(620,140)"},"ID":28,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsNavMeshAgentHasPath","NodeData":{"Offset":"(-162.214142,151.359146)"},"ID":29,"Name":"Is
-        Nav Mesh Agent Has Path","Instant":true,"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":23},"SharedVector3targetPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneEnterPatrolMode","NodeData":{"Offset":"(39.2769775,164.864624)"},"ID":30,"Name":"Drone
-        Enter Patrol Mode","Instant":true,"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":24}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.InterruptibleWait","NodeData":{"Offset":"(208.654053,170.133789)"},"ID":31,"Name":"Interruptible
-        Wait","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":25},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":26}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToPatrol","NodeData":{"Offset":"(382.330658,161.782654)"},"ID":32,"Name":"Set
-        Destination To Patrol","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":27},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":28},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":29},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":30},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":31}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":32},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":33},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":34},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":35},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":36},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":1.5},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":37},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":38},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}]}'
-      fieldSerializationData:
-        typeName: []
-        fieldNameHash: 
-        startIndex: 
-        dataPosition: 
-        unityObjects:
-        - {fileID: 824313762}
-        - {fileID: 824313762}
-        - {fileID: 824313757}
-        - {fileID: 824313761}
-        - {fileID: 824313762}
-        - {fileID: 824313755}
-        - {fileID: 824313757}
-        - {fileID: 824313755}
-        - {fileID: 824313757}
-        - {fileID: 824313757}
-        - {fileID: 824313762}
-        - {fileID: 824313758}
-        - {fileID: 824313762}
-        - {fileID: 824313757}
-        - {fileID: 824313762}
-        - {fileID: 824313755}
-        - {fileID: 824313757}
-        - {fileID: 708599494}
-        - {fileID: 562033923}
-        - {fileID: 824313755}
-        - {fileID: 824313762}
-        - {fileID: 824313758}
-        - {fileID: 824313757}
-        - {fileID: 824313758}
-        - {fileID: 824313761}
-        - {fileID: 824313762}
-        - {fileID: 824313757}
-        - {fileID: 824313762}
-        - {fileID: 824313757}
-        - {fileID: 824313758}
-        - {fileID: 708599494}
-        - {fileID: 562033923}
-        - {fileID: 824313762}
-        - {fileID: 824313757}
-        - {fileID: 824313761}
-        - {fileID: 824313758}
-        - {fileID: 824313755}
-        - {fileID: 708599494}
-        - {fileID: 562033923}
-        byteData: 
-        byteDataArray: 
-      Version: 1.7.10
-  gizmoViewMode: 2
-  showBehaviorDesignerGizmo: 1
---- !u!65 &824313755 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 8915890175638079008, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &824313757 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5628670126002967865, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 824313752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf01ddb19bf383246ad1ce9598c23685, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!195 &824313758 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 8550588303330216472, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &824313761 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2064840508558717499, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &824313762 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &824313763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 824313752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96833cb862166464894e897b9e4f5a4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &928442627
 GameObject:
   m_ObjectHideFlags: 0
@@ -8436,3 +7777,4 @@ SceneRoots:
   - {fileID: 2746698291153894638}
   - {fileID: 900053060764606494}
   - {fileID: 735032937}
+  - {fileID: 160143783}

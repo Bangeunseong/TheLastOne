@@ -3,11 +3,11 @@ using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
+namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly
 {
-	[TaskCategory("Every")]
-	[TaskDescription("DroneResetAll")]
-	public class DroneResetAll : global::BehaviorDesigner.Runtime.Tasks.Action
+	[TaskCategory("DroneOnly")]
+	[TaskDescription("ReconDroneResetAll")]
+	public class ReconDroneResetAll : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
 		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;

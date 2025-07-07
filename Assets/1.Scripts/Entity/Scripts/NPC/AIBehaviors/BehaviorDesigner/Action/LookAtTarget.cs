@@ -15,11 +15,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		
 		public override TaskStatus OnUpdate()
 		{
-			if (selfTransform.Value == null || targetTransform.Value == null)
-			{
-				return TaskStatus.Failure;
-			}
-
 			if (shouldLookTarget.Value)
 			{
 				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value);

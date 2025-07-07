@@ -58,7 +58,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
 				{
 					shouldLookTarget.Value = true;
-					// 주변에 알람 울리기
 					targetTransform.Value = collider.transform;
 					targetPos.Value = colliderPos;
 					return TaskStatus.Success;
