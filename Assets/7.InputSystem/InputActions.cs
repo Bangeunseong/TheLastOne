@@ -170,6 +170,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""f5a5c98c-decb-48be-9fee-7238a768a1a6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -392,6 +401,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c768e0b-51e1-4414-98aa-e28ce25f0e1c"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -416,6 +436,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_SwitchWeapon = m_Player.FindAction("SwitchWeapon", throwIfNotFound: true);
         m_Player_Focus = m_Player.FindAction("Focus", throwIfNotFound: true);
         m_Player_Instinct = m_Player.FindAction("Instinct", throwIfNotFound: true);
+        m_Player_ItemAction = m_Player.FindAction("ItemAction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -493,6 +514,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwitchWeapon;
     private readonly InputAction m_Player_Focus;
     private readonly InputAction m_Player_Instinct;
+    private readonly InputAction m_Player_ItemAction;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -513,6 +535,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchWeapon => m_Wrapper.m_Player_SwitchWeapon;
         public InputAction @Focus => m_Wrapper.m_Player_Focus;
         public InputAction @Instinct => m_Wrapper.m_Player_Instinct;
+        public InputAction @ItemAction => m_Wrapper.m_Player_ItemAction;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -570,6 +593,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Instinct.started += instance.OnInstinct;
             @Instinct.performed += instance.OnInstinct;
             @Instinct.canceled += instance.OnInstinct;
+            @ItemAction.started += instance.OnItemAction;
+            @ItemAction.performed += instance.OnItemAction;
+            @ItemAction.canceled += instance.OnItemAction;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -622,6 +648,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Instinct.started -= instance.OnInstinct;
             @Instinct.performed -= instance.OnInstinct;
             @Instinct.canceled -= instance.OnInstinct;
+            @ItemAction.started -= instance.OnItemAction;
+            @ItemAction.performed -= instance.OnItemAction;
+            @ItemAction.canceled -= instance.OnItemAction;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -657,5 +686,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnSwitchWeapon(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
         void OnInstinct(InputAction.CallbackContext context);
+        void OnItemAction(InputAction.CallbackContext context);
     }
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
-using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;

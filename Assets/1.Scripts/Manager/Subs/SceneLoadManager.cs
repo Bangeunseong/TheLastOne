@@ -126,20 +126,20 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-            
-            switch (sceneName)
+
+            switch (CurrentScene)
             { 
                 case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby);
                     break;
                 case SceneType.Loading: 
                     break;
                 case SceneType.Stage1:
-                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame);
-                    break;
+                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
                 case SceneType.EndingScene:
                     break;
+                default: throw new ArgumentOutOfRangeException();
             }
-
+            
             IsLoading = false;
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
