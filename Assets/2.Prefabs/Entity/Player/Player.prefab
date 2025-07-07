@@ -2816,6 +2816,7 @@ GameObject:
   - component: {fileID: 722777656224247020}
   - component: {fileID: 884554410609251424}
   - component: {fileID: 4498054374752332944}
+  - component: {fileID: 9007735852533323761}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -2981,7 +2982,8 @@ MonoBehaviour:
   <CurrentStamina>k__BackingField: 0
   <CurrentFocusGauge>k__BackingField: 0
   <CurrentInstinctGauge>k__BackingField: 0
-  <CurrentSpeedMultiplier>k__BackingField: 1
+  <SkillSpeedMultiplier>k__BackingField: 1
+  <ItemSpeedMultiplier>k__BackingField: 1
   <Damage>k__BackingField: 0
   <AttackRate>k__BackingField: 0
   <Level>k__BackingField: 0
@@ -3076,6 +3078,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recoilReturnSpeed: 5
   recoilSnappiness: 10
+--- !u!114 &9007735852533323761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7874159748350873753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f8014b0d7a45b19caa59fa79147538, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Items>k__BackingField:
+    m_Keys: 
+    m_Values: []
 --- !u!1 &7892139384327641888
 GameObject:
   m_ObjectHideFlags: 0

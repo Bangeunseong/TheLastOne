@@ -120,7 +120,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.SkillSpeedMultiplier * playerCondition.ItemSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -149,7 +149,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             float t = 0;
             while (t < duration)
             {
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 float elapsed = t / duration;
                 stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
                 yield return null;
@@ -163,7 +163,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
-                playerCondition.OnRecoverStamina(recoverRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnRecoverStamina(recoverRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
@@ -172,7 +173,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             while (playerCondition.CurrentStamina > 0)
             {
-                playerCondition.OnConsumeStamina(consumeRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnConsumeStamina(consumeRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }

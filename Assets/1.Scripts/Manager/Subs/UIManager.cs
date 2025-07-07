@@ -26,6 +26,7 @@ namespace _1.Scripts.Manager.Subs
         private LobbyUI lobbyUI;
         private LoadingUI loadingUI;
         private SettingUI settingUI;
+        private QuickSlotUI quickSlotUI;
         
         private Dictionary<CurrentState, List<UIBase>> loadedUI = new Dictionary<CurrentState, List<UIBase>>();
         private Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
@@ -35,6 +36,7 @@ namespace _1.Scripts.Manager.Subs
         private Transform popupRoot;
         
         public LoadingUI LoadingUI => loadingUI;
+        public QuickSlotUI QuickSlotUI => quickSlotUI;
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
@@ -88,7 +90,9 @@ namespace _1.Scripts.Manager.Subs
                     loadingUI?.SetActive(true);
                     break;
                 case CurrentState.InGame:
-                    var inGameUI  = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS); ;
+                    var inGameUI  = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
+                    if (quickSlotUI == null && inGameUI != null)
+                        quickSlotUI = inGameUI.GetComponentInChildren<QuickSlotUI>();
                     break;
             }
         }
