@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Item.Common;
+using _1.Scripts.Manager.Core;
 using Cinemachine;
 using Michsky.UI.Shift;
 using TMPro;
@@ -62,7 +64,7 @@ namespace _1.Scripts.UI.InGame
 
         public void CloseAndUse()
         {
-            if (!quickSlotPanel.activeSelf) return;
+            if (!quickSlotPanel.activeInHierarchy) return;
             
             quickSlotPanelAnimator.Play("Panel Out");
             quickSlotGroup.alpha = 0;
@@ -94,7 +96,7 @@ namespace _1.Scripts.UI.InGame
         private void UseSlot(int idx)
         {
             Service.Log($"{idx} 번째 슬롯의 아이템 사용");
-            // TODO: 아이템 사용 로직 호출
+            CoreManager.Instance.gameManager.Player.PlayerInventory.OnSelectItem((ItemType)currentSlot);
         }
 
         private void RefreshQuickSlot()

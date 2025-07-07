@@ -2921,6 +2921,7 @@ MonoBehaviour:
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
   <PlayerGravity>k__BackingField: {fileID: 884554410609251424}
   <PlayerRecoil>k__BackingField: {fileID: 4498054374752332944}
+  <PlayerInventory>k__BackingField: {fileID: 0}
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
   <CameraPoint>k__BackingField: {fileID: 1977320588093521907}
@@ -3091,8 +3092,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Items>k__BackingField:
-    m_Keys: 
-    m_Values: []
+    _serializedList: []
+  <CurrentItem>k__BackingField: 0
+  <HoldDurationToOpen>k__BackingField: 1
+  <IsOpenUIAction>k__BackingField: 0
 --- !u!1 &7892139384327641888
 GameObject:
   m_ObjectHideFlags: 0
