@@ -11,8 +11,20 @@ namespace _1.Scripts.Weapon.Scripts.Common
     {
         [field: Header("DummyGun Settings")]
         [field: SerializeField] public WeaponType Type { get; private set; }
-
+        [field: SerializeField] public SkinnedMeshRenderer[] Renderers { get; private set; }
+        
         public event Action OnPicked;
+
+        private void Awake()
+        {
+            if (Renderers.Length > 0) return;
+            Renderers = this.TryGetChildComponents<SkinnedMeshRenderer>("Gun");
+        }
+
+        private void Reset()
+        {
+            Renderers = this.TryGetChildComponents<SkinnedMeshRenderer>("Gun");
+        }
 
         public void OnInteract(GameObject ownerObj)
         {
