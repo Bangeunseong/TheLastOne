@@ -161,18 +161,20 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
         {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina && !coreManager.gameManager.IsGamePaused)
+            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
-                playerCondition.OnRecoverStamina(recoverRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnRecoverStamina(recoverRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
         
         protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
         {
-            while (playerCondition.CurrentStamina > 0 && !coreManager.gameManager.IsGamePaused)
+            while (playerCondition.CurrentStamina > 0)
             {
-                playerCondition.OnConsumeStamina(consumeRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnConsumeStamina(consumeRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
