@@ -63,7 +63,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 
 			if (targetTransform.Value == null) // 예외처리 1 : 타겟이 사라졌을 시
 			{
-				// 상태 리셋해야함, 타이머 초기화 추가해야함
 				targetPos.Value = Vector3.zero;
 				targetTransform.Value = null;
 				isAlerted.Value = false;
@@ -75,7 +74,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 			{
 				var stat = targetTransform.Value.GetComponent<BaseNpcStatController>();
 				if (stat == null || stat.isDead)
-				{ // 상태 리셋해야함
+				{
 					targetPos.Value = Vector3.zero;
 					targetTransform.Value = null;
 					isAlerted.Value = false;

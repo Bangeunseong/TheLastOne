@@ -22,6 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         public SharedBaseNpcStatController statController;
         public SharedParticleSystem explosionParticle;
         public SharedCollider myCollider;
+        public SharedBool isDead;
         
         private bool isExploded = false;
         
@@ -77,8 +78,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             myCollider.Value.enabled = false;
             
             // 5. isDead = true
-            statController.Value.isDead = true;
-       
+            isDead.Value = true;
+            
             // 6. 기다린 후 파괴
             StartCoroutine(DelayedDestroy(selfTransform.Value));
             

@@ -14,6 +14,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         public SharedTransform targetTransform;
         public SharedVector3 targetPos;
         public SharedBool shouldLookTarget;
+        public SharedBool isAlerted;
         public SharedFloat timer;
         public SharedNavMeshAgent agent;
 		public SharedAnimator animator;
@@ -40,6 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             
             enemyLight.Value.enabled = false;
             allyLight.Value.enabled = false;
+            isAlerted.Value = false;
             
             return TaskStatus.Success;
         }

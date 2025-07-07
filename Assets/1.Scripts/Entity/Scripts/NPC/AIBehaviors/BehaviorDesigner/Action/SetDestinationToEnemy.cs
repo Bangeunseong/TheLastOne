@@ -17,7 +17,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedNavMeshAgent navMeshAgent;
 		public SharedBaseNpcStatController statController;
 		public SharedBool shouldLookTarget;
-		public SharedBool shouldInterruptible;
 		public SharedFloat stoppingDistance;
 		
 		public override TaskStatus OnUpdate()
@@ -45,7 +44,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			
 			if (NavMesh.SamplePosition(targetSpot, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
 			{
-				shouldInterruptible.Value = true;
 				navMeshAgent.Value.SetDestination(hit.position);
 			}
 

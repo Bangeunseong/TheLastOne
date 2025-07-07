@@ -131,23 +131,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2674326327351137199, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: onStunParticle
+      value: 
+      objectReference: {fileID: 1835892755}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: resetValuesOnRestart
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.JSONSerialization
-      value: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(136.267853,128.484848)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-3.73214722,118.484848)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(4.199198,130.30304)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlive","NodeData":{"Offset":"(-328.83493,142.6026)"},"ID":3,"Name":"Is
+      value: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(136.267853,128.484848)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-3.73214722,118.484848)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":3},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(4.199198,130.30304)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlive","NodeData":{"Offset":"(-328.83493,142.6026)"},"ID":3,"Name":"Is
         Alive","Instant":true,"SharedBoolisDead":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAICanRun","NodeData":{"Offset":"(-170.011215,144.073135)"},"ID":4,"Name":"Is
         AI Can Run","Instant":true,"SharedBoolcanRun":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.ParallelSelector","NodeData":{"Offset":"(-1.02143764,143.502563)"},"ID":5,"Name":"Parallel
-        Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-645.3486,209.125046)"},"ID":6,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.LookAtTarget","NodeData":{"Offset":"(-244.4136,118.939117)"},"ID":7,"Name":"Look
+        Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-645.3486,209.125046)"},"ID":6,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.LookAtTarget","NodeData":{"Offset":"(-244.4136,126.265129)"},"ID":7,"Name":"Look
         At Target","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":0},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsNotAlerted","NodeData":{"Offset":"(4.70995331,128.164429)"},"ID":8,"Name":"Is
-        Not Alerted","Instant":true,"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.SuicideDroneResetAll","NodeData":{"Offset":"(231.105484,125.4848)"},"ID":9,"Name":"Suicide
-        Drone Reset All","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":1},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":2},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":3},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":4},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":5}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-4.610756,198.466034)"},"ID":10,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.EnemyInAttackRange","NodeData":{"Offset":"(-130.148926,149.063416)"},"ID":11,"Name":"Enemy
+        Not Alerted","Instant":true,"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.SuicideDroneResetAll","NodeData":{"Offset":"(231.105484,125.4848)"},"ID":9,"Name":"Suicide
+        Drone Reset All","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":1},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":2},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":3},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":4},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":5}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-4.610756,198.466034)"},"ID":10,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.EnemyInAttackRange","NodeData":{"Offset":"(-130.148926,149.063416)"},"ID":11,"Name":"Enemy
         In Attack Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":6},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":7}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.SuicideDroneAttacking","NodeData":{"Offset":"(133.793762,150.583557)"},"ID":12,"Name":"Suicide
-        Drone Attacking","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":8},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":9},"SharedParticleSystemexplosionParticle":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedParticleSystem","Name":"ExplosionParticle","IsShared":true,"ParticleSystemmValue":10},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":11}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":13},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":14},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":15},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":16},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":17},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":18},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedParticleSystem","Name":"ExplosionParticle","IsShared":true,"ParticleSystemmValue":19}]}'
+        Drone Attacking","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":8},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":9},"SharedParticleSystemexplosionParticle":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedParticleSystem","Name":"ExplosionParticle","IsShared":true,"ParticleSystemmValue":10},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":11},"SharedBoolisDead":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(603.879456,198.331482)"},"ID":13,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-156.420044,125.809204)"},"ID":14,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlerted","NodeData":{"Offset":"(-160,190)"},"ID":15,"Name":"Is
+        Alerted","Instant":true,"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},"SharedColliderselfCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":13},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":14}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(170,190)"},"ID":16,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-314.088165,168.99678)"},"ID":17,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInFOV","NodeData":{"Offset":"(-104.088165,136.176147)"},"ID":18,"Name":"Is
+        Target In FOV","Instant":true,"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":15},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":16}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerReset","NodeData":{"Offset":"(75.9118347,136.706512)"},"ID":19,"Name":"Timer
+        Reset","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-4.08816528,166.176208)"},"ID":20,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerIncrease","NodeData":{"Offset":"(-74.0881958,146.176208)"},"ID":21,"Name":"Timer
+        Increase","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(85.9118347,146.176208)"},"ID":22,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTimerPassed","NodeData":{"Offset":"(-104.088196,118.081032)"},"ID":23,"Name":"Is
+        Timer Passed","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":17}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.SuicideDroneResetAll","NodeData":{"Offset":"(110.22982,116.10273)"},"ID":24,"Name":"Suicide
+        Drone Reset All","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":18},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":19},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":20},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":21},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":22}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.ReturnSuccessOnly","NodeData":{"Offset":"(195.911835,166.176208)"},"ID":25,"Name":"Return
+        Success Only","Instant":true}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.LightOnWithSound","NodeData":{"Offset":"(-1.86243057,132.597046)"},"ID":26,"Name":"Light
+        On With Sound","Instant":true,"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":23},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":24},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":25},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":26}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToEnemy","NodeData":{"Offset":"(177.267822,134.484741)"},"ID":27,"Name":"Set
+        Destination To Enemy","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":27},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNavMeshAgentnavMeshAgent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":28},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":29},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedFloatstoppingDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":0}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":30},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":31},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":32},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":33},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":34},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":35},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":36},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedParticleSystem","Name":"ExplosionParticle","IsShared":true,"ParticleSystemmValue":37},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":0}]}'
       objectReference: {fileID: 0}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.size
-      value: 20
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
@@ -208,35 +227,135 @@ PrefabInstance:
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[13]
       value: 
-      objectReference: {fileID: 160143787}
+      objectReference: {fileID: 160143788}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[14]
       value: 
-      objectReference: {fileID: 160143790}
+      objectReference: {fileID: 160143787}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[15]
       value: 
-      objectReference: {fileID: 160143789}
+      objectReference: {fileID: 160143788}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[16]
       value: 
-      objectReference: {fileID: 160143788}
+      objectReference: {fileID: 160143787}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[17]
       value: 
-      objectReference: {fileID: 228501957}
+      objectReference: {fileID: 160143787}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[18]
       value: 
-      objectReference: {fileID: 1315797148}
+      objectReference: {fileID: 160143785}
     - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
         type: 3}
       propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[19]
+      value: 
+      objectReference: {fileID: 160143789}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[20]
+      value: 
+      objectReference: {fileID: 160143790}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[21]
+      value: 
+      objectReference: {fileID: 228501957}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[22]
+      value: 
+      objectReference: {fileID: 1315797148}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[23]
+      value: 
+      objectReference: {fileID: 228501957}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[24]
+      value: 
+      objectReference: {fileID: 1315797148}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[25]
+      value: 
+      objectReference: {fileID: 160143787}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[26]
+      value: 
+      objectReference: {fileID: 160143788}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[27]
+      value: 
+      objectReference: {fileID: 160143785}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[28]
+      value: 
+      objectReference: {fileID: 160143789}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[29]
+      value: 
+      objectReference: {fileID: 160143787}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[30]
+      value: 
+      objectReference: {fileID: 160143785}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[31]
+      value: 
+      objectReference: {fileID: 160143787}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[32]
+      value: 
+      objectReference: {fileID: 160143790}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[33]
+      value: 
+      objectReference: {fileID: 160143789}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[34]
+      value: 
+      objectReference: {fileID: 160143788}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[35]
+      value: 
+      objectReference: {fileID: 228501957}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[36]
+      value: 
+      objectReference: {fileID: 1315797148}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[37]
+      value: 
+      objectReference: {fileID: 160143784}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[38]
+      value: 
+      objectReference: {fileID: 1315797148}
+    - target: {fileID: 2809953801716960046, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[39]
       value: 
       objectReference: {fileID: 160143784}
     - target: {fileID: 3051697926383035272, guid: 1d7631e67b59a9a46b7bea54c29461a4,
@@ -299,10 +418,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3051697926383035272, guid: 1d7631e67b59a9a46b7bea54c29461a4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5188686575903550678, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 160143791}
   m_SourcePrefab: {fileID: 100100000, guid: 1d7631e67b59a9a46b7bea54c29461a4, type: 3}
 --- !u!198 &160143784 stripped
 ParticleSystem:
@@ -316,13 +440,19 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 160143783}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &160143786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5188686575903550678, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 160143783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &160143787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2674326327351137199, guid: 1d7631e67b59a9a46b7bea54c29461a4,
     type: 3}
   m_PrefabInstance: {fileID: 160143783}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 160143786}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b84ec9be76b7bf439ff5337aa7393ef, type: 3}
@@ -346,6 +476,18 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 160143783}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &160143791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160143786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96833cb862166464894e897b9e4f5a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!108 &228501957 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 7829841242739997559, guid: 1d7631e67b59a9a46b7bea54c29461a4,
@@ -851,206 +993,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.JSONSerialization
-      value: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(297,75)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-3,115)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":5},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-2,141)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"Self","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlive","NodeData":{"Offset":"(-443.896973,132.839691)"},"ID":3,"Name":"Is
-        Alive","Instant":true,"SharedBoolisDead":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAICanRun","NodeData":{"Offset":"(-247.930115,137.867249)"},"ID":4,"Name":"Is
-        AI Can Run","Instant":true,"SharedBoolcanRun":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.ParallelSelector","NodeData":{"Offset":"(-7.05905151,161.734558)"},"ID":5,"Name":"Parallel
-        Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-510,130)"},"ID":6,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.LookAtTarget","NodeData":{"Offset":"(-329.398254,155.924622)"},"ID":7,"Name":"Look
-        At Target","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":0},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.EnemyInAttackRange","NodeData":{"Offset":"(-124.139824,145.9538)"},"ID":8,"Name":"Enemy
-        In Attack Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":1},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":2}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.ReconDroneAttacking","NodeData":{"Offset":"(150,160)"},"ID":9,"Name":"Recon
-        Drone Attacking","Instant":true,"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(10,130)"},"ID":10,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-157.013489,163.526367)"},"ID":11,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-201.852081,166.429443)"},"ID":12,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsAlerted","NodeData":{"Offset":"(-159.594269,120.623047)"},"ID":13,"Name":"Is
-        Alerted","Instant":true,"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":4},"SharedColliderselfCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":5},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":6}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(169.43779,141.5907)"},"ID":14,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-308.707336,163.204468)"},"ID":15,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInFOV","NodeData":{"Offset":"(-103.464943,139.9784)"},"ID":16,"Name":"Is
-        Target In FOV","Instant":true,"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":7},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":8}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerReset","NodeData":{"Offset":"(78.79303,149.655762)"},"ID":17,"Name":"Timer
-        Reset","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-3.22577477,170)"},"ID":18,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.TimerIncrease","NodeData":{"Offset":"(-71.75933,147.3357)"},"ID":19,"Name":"Timer
-        Increase","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(85.75754,146.3634)"},"ID":20,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTimerPassed","NodeData":{"Offset":"(-100.909035,111.211929)"},"ID":21,"Name":"Is
-        Timer Passed","Instant":true,"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":9}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.ReconDroneResetAll","NodeData":{"Offset":"(100,120)"},"ID":22,"Name":"Recon
-        Drone Reset All","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":10},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloattimer":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":11}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.ReturnSuccessOnly","NodeData":{"Offset":"(204.276611,172.559082)"},"ID":23,"Name":"Return
-        Success Only","Instant":true}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(208.064438,160)"},"ID":24,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsTargetInDetectRange","NodeData":{"Offset":"(-79.59429,132.2367)"},"ID":25,"Name":"Is
-        Target In Detect Range","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":12},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":13}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.AlertNearBy","NodeData":{"Offset":"(120,130)"},"ID":26,"Name":"Alert
-        Near By","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":14},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedCollidermyCollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":15},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":16},"SharedLightenemylight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":17},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":18},"SharedCollidercollider":{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":19},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false}}]}]},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToEnemy","NodeData":{"Offset":"(196.212219,163.526367)"},"ID":27,"Name":"Set
-        Destination To Enemy","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":20},"SharedTransformtargetTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},"SharedVector3targetPos":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNavMeshAgentnavMeshAgent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":21},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":22},"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedBoolshouldInterruptible":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},"SharedFloatstoppingDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":1.5}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(620,140)"},"ID":28,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.IsNavMeshAgentHasPath","NodeData":{"Offset":"(-162.214142,151.359146)"},"ID":29,"Name":"Is
-        Nav Mesh Agent Has Path","Instant":true,"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":23},"SharedVector3targetPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly.DroneEnterPatrolMode","NodeData":{"Offset":"(40,160)"},"ID":30,"Name":"Drone
-        Enter Patrol Mode","Instant":true,"SharedBoolshouldLookTarget":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},"SharedAnimatoranimator":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":24}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.InterruptibleWait","NodeData":{"Offset":"(208.654053,170.133789)"},"ID":31,"Name":"Interruptible
-        Wait","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":25},"SharedBoolisAlerted":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},"SharedFloatmaxViewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":26}},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.SetDestinationToPatrol","NodeData":{"Offset":"(382.330658,161.782654)"},"ID":32,"Name":"Set
-        Destination To Patrol","Instant":true,"SharedTransformselfTransform":{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":27},"SharedBaseNpcStatControllerstatController":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":28},"SharedNavMeshAgentagent":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":29},"SharedLightenemyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":30},"SharedLightallyLight":{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":31}}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"self_Transform","IsShared":true,"TransformmValue":32},{"Type":"BehaviorDesigner.Runtime.SharedTransform","Name":"target_Transform","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"target_Pos","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"CanRun","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"maxViewDistance","IsShared":true,"SinglemValue":100},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldLookTarget","IsShared":true,"BooleanmValue":false},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedBaseNpcStatController","Name":"statController","IsShared":true,"BaseNpcStatControllermValue":33},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedAnimator","Name":"animator","IsShared":true,"AnimatormValue":34},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedNavMeshAgent","Name":"agent","IsShared":true,"NavMeshAgentmValue":35},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsAlerted","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedCollider","Name":"self_Collider","IsShared":true,"CollidermValue":36},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"timer","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"shouldInterrupt","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"stoppingDistance","IsShared":true,"SinglemValue":1.5},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Enemy_Light","IsShared":true,"LightmValue":37},{"Type":"_1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables.SharedLight","Name":"Ally_Light","IsShared":true,"LightmValue":38},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"IsDead","IsShared":true,"BooleanmValue":false}]}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.size
-      value: 39
-      objectReference: {fileID: 0}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[3]
-      value: 
-      objectReference: {fileID: 735032943}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[4]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[5]
-      value: 
-      objectReference: {fileID: 735032940}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[6]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[7]
-      value: 
-      objectReference: {fileID: 735032940}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[9]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[10]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[11]
-      value: 
-      objectReference: {fileID: 735032942}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[12]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[13]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[14]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[15]
-      value: 
-      objectReference: {fileID: 735032940}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[16]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[17]
-      value: 
-      objectReference: {fileID: 735032939}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[18]
-      value: 
-      objectReference: {fileID: 735032938}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[19]
-      value: 
-      objectReference: {fileID: 735032940}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[20]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[21]
-      value: 
-      objectReference: {fileID: 735032942}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[22]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[23]
-      value: 
-      objectReference: {fileID: 735032942}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[24]
-      value: 
-      objectReference: {fileID: 735032943}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[25]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[26]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[27]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[28]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[29]
-      value: 
-      objectReference: {fileID: 735032942}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[30]
-      value: 
-      objectReference: {fileID: 735032939}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[31]
-      value: 
-      objectReference: {fileID: 735032938}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[32]
-      value: 
-      objectReference: {fileID: 735032944}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[33]
-      value: 
-      objectReference: {fileID: 735032941}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[34]
-      value: 
-      objectReference: {fileID: 735032943}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[35]
-      value: 
-      objectReference: {fileID: 735032942}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[36]
-      value: 
-      objectReference: {fileID: 735032940}
-    - target: {fileID: 1804825920084465453, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: mBehaviorSource.mTaskData.fieldSerializationData.unityObjects.Array.data[37]
-      value: 
-      objectReference: {fileID: 735032939}
     - target: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
         type: 3}
       propertyPath: m_Name
@@ -1111,54 +1053,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
---- !u!108 &735032938 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 1263588022468616192, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!108 &735032939 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 8470211306173647419, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &735032940 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 8915890175638079008, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &735032941 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5628670126002967865, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf01ddb19bf383246ad1ce9598c23685, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!195 &735032942 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 8550588303330216472, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &735032943 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2064840508558717499, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &735032944 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-    type: 3}
-  m_PrefabInstance: {fileID: 735032937}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &928442627
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1667,12 @@ MonoBehaviour:
   m_AmplitudeGain: 0
   m_FrequencyGain: 0
   mNoiseOffsets: {x: 21.395325, y: -512.9042, z: -381.71802}
+--- !u!198 &1835892755 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3813748275385780599, guid: 1d7631e67b59a9a46b7bea54c29461a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 160143783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1917048628
 GameObject:
   m_ObjectHideFlags: 0
