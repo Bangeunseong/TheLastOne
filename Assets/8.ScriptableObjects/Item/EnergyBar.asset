@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EnergyBar
   m_EditorClassIdentifier: 
   Name: EnergyBar
-  ItemType: 0
+  ItemType: 2
   IsPlayerMovable: 1
   Value: 100
   Delay: 3

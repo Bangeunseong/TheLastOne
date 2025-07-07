@@ -73,7 +73,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             isPressed = false;
             switch (IsOpenUIAction)
             {
-                case true: 
+                case true:
                     coreManager.uiManager.InGameUI.QuickSlotUI.CloseAndUse(); 
                     player.InputProvider.enabled = true; break;
                 case false: OnUseItem(); break;
@@ -86,11 +86,24 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             Service.Log($"Attempting to select {itemType}");
             CurrentItem = itemType;
         }
+
+        public bool OnRefillItem(ItemType itemType)
+        {
+            Service.Log($"Attempting to refill {itemType}");
+            return Items[itemType].OnRefill();
+        }
         
         private void OnUseItem()
         {
             Service.Log($"Attempting to use {CurrentItem}.");
-            Items[CurrentItem].OnUse(gameObject);
+            switch (Items[CurrentItem])
+            {
+                case Medkit medkit: medkit.OnUse(gameObject); break;
+                case NanoAmple nanoAmple: nanoAmple.OnUse(gameObject); break;
+                case EnergyBar energyBar: energyBar.OnUse(gameObject); break;
+                case Shield shield: shield.OnUse(gameObject); break;
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
