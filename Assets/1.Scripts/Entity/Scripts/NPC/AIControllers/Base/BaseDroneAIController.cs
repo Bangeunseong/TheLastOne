@@ -107,7 +107,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             ResetAll();
             base.HackingNpc();
         }
-        
+
+        public bool IsStunned { get; }
+
         public void OnStunned(float duration)
         {
             isStunned = true;

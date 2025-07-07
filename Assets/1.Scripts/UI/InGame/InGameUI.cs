@@ -30,8 +30,6 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image focusGaugeFrame;
         [SerializeField] private Image instinctGaugeImage;
         [SerializeField] private Image instinctGaugeFrame;
-        [SerializeField] private Image instinctGaugeEffect;
-        [SerializeField] private Image focusGaugeEffect;
         [SerializeField] private Animator instinctEffectAnimator;
         [SerializeField] private Animator focusEffectAnimator;
         private Coroutine focusEffectCoroutine;
@@ -169,7 +167,7 @@ namespace _1.Scripts.UI.InGame
             {
                 focusEffectAnimator.SetTrigger("Full");
                 focusEffectAnimator.ResetTrigger("Full");
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(1f);
             }
         }
 
@@ -179,7 +177,7 @@ namespace _1.Scripts.UI.InGame
             {
                 instinctEffectAnimator.ResetTrigger("Full");
                 instinctEffectAnimator.SetTrigger("Full");
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(1f);
             }
         }
     }
