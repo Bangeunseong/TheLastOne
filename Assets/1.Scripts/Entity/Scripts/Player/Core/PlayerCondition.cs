@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
-using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -26,6 +25,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public float MaxStamina { get; private set; }
         [field: SerializeField] public float CurrentStamina { get; private set; }
+        [field: SerializeField] public int MaxShield { get; private set; }
+        [field: SerializeField] public int CurrentShield { get; private set; }
         [field: SerializeField] public float CurrentFocusGauge { get; private set; }
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
         [field: SerializeField] public float SkillSpeedMultiplier { get; private set; } = 1f;
@@ -141,10 +142,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Service.Log("DataTransferObject is null");
                 MaxHealth = CurrentHealth = StatData.maxHealth;
                 MaxStamina = CurrentStamina = StatData.maxStamina;
+                MaxShield = StatData.maxShield; CurrentShield = 0;
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
-                CurrentFocusGauge = 0f;
-                CurrentInstinctGauge = 0f;
+                CurrentFocusGauge = CurrentInstinctGauge = 0f;
                 Level = 1;
                 Experience = 0;
             }
@@ -154,6 +155,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Level = data.characterInfo.level; Experience = data.characterInfo.experience;
                 MaxHealth = data.characterInfo.maxHealth; CurrentHealth = data.characterInfo.health;
                 MaxStamina = data.characterInfo.maxStamina; CurrentStamina = data.characterInfo.stamina;
+                MaxShield = data.characterInfo.maxShield; CurrentShield = data.characterInfo.shield;
                 AttackRate = data.characterInfo.attackRate; Damage = data.characterInfo.damage;
                 LastSavedPosition = data.currentCharacterPosition.ToVector3();
                 LastSavedRotation = data.currentCharacterRotation.ToQuaternion();
@@ -189,7 +191,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnTakeDamage(int damage)
         {
             if (IsDead) return;
-            CurrentHealth -= damage;
+            if (CurrentShield <= 0) CurrentHealth -= damage;
+            else
+            {
+                if (CurrentShield < damage) CurrentHealth += CurrentShield - damage;
+                CurrentShield = Mathf.Max(CurrentShield - damage, 0);
+            }
             OnDamage?.Invoke();
             
             if (CurrentHealth <= 0) { OnDead(); }
@@ -203,6 +210,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+        }
+
+        /// <summary>
+        /// Recover Shield Point
+        /// </summary>
+        /// <param name="value">Value of shield to recover</param>
+        public void OnRecoverShield(int value)
+        {
+            if (IsDead) return;
+            CurrentShield = Mathf.Min(CurrentShield + value, MaxShield);
         }
 
         /// <summary>
@@ -656,11 +673,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             switch (itemData.ItemType)
             {
                 case ItemType.Medkit: 
-                case ItemType.NanoAmple:
-                    OnRecoverHealth(itemData.Value); break;
+                case ItemType.NanoAmple: OnRecoverHealth(itemData.Value); break;
                 case ItemType.EnergyBar: OnRecoverStamina(itemData.Value); break;
-                case ItemType.Shield: // TODO: Recover Defense Point -> Character Stat에 Defense 추가필요 
-                    break;
+                case ItemType.Shield: OnRecoverShield(itemData.Value); break;
                 default: throw new ArgumentOutOfRangeException();
             }
             ItemSpeedMultiplier = 1f;

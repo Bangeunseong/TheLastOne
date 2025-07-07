@@ -54,6 +54,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     maxHealth = Player.PlayerCondition.MaxHealth, health = Player.PlayerCondition.CurrentHealth,
                     maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
+                    maxShield = Player.PlayerCondition.MaxShield, shield = Player.PlayerCondition.CurrentShield,
                     attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
                     level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
                     focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,

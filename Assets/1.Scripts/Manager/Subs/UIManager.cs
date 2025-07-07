@@ -6,7 +6,9 @@ using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using _1.Scripts.UI.Setting;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -21,22 +23,23 @@ namespace _1.Scripts.Manager.Subs
     [Serializable]
     public class UIManager
     {
-        private CurrentState currentState = CurrentState.None;
+        [field: Header("UI Components")]
+        [field: SerializeField] public SerializedDictionary<CurrentState, List<UIBase>> LoadedUI { get; private set; } = new();
+        private Dictionary<string, UIPopup> loadedPopup = new();
+        private Stack<UIPopup> popupStack = new();
         
+        [field: Header("InGameUI")]
+        [field: SerializeField] public InGameUI InGameUI { get; private set; }
+        
+        private Transform uiRoot;
+        private Transform popupRoot;
+        private CurrentState currentState = CurrentState.None;
+
         private LobbyUI lobbyUI;
         private LoadingUI loadingUI;
         private SettingUI settingUI;
-        private QuickSlotUI quickSlotUI;
-        
-        private Dictionary<CurrentState, List<UIBase>> loadedUI = new Dictionary<CurrentState, List<UIBase>>();
-        private Dictionary<string, UIPopup> loadedPopup = new Dictionary<string, UIPopup>();
-        private Stack<UIPopup> popupStack = new Stack<UIPopup>();
 
-        private Transform uiRoot;
-        private Transform popupRoot;
-        
         public LoadingUI LoadingUI => loadingUI;
-        public QuickSlotUI QuickSlotUI => quickSlotUI;
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
@@ -73,9 +76,7 @@ namespace _1.Scripts.Manager.Subs
             if (currentState == newState) return;
             
             DeactivateState(currentState);
-
             currentState = newState;
-            
             ActivateState(currentState);
         }
 
@@ -90,9 +91,7 @@ namespace _1.Scripts.Manager.Subs
                     loadingUI?.SetActive(true);
                     break;
                 case CurrentState.InGame:
-                    var inGameUI  = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
-                    if (quickSlotUI == null && inGameUI != null)
-                        quickSlotUI = inGameUI.GetComponentInChildren<QuickSlotUI>();
+                    InGameUI = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
                     break;
             }
         }
@@ -109,10 +108,9 @@ namespace _1.Scripts.Manager.Subs
                     break;
                 
                 case CurrentState.InGame:
-                    if (loadedUI.TryGetValue(state, out var list))
+                    if (LoadedUI.TryGetValue(state, out var list))
                     {
-                        foreach (var ui in list)
-                            ui.SetActive(false);
+                        foreach (var ui in list) ui.SetActive(false);
                     }
                     break;
             }
@@ -120,33 +118,21 @@ namespace _1.Scripts.Manager.Subs
         
         private T LoadUI<T>(CurrentState state, string address) where T : UIBase
         {
-            if (loadedUI.TryGetValue(state, out var list))
+            if (LoadedUI.TryGetValue(state, out var list))
             {
                 foreach (var existing in list)
-                    if (existing is T found)
-                    {
-                        found.SetActive(true);
-                        return found;
-                    }
+                    if (existing is T found) { found.SetActive(true); return found; }
             }
-            else
-            {
-                list = new List<UIBase>();
-                loadedUI[state] = list;
-            }
-
-            var prefab    = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
+            
+            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
             if (prefab == null || uiRoot == null) return null;
 
-            var instance  = GameObject.Instantiate(prefab, uiRoot, false);
-            var component = instance.GetComponent<T>();
-            if (component == null) return null;
-
-            component.Init(this);
+            var instance  = Object.Instantiate(prefab, uiRoot, false);
+            if (!instance.TryGetComponent(out T component)) return null;
+            if (component is InGameUI inGameUI) inGameUI.Init(this);
             component.SetActive(true);
-            list.Add(component);
             return component;
-        }        
+        }
         
         public T ShowPopup<T>(string address) where T : UIPopup
         {
@@ -162,7 +148,7 @@ namespace _1.Scripts.Manager.Subs
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
             if (prefab != null && popupRoot != null)
             {
-                var instance = GameObject.Instantiate(prefab, popupRoot, false);
+                var instance = Object.Instantiate(prefab, popupRoot, false);
                 var component = instance.GetComponent<T>();
                 if (component != null)
                 {

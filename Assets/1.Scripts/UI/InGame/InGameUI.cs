@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.Setting;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -41,19 +44,38 @@ namespace _1.Scripts.UI.InGame
         [Header("무기 정보")] 
         [SerializeField] private WeaponUI weaponUI;
 
-
+        [field: Header("퀵 슬롯 UI")]
+        [field: SerializeField] public QuickSlotUI QuickSlotUI { get; private set; }
+        
         private PlayerCondition playerCondition;
         private bool isPaused = false;
 
+        private void Awake()
+        {
+            if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
+        }
+
+        private void Start()
+        {
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+        }
 
         public override void Init(UIManager manager)
         {
             base.Init(manager);
+            
+            if (playerCondition != null) UpdateStateUI();
 
-            playerCondition = FindObjectOfType<PlayerCondition>();
-            if (playerCondition != null)
+            if (manager.LoadedUI.TryGetValue(CurrentState.InGame, out var list))
             {
-                UpdateStateUI();
+                Service.Log($"{list}");
+                list.Add(this);
+            }
+            else
+            { 
+                Service.Log("Trying to add new UI");
+                var uiList = new List<UIBase> { this }; 
+                manager.LoadedUI.Add(CurrentState.InGame, uiList);
             }
         }
 
