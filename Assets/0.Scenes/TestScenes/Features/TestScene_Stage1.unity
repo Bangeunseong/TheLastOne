@@ -6886,7 +6886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9414417dc32ae9541b203b1c3c2499ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemType>k__BackingField: 0
+  <ItemType>k__BackingField: 2
 --- !u!64 &4324568784972165741
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6990,7 +6990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9414417dc32ae9541b203b1c3c2499ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemType>k__BackingField: 0
+  <ItemType>k__BackingField: 1
 --- !u!64 &4382770910351892623
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8720,7 +8720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9414417dc32ae9541b203b1c3c2499ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemType>k__BackingField: 0
+  <ItemType>k__BackingField: 3
 --- !u!64 &8659202194519715760
 MeshCollider:
   m_ObjectHideFlags: 0

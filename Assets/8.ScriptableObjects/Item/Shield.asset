@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shield
   m_EditorClassIdentifier: 
   Name: Shield
-  ItemType: 0
+  ItemType: 3
   IsPlayerMovable: 1
   Value: 50
   Delay: 5
