@@ -34,6 +34,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         private Coroutine stunnedCoroutine;
         [SerializeField] private ParticleSystem onStunParticle;
         
+        [Header("Hacking")]
+        private Coroutine hackingCoroutine;
+        private bool isHacking = false;
+        [SerializeField] private float hackingDuration = 3f;
+        [SerializeField] private float successChance = 0.7f; // 70% 확률
+        
         private void Awake()
         {
             var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneStatData"); // 자신만의 데이터 가져오기
@@ -97,16 +103,56 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         #region 여기부턴 상호작용
         public void Hacking()
         {
-            if (!runtimeReconDroneStatData.isAlly)
+            if (isHacking || runtimeReconDroneStatData.isAlly)
             {
+                return;
+            }
+
+            if (hackingCoroutine != null)
+            {
+                StopCoroutine(hackingCoroutine);
+            }
+
+            hackingCoroutine = StartCoroutine(HackingProcess());
+        }
+
+        private IEnumerator HackingProcess()
+        {
+            isHacking = true;
+
+            // 1. 드론 멈추기
+            float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
+            OnStunned(stunDurationOnHacking);
+
+            // 2. 해킹 시도 시간 기다림
+            yield return new WaitForSeconds(hackingDuration);
+
+            // 3. 확률 판정
+            bool success = UnityEngine.Random.value < successChance;
+
+            if (success)
+            {
+                // 해킹 성공
                 runtimeReconDroneStatData.isAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
-                ResetAIState();
             }
+            else
+            {
+                // 해킹 실패
+                // 실패 후 추가 패널티 로직 ㄱㄱ
+            }
+
+            // yield return new WaitForSeconds(1f);
+            // 움직이기 시작할 때 무언가 추가할거라면 여기에
+            
+            isHacking = false;
+            hackingCoroutine = null;
         }
 
         public void OnStunned(float duration = 3f)
         {
+            if (isStunned) return;
+            
             isStunned = true;
             behaviorTree.SetVariableValue("CanRun", false);
             ResetAIState();
