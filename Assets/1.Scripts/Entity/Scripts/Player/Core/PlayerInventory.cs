@@ -73,7 +73,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             isPressed = false;
             switch (IsOpenUIAction)
             {
-                case true: 
+                case true:
                     coreManager.uiManager.InGameUI.QuickSlotUI.CloseAndUse(); 
                     player.InputProvider.enabled = true; break;
                 case false: OnUseItem(); break;

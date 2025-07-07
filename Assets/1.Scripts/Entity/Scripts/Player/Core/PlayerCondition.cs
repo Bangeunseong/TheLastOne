@@ -638,7 +638,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             IsUsingInstinct = false;
         }
-
         private IEnumerator InstinctRecover_Coroutine(float delay)
         {
             while (!IsDead)
@@ -659,7 +658,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (itemCoroutine != null) return;
             itemCoroutine = StartCoroutine(Item_Coroutine(usedItem.ItemData));
         }
-
         private IEnumerator Item_Coroutine(ItemData itemData)
         {
             // TODO: Animation 재생
