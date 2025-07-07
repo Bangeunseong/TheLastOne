@@ -129,7 +129,7 @@ namespace _1.Scripts.UI.InGame
             if (playerCondition == null) return;
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
-            //UpdateArmorSlider(playerCondition.CurrentArmor, playerCondition.MaxArmor);
+            UpdateArmorSlider(playerCondition.CurrentShield, playerCondition.MaxShield);
             UpdateLevelUI(playerCondition.Level);
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
