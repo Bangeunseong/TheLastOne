@@ -86,6 +86,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             Service.Log($"Attempting to select {itemType}");
             CurrentItem = itemType;
         }
+
+        public bool OnRefillItem(ItemType itemType)
+        {
+            Service.Log($"Attempting to refill {itemType}");
+            return Items[CurrentItem].OnRefill();
+        }
         
         private void OnUseItem()
         {

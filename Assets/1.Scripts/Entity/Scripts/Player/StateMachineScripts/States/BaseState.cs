@@ -2,6 +2,7 @@
 using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -331,9 +332,14 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsDead) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
-            if (interactable is DummyWeapon gun)
+            switch (interactable)
             {
-                gun.OnInteract(stateMachine.Player.gameObject);
+                case DummyWeapon gun:
+                    gun.OnInteract(stateMachine.Player.gameObject);
+                    break;
+                case DummyItem item:
+                    item.OnInteract(stateMachine.Player.gameObject);
+                    break;
             }
         }
         /* ---------------------- */
