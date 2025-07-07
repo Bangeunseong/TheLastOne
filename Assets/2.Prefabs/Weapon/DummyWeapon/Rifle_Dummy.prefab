@@ -576,8 +576,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9789ae1cac1a4e829156435e0c5cf0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <TargetLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 1073741824
   <Type>k__BackingField: 1
-  <Renderers>k__BackingField: []
+  <Renderers>k__BackingField:
+  - {fileID: 6028178752801936544}
+  - {fileID: 1689335009252097673}
+  - {fileID: 4683639143741756856}
+  - {fileID: 3374632114803530266}
+  - {fileID: 7326658632247836409}
+  - {fileID: 5864314671521685359}
+  - {fileID: 1678535779250530069}
+  - {fileID: 6140110969501684204}
+  - {fileID: 7328308675489599545}
+  - {fileID: 7326440837575346923}
+  - {fileID: 7328059735286700145}
+  - {fileID: 7328121278318926877}
+  - {fileID: 7328373758480190607}
 --- !u!54 &633354372327206671
 Rigidbody:
   m_ObjectHideFlags: 0
