@@ -8,5 +8,6 @@ namespace _1.Scripts.Interfaces.Item
     {
         void Initialize(CoreManager coreManager, DataTransferObject dto = null);
         void OnUse(GameObject interactor);
+        bool OnRefill(int value = 1);
     }
 }

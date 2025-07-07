@@ -13,8 +13,15 @@ namespace _1.Scripts.Item.Common
         
         [field: Header("Current Item Stat.")]
         [field: SerializeField] public int CurrentItemCount { get; protected set; }
-        
+
         public virtual void Initialize(CoreManager coreManager, DataTransferObject dto = null) { }
         public virtual void OnUse(GameObject interactor) { }
+
+        public virtual bool OnRefill(int value = 1)
+        {
+            if (CurrentItemCount >= ItemData.MaxStackCount) return false;
+            CurrentItemCount = Mathf.Min(CurrentItemCount + value, ItemData.MaxStackCount);
+            return true;
+        }
     }
 }
