@@ -36,7 +36,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				}
 			}
 
-			navMeshAgent.Value.speed = statController.Value.RuntimeStatData.moveSpeed + statController.Value.RuntimeStatData.runMultiplier;
+			navMeshAgent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
 			shouldLookTarget.Value = true;
 			
 			Vector3 directionToEnemy = (targetTransform.Value.position - selfTransform.Value.position).normalized;

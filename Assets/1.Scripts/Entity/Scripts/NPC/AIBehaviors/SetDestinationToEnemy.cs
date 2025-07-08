@@ -31,7 +31,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 }
             }
             
-            controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed + controller.statController.RuntimeStatData.runMultiplier;
+            controller.navMeshAgent.speed = controller.statController.RuntimeStatData.MoveSpeed + controller.statController.RuntimeStatData.RunMultiplier;
             controller.shouldLookTarget = true;
             
             // NavMesh 위의 가장 가까운 위치를 찾음

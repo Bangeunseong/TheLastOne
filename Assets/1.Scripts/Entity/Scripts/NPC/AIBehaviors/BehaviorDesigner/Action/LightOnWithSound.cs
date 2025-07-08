@@ -27,7 +27,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				return TaskStatus.Failure;
 			}
 			
-			if (statController.Value.RuntimeStatData.isAlly)
+			if (statController.Value.RuntimeStatData.IsAlly)
 			{
 				if (!allyLight.Value.enabled)
 				{

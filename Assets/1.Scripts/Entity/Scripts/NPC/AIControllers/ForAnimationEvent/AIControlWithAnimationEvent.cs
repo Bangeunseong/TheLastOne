@@ -52,5 +52,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                 Debug.LogWarning("SharedNavMeshAgent를 찾을 수 없거나 값이 없습니다.");
             }
         }
+        
+        public void DestroyObjectForAnimationEvent()
+        {
+            Destroy(gameObject);
+        }
     }
 }

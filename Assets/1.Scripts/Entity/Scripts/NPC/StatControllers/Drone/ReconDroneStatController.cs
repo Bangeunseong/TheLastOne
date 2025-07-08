@@ -7,6 +7,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
@@ -35,10 +36,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private ParticleSystem onStunParticle;
         
         [Header("Hacking")]
-        private Coroutine hackingCoroutine;
-        private bool isHacking = false;
         [SerializeField] private float hackingDuration = 3f;
         [SerializeField] private float successChance = 0.7f; // 70% 확률
+        [SerializeField] private int hackingFailAttackIncrease = 3;
+        [SerializeField] private float hackingFailArmorIncrease = 3f;
+        [SerializeField] private float hackingFailPenaltyDuration = 10f;
+        private Coroutine hackingCoroutine;
+        private bool isHacking = false;
         
         private void Awake()
         {
@@ -50,15 +54,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 
         private void Update()
         {
-            runtimeReconDroneStatData.isAlly = isAlly;
+            runtimeReconDroneStatData.IsAlly = isAlly;
         }
 
         public void OnTakeDamage(int damage)
         {
             if (!isDead)
             {
-                runtimeReconDroneStatData.maxHealth -= damage;
-                if (runtimeReconDroneStatData.maxHealth <= 0)
+                float armorRatio = runtimeReconDroneStatData.Armor / runtimeReconDroneStatData.MaxArmor;
+                float reducePercent = Mathf.Clamp01(armorRatio); // 0.0 ~ 1.0 사이
+                damage = (int)(damage * (1f - reducePercent));
+
+                runtimeReconDroneStatData.MaxHealth -= damage;
+                if (runtimeReconDroneStatData.MaxHealth <= 0)
                 {
                     behaviorTree.SetVariableValue("IsDead", true);
                     
@@ -92,18 +100,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 
         public override void ModifySpeed(float percent)
         {
-            runtimeReconDroneStatData.moveSpeed *= percent;
-        }
-
-        public void DestroyObjectForAnimationEvent()
-        {
-            Destroy(gameObject);
+            runtimeReconDroneStatData.MoveSpeed *= percent;
         }
 
         #region 여기부턴 상호작용
         public void Hacking()
         {
-            if (isHacking || runtimeReconDroneStatData.isAlly)
+            if (isHacking || runtimeReconDroneStatData.IsAlly)
             {
                 return;
             }
@@ -133,13 +136,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                runtimeReconDroneStatData.isAlly = true;
+                runtimeReconDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
             }
             else
             {
                 // 해킹 실패
                 // 실패 후 추가 패널티 로직 ㄱㄱ
+                
+                // 공격력 및 방어력이 10% 증가
+                int baseDamage = runtimeReconDroneStatData.BaseDamage;
+                float baseArmor = runtimeReconDroneStatData.Armor;
+                StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
             }
 
             // yield return new WaitForSeconds(1f);
@@ -148,7 +157,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             isHacking = false;
             hackingCoroutine = null;
         }
-
+        
+        private IEnumerator DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        {
+            runtimeReconDroneStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
+            runtimeReconDroneStatData.Armor = baseArmor + hackingFailArmorIncrease;
+            
+            yield return new WaitForSeconds(hackingFailPenaltyDuration);
+            
+            runtimeReconDroneStatData.BaseDamage = baseDamage;
+            runtimeReconDroneStatData.Armor = baseArmor;
+        } 
+        
         public void OnStunned(float duration = 3f)
         {
             if (isStunned) return;

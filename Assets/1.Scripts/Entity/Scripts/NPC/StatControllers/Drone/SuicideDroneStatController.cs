@@ -6,6 +6,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
@@ -47,15 +48,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 
         private void Update()
         {
-            runtimeSuicideDroneStatData.isAlly = isAlly;
+            runtimeSuicideDroneStatData.IsAlly = isAlly;
         }
 
         public void OnTakeDamage(int damage)
         {
             if (!isDead)
             {
-                runtimeSuicideDroneStatData.maxHealth -= damage;
-                if (runtimeSuicideDroneStatData.maxHealth <= 0)
+                float armorRatio = runtimeSuicideDroneStatData.Armor / runtimeSuicideDroneStatData.MaxArmor;
+                float reducePercent = Mathf.Clamp01(armorRatio); // 0.0 ~ 1.0 사이
+                damage = (int)(damage * (1f - reducePercent));
+                
+                runtimeSuicideDroneStatData.MaxHealth -= damage;
+                if (runtimeSuicideDroneStatData.MaxHealth <= 0)
                 {
                     behaviorTree.SetVariableValue("IsDead", true);
                     
@@ -91,7 +96,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         
         public void Hacking()
         {
-            if (isHacking || runtimeSuicideDroneStatData.isAlly)
+            if (isHacking || runtimeSuicideDroneStatData.IsAlly)
             {
                 return;
             }
@@ -119,8 +124,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                runtimeSuicideDroneStatData.isAlly = true;
+                runtimeSuicideDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
             }
             else
             {

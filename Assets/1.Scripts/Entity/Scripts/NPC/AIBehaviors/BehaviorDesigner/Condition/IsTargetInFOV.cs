@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		
 		public override TaskStatus OnUpdate()
 		{
-			if (NpcUtil.IsTargetVisible(myCollider.Value.bounds.center, targetPos.Value, maxViewDistance.Value, statController.Value.RuntimeStatData.isAlly))
+			if (NpcUtil.IsTargetVisible(myCollider.Value.bounds.center, targetPos.Value, maxViewDistance.Value, statController.Value.RuntimeStatData.IsAlly))
 			{
 				return TaskStatus.Success;
 			}
