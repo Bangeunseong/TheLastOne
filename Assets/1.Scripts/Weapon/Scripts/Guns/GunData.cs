@@ -18,7 +18,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         [field: SerializeField] public string BulletPrefabId { get; private set; }
     }
     
-    [CreateAssetMenu(fileName = "New GunData", menuName = "ScriptableObjects/Gun", order = 0)]
+    [CreateAssetMenu(fileName = "New GunData", menuName = "ScriptableObjects/Weapon/Create New GunData", order = 0)]
     public class GunData : ScriptableObject
     {
         [field: SerializeField] public GunStat GunStat { get; private set; }
