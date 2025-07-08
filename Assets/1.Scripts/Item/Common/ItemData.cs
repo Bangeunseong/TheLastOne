@@ -20,6 +20,7 @@ namespace _1.Scripts.Item.Common
         public bool IsPlayerMovable;
         public int Value;
         public float Delay;
+        public Sprite Icon;
 
         [Header("Item Stack Count")]
         public int MaxStackCount;

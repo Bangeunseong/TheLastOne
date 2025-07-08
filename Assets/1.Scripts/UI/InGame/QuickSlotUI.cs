@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
-using Cinemachine;
 using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
@@ -13,12 +10,6 @@ using Cursor = UnityEngine.Cursor;
 
 namespace _1.Scripts.UI.InGame
 {
-    [Serializable]
-    public class DummyItemData
-    {
-        public Sprite icon;
-        public int count;
-    }
     public class QuickSlotUI : MonoBehaviour
     {
         [Header("QuickSlotUI")]
@@ -30,12 +21,14 @@ namespace _1.Scripts.UI.InGame
         [Header("QuickSlot Elements")] 
         [SerializeField] public Image[] slotIcons;
         [SerializeField] private TextMeshProUGUI[] slotCounts;
-        [SerializeField] private DummyItemData[] dummyItems = new DummyItemData[4]; 
+        private PlayerInventory inventory;
         
         private int currentSlot = -1;
 
         private void Start()
         {
+            inventory = CoreManager.Instance.gameManager.Player.PlayerInventory;
+            
             for (int i = 0; i < slotEvents.Length; i++)
             {
                 int idx = i;
@@ -101,29 +94,37 @@ namespace _1.Scripts.UI.InGame
 
         private void RefreshQuickSlot()
         {
+            var items = inventory.Items;
+            
             for (int i = 0; i < slotIcons.Length; i++)
             {
-                var data = (i < dummyItems.Length) ? dummyItems[i] : null;
+                ItemType type = (ItemType)i;
 
-                if (data != null && data.icon != null)
+                BaseItem item = null;
+                foreach (var it in items)
                 {
-                    slotIcons[i].sprite = data.icon;
-
-                    if (data.count > 0)
+                    if (it.Key == type)
                     {
-                        slotCounts[i].text = data.count.ToString();
-                        slotCounts[i].gameObject.SetActive(true);
+                        item = it.Value;
+                        break;
                     }
-                    else
-                    {
-                        slotCounts[i].gameObject.SetActive(false);
-                    }
+                }
+                
+                if (item != null && item.CurrentItemCount > 0)
+                {
+                    slotIcons[i].enabled = true;
+                    slotIcons[i].sprite = item.ItemData.Icon;
+                    slotCounts[i].text = item.CurrentItemCount.ToString();
+                    slotCounts[i].gameObject.SetActive(true);
                 }
                 else
                 {
                     slotIcons[i].sprite = null;
+                    slotIcons[i].enabled = false;
+                    slotCounts[i].text = "";
                     slotCounts[i].gameObject.SetActive(false);
                 }
+
             }
         }
     }
