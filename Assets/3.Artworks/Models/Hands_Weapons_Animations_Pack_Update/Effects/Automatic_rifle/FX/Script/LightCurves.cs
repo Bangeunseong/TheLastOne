@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using _1.Scripts.Manager.Core;
 
 public class LightCurves : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class LightCurves : MonoBehaviour
     [HideInInspector] public bool canUpdate;
     private float startTime;
     private Light lightSource;
+    private CoreManager coreManager;
 
     private void Awake()
     {
@@ -19,20 +20,30 @@ public class LightCurves : MonoBehaviour
 
     private void OnEnable()
     {
-        startTime = Time.time;
+        startTime = 0f;
         canUpdate = true;
+    }
+
+    private void Start()
+    {
+        coreManager = CoreManager.Instance;
     }
 
     private void Update()
     {
-        var time = Time.time - startTime;
         if (canUpdate) {
-            var eval = LightCurve.Evaluate(time / GraphTimeMultiplier) * GraphIntensityMultiplier;
+            var eval = LightCurve.Evaluate(startTime / GraphTimeMultiplier) * GraphIntensityMultiplier;
             lightSource.intensity = eval;
         }
-        if (time >= GraphTimeMultiplier) {
-            if (IsLoop) startTime = Time.time;
-            else canUpdate = false;
+
+        if (startTime < GraphTimeMultiplier)
+        {
+            if(!coreManager.gameManager.IsGamePaused) startTime += Time.unscaledDeltaTime;
+        }
+        else
+        {
+            if (IsLoop) startTime = 0f;
+            canUpdate = false;
         }
     }
 }

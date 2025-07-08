@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -18,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected Coroutine crouchCoroutine;
         
         private float speed;
-        private float smoothVelocity;
+        private float smoothVelocity = 5f;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -35,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead || coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
@@ -104,9 +106,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
-            
-            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+
+            speed = speed switch
+            {
+                >= 0 and < 1 => 1,
+                >= 1 => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
+                _ => throw new ArgumentOutOfRangeException()
+            };
             // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
@@ -120,7 +126,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.SkillSpeedMultiplier * playerCondition.ItemSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -149,7 +155,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             float t = 0;
             while (t < duration)
             {
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 float elapsed = t / duration;
                 stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
                 yield return null;
@@ -163,7 +169,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
-                playerCondition.OnRecoverStamina(recoverRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnRecoverStamina(recoverRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
@@ -172,7 +179,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             while (playerCondition.CurrentStamina > 0)
             {
-                playerCondition.OnConsumeStamina(consumeRate);
+                if (!coreManager.gameManager.IsGamePaused)
+                    playerCondition.OnConsumeStamina(consumeRate);
                 yield return new WaitForSecondsRealtime(interval);
             }
         }
@@ -196,6 +204,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
             playerInput.PlayerActions.Focus.started += OnFocusStarted;
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
+            playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
+            playerInput.PlayerActions.ItemAction.canceled += OnItemActionCanceled;
         }
         
         private void RemoveInputActionCallbacks()
@@ -217,6 +227,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
             playerInput.PlayerActions.Focus.started -= OnFocusStarted;
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
+            playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
+            playerInput.PlayerActions.ItemAction.canceled -= OnItemActionCanceled;
         }
         
         /* - 기본동작 관련 메소드 - */
@@ -229,12 +241,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Aim 관련 메소드 - */
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             playerCondition.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             playerCondition.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
         }
         /* ----------------- */
@@ -242,7 +254,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching) return;
             playerCondition.IsAttacking = true;
         }
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
@@ -318,12 +330,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnInteractStarted(InputAction.CallbackContext context)
         {
             if (playerCondition.IsDead) return;
-            if (stateMachine.Player.PlayerInteraction.Interactable == null) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
-            if (interactable is DummyWeapon gun)
+            switch (interactable)
             {
-                gun.OnInteract(stateMachine.Player.gameObject);
+                case DummyWeapon gun:
+                    gun.OnInteract(stateMachine.Player.gameObject);
+                    break;
+                case DummyItem item:
+                    item.OnInteract(stateMachine.Player.gameObject);
+                    break;
             }
         }
         /* ---------------------- */
@@ -338,5 +354,17 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (!playerCondition.OnConsumeInstinctGauge()) return;
         }
         /* -------------------- */
+        
+        /* - Item 관련 메소드 - */
+        protected virtual void OnItemActionStarted(InputAction.CallbackContext context)
+        {
+            stateMachine.Player.PlayerInventory.OnItemActionStarted();
+        }
+
+        protected virtual void OnItemActionCanceled(InputAction.CallbackContext context)
+        {
+            stateMachine.Player.PlayerInventory.OnItemActionCanceled();
+        }
+        /* ------------------- */
     }
 }

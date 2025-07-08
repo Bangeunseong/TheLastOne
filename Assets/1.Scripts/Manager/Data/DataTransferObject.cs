@@ -33,10 +33,14 @@ namespace _1.Scripts.Manager.Data
         public int health;
         public float maxStamina;
         public float stamina;
+        public int maxShield;
+        public int shield;
         public float damage;
         public float attackRate;
         public int level;
         public int experience;
+        public float focusGauge;
+        public float instinctGauge;
     }
 
     [Serializable]
@@ -55,6 +59,9 @@ namespace _1.Scripts.Manager.Data
         [field: SerializeField] public WeaponInfo[] Weapons { get; set; }
         [field: SerializeField] public bool[] AvailableWeapons { get; set; }
 
+        [field: Header("Character Items")]
+        [field: SerializeField] public int[] Items { get; set; }
+        
         [Header("Stage Info.")] 
         [SerializeField] public SceneType currentSceneId;
         [SerializeField] public SerializableVector3 currentCharacterPosition;
@@ -68,7 +75,9 @@ namespace _1.Scripts.Manager.Data
                 $"{characterInfo.attackRate}\n{characterInfo.level}, " +
                 $"{characterInfo.experience}" +
                 
-                
+                "Weapon Info.\n" +
+                $"{Weapons}\n" + 
+                $"{AvailableWeapons}\n" +
                 
                 $"Stage Info.\n{currentCharacterPosition.ToVector3()}, " +
                 $"{currentCharacterRotation.ToQuaternion()}";

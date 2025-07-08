@@ -18,11 +18,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         Debug,
     }
     
-    [CreateAssetMenu(fileName = "New PlayerData", menuName = "ScriptableObjects/Player", order = 0)]
+    [CreateAssetMenu(fileName = "New PlayerData", menuName = "ScriptableObjects/Entity/Create New PlayerData", order = 0)]
     public class PlayerStatData : EntityStatData
     {
         [Header("Extra Stats")]
         public float maxStamina;
+        public int maxShield;
         public float focusGaugeRefillRate_OnKill;
         public float focusGaugeRefillRate_OnHeadShot;
         public float focusGaugeRefillRate_OnHacked;

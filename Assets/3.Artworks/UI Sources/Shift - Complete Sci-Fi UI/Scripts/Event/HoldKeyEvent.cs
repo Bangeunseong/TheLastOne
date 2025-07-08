@@ -15,35 +15,19 @@ namespace Michsky.UI.Shift
         [SerializeField]
         public UnityEvent releaseAction;
 
-        private bool isOn = false;
-        private bool isHolding = false;
+        bool wasHolding = false;
 
         void Update()
         {
-            if (Input.GetKey(hotkey))
-            {
-                isHolding = true;
-                isOn = false;
-            }
+            bool nowHolding = Input.GetKey(hotkey);
 
-            else
-            {
-                isHolding = false;
-                isOn = true;
-            }
-
-            if (isOn == true && isHolding == false)
-            {
-                releaseAction.Invoke();
-                isHolding = false;
-                isOn = false;
-            }
-
-            else if (isOn == false && isHolding == true)
-            {
+            if (nowHolding && !wasHolding)
                 holdAction.Invoke();
-                isHolding = true;
-            }
+
+            if (!nowHolding && wasHolding)
+                releaseAction.Invoke();
+
+            wasHolding = nowHolding;
         }
     }
 }

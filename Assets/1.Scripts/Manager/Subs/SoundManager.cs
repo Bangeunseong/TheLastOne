@@ -154,6 +154,8 @@ namespace _1.Scripts.Manager.Subs
         
         public SoundPlayer PlaySFX(SfxType sfxType, Vector3 position, float duration = -1, int index = -1)
         {
+            // Debug.Log(sfxType);
+            
             string groupName = sfxType.ToString();
 
             if (!soundGroups.TryGetValue(groupName, out var group))
@@ -169,6 +171,8 @@ namespace _1.Scripts.Manager.Subs
                 return null;
             }
 
+            // Debug.Log(clip);
+            
             var obj = poolManager.Get("SoundPlayer");
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
