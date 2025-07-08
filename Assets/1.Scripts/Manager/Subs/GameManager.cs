@@ -9,6 +9,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -82,6 +83,12 @@ namespace _1.Scripts.Manager.Subs
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = grenadeThrower.CurrentAmmoCount
+                        });
+                        break;
+                    case Crossbow hackingGun:
+                        newWeaponInfo.Add(new WeaponInfo
+                        {
+                            currentAmmoCount = hackingGun.CurrentAmmoCount,
                         });
                         break;
                 }

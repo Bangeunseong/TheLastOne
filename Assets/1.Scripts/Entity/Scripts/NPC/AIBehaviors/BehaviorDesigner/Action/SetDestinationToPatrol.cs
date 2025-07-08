@@ -20,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 		public override TaskStatus OnUpdate()
 		{
-			agent.Value.speed = statController.Value.RuntimeStatData.moveSpeed;
+			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed;
 			agent.Value.isStopped = false;
 			
 			Vector3 targetPosition = GetWanderLocation();

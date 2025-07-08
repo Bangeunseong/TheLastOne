@@ -43,7 +43,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				return TaskStatus.Success;
 			}
 
-			bool ally = statController.Value.RuntimeStatData.isAlly;
+			bool ally = statController.Value.RuntimeStatData.IsAlly;
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = 0f;
 			if (statController.Value.TryGetRuntimeStatInterface<IDetectable>(out var detectable))

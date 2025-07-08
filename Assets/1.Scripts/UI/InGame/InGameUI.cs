@@ -105,12 +105,12 @@ namespace _1.Scripts.UI.InGame
 
             if (manager.LoadedUI.TryGetValue(CurrentState.InGame, out var list))
             {
-                Service.Log($"{list}");
+                // Service.Log($"{list}");
                 list.Add(this);
             }
             else
             { 
-                Service.Log("Trying to add new UI");
+                // Service.Log("Trying to add new UI");
                 var uiList = new List<UIBase> { this }; 
                 manager.LoadedUI.Add(CurrentState.InGame, uiList);
             }

@@ -219,7 +219,7 @@ namespace _1.Scripts.Manager.Subs
                     continue;
                 }
 
-                CreatePool(prefab, 500, 1000);
+                CreatePool(prefab);
                 current++;
                 
                 float progress = (float)current / total;

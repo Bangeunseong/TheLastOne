@@ -3,6 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Common
@@ -46,11 +47,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
             var index = -1;
             for (var i = 0; i < player.PlayerCondition.Weapons.Count; i++)
             {
-                if (player.PlayerCondition.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type)
-                {
-                    index = i; break;
-                } else if (player.PlayerCondition.Weapons[i] is GrenadeLauncher grenadeThrower &&
-                           grenadeThrower.GrenadeData.GrenadeStat.Type == Type)
+                if (player.PlayerCondition.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type || 
+                    player.PlayerCondition.Weapons[i] is GrenadeLauncher grenadeThrower && grenadeThrower.GrenadeData.GrenadeStat.Type == Type || 
+                    player.PlayerCondition.Weapons[i] is Crossbow crossbow && crossbow.HackData.HackStat.Type == Type)
                 {
                     index = i; break;
                 }
@@ -66,6 +65,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             else
             {
                 var result = player.PlayerCondition.Weapons[index].OnRefillAmmo(
+                    player.PlayerCondition.Weapons[index] is Crossbow ? 4 :
                     player.PlayerCondition.Weapons[index] is GrenadeLauncher ? 6 : 
                         player.PlayerCondition.Weapons[index] is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol ? 30 : 60);
                 if (!result) return;

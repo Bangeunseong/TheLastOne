@@ -20,7 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
         {
             if (NpcUtil.IsTargetVisible(controller.MyPos, 
                     controller.targetPos, 100f, 
-                    controller.statController.RuntimeStatData.isAlly))
+                    controller.statController.RuntimeStatData.IsAlly))
             {
                 return INode.State.SUCCESS;
             }

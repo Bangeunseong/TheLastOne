@@ -185,6 +185,7 @@ Transform:
   - {fileID: 3015887317089705974}
   - {fileID: 6150159485945119434}
   - {fileID: 9077367542204755455}
+  - {fileID: 2601210476487755657}
   m_Father: {fileID: 8155339996397314302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &658746208241885304
@@ -2921,7 +2922,7 @@ MonoBehaviour:
   <PlayerInteraction>k__BackingField: {fileID: 722777656224247020}
   <PlayerGravity>k__BackingField: {fileID: 884554410609251424}
   <PlayerRecoil>k__BackingField: {fileID: 4498054374752332944}
-  <PlayerInventory>k__BackingField: {fileID: 0}
+  <PlayerInventory>k__BackingField: {fileID: 9007735852533323761}
   <MainCameraTransform>k__BackingField: {fileID: 0}
   <CameraPivot>k__BackingField: {fileID: 8155339996397314302}
   <CameraPoint>k__BackingField: {fileID: 1977320588093521907}
@@ -2957,10 +2958,12 @@ MonoBehaviour:
     pistolReloadClipTime: 1.333
     rifleReloadClipTime: 2.667
     grenadeLauncherReloadClipTime: 10.333
+    crossbowReloadClipTime: 2.333
     handToOtherWeaponClipTime: 1
     pistolToOtherWeaponClipTime: 0.667
     rifleToOtherWeaponClipTime: 1
     grenadeLauncherToOtherWeaponClipTime: 0.867
+    crossbowToOtherWeaponClipTime: 0.833
     weaponWieldClipTime: 1
   <StateMachine>k__BackingField:
     <CurrentStateName>k__BackingField: 
@@ -2981,6 +2984,8 @@ MonoBehaviour:
   <CurrentHealth>k__BackingField: 0
   <MaxStamina>k__BackingField: 0
   <CurrentStamina>k__BackingField: 0
+  <MaxShield>k__BackingField: 0
+  <CurrentShield>k__BackingField: 0
   <CurrentFocusGauge>k__BackingField: 0
   <CurrentInstinctGauge>k__BackingField: 0
   <SkillSpeedMultiplier>k__BackingField: 1
@@ -3019,6 +3024,7 @@ MonoBehaviour:
   - {fileID: 2061812102761699300}
   - {fileID: 6054772671777319384}
   - {fileID: 1511550292127419583}
+  - {fileID: 2692384500652961883}
   <Weapons>k__BackingField: []
   <AvailableWeapons>k__BackingField: 
   <EquippedWeaponIndex>k__BackingField: 0
@@ -3094,7 +3100,7 @@ MonoBehaviour:
   <Items>k__BackingField:
     _serializedList: []
   <CurrentItem>k__BackingField: 0
-  <HoldDurationToOpen>k__BackingField: 1
+  <HoldDurationToOpen>k__BackingField: 0
   <IsOpenUIAction>k__BackingField: 0
 --- !u!1 &7892139384327641888
 GameObject:
@@ -3947,6 +3953,86 @@ Transform:
   - {fileID: 1918875739499475246}
   m_Father: {fileID: 3835236270369188542}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &209850617395511385
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 513947167328364100}
+    m_Modifications:
+    - target: {fileID: 2802652355955709202, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_Name
+      value: Crossbow
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.678634
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 115961e03a00cff43a6cb91fae9268df, type: 3}
+--- !u!4 &2601210476487755657 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2805972519676430288, guid: 115961e03a00cff43a6cb91fae9268df,
+    type: 3}
+  m_PrefabInstance: {fileID: 209850617395511385}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2692384500652961883 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2861139769301037058, guid: 115961e03a00cff43a6cb91fae9268df,
+    type: 3}
+  m_PrefabInstance: {fileID: 209850617395511385}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1150733641596716037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4199,6 +4285,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hand
+      objectReference: {fileID: 0}
+    - target: {fileID: 1556690003787875055, guid: 55c497bd38c4e734fa58d765b2e9eb30,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1587384213491538809, guid: 55c497bd38c4e734fa58d765b2e9eb30,
         type: 3}

@@ -6,6 +6,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
@@ -32,10 +33,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private ParticleSystem onStunParticle;
         
         [Header("Hacking")]
+        [SerializeField] private float hackingDuration = 3f;
+        [SerializeField] private float successChance = 0f; // 70% 확률
+        [SerializeField] private int hackingFailAttackIncrease = 3;
+        [SerializeField] private float hackingFailArmorIncrease = 3f;
+        [SerializeField] private float hackingFailPenaltyDuration = 10f;
         private Coroutine hackingCoroutine;
         private bool isHacking = false;
-        [SerializeField] private float hackingDuration = 3f;
-        [SerializeField] private float successChance = 0.7f; // 70% 확률
         
         private void Awake()
         {
@@ -45,17 +49,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
         }
 
-        private void Update()
-        {
-            runtimeSuicideDroneStatData.isAlly = isAlly;
-        }
-
         public void OnTakeDamage(int damage)
         {
             if (!isDead)
             {
-                runtimeSuicideDroneStatData.maxHealth -= damage;
-                if (runtimeSuicideDroneStatData.maxHealth <= 0)
+                float armorRatio = runtimeSuicideDroneStatData.Armor / runtimeSuicideDroneStatData.MaxArmor;
+                float reducePercent = Mathf.Clamp01(armorRatio); // 0.0 ~ 1.0 사이
+                damage = (int)(damage * (1f - reducePercent));
+                
+                runtimeSuicideDroneStatData.MaxHealth -= damage;
+                if (runtimeSuicideDroneStatData.MaxHealth <= 0)
                 {
                     behaviorTree.SetVariableValue("IsDead", true);
                     
@@ -91,13 +94,25 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         
         public void Hacking()
         {
-            if (isHacking || runtimeSuicideDroneStatData.isAlly)
+            if (isStunned)
+            {
+                // 해킹 성공
+                Debug.Log("해킹 성공 - 스턴 중 해킹");
+                runtimeSuicideDroneStatData.IsAlly = true;
+                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                return;
+            }
+            
+            if (isHacking || runtimeSuicideDroneStatData.IsAlly)
             {
                 return;
             }
 
             if (hackingCoroutine != null)
+            {
                 StopCoroutine(hackingCoroutine);
+            }
 
             hackingCoroutine = StartCoroutine(HackingProcess());
         }
@@ -119,13 +134,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                runtimeSuicideDroneStatData.isAlly = true;
+                Debug.Log("해킹 성공 - 확률 부합");
+                runtimeSuicideDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
             }
             else
             {
                 // 해킹 실패
                 // 실패 후 추가 패널티 로직 ㄱㄱ
+                
+                // 공격력 및 방어력이 10% 증가
+                int baseDamage = runtimeSuicideDroneStatData.BaseDamage;
+                float baseArmor = runtimeSuicideDroneStatData.Armor;
+                StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
+                behaviorTree.SetVariableValue("shouldAlertNearBy", true);
             }
 
             // yield return new WaitForSeconds(1f);
@@ -135,6 +158,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             hackingCoroutine = null;
         }
         
+        private IEnumerator DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        {
+            runtimeSuicideDroneStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
+            runtimeSuicideDroneStatData.Armor = baseArmor + hackingFailArmorIncrease;
+            
+            yield return new WaitForSeconds(hackingFailPenaltyDuration);
+            
+            runtimeSuicideDroneStatData.BaseDamage = baseDamage;
+            runtimeSuicideDroneStatData.Armor = baseArmor;
+        } 
         
         public void OnStunned(float duration = 3f)
         {

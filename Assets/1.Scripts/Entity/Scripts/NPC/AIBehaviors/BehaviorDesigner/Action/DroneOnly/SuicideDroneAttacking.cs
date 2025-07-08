@@ -43,7 +43,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, selfTransform.Value.position, index:4);
                 
             // 2. 데미지 주기
-            bool isAlly = statController.Value.RuntimeStatData.isAlly;
+            bool isAlly = statController.Value.RuntimeStatData.IsAlly;
             Vector3 selfPos = selfTransform.Value.position;
             float range = boomable.BoomRange;
             
@@ -59,8 +59,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
                     Service.Log("데미지 입히기 실행");
-                    Service.Log($"{statController.Value.RuntimeStatData.baseDamage}");
-                    damagable.OnTakeDamage(statController.Value.RuntimeStatData.baseDamage);
+                    Service.Log($"{statController.Value.RuntimeStatData.BaseDamage}");
+                    damagable.OnTakeDamage(statController.Value.RuntimeStatData.BaseDamage);
                 }
             }
 
