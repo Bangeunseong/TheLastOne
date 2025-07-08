@@ -101,6 +101,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         #region 여기부턴 상호작용
         public void Hacking()
         {
+            if (isStunned)
+            {
+                // 해킹 성공
+                Debug.Log("해킹 성공");
+                runtimeReconDroneStatData.IsAlly = true;
+                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                return;
+            }
+            
             if (isHacking || runtimeReconDroneStatData.IsAlly)
             {
                 return;
