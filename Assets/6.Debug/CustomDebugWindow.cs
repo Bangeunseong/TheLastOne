@@ -43,19 +43,19 @@ namespace _6.Debug
             {
 #if UNITY_EDITOR
                 var enemySpawnObjects = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
-                var droneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("Drone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var suicideDroneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("SuicideDrone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var droneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("_Drone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var suicideDroneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("_SuicideDrone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
                 
                 var itemSpawnObjects = GameObject.FindGameObjectsWithTag("ItemSpawnPoint");
-                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("_EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
                 
                 var weaponSpawnObjects = GameObject.FindGameObjectsWithTag("WeaponSpawnPoint");
-                var pistolSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("Pistol", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var rifleSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("Rifle", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var glSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("GL", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var pistolSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_Pistol", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var rifleSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_Rifle", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var glSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_GL", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
 
                 var data = CreateInstance<SpawnData>();
                 data.SetSpawnPoints("Drone", droneSpawnPoints.ToArray());
