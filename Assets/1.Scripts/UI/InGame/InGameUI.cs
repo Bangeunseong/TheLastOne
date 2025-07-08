@@ -13,6 +13,7 @@ using Michsky.UI.Shift;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 
@@ -55,17 +56,21 @@ namespace _1.Scripts.UI.InGame
         [Header("무기 정보")] 
         [SerializeField] private WeaponUI weaponUI;
         
-        [Header("아이템 사용")]
-        [SerializeField] private Image itemUseProgress;
-
         [field: Header("퀵 슬롯 UI")]
         [field: SerializeField] public QuickSlotUI QuickSlotUI { get; private set; }
+        
+        [Header("ItemUseUI")]
+        [SerializeField] private Image progressFillImage;
+        [SerializeField] private TextMeshProUGUI messageText;
+        [SerializeField] private float messageDuration = 3f;
         
         private PlayerCondition playerCondition;
         private bool isPaused = false;
 
         private void Awake()
         {
+            if (progressFillImage != null)
+                progressFillImage.enabled = false;
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
         }
 
@@ -265,6 +270,30 @@ namespace _1.Scripts.UI.InGame
                 instinctEffectAnimator.SetTrigger("Full");
                 yield return new WaitForSeconds(1f);
             }
+        }
+
+        public void ShowItemProgress()
+        {
+            if (progressFillImage != null)
+                progressFillImage.enabled = true;
+        }
+
+        public void HideItemProgress()
+        {
+            if (progressFillImage != null)
+                progressFillImage.enabled = false;
+        }
+
+        public void UpdateItemProgress(float progress)
+        {
+            if (progressFillImage != null)
+                progressFillImage.fillAmount = Mathf.Clamp01(progress);
+        }
+
+        public void ShowMessage(string message)
+        {
+            if (messageText != null)
+                messageText.text = message;
         }
     }
 }
