@@ -1578,7 +1578,7 @@ MonoBehaviour:
   <TargetLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 1073741824
-  <Type>k__BackingField: 2
+  <Type>k__BackingField: 0
   <Renderers>k__BackingField:
   - {fileID: 5864788162696630212}
   - {fileID: 288350811031652654}

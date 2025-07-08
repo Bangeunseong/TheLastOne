@@ -14,18 +14,18 @@ namespace _1.Scripts.Static
             "EmpExplode",
             "Grenade",
             "SoundPlayer",
-            "Medkit",
-            "NanoAmple",
-            "Shield",
-            "StaminaPill"
+            "Medkit_Prefab",
+            "NanoAmple_Prefab",
+            "Shield_Prefab",
+            "EnergyBar_Prefab",
         };
     }
-    
+
     public static class PoolableGameObjects_Stage1
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "Shell", 
+            "Shell",
         };
     }
 
