@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5585757344235063750}
   - component: {fileID: 4984550532103764690}
   m_Layer: 7
-  m_Name: StaminaPill
+  m_Name: StaminaPill_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

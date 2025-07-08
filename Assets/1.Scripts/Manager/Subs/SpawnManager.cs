@@ -1,33 +1,62 @@
 using System;
+using System.Net;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Util;
+using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class SpawnManager
     {
-        private SpawnData currentSpawnData;
+        [field: Header("Spawn Point Data")]
+        [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
 
-        public void ChangeSpawnData(SpawnData spawnData)
+        private CoreManager coreManager;
+
+        public void Start()
         {
-            currentSpawnData = spawnData;
+            coreManager = CoreManager.Instance;
+        }
+        
+        public void ChangeSpawnDataAndInstantiate(SceneType sceneType)
+        {
+            CurrentSpawnData = sceneType switch
+            {
+                SceneType.Stage1 => coreManager.resourceManager.GetAsset<SpawnData>("SpawnPoints_Stage1"),
+                SceneType.Stage2 => coreManager.resourceManager.GetAsset<SpawnData>("SpawnPoints_Stage2"),
+                _ => null
+            };
+            SpawnPropsBySpawnData();
         }
 
-        public void SpawnWeaponAndItemBySpawnData(SpawnData spawnData, SceneType sceneType)
+        public void SpawnEnemyBySpawnData()
         {
-            ChangeSpawnData(spawnData);
-            //
-            // switch (sceneType)
-            // {
-            //     case SceneType.Stage1:
-            //         foreach (var weapons in currentSpawnData.)
-            // }
-            //
-            // foreach (var VARIABLE in currentSpawnData.WeaponSpawnPoints)
-            // {
-            // }
+            
+        }
 
+        private void SpawnPropsBySpawnData()
+        {
+            if (CurrentSpawnData == null) return;
+            foreach (var pair in CurrentSpawnData.WeaponSpawnPoints)
+            {
+                foreach (var val in pair.Value)
+                {
+                    UnityEngine.Object.Instantiate(
+                        coreManager.resourceManager.GetAsset<GameObject>(pair.Key + "_Dummy"), 
+                        val.position, val.rotation);
+                }
+            }
+            foreach (var pair in CurrentSpawnData.ItemSpawnPoints)
+            {
+                foreach (var val in pair.Value)
+                {
+                    UnityEngine.Object.Instantiate(
+                        coreManager.resourceManager.GetAsset<GameObject>(pair.Key + "_Prefab"),
+                        val.position, val.rotation);
+                }
+            }
         }
     }
 }

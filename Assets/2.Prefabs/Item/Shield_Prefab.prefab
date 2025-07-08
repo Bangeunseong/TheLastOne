@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1814888624005217437}
   - component: {fileID: 8759650453072700275}
   m_Layer: 7
-  m_Name: Shield
+  m_Name: Shield_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -68,7 +68,7 @@ namespace _6.Debug
                 
                 data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
-                data.SetSpawnPoints(WeaponType.GrenadeThrow, glSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.GrenadeLauncher, glSpawnPoints.ToArray());
                 
                 AssetDatabase.CreateAsset(data, "Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints.asset");
                 AssetDatabase.SaveAssets();
