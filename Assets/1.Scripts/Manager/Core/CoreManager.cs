@@ -20,6 +20,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public ObjectPoolManager objectPoolManager;
         [SerializeField] public SoundManager soundManager;
         [SerializeField] public TimeScaleManager timeScaleManager;
+        public StageManager stageManager;
         
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
@@ -45,6 +46,7 @@ namespace _1.Scripts.Manager.Core
             objectPoolManager = new ObjectPoolManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
+            stageManager = GameObject.Find("StageManager").GetComponent<StageManager>();
         }
 
         private void Reset()
@@ -58,6 +60,7 @@ namespace _1.Scripts.Manager.Core
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
             soundManager = new SoundManager();
+            stageManager = GameObject.Find("StageManager").GetComponent<StageManager>();
         }
 
         // Start is called before the first frame update
@@ -70,7 +73,6 @@ namespace _1.Scripts.Manager.Core
             resourceManager.Start();
             soundManager.Start(audioSource);
             timeScaleManager.Start();
-
             // gameManager.TryLoadSettingData().Wait();
             // if (gameManager.SettingData != null) { }
         }
