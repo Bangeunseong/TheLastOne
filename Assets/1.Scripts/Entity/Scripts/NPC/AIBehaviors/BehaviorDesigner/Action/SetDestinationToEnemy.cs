@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
@@ -35,7 +36,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 					return TaskStatus.Failure;
 				}
 			}
-
+			
 			navMeshAgent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
 			shouldLookTarget.Value = true;
 			

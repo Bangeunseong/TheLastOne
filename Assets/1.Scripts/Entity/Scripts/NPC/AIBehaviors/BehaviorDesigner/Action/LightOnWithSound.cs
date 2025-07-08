@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedLight allyLight;
 		public SharedBaseNpcStatController statController;
 		public SharedCollider myCollider;
+		public SharedAnimator animator;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -40,6 +42,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				{
 					enemyLight.Value.enabled = true;
 				}
+			}
+			
+			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+			if (!stateInfo.IsName("DroneBot_StrafeLeft"))
+			{
+				animator.Value.SetTrigger(DroneAnimationHashData.StrafeLeft);
 			}
 			
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1);
