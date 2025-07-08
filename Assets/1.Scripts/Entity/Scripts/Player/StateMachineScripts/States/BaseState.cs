@@ -202,6 +202,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.SwitchToHack.started += OnSwitchToCrossbow;
             playerInput.PlayerActions.Focus.started += OnFocusStarted;
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
@@ -225,6 +226,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            playerInput.PlayerActions.SwitchToHack.started -= OnSwitchToCrossbow;
             playerInput.PlayerActions.Focus.started -= OnFocusStarted;
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
@@ -295,13 +297,22 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (weaponCount == 0) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
+
+        private void OnSwitchToCrossbow(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsSwitching) return;
+
+            int weaponCount = playerCondition.Weapons.Count;
+            if (weaponCount == 0) return;
+            playerCondition.OnSwitchWeapon(4, 0.5f);
+        }
         private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching) return;
             
             var value = context.ReadValue<Vector2>();
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
-            playerCondition.OnSwitchWeapon(nextIndex, nextIndex > 1 ? 1f : 0.5f);
+            playerCondition.OnSwitchWeapon(nextIndex, nextIndex == (int)WeaponType.GrenadeThrow + 1 ? 1f : 0.5f);
         }
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
