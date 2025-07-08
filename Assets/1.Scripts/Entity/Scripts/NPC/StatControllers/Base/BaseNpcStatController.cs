@@ -20,7 +20,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected Animator animator;
         
         public bool isDead = false;
-        public bool isAlly;
         
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯에 특정 인터페이스가 있는지 검사 후, 그 인터페이스를 반환
