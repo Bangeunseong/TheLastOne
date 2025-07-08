@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740169637518905313}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.00025746142, y: 0, z: -0.00046733092}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2649358240350903522}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1260469655399846201
 MeshFilter:
@@ -107,13 +107,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884863097463750125}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.32, z: 1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2649358240350903522}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1297270659291096208
 MonoBehaviour:
@@ -133,10 +133,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   autoUpdate: 0
+  colorProfile: {fileID: 0}
   gizmosUpdate: 0
   liner: {fileID: 0}
-  useLinerClampedPosition: 0
-  cutOnHit: 0
+  linerClamped: 0
+  linerCutOnHit: 0
+  linerFixCut: 1
   linerEndPosition: 1
   linerBasePosition: 0
   stamp: {fileID: 0}
@@ -197,6 +199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6346484038150803210}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -205,7 +208,6 @@ Transform:
   - {fileID: 5353182196415600230}
   - {fileID: 3489742259268679593}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6586932993434761860
 MeshFilter:
@@ -278,6 +280,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   autoUpdate: 0
+  colorProfile: {fileID: 0}
   gizmosUpdate: 0
   poolManager: {fileID: 0}
   onRate:
@@ -286,6 +289,7 @@ MonoBehaviour:
   onReload:
     m_PersistentCalls:
       m_Calls: []
+  autoReload: 1
   bullets:
   - {fileID: 6851432507371259564, guid: 5c043e562e4f06343af6a8971bf8d428, type: 3}
   cloneBullets:
@@ -316,21 +320,22 @@ MonoBehaviour:
     magazineCapacity: 18
     magazineAmount: 18
     reloadTime: 0.5
-    inBetweenTime: 0.01
+    rateTime: 0.1
     randomness: 0.01
     missRate: 0
     inRate: 0
     inReload: 0
+  autoShoot: 1
   trackTarget: {fileID: 0}
-  index: 0
+  bulletIndex: 0
   cloneIndex: 0
   usingAmmo: 1
   arrayCasting: 1
   arrayCapacity: 20
-  raySource: {fileID: 1297270659291096208}
   onCast:
     m_PersistentCalls:
       m_Calls: []
+  raySource: {fileID: 1297270659291096208}
 --- !u!114 &1335678964
 MonoBehaviour:
   m_ObjectHideFlags: 0
