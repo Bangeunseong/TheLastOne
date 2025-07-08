@@ -23,7 +23,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         [field: SerializeField] public float Rpm { get; private set; } // 다음 수류탄을 던지는데 걸리는 딜레이
     }
     
-    [CreateAssetMenu(fileName = "New GrenadeData", menuName = "ScriptableObjects/Grenade", order = 0)]
+    [CreateAssetMenu(fileName = "New GrenadeData", menuName = "ScriptableObjects/Weapon/Create New GrenadeData", order = 0)]
     public class GrenadeData : ScriptableObject
     {
         [field: SerializeField] public GrenadeStat GrenadeStat { get; private set; }
