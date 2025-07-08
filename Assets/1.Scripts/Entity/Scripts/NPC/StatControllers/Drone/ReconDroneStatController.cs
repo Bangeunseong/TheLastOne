@@ -149,6 +149,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 int baseDamage = runtimeReconDroneStatData.BaseDamage;
                 float baseArmor = runtimeReconDroneStatData.Armor;
                 StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
+                behaviorTree.SetVariableValue("shouldAlertNearBy", false);
             }
 
             // yield return new WaitForSeconds(1f);

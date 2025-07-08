@@ -10,7 +10,7 @@ using BehaviorDesigner.Runtime.Tasks;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly
 {	
-	[TaskCategory("DroneOnly")]
+	[TaskCategory("Every")]
 	[TaskDescription("AlertNearBy")]
 	public class AlertNearBy : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
@@ -24,11 +24,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		public SharedLight allyLight;
 		public SharedCollider collider;
 		public SharedBool isAlerted;
+		public SharedBool shouldAlertNearBy;
 		
 		public override TaskStatus OnUpdate()
 		{            
-			Debug.Log("알람 ON");
-			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
 			{
 				return TaskStatus.Failure;
@@ -61,6 +60,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				}
 			}
 			
+			shouldAlertNearBy.Value = false;
 			return TaskStatus.Success;
 		}
 	}

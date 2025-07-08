@@ -33,10 +33,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private ParticleSystem onStunParticle;
         
         [Header("Hacking")]
-        private Coroutine hackingCoroutine;
-        private bool isHacking = false;
         [SerializeField] private float hackingDuration = 3f;
         [SerializeField] private float successChance = 0.7f; // 70% 확률
+        [SerializeField] private int hackingFailAttackIncrease = 3;
+        [SerializeField] private float hackingFailArmorIncrease = 3f;
+        [SerializeField] private float hackingFailPenaltyDuration = 10f;
+        private Coroutine hackingCoroutine;
+        private bool isHacking = false;
         
         private void Awake()
         {
@@ -132,6 +135,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             {
                 // 해킹 실패
                 // 실패 후 추가 패널티 로직 ㄱㄱ
+                
+                // 공격력 및 방어력이 10% 증가
+                int baseDamage = runtimeSuicideDroneStatData.BaseDamage;
+                float baseArmor = runtimeSuicideDroneStatData.Armor;
+                StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
+                behaviorTree.SetVariableValue("shouldAlertNearBy", false);
             }
 
             // yield return new WaitForSeconds(1f);
@@ -141,6 +150,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             hackingCoroutine = null;
         }
         
+        private IEnumerator DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        {
+            runtimeSuicideDroneStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
+            runtimeSuicideDroneStatData.Armor = baseArmor + hackingFailArmorIncrease;
+            
+            yield return new WaitForSeconds(hackingFailPenaltyDuration);
+            
+            runtimeSuicideDroneStatData.BaseDamage = baseDamage;
+            runtimeSuicideDroneStatData.Armor = baseArmor;
+        } 
         
         public void OnStunned(float duration = 3f)
         {
