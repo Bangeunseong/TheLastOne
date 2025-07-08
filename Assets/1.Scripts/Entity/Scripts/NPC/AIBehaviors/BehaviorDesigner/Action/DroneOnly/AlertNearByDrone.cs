@@ -22,7 +22,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		public SharedBaseNpcStatController statController;
 		public SharedLight enemylight;
 		public SharedLight allyLight;
-		public SharedCollider collider;
 		public SharedBool isAlerted;
 		public SharedBool shouldAlertNearBy;
 		
@@ -34,7 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 			}
 			
 			(statController.Value.RuntimeStatData.IsAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
-			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, collider.Value.bounds.center, index:1); // 사운드 출력
+			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); // 사운드 출력
 			isAlerted.Value = true;
 
 			bool isAlly = statController.Value.RuntimeStatData.IsAlly; 
