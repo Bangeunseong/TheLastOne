@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Item.Common;
-using _1.Scripts.Util;
+using _1.Scripts.Weapon.Scripts.Common;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
-namespace _1.Scripts.Weapon.Scripts.Common
+namespace _1.Scripts.Util
 {
-    [CreateAssetMenu(fileName = "New SpawnPoints", menuName = "ScriptableObjects/Common", order = 0)]
+    [CreateAssetMenu(fileName = "New SpawnPoints", menuName = "ScriptableObjects/Common/Create New SpawnPoints", order = 0)]
     public class SpawnData : ScriptableObject
     {
         [field: Header("Item Spawn Points")]
