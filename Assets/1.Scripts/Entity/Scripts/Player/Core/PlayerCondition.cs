@@ -10,6 +10,7 @@ using _1.Scripts.Sound;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -351,6 +352,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     if (grenadeThrower.OnShoot())
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                     break;
+                case Crossbow hackingGun:
+                    if(hackingGun.OnShoot())
+                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                    break;
             }
         }
         
@@ -430,6 +435,26 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     reloadCoroutine = StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime + 0.3f));
                     break;
                 }
+                case Crossbow {IsReadyToReload: false}:
+                    return false;
+                case Crossbow crossbow:
+                {
+                    if (reloadCoroutine != null)
+                    {
+                        StopCoroutine(reloadCoroutine);
+                        crossbow.IsReloading = false;
+                        IsReloading = false;
+                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    }
+                    
+                    // Player Reload AudioClip
+                    float clipLength = crossbow.HackData.HackStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, clipLength);
+                    
+                    // Start Reload Coroutine
+                    reloadCoroutine = StartCoroutine(Reload_Coroutine(crossbow.HackData.HackStat.ReloadTime + 0.3f));
+                    break;
+                }
             }
 
             return true;
@@ -447,6 +472,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     break;
                 case GrenadeLauncher grenadeLauncher:
                     grenadeLauncher.IsReloading = false;
+                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    break;
+                case Crossbow crossbow:
+                    crossbow.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
             }
@@ -538,6 +567,43 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
+            } else if (Weapons[EquippedWeaponIndex] is Crossbow crossbow)
+            {
+                if(crossbow.CurrentAmmoCount <= 0 || crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
+                    yield break;
+                
+                // Animation Control (Reload Start)
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
+                var animationSpeed = player.AnimationData.CrossbowReloadClipTime /
+                                     crossbow.HackData.HackStat.ReloadTime;
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
+                
+                crossbow.IsReloading = true;
+                IsReloading = true;
+                var t = 0f;
+                while (t < interval)
+                {
+                    if (coreManager.gameManager.IsGamePaused)
+                    {
+                        if(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash) != 0f)
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 0f);
+                    }
+                    else
+                    {
+                        if (!Mathf.Approximately(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash), animationSpeed))
+                            currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
+                        t += Time.unscaledDeltaTime;
+                    }
+                    yield return null;
+                }
+                crossbow.OnReload();
+                IsReloading = false;
+                crossbow.IsReloading = false;
+                
+                // Animation Control (Reload End)
+                currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+                currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
+                currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             }
             reloadPlayer = null;
             reloadCoroutine = null;
@@ -580,6 +646,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 case 3: WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
+                case 4: WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash,
+                    player.AnimationData.CrossbowToOtherWeaponClipTime / duration); break;
             }
             
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
