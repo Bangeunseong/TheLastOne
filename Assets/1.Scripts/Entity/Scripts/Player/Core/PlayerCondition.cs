@@ -663,11 +663,22 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             // TODO: Animation 재생
             if (!itemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
             var t = 0f;
+            var inGameUI = coreManager.uiManager.InGameUI;
+            inGameUI.ShowItemProgress();
+            inGameUI.UpdateItemProgress(0f);
             while (t < itemData.Delay)
             {
-                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused)
+                {
+                    t += Time.unscaledDeltaTime;
+                    inGameUI.UpdateItemProgress(t / itemData.Delay);
+                }
                 yield return null;
             }
+            
+            inGameUI.UpdateItemProgress(1f);
+            inGameUI.HideItemProgress();
+            
             switch (itemData.ItemType)
             {
                 case ItemType.Medkit: 
