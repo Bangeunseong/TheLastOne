@@ -183,7 +183,6 @@ namespace _1.Scripts.Manager.Subs
         /// 현재 씬 이름에 따라 알맞은 풀 생성
         /// </summary>
         /// <param name="sceneName"></param>
-        /// <remarks>뭔가 문제가 있어 보임...</remarks>
         public async Task CreatePoolsFromResourceBySceneLabelAsync(string sceneName)
         {
             var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs); 
@@ -198,6 +197,7 @@ namespace _1.Scripts.Manager.Subs
                 return;
             }
             await CreatePoolsFromListAsync(prefabsToLoad);
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
         }
         
         /// <summary>
@@ -227,7 +227,6 @@ namespace _1.Scripts.Manager.Subs
                 coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield(); 
             }
-            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
         }
     }
 }

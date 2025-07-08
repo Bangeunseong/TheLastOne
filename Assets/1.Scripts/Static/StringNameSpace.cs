@@ -17,7 +17,7 @@ namespace _1.Scripts.Static
             "Medkit_Prefab",
             "NanoAmple_Prefab",
             "Shield_Prefab",
-            "StaminaPill_Prefab",
+            "EnergyBar_Prefab",
         };
     }
 
