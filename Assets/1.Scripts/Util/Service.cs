@@ -26,6 +26,14 @@ public static class Service
         return component;
     }
 
+    public static T[] TryGetChildComponents<T>(this MonoBehaviour _this,  string _target) where T : class
+    {
+        var target = FindFirstChild(_this.transform, _target);
+        if (target == null) return null;
+        var components = target.GetComponentsInChildren<T>();
+        return components;
+    }
+
     /// <summary>
     /// 예외처리가된 특정 자식 오브젝트의 컴포넌트를 가져오는  메서드
     /// </summary>

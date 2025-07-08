@@ -10,9 +10,34 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
+        [field: SerializeField] public LayerMask TargetLayer { get; private set; }
         [field: SerializeField] public WeaponType Type { get; private set; }
+        [field: SerializeField] public Transform[] Renderers { get; private set; }
 
+        private LayerMask originalMask;
+        
         public event Action OnPicked;
+
+        private void Awake()
+        {
+            if (Renderers.Length > 0) return;
+            Renderers = this.TryGetChildComponents<Transform>("Gun");
+        }
+
+        private void Reset()
+        {
+            Renderers = this.TryGetChildComponents<Transform>("Gun");
+        }
+
+        private void Start()
+        {
+            originalMask = gameObject.layer;
+        }
+
+        public void ChangeLayerOfBody(bool isTransparent)
+        {
+            gameObject.layer = isTransparent ? TargetLayer : originalMask;
+        }
 
         public void OnInteract(GameObject ownerObj)
         {

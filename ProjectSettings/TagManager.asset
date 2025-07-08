@@ -8,6 +8,9 @@ TagManager:
   - Ally
   - Enemy
   - FxTemporaire
+  - WeaponSpawnPoint
+  - ItemSpawnPoint
+  - EnemySpawnPoint
   layers:
   - Default
   - TransparentFX
