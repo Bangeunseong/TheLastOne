@@ -52,11 +52,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
         }
 
-        private void Update()
-        {
-            runtimeReconDroneStatData.IsAlly = isAlly;
-        }
-
         public void OnTakeDamage(int damage)
         {
             if (!isDead)
@@ -136,6 +131,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
+                Debug.Log("해킹 성공");
                 runtimeReconDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
                 CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);

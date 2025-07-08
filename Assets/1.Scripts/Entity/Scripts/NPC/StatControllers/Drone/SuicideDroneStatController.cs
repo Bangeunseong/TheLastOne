@@ -49,11 +49,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
         }
 
-        private void Update()
-        {
-            runtimeSuicideDroneStatData.IsAlly = isAlly;
-        }
-
         public void OnTakeDamage(int damage)
         {
             if (!isDead)
