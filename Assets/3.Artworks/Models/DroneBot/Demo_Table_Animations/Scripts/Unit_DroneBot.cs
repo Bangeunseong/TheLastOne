@@ -119,7 +119,7 @@ public class Unit_DroneBot : MonoBehaviour
 	{
 		var targetTransform = behaviorTree.GetVariable("target_Transform") as SharedTransform;
 		var targetPos = behaviorTree.GetVariable("target_Pos") as SharedVector3;
-		bool isAlly = statController.RuntimeStatData.isAlly;
+		bool isAlly = statController.RuntimeStatData.IsAlly;
 
 		if (targetTransform == null || targetTransform.Value == null) return;
 		
@@ -158,7 +158,7 @@ public class Unit_DroneBot : MonoBehaviour
 			
 			bullet.Initialize(pos_side.position, directionToTarget, 
 				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
-				statController.RuntimeStatData.baseDamage, finalLayerMask);
+				statController.RuntimeStatData.BaseDamage, finalLayerMask);
 		}
 
 		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);

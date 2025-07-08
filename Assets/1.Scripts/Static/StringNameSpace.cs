@@ -14,6 +14,10 @@ namespace _1.Scripts.Static
             "EmpExplode",
             "Grenade",
             "SoundPlayer",
+            "Medkit",
+            "NanoAmple",
+            "Shield",
+            "StaminaPill"
         };
     }
     

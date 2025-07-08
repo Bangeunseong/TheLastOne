@@ -28,7 +28,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     return INode.State.FAILED;
                 }
                 
-                bool isAlly = controller.statController.RuntimeStatData.isAlly;
+                bool isAlly = controller.statController.RuntimeStatData.IsAlly;
                 Vector3 selfPos = controller.transform.position;
                 float range = detectable.DetectRange;
             

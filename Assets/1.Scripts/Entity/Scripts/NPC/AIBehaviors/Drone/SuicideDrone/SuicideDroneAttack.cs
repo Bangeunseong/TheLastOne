@@ -41,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.SuicideDrone
                 
                 
                 // 2. 데미지 주기
-                bool isAlly = controller.statController.RuntimeStatData.isAlly;
+                bool isAlly = controller.statController.RuntimeStatData.IsAlly;
                 Vector3 selfPos = controller.transform.position;
                 float range = boomable.BoomRange;
             
@@ -59,8 +59,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.SuicideDrone
                     if (collider.TryGetComponent(out IDamagable damagable))
                     {
                         Service.Log("데미지 입히기 실행");
-                        Service.Log($"{droneController.statController.RuntimeStatData.baseDamage}");
-                        damagable.OnTakeDamage(droneController.statController.RuntimeStatData.baseDamage);
+                        Service.Log($"{droneController.statController.RuntimeStatData.BaseDamage}");
+                        damagable.OnTakeDamage(droneController.statController.RuntimeStatData.BaseDamage);
                     }
                 }
 

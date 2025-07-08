@@ -18,6 +18,8 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 1
   baseAttackRate: 2
+  armor: 0
+  maxArmor: 10
   moveSpeed: 3
   runMultiplier: 1
   walkMultiplier: 0

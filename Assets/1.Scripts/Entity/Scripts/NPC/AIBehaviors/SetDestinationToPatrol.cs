@@ -25,7 +25,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
             controller.targetPos = Vector3.zero;
             controller.targetTransform = null;
             
-            controller.navMeshAgent.speed = controller.statController.RuntimeStatData.moveSpeed;
+            controller.navMeshAgent.speed = controller.statController.RuntimeStatData.MoveSpeed;
             controller.navMeshAgent.isStopped = false;
 
             Vector3 targetPosition = GetWanderLocation();

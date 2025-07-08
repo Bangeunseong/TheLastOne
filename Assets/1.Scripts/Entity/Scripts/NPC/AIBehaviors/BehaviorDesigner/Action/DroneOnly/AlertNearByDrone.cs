@@ -10,7 +10,7 @@ using BehaviorDesigner.Runtime.Tasks;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly
 {	
-	[TaskCategory("DroneOnly")]
+	[TaskCategory("Every")]
 	[TaskDescription("AlertNearBy")]
 	public class AlertNearBy : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
@@ -24,21 +24,20 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		public SharedLight allyLight;
 		public SharedCollider collider;
 		public SharedBool isAlerted;
+		public SharedBool shouldAlertNearBy;
 		
 		public override TaskStatus OnUpdate()
 		{            
-			Debug.Log("알람 ON");
-			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
 			{
 				return TaskStatus.Failure;
 			}
 			
-			(statController.Value.RuntimeStatData.isAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
+			(statController.Value.RuntimeStatData.IsAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, collider.Value.bounds.center, index:1); // 사운드 출력
 			isAlerted.Value = true;
 
-			bool isAlly = statController.Value.RuntimeStatData.isAlly; 
+			bool isAlly = statController.Value.RuntimeStatData.IsAlly; 
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = alertable.AlertRadius;
 
@@ -61,6 +60,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				}
 			}
 			
+			shouldAlertNearBy.Value = false;
 			return TaskStatus.Success;
 		}
 	}

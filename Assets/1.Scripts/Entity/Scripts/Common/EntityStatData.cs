@@ -14,7 +14,9 @@ namespace _1.Scripts.Entity.Scripts.Common
         public int maxHealth;
         public int baseDamage;
         public float baseAttackRate;
-
+        public float armor;
+        public float maxArmor;
+        
         [Header("Movement")] 
         public float moveSpeed;
         public float runMultiplier;

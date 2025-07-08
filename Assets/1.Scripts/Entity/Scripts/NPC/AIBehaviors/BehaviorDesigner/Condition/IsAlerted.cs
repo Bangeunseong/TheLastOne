@@ -34,7 +34,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				return TaskStatus.Failure;
 			}
 			
-			bool isAlly = statController.Value.RuntimeStatData.isAlly;
+			bool isAlly = statController.Value.RuntimeStatData.IsAlly;
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = detectable.DetectRange;
             
