@@ -36,9 +36,11 @@ namespace _1.Scripts.Manager.Subs
         PistolShoot,
         RifleShoot,
         GrenadeLauncherShoot,
+        CrossbowShoot,
         PistolReload,
         RifleReload,
         GrenadeLauncherReload,
+        CrossbowReload,
         
         // Enemy SFX
         EnemyAttack,

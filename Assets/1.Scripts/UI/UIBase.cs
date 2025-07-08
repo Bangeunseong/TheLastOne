@@ -12,7 +12,7 @@ namespace _1.Scripts.UI
 
         public virtual void Init(UIManager manager)
         {
-            Service.Log($"Initialize Started : {name}");
+            // Service.Log($"Initialize Started : {name}");
             uiManager = manager;
             if (uiManager == null) Service.Log("UIManager가 Null");
         }
