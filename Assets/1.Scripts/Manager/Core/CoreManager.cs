@@ -70,6 +70,7 @@ namespace _1.Scripts.Manager.Core
             resourceManager.Start();
             soundManager.Start(audioSource);
             timeScaleManager.Start();
+            spawnManager.Start();
 
             // gameManager.TryLoadSettingData().Wait();
             // if (gameManager.SettingData != null) { }
