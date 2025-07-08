@@ -37,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         
         [Header("Hacking")]
         [SerializeField] private float hackingDuration = 3f;
-        [SerializeField] private float successChance = 0.7f; // 70% 확률
+        [SerializeField] private float successChance = 0f; // 70% 확률
         [SerializeField] private int hackingFailAttackIncrease = 3;
         [SerializeField] private float hackingFailArmorIncrease = 3f;
         [SerializeField] private float hackingFailPenaltyDuration = 10f;
@@ -104,7 +104,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (isStunned)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공");
+                Debug.Log("해킹 성공 - 스턴 중 해킹");
                 runtimeReconDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
                 CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
@@ -141,7 +141,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공");
+                Debug.Log("해킹 성공 - 확률 부합");
                 runtimeReconDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
                 CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
@@ -155,7 +155,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 int baseDamage = runtimeReconDroneStatData.BaseDamage;
                 float baseArmor = runtimeReconDroneStatData.Armor;
                 StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
-                behaviorTree.SetVariableValue("shouldAlertNearBy", false);
+                behaviorTree.SetVariableValue("shouldAlertNearBy", true);
             }
 
             // yield return new WaitForSeconds(1f);
