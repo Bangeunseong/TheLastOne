@@ -1,5 +1,11 @@
-﻿using _1.Scripts.Entity.Scripts.Player.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Entity.Scripts.Player.Data;
+using _1.Scripts.Item.Common;
+using _1.Scripts.Util;
+using _1.Scripts.Weapon.Scripts.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,6 +37,42 @@ namespace _6.Debug
                 playerObj = GameObject.FindWithTag("Player");
                 if (!playerObj.TryGetComponent(out Player playerComponent)) return;
                 playerComponent.PlayerCondition.OnRecoverInstinctGauge(InstinctGainType.Debug);
+            }
+
+            if (GUILayout.Button("Find Spawn Points & Create S.O."))
+            {
+#if UNITY_EDITOR
+                var enemySpawnObjects = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
+                var droneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("Drone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var suicideDroneSpawnPoints = enemySpawnObjects.Where(obj => obj.name.Contains("SuicideDrone", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                
+                var itemSpawnObjects = GameObject.FindGameObjectsWithTag("ItemSpawnPoint");
+                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                
+                var weaponSpawnObjects = GameObject.FindGameObjectsWithTag("WeaponSpawnPoint");
+                var pistolSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("Pistol", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var rifleSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("Rifle", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var glSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("GL", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+
+                var data = CreateInstance<SpawnData>();
+                data.SetSpawnPoints("Drone", droneSpawnPoints.ToArray());
+                data.SetSpawnPoints("SuicideDrone", suicideDroneSpawnPoints.ToArray());
+                
+                data.SetSpawnPoints(ItemType.Medkit, medkitSpawnPoints.ToArray());
+                data.SetSpawnPoints(ItemType.NanoAmple, nanoAmpleSpawnPoints.ToArray());
+                data.SetSpawnPoints(ItemType.EnergyBar, staminaPillSpawnPoints.ToArray());
+                data.SetSpawnPoints(ItemType.Shield, shieldSpawnPoints.ToArray());
+                
+                data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.GrenadeThrow, glSpawnPoints.ToArray());
+                
+                AssetDatabase.CreateAsset(data, "Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints.asset");
+                AssetDatabase.SaveAssets();
+#endif
             }
         }
     }
