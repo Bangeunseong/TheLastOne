@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using Unity.Collections;
 using UnityEngine;
@@ -153,16 +154,10 @@ namespace _1.Scripts.Manager.Subs
         {
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
-            CoreManager.Instance.gameManager.Initialize_Player(player);
+            coreManager.gameManager.Initialize_Player(player);
             player.PlayerCondition.IsPlayerHasControl = true;
-
-            var dummyGunList =
-                UnityEngine.Object.FindObjectsByType<DummyWeapon>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            foreach (var dummyGun in dummyGunList)
-            {
-                Service.Log(dummyGun.name);
-                dummyGun.OnPicked += coreManager.SaveData_QueuedAsync;
-            }
+            
+            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
         }
         
         private async Task WaitForUserInput()

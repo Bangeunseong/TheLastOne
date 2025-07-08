@@ -35,7 +35,7 @@ namespace Michsky.UI.Shift
 
             if (enableHoverSound == true)
             {
-                soundManager?.PlayUISFX(hoverSfxType, hoverIndex);
+                soundManager?.PlayUISFX(hoverSfxType, -1, hoverIndex);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Michsky.UI.Shift
 
             if (enableClickSound == true)
             {
-                soundManager?.PlayUISFX(clickSfxType, clickIndex);
+                soundManager?.PlayUISFX(clickSfxType, -1, clickIndex);
             }
         }
     }

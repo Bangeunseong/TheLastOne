@@ -16,9 +16,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 		public override void OnStart()
 		{
-			if (playerCollider == null)
+			if (playerCollider.Value == null)
 			{
-				playerCollider.Value = Service.TryGetChildComponent<Collider>(CoreManager.Instance.gameManager.Player,"spine_03");
+				playerCollider.Value =
+					Service.TryGetChildComponent<Collider>(CoreManager.Instance.gameManager.Player, "spine_03");
 			}
 		}
 

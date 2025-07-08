@@ -1,6 +1,7 @@
 ﻿using System;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
@@ -29,15 +30,26 @@ namespace _1.Scripts.Weapon.Scripts.Common
         {
             Renderers = this.TryGetChildComponents<Transform>("Gun");
         }
-
+        
+        private void OnEnable()
+        {
+            OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
+        }
+        
         private void Start()
         {
             originalMask = gameObject.layer;
         }
 
+        private void OnDisable()
+        {
+            OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
+        }
+
         public void ChangeLayerOfBody(bool isTransparent)
         {
-            gameObject.layer = isTransparent ? TargetLayer : originalMask;
+            foreach (var render in Renderers) 
+                render.gameObject.layer = isTransparent ? TargetLayer : originalMask;
         }
 
         public void OnInteract(GameObject ownerObj)
@@ -75,7 +87,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
             OnPicked?.Invoke();
-            Destroy(gameObject);
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
 }
