@@ -13,6 +13,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 	{
 		public SharedNavMeshAgent agent;
 		public SharedVector3 targetPosition;
+		public SharedBool shouldAlertNearBy;
 		
 		public override TaskStatus OnUpdate()
 		{

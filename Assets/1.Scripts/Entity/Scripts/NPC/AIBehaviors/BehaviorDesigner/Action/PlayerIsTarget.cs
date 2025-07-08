@@ -13,7 +13,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedVector3 targetPosition;
 		public SharedCollider playerCollider;
 		public SharedBool shouldLookTarget;
-		
+
+		public override void OnStart()
+		{
+			if (playerCollider == null)
+			{
+				playerCollider.Value = Service.TryGetChildComponent<Collider>(CoreManager.Instance.gameManager.Player,"spine_03");
+			}
+		}
+
 		public override TaskStatus OnUpdate()
 		{
 			targetTransform.Value = CoreManager.Instance.gameManager.Player.transform;
