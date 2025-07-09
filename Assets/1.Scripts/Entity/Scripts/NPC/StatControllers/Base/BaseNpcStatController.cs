@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
+    public enum EnemyType
+    {
+        ReconDrone,
+        SuicideDrone
+    }
+    
     /// <summary>
     /// Npc 스텟 공통로직 정의
     /// </summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Weapon.Scripts.Common;
 using AYellowpaper.SerializedCollections;
@@ -17,13 +18,26 @@ namespace _1.Scripts.Util
         [field: SerializeField] public SerializedDictionary<WeaponType, List<Pair>> WeaponSpawnPoints { get; private set; }
         
         [field: Header("Enemy Spawn Points")]
-        [field: SerializeField] public SerializedDictionary<string, List<Pair>> EnemySpawnPoints { get; private set; }
-
-        public void SetSpawnPoints(string type, Pair[] spawnPoints)
+        [field: SerializeField] public SerializedDictionary<int, SerializedDictionary<EnemyType, List<Pair>>> EnemySpawnPoints { get; private set; }
+        
+        public void SetSpawnPoints(int index, EnemyType enemyType, Pair[] spawnPoints)
         {
-            EnemySpawnPoints ??= new SerializedDictionary<string, List<Pair>>();
-            if (EnemySpawnPoints.TryGetValue(type, out var list)) { list.AddRange(spawnPoints); }
-            else { EnemySpawnPoints[type] = spawnPoints.ToList(); }
+            EnemySpawnPoints ??= new SerializedDictionary<int, SerializedDictionary<EnemyType, List<Pair>>>();
+
+            if (!EnemySpawnPoints.TryGetValue(index, out var spawnInfo))
+            {
+                spawnInfo = new SerializedDictionary<EnemyType, List<Pair>>();
+                EnemySpawnPoints[index] = spawnInfo;
+            }
+
+            if (spawnInfo.TryGetValue(enemyType, out var list))
+            {
+                list.AddRange(spawnPoints);
+            }
+            else
+            {
+                spawnInfo[enemyType] = spawnPoints.ToList();
+            }
         }
         
         public void SetSpawnPoints(ItemType type, Pair[] spawnPoints)

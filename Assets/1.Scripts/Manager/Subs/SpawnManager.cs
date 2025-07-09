@@ -31,9 +31,20 @@ namespace _1.Scripts.Manager.Subs
             SpawnPropsBySpawnData();
         }
 
-        public void SpawnEnemyBySpawnData()
+        public void SpawnEnemyBySpawnData(int index)
         {
-            
+            if (CurrentSpawnData.EnemySpawnPoints.TryGetValue(index, out var spawnPoints))
+            {
+                foreach (var pair in spawnPoints)
+                {
+                    foreach (var val in pair.Value)
+                    {
+                        GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
+                        enemy.transform.position = val.position;
+                        enemy.transform.rotation = val.rotation;
+                    }
+                }
+            }
         }
 
         private void SpawnPropsBySpawnData()
