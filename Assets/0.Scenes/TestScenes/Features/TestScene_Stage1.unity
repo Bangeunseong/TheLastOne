@@ -2882,11 +2882,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2414237663088771160, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: <Pov>k__BackingField
@@ -2907,16 +2902,6 @@ PrefabInstance:
       propertyPath: <ThirdPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 311603909}
-    - target: {fileID: 6731374018442590293, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: <MaxAmmoCountInMagazine>k__BackingField
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731374018442590293, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: <CurrentAmmoCountInMagazine>k__BackingField
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2971,11 +2956,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8591504548230945949, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
