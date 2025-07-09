@@ -38,6 +38,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private int hackingFailAttackIncrease = 3;
         [SerializeField] private float hackingFailArmorIncrease = 3f;
         [SerializeField] private float hackingFailPenaltyDuration = 10f;
+        [SerializeField] private GameObject rootRenderer;
         private Coroutine hackingCoroutine;
         private bool isHacking = false;
         
@@ -47,6 +48,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData); // 복사
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
+            rootRenderer = this.TryGetChildComponent<GameObject>("body");
         }
 
         public void OnTakeDamage(int damage)
@@ -97,10 +99,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (isStunned)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공 - 스턴 중 해킹");
-                runtimeSuicideDroneStatData.IsAlly = true;
-                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
-                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                HackingSuccess();
                 return;
             }
             
@@ -134,10 +133,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공 - 확률 부합");
-                runtimeSuicideDroneStatData.IsAlly = true;
-                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
-                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                HackingSuccess();
             }
             else
             {
@@ -168,6 +164,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             runtimeSuicideDroneStatData.BaseDamage = baseDamage;
             runtimeSuicideDroneStatData.Armor = baseArmor;
         } 
+        
+        private void HackingSuccess()
+        {
+            runtimeSuicideDroneStatData.IsAlly = true;
+
+            if (rootRenderer.layer == LayerConstants.StencilEnemy)
+            {
+                NpcUtil.SetLayerRecursively(rootRenderer, LayerConstants.StencilAlly);
+            }
+            else
+            {
+                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+            }
+                
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+        }
         
         public void OnStunned(float duration = 3f)
         {
