@@ -53,8 +53,10 @@ namespace _1.Scripts.Manager.Subs
         public async Task OpenScene(SceneType sceneName)
         {
             IsLoading = true;
-            
             PreviousScene = CurrentScene;
+            
+            coreManager.objectPoolManager.ReleaseAll();
+            coreManager.spawnManager.ClearAllSpawnedEnemies();
             if (PreviousScene != sceneName)
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
@@ -65,6 +67,7 @@ namespace _1.Scripts.Manager.Subs
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
                     Cursor.lockState = CursorLockMode.None;
                 }
+                
                 CurrentScene = sceneName;
             }
             

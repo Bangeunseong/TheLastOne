@@ -39,7 +39,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     if (!collider.CompareTag("Player"))
                     {
                         var statController = collider.GetComponent<BaseNpcStatController>();
-                        if (statController == null || statController.isDead)
+                        if (statController == null || statController.IsDead)
                         {
                             continue;
                         }
@@ -63,7 +63,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                 if (!droneController.targetTransform.CompareTag("Player"))
                 {
                     var statController = droneController.targetTransform.GetComponent<BaseNpcStatController>();
-                    if (statController == null || statController.isDead)
+                    if (statController == null || statController.IsDead)
                     {
                         droneController.ResetAll();
                         return INode.State.FAILED;
