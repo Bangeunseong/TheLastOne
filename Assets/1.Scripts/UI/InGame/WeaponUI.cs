@@ -7,6 +7,7 @@ using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using Unity.VisualScripting;
 
 namespace _1.Scripts.UI.InGame
 {
@@ -14,7 +15,7 @@ namespace _1.Scripts.UI.InGame
     {
         Main,
         Pistol,
-        HackGun,
+        Crossbow,
         GrenadeLauncher,
     }
     public class WeaponUI : MonoBehaviour
@@ -114,7 +115,7 @@ namespace _1.Scripts.UI.InGame
 
                 if (slotWeapon != null)
                 {
-                    //slotImage[i].sprite = slotWeapon.IconSprite;
+                   // slotImage[i].sprite = slotWeapon.iconSprite;
                     slotImage[i].color  = Color.white;
                 }
                 else
@@ -193,8 +194,8 @@ namespace _1.Scripts.UI.InGame
                     return w is Gun g1 && g1.GunData.GunStat.Type == WeaponType.Rifle;
                 case SlotType.Pistol:
                     return w is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
-                //case SlotType.Hack:
-                    // return w is Gun g3 && g3.GunData.GunStat.Type == WeaponType.HackGun;
+                case SlotType.Crossbow:
+                    return w is Gun g3 && g3.GunData.GunStat.Type == WeaponType.Crossbow;
                 case SlotType.GrenadeLauncher:
                     return w is GrenadeLauncher;
                 default:

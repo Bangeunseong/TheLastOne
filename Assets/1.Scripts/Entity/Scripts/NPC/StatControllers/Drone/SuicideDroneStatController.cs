@@ -11,6 +11,7 @@ using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
@@ -40,6 +41,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private float hackingFailPenaltyDuration = 10f;
         private Coroutine hackingCoroutine;
         private bool isHacking = false;
+        private HackingProgressUI hackingProgressUI;
+
         
         private void Awake()
         {
@@ -120,13 +123,25 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         private IEnumerator HackingProcess()
         {
             isHacking = true;
+            
+            var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
+            hackingProgressUI = obj.GetComponent<HackingProgressUI>();
+            hackingProgressUI.SetTarget(transform);
+            hackingProgressUI.gameObject.SetActive(true);
+            hackingProgressUI.SetProgress(0f);
 
             // 1. 드론 멈추기
             float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
             OnStunned(stunDurationOnHacking);
 
             // 2. 해킹 시도 시간 기다림
-            yield return new WaitForSeconds(hackingDuration);
+            float timer = 0f;
+            while (timer < hackingDuration)
+            {
+                timer += Time.deltaTime;
+                hackingProgressUI.SetProgress(timer / hackingDuration);
+                yield return null;
+            }
 
             // 3. 확률 판정
             bool success = UnityEngine.Random.value < successChance;
@@ -138,6 +153,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 runtimeSuicideDroneStatData.IsAlly = true;
                 NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
                 CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                hackingProgressUI.OnSuccess();
             }
             else
             {
@@ -149,6 +165,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                 float baseArmor = runtimeSuicideDroneStatData.Armor;
                 StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
                 behaviorTree.SetVariableValue("shouldAlertNearBy", true);
+                hackingProgressUI.OnFail();
             }
 
             // yield return new WaitForSeconds(1f);

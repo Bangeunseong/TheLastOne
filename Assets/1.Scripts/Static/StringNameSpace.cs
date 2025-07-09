@@ -26,6 +26,7 @@ namespace _1.Scripts.Static
         public static readonly HashSet<string> prefabs = new()
         {
             "Shell", 
+            "HackingProgressUI"
         };
     }
 
@@ -34,6 +35,7 @@ namespace _1.Scripts.Static
         public static readonly HashSet<string> prefabs = new()
         {
             "robot2"
+            
         };
     }
 }
