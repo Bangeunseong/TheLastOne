@@ -32,12 +32,14 @@ namespace _1.Scripts.Weapon.Scripts.Common
         private void OnEnable()
         {
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
+            OnPicked += InventoryUI.Instance.RefreshInventoryUI;
             OnPicked += RemoveSelfFromSpawnedList;
         }
 
         private void OnDisable()
         {
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
+            OnPicked -= InventoryUI.Instance.RefreshInventoryUI;
             OnPicked -= RemoveSelfFromSpawnedList;
         }
 
@@ -89,7 +91,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
             OnPicked?.Invoke();
-            InventoryUI.Instance?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
