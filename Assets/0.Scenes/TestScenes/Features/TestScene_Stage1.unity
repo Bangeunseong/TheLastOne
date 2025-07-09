@@ -108,15 +108,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 3
     agentTypeID: 0
-    agentRadius: 0.3
-    agentHeight: 3
+    agentRadius: 0.5
+    agentHeight: 2.46
     agentSlope: 45
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.1
+    cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
     buildHeightMesh: 0
@@ -191,79 +191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d557d9970893d46439c5ee8c3535f469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &188695954
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1767946476697586225, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_Name
-      value: ReconDrone
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -30.849432
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.239906
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -39.041035
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
 --- !u!1001 &260227959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1029,7 +956,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: afde3ea13eba2a94ba920683de921e93, type: 2}
   m_BuildHeightMesh: 0
@@ -1344,6 +1271,74 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 773268753}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &833057173
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3078088137627311920, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_Name
+      value: ReconDrone (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -30.679708
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -40.744957
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788756693257595226, guid: bdc07fe471b3f1347b0fc9accb4c772f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bdc07fe471b3f1347b0fc9accb4c772f, type: 3}
 --- !u!1 &928442627
 GameObject:
   m_ObjectHideFlags: 0
@@ -3914,7 +3909,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -4611,7 +4606,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -5591,7 +5586,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -5833,7 +5828,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -6390,7 +6385,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -8760,7 +8755,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -9140,4 +9135,4 @@ SceneRoots:
   - {fileID: 1256476945}
   - {fileID: 900053060764606494}
   - {fileID: 114461157}
-  - {fileID: 188695954}
+  - {fileID: 833057173}
