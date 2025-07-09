@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Entity.Scripts.Player.Data;
@@ -53,10 +52,19 @@ namespace _6.Debug
                 var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
                 
                 var weaponSpawnObjects = GameObject.FindGameObjectsWithTag("WeaponSpawnPoint");
-                var pistolSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_Pistol", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var rifleSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_Rifle", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var glSpawnPoints = weaponSpawnObjects.Where(obj => obj.name.Contains("_GL", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-
+                var pistolSpawnPoints = weaponSpawnObjects
+                    .Where(obj => obj.name.Contains("_Pistol", StringComparison.OrdinalIgnoreCase))
+                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var rifleSpawnPoints = weaponSpawnObjects
+                    .Where(obj => obj.name.Contains("_Rifle", StringComparison.OrdinalIgnoreCase))
+                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var glSpawnPoints = weaponSpawnObjects
+                    .Where(obj => obj.name.Contains("_GL", StringComparison.OrdinalIgnoreCase))
+                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var crossbowSpawnPoints = weaponSpawnObjects
+                    .Where(obj => obj.name.Contains("_Crossbow", StringComparison.OrdinalIgnoreCase))
+                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                
                 var data = CreateInstance<SpawnData>();
                 data.SetSpawnPoints("Drone", droneSpawnPoints.ToArray());
                 data.SetSpawnPoints("SuicideDrone", suicideDroneSpawnPoints.ToArray());
@@ -68,7 +76,8 @@ namespace _6.Debug
                 
                 data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
-                data.SetSpawnPoints(WeaponType.GrenadeThrow, glSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.GrenadeLauncher, glSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.Crossbow, crossbowSpawnPoints.ToArray());
                 
                 AssetDatabase.CreateAsset(data, "Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints.asset");
                 AssetDatabase.SaveAssets();

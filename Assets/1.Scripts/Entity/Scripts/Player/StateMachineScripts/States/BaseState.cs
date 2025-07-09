@@ -312,7 +312,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var value = context.ReadValue<Vector2>();
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
-            playerCondition.OnSwitchWeapon(nextIndex, nextIndex == (int)WeaponType.GrenadeThrow + 1 ? 1f : 0.5f);
+            playerCondition.OnSwitchWeapon(nextIndex, nextIndex == (int)WeaponType.GrenadeLauncher + 1 ? 1f : 0.5f);
         }
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
