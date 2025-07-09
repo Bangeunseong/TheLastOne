@@ -276,7 +276,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             int weaponCount = playerCondition.Weapons.Count;
             
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[1]) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
         private void OnSwitchToSecondary(InputAction.CallbackContext context)
@@ -285,7 +285,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             int weaponCount = playerCondition.Weapons.Count;
             
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[2]) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
@@ -294,7 +294,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
             int weaponCount = playerCondition.Weapons.Count;
 
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[3]) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
 
@@ -303,7 +303,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
             int weaponCount = playerCondition.Weapons.Count;
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[4]) return;
             playerCondition.OnSwitchWeapon(4, 0.5f);
         }
         private  void OnSwitchByScroll(InputAction.CallbackContext context)
