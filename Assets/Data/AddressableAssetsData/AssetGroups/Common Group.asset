@@ -150,7 +150,7 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
-    m_Address: StaminaPill
+    m_Address: EnergyBar_Prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -196,6 +196,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48b89b04124f85d44bf8390ed591234f
+    m_Address: Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints_Stage1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
