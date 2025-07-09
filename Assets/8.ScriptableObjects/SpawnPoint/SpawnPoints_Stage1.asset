@@ -15,42 +15,42 @@ MonoBehaviour:
   <ItemSpawnPoints>k__BackingField:
     _serializedList:
     - Key: 0
-      Value:
-      - position: {x: -2.37, y: 4.07, z: 13.35}
-        rotation: {x: -0, y: 0.35707057, z: -0, w: 0.93407744}
+      Value: []
     - Key: 1
-      Value:
-      - position: {x: 4.77, y: 6.33, z: 8.5}
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+      Value: []
     - Key: 2
-      Value:
-      - position: {x: -2.44, y: 0.34533286, z: 8.01}
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+      Value: []
     - Key: 3
-      Value:
-      - position: {x: -2.0633597, y: 0.34533286, z: 4.948878}
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+      Value: []
   <WeaponSpawnPoints>k__BackingField:
     _serializedList:
     - Key: 0
       Value:
-      - position: {x: -5.935, y: 3.138, z: 0.276}
-        rotation: {x: -0.17423765, y: -0.1742377, z: 0.6853038, w: 0.68530375}
+      - position: {x: -19.8, y: 4.75, z: -41.67}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        isRepeating: 0
+        repeatCount: 0
     - Key: 1
       Value:
-      - position: {x: 4.257, y: 6.178, z: 9.072}
-        rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+      - position: {x: -20.11, y: 4.75, z: -42.91}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        isRepeating: 0
+        repeatCount: 0
     - Key: 2
       Value:
-      - position: {x: 18.479, y: 1.27, z: 3.175}
-        rotation: {x: 0.15972587, y: 0.15972587, z: 0.6888307, w: 0.6888307}
+      - position: {x: -19.69, y: 4.75, z: -39.09}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        isRepeating: 0
+        repeatCount: 0
+    - Key: 3
+      Value:
+      - position: {x: -19.71, y: 4.75, z: -36.98}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        isRepeating: 0
+        repeatCount: 0
   <EnemySpawnPoints>k__BackingField:
     _serializedList:
     - Key: Drone
-      Value:
-      - position: {x: 6.71, y: 0, z: 21.7}
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+      Value: []
     - Key: SuicideDrone
-      Value:
-      - position: {x: -1.87, y: 0, z: 26.81}
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+      Value: []
