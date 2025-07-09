@@ -2,6 +2,7 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
@@ -88,6 +89,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
             OnPicked?.Invoke();
+            InventoryUI.Instance?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }

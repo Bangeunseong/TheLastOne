@@ -46,7 +46,13 @@ namespace _1.Scripts.UI.Inventory
         private float maxRecoil = 100f;
         private float maxWeight = 1f;
         private int maxAmmo;
-
+        
+        public static InventoryUI Instance { get; private set; }
+        private void Awake()
+        {
+            Instance = this;
+        }
+        
         private void Start()
         {
             playerCondition = FindObjectOfType<PlayerCondition>();
@@ -114,6 +120,7 @@ namespace _1.Scripts.UI.Inventory
         }
         public void ShowWeapon(int index)
         {
+            InitializeSlots();
             if (playerCondition == null) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
@@ -131,6 +138,12 @@ namespace _1.Scripts.UI.Inventory
 
             if (titleText != null) titleText.text = SlotUtility.GetWeaponName(weapon);
             if (descriptionText != null) descriptionText.text = titleText.text + " needs Description";
+        }
+        
+        public void RefreshInventoryUI()
+        {
+            CalculateMaxStats();
+            InitializeSlots();
         }
         
         private void UpdateStats(int damage, int ammoCount, float rpm, float recoil, float weight)
