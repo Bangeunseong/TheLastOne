@@ -98,6 +98,7 @@ namespace _6.Debug
                 
                 foreach (var ((index, type), list) in enemyDict)
                 {
+                    UnityEngine.Debug.Log($"{index}: {type}: {list}");
                     data.SetSpawnPoints(index, type, list.ToArray());
                 }
                 
