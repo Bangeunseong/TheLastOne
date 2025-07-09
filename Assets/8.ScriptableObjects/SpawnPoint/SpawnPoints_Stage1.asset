@@ -73,11 +73,11 @@ MonoBehaviour:
     - Key: 3
       Value:
       - position: {x: -25.548, y: 5.37, z: -45.89}
-        rotation: {x: 0.7071068, y: 0.7071068, z: 0, w: 0}
+        rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
         isRepeating: 0
         repeatCount: 0
       - position: {x: -25.548, y: 5.37, z: -33.91}
-        rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
         isRepeating: 0
         repeatCount: 0
   <EnemySpawnPoints>k__BackingField:
