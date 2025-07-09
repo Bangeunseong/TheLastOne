@@ -25,7 +25,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 			if (!targetTransform.Value.CompareTag("Player"))
 			{
 				var statController = targetTransform.Value.GetComponent<BaseNpcStatController>();
-				if (statController == null || statController.isDead)
+				if (statController == null || statController.IsDead)
 				{
 					return TaskStatus.Failure;
 				}

@@ -22,7 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.ReconDrone
             if (!controller.targetTransform.CompareTag("Player"))
             {
                 var statController = controller.targetTransform.GetComponent<BaseNpcStatController>();
-                if (statController == null || statController.isDead)
+                if (statController == null || statController.IsDead)
                 {
                     return INode.State.FAILED;
                 }

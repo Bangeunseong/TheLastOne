@@ -60,8 +60,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 61a96ce7afb20424d8001906948b468d
-    m_Address: Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints_Stage1.asset
+  - m_GUID: 1274e3ac636ba8948a3566b702b6c14a
+    m_Address: SpawnPoints_Stage1
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

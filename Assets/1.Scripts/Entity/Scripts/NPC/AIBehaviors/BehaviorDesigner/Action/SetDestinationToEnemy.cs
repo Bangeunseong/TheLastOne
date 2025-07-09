@@ -31,7 +31,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			if (!targetTransform.Value.CompareTag("Player"))
 			{
 				var statCtrl = targetTransform.Value.GetComponent<BaseNpcStatController>();
-				if (statCtrl == null || statCtrl.isDead)
+				if (statCtrl == null || statCtrl.IsDead)
 				{
 					return TaskStatus.Failure;
 				}

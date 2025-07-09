@@ -38,20 +38,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         [SerializeField] private int hackingFailAttackIncrease = 3;
         [SerializeField] private float hackingFailArmorIncrease = 3f;
         [SerializeField] private float hackingFailPenaltyDuration = 10f;
+        [SerializeField] private GameObject rootRenderer;
         private Coroutine hackingCoroutine;
         private bool isHacking = false;
         
-        private void Awake()
+        protected override void Awake()
         {
             var suicideDroneStatData = CoreManager.Instance.resourceManager.GetAsset<SuicideDroneStatData>("SuicideDroneStatData"); // 자신만의 데이터 가져오기
             runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData); // 복사
-            animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
+            rootRenderer = this.TryGetChildComponent<GameObject>("body");
         }
 
         public void OnTakeDamage(int damage)
         {
-            if (!isDead)
+            if (!IsDead)
             {
                 float armorRatio = runtimeSuicideDroneStatData.Armor / runtimeSuicideDroneStatData.MaxArmor;
                 float reducePercent = Mathf.Clamp01(armorRatio); // 0.0 ~ 1.0 사이
@@ -72,11 +73,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                     int randomIndex = UnityEngine.Random.Range(0, deathHashes.Length);
                     animator.SetTrigger(deathHashes[randomIndex]);
 
-                    isDead = true;
+                    IsDead = true;
                 }
                 else
                 {
-                    int[] HitHashes = new int[]
+                    int[] hitHashes = new int[]
                     {
                         DroneAnimationHashData.Hit1,
                         DroneAnimationHashData.Hit2,
@@ -84,8 +85,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                         DroneAnimationHashData.Hit4
                     };
 
-                    int randomIndex = UnityEngine.Random.Range(0, HitHashes.Length);
-                    animator.SetTrigger(HitHashes[randomIndex]);
+                    int randomIndex = UnityEngine.Random.Range(0, hitHashes.Length);
+                    animator.SetTrigger(hitHashes[randomIndex]);
                 }
             }
         }
@@ -97,10 +98,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (isStunned)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공 - 스턴 중 해킹");
-                runtimeSuicideDroneStatData.IsAlly = true;
-                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
-                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                HackingSuccess();
                 return;
             }
             
@@ -134,10 +132,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             if (success)
             {
                 // 해킹 성공
-                Debug.Log("해킹 성공 - 확률 부합");
-                runtimeSuicideDroneStatData.IsAlly = true;
-                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
-                CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+                HackingSuccess();
             }
             else
             {
@@ -168,6 +163,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             runtimeSuicideDroneStatData.BaseDamage = baseDamage;
             runtimeSuicideDroneStatData.Armor = baseArmor;
         } 
+        
+        private void HackingSuccess()
+        {
+            runtimeSuicideDroneStatData.IsAlly = true;
+
+            if (rootRenderer.layer == LayerConstants.StencilEnemy)
+            {
+                NpcUtil.SetLayerRecursively(rootRenderer, LayerConstants.StencilAlly);
+            }
+            else
+            {
+                NpcUtil.SetLayerRecursively(this.gameObject, LayerConstants.Ally);
+            }
+                
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+        }
         
         public void OnStunned(float duration = 3f)
         {
