@@ -281,7 +281,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
         public bool OnConsumeInstinctGauge(float value = 1f)
         {
-            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct) return false;
+            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || CurrentHealth >= MaxHealth * 0.5f) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
             OnInstinctEngaged();
             return true;
