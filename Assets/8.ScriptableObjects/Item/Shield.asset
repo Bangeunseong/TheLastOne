@@ -17,4 +17,5 @@ MonoBehaviour:
   IsPlayerMovable: 1
   Value: 50
   Delay: 5
+  Icon: {fileID: 21300000, guid: 1189ad3f609d9a04e81baa1446731646, type: 3}
   MaxStackCount: 4

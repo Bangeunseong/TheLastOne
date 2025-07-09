@@ -258,7 +258,7 @@ namespace _1.Scripts.UI.InGame
             {
                 focusEffectAnimator.SetTrigger("Full");
                 focusEffectAnimator.ResetTrigger("Full");
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
@@ -268,7 +268,7 @@ namespace _1.Scripts.UI.InGame
             {
                 instinctEffectAnimator.ResetTrigger("Full");
                 instinctEffectAnimator.SetTrigger("Full");
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
