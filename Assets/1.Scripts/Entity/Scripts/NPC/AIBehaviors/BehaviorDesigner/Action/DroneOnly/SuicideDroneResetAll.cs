@@ -20,7 +20,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		public SharedAnimator animator;
         public SharedLight enemyLight;
         public SharedLight allyLight;
-        public SharedBool shouldAlertNearBy;
         
         public override TaskStatus OnUpdate()
         {
