@@ -40,7 +40,7 @@ namespace _1.Scripts.UI.InGame
         
         public void SetProgress(float progress)
         {
-            progressSlider.value = progress;
+            progressSlider.value = progress * 100;
         }
         
         public void OnSuccess()
