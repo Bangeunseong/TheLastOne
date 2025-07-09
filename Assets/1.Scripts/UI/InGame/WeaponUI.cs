@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _1.Scripts.Util;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using Unity.VisualScripting;
 
 namespace _1.Scripts.UI.InGame
@@ -110,7 +112,7 @@ namespace _1.Scripts.UI.InGame
             
             for (int i = 0; i < slotType.Length; i++)
             {      
-                BaseWeapon slotWeapon = weapons.Where((w, idx) => available[idx] && IsMatchSlot(w, slotType[i]))
+                BaseWeapon slotWeapon = weapons.Where((w, idx) => available[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
                 if (slotWeapon != null)
@@ -120,28 +122,14 @@ namespace _1.Scripts.UI.InGame
                 }
                 else
                 {
-                    slotImage[i].color = Color.gray;
+                    slotImage[i].color = Color.clear;
                 }
-                slotText[i].text = slotWeapon != null ? GetWeaponName(slotWeapon) : string.Empty;
+                slotText[i].text = slotWeapon != null ? SlotUtility.GetWeaponName(slotWeapon) : string.Empty;
 
-                bool hasAmmo = false;
-                
-                if (slotWeapon is Gun g)
-                {
-                    slotAmmoText[i].text = $"{g.CurrentAmmoCountInMagazine}/{g.CurrentAmmoCount}";
-                    slotAmmoText[i].color = selectedColor;
-                    hasAmmo = true;
-                }
-                else if (slotWeapon is GrenadeLauncher gl)
-                {
-                    slotAmmoText[i].text = $"{gl.CurrentAmmoCountInMagazine}/{gl.CurrentAmmoCount}";
-                    slotAmmoText[i].color = selectedAmmoColor;
-                    hasAmmo = true;
-                }
-                else
-                {
-                    slotAmmoText[i].text = string.Empty;
-                }
+                var (mag, total) = SlotUtility.GetWeaponAmmo(slotWeapon);
+                bool hasAmmo = mag > 0 || total > 0;
+                slotAmmoText[i].text = hasAmmo ? $"{mag}/{total}" : string.Empty;
+                slotAmmoText[i].color = slotWeapon is Gun ? selectedColor : selectedAmmoColor;
 
                 bool isSelected = (slotWeapon != null && slotWeapon == selectedWeapon);
                 if (isSelected) 
@@ -160,14 +148,14 @@ namespace _1.Scripts.UI.InGame
                 targetScales[i] = isSelected ? selectedScale : normalScale;
             }
             BaseWeapon sel = (selectedIndex >= 0 && selectedIndex < weapons.Count && available[selectedIndex])
-                ? weapons[selectedIndex] : null;
-
-            if (sel is Gun gun)
-                ammoUI.UpdateAmmoUI(gun.CurrentAmmoCountInMagazine);
-            else if (sel is GrenadeLauncher gl)
-                ammoUI.UpdateAmmoUI(gl.CurrentAmmoCountInMagazine);
-            else
-                ammoUI.UpdateAmmoUI(0);
+                ? weapons[selectedIndex]
+                : null;
+            int magVal = 0;
+            if (sel != null)
+            {
+                magVal = SlotUtility.GetWeaponAmmo(sel).mag;
+            }
+            ammoUI.UpdateAmmoUI(magVal);
             
             if (selectionChanged)
             {
@@ -186,22 +174,6 @@ namespace _1.Scripts.UI.InGame
                 }
             }
         }
-        private bool IsMatchSlot(BaseWeapon w, SlotType slot)
-        {
-            switch (slot)
-            {
-                case SlotType.Main:
-                    return w is Gun g1 && g1.GunData.GunStat.Type == WeaponType.Rifle;
-                case SlotType.Pistol:
-                    return w is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
-                case SlotType.Crossbow:
-                    return w is Gun g3 && g3.GunData.GunStat.Type == WeaponType.Crossbow;
-                case SlotType.GrenadeLauncher:
-                    return w is GrenadeLauncher;
-                default:
-                    return false;
-            }
-        }
 
         private IEnumerator HidePanelCoroutine()
         {
@@ -210,13 +182,6 @@ namespace _1.Scripts.UI.InGame
                 panelAnimator.ResetTrigger("Show");
                 panelAnimator.SetTrigger("Hide");
             hideCoroutine = null;
-        }
-
-        private string GetWeaponName(BaseWeapon w)
-        {
-            if (w is Gun g) return g.GunData.GunStat.Type.ToString();
-            if (w is GrenadeLauncher gl)  return gl.GrenadeData.GrenadeStat.Type.ToString();
-            return w.GetType().Name;
         }
     }
 }
