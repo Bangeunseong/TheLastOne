@@ -58,10 +58,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected abstract void PlayHitAnimation();
         protected abstract void PlayDeathAnimation();
 
-        protected virtual void HackingFailurePenalty()
-        {
-            hackingProgressUI.OnFail();
-        }
+        protected abstract void HackingFailurePenalty();
+
         
         protected virtual void Awake()
         {
@@ -145,6 +143,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
             else
             {
+                hackingProgressUI.OnFail();
                 HackingFailurePenalty();
             }
 

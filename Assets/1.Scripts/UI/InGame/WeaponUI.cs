@@ -174,6 +174,11 @@ namespace _1.Scripts.UI.InGame
                 }
             }
         }
+        
+        public void RefreshWeaponUI(List<BaseWeapon> weapons, List<bool> available, int selectedIndex)
+        {
+            Refresh(weapons, available, selectedIndex);
+        }
 
         private IEnumerator HidePanelCoroutine()
         {

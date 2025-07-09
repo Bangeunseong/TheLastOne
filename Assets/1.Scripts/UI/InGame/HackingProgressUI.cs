@@ -35,7 +35,7 @@ namespace _1.Scripts.UI.InGame
         {
             this.target = target;
             gameObject.SetActive(true);
-            animator.Play("Show");
+            animator.SetTrigger("Show");
         }
         
         public void SetProgress(float progress)
@@ -45,13 +45,15 @@ namespace _1.Scripts.UI.InGame
         
         public void OnSuccess()
         {
-            animator.Play("Success");
+            Service.Log("Hacking Success");
+            animator.SetTrigger("Success");
             StartCoroutine(DisappearCoroutine(1f));
         }
         
         public void OnFail()
         {
-            animator.Play("Fail");
+            Service.Log("Hacking Fail");
+            animator.SetTrigger("Fail");
             StartCoroutine(DisappearCoroutine(1f));
         }
 
