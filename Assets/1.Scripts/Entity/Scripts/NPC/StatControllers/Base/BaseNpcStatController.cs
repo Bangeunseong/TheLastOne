@@ -10,6 +10,7 @@ using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
+using _1.Scripts.UI.InGame;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 
@@ -52,10 +53,15 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private Coroutine hackingCoroutine;
         private bool isHacking;
+        private HackingProgressUI hackingProgressUI;
         
         protected abstract void PlayHitAnimation();
         protected abstract void PlayDeathAnimation();
-        protected abstract void HackingFailurePenalty();
+
+        protected virtual void HackingFailurePenalty()
+        {
+            hackingProgressUI.OnFail();
+        }
         
         protected virtual void Awake()
         {
@@ -110,13 +116,25 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         private IEnumerator HackingProcess()
         {
             isHacking = true;
+            
+            var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
+            hackingProgressUI = obj.GetComponent<HackingProgressUI>();
+            hackingProgressUI.SetTarget(transform);
+            hackingProgressUI.gameObject.SetActive(true);
+            hackingProgressUI.SetProgress(0f);
 
             // 1. 드론 멈추기
             float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
             OnStunned(stunDurationOnHacking);
 
             // 2. 해킹 시도 시간 기다림
-            yield return new WaitForSeconds(hackingDuration);
+            float time = 0f;
+            while (time < hackingDuration)
+            {
+                time += Time.deltaTime;
+                hackingProgressUI.SetProgress(time / hackingDuration);
+                yield return null;
+            }
 
             // 3. 확률 판정
             bool success = UnityEngine.Random.value < successChance;
@@ -148,6 +166,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
+            hackingProgressUI.OnSuccess();
         }
         
         public void OnStunned(float duration = 3f)
