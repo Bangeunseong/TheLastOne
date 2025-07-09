@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesignerOnly.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 using UnityEngine.AI;
