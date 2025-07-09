@@ -6,6 +6,7 @@ using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Interfaces;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Util;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
@@ -17,7 +18,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
     {
         public INode.State Evaluate(BaseNpcAI controller)
         {
-            if (Service.IsTargetVisible(controller.MyPos, controller.targetPos, 100f, controller.statController.RuntimeStatData.isAlly))
+            if (NpcUtil.IsTargetVisible(controller.MyPos, 
+                    controller.targetPos, 100f, 
+                    controller.statController.RuntimeStatData.IsAlly))
             {
                 return INode.State.SUCCESS;
             }

@@ -12,17 +12,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
     /// </summary>
     public class RuntimeEntityStatData
     {
-        public string entityName;
-        public bool isPlayer;
-        public bool isAlly;
-
-        public int maxHealth;
-        public int baseDamage;
-        public float baseAttackRate;
-
-        public float moveSpeed;
-        public float runMultiplier;
-        public float walkMultiplier;
+        public string EntityName { get; set; }
+        public bool IsPlayer { get; set; }
+        public bool IsAlly { get; set; }
+        public float MaxHealth { get; set; }
+        public int BaseDamage { get; set; }
+        public float BaseAttackRate { get; set; }
+        public float Armor { get; set; }
+        public float MaxArmor { get; set; }
+        public float MoveSpeed { get; set; }
+        public float RunMultiplier { get; set; }
+        public float WalkMultiplier { get; set; } 
 
         public AudioClip[] footStepSounds;
         public AudioClip[] hitSounds;
@@ -30,17 +30,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         
         protected RuntimeEntityStatData(EntityStatData so)
         {
-            entityName = so.entityName;
-            isPlayer = so.isPlayer;
-            isAlly = so.isAlly;
+            EntityName = so.entityName;
+            IsPlayer = so.isPlayer;
+            IsAlly = so.isAlly;
 
-            maxHealth = so.maxHealth;
-            baseDamage = so.baseDamage;
-            baseAttackRate = so.baseAttackRate;
-
-            moveSpeed = so.moveSpeed;
-            runMultiplier = so.runMultiplier;
-            walkMultiplier = so.walkMultiplier;
+            MaxHealth = so.maxHealth;
+            BaseDamage = so.baseDamage;
+            BaseAttackRate = so.baseAttackRate;
+            Armor = so.armor;
+            MaxArmor = so.maxArmor;
+            
+            MoveSpeed = so.moveSpeed;
+            RunMultiplier = so.runMultiplier;
+            WalkMultiplier = so.walkMultiplier;
 
             footStepSounds = so.footStepSounds;
             hitSounds = so.hitSounds;

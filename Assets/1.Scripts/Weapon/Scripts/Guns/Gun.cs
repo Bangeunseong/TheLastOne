@@ -33,6 +33,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         
         // Fields
         private float timeSinceLastShotFired;
+        private CoreManager coreManager;
         
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
@@ -54,6 +55,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private void Start()
         {
+            coreManager = CoreManager.Instance;
             timeSinceLastShotFired = 0f;
             IsRecoiling = false;
             MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
@@ -61,7 +63,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private void Update()
         {
-            if (!IsRecoiling) return;
+            if (!IsRecoiling || coreManager.gameManager.IsGamePaused) return;
             timeSinceLastShotFired += Time.unscaledDeltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;

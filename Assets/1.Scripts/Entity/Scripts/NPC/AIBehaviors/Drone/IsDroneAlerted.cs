@@ -4,6 +4,7 @@ using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
@@ -27,7 +28,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     return INode.State.FAILED;
                 }
                 
-                bool isAlly = controller.statController.RuntimeStatData.isAlly;
+                bool isAlly = controller.statController.RuntimeStatData.IsAlly;
                 Vector3 selfPos = controller.transform.position;
                 float range = detectable.DetectRange;
             
@@ -45,7 +46,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone
                     }
                 
                     Vector3 colliderPos = collider.bounds.center;
-                    if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
+                    if (NpcUtil.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
                     {
                         controller.targetTransform = collider.transform;
                         controller.targetPos = colliderPos;

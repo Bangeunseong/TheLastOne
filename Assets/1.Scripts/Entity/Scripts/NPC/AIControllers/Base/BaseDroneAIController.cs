@@ -84,7 +84,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, MyPos, 1); // 사운드 출력
             SetAlert(true); // 알람 활성화
 
-            bool isAlly = statController.RuntimeStatData.isAlly; 
+            bool isAlly = statController.RuntimeStatData.IsAlly; 
             Vector3 selfPos = transform.position;
             float range = alertable.AlertRadius;
 
@@ -107,7 +107,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.Base
             ResetAll();
             base.HackingNpc();
         }
-        
+
+        public bool IsStunned { get; }
+
         public void OnStunned(float duration)
         {
             isStunned = true;

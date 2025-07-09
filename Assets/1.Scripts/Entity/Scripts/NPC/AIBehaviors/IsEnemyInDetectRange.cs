@@ -9,6 +9,7 @@ using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
@@ -25,7 +26,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 return INode.State.FAILED;
             }
             
-            bool isAlly = controller.statController.RuntimeStatData.isAlly;
+            bool isAlly = controller.statController.RuntimeStatData.IsAlly;
             Vector3 selfPos = controller.transform.position;
             float range = detectable.DetectRange;
             
@@ -43,7 +44,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 }
                 
                 Vector3 colliderPos = collider.bounds.center;
-                if (Service.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
+                if (NpcUtil.IsTargetVisible(controller.MyPos, colliderPos, 100f, isAlly))
                 {
                     controller.targetTransform = collider.transform;
                     controller.targetPos = colliderPos;

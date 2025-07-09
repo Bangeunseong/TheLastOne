@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -46,20 +48,24 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
 
+            // Save Current Character Info.
             var save = new DataTransferObject
             {
                 characterInfo = new CharacterInfo
                 {
                     maxHealth = Player.PlayerCondition.MaxHealth, health = Player.PlayerCondition.CurrentHealth,
                     maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
+                    maxShield = Player.PlayerCondition.MaxShield, shield = Player.PlayerCondition.CurrentShield,
                     attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
                     level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
+                    focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
                 currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
                 currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
             };
 
+            // Save Current Weapon Infos
             var newWeaponInfo = new List<WeaponInfo>();
             var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
             foreach (var weapon in Player.PlayerCondition.Weapons)
@@ -79,12 +85,21 @@ namespace _1.Scripts.Manager.Subs
                             currentAmmoCount = grenadeThrower.CurrentAmmoCount
                         });
                         break;
+                    case Crossbow hackingGun:
+                        newWeaponInfo.Add(new WeaponInfo
+                        {
+                            currentAmmoCount = hackingGun.CurrentAmmoCount,
+                        });
+                        break;
                 }
             }
-
             save.Weapons = newWeaponInfo.ToArray();
             save.AvailableWeapons = newAvailableWeapons.ToArray();
 
+            // Save Current Item Infos
+            var newItemCountList = (from ItemType type in Enum.GetValues(typeof(ItemType)) select Player.PlayerInventory.Items[type].CurrentItemCount).ToList();
+            save.Items = newItemCountList.ToArray();
+            
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
             await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);
         }
@@ -129,7 +144,8 @@ namespace _1.Scripts.Manager.Subs
         public void PauseGame()
         {
             if (!Player) return;
-            
+
+            IsGamePaused = true;
             Player.Pov.m_HorizontalAxis.Reset();
             Player.Pov.m_VerticalAxis.Reset();
             Player.InputProvider.enabled = false;
@@ -139,7 +155,8 @@ namespace _1.Scripts.Manager.Subs
         public void ResumeGame()
         {
             if (!Player) return;
-            
+
+            IsGamePaused = false;
             Player.InputProvider.enabled = true;
             Player.PlayerInput.enabled = true;
         }

@@ -9,7 +9,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
     {
         Pistol,
         Rifle,
-        GrenadeThrow,
+        GrenadeLauncher,
+        Crossbow,
     }
     
     public abstract class BaseWeapon : MonoBehaviour, IShootable

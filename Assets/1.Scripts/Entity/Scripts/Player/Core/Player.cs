@@ -20,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
         [field: SerializeField] public PlayerGravity PlayerGravity { get; private set; }
         [field: SerializeField] public PlayerRecoil PlayerRecoil { get; private set; }
+        [field: SerializeField] public PlayerInventory PlayerInventory { get; private set; }
         
         [field: Header("Camera Components")]
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
@@ -55,6 +56,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!PlayerRecoil) PlayerRecoil = this.TryGetChildComponent<PlayerRecoil>();
+            if (!PlayerInventory) PlayerInventory = this.TryGetChildComponent<PlayerInventory>();
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
@@ -78,6 +80,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!PlayerRecoil) PlayerRecoil = this.TryGetChildComponent<PlayerRecoil>();
+            if (!PlayerInventory) PlayerInventory = this.TryGetChildComponent<PlayerInventory>();
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");

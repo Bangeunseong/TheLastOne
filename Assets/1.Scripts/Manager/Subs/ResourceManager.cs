@@ -69,7 +69,9 @@ namespace _1.Scripts.Manager.Subs
         public T GetAsset<T>(string name) where T : Object
         {
             if (resources.TryGetValue(name, out Object obj))
+            {
                 return obj as T;
+            }
             return null;
         }
         
@@ -94,7 +96,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!handlesByLabel.TryGetValue(label, out var handles))
             {
-                Debug.LogWarning($"can't find AsyncOperationHandle {label}");
+                // Debug.LogWarning($"can't find AsyncOperationHandle {label}");
                 return;
             }
 
