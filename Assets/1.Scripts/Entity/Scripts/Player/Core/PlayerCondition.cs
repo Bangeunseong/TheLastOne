@@ -693,8 +693,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private IEnumerator Instinct_Coroutine(float duration)
         {
             IsUsingInstinct = true;
+            coreManager.spawnManager.ChangeStencilLayerAllNpc(true);
+            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(true);
             
-            // TODO: Turn On Enemy Silhouette (By using spawn manager)
             SkillSpeedMultiplier = StatData.instinctSkillMultiplier;
             var t = 0f;
             while (t < duration)
@@ -703,8 +704,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 yield return null;
             }
             SkillSpeedMultiplier = 1f;
-            // TODO: Turn Off Enemy Silhouette
             
+            coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
+            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
             IsUsingInstinct = false;
         }
         private IEnumerator InstinctRecover_Coroutine(float delay)

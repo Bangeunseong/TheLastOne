@@ -12,11 +12,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
-        [field: SerializeField] public LayerMask TargetLayer { get; private set; }
         [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public Transform[] Renderers { get; private set; }
-
-        private LayerMask originalMask;
         
         public event Action OnPicked;
 
@@ -34,22 +31,26 @@ namespace _1.Scripts.Weapon.Scripts.Common
         private void OnEnable()
         {
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
-        }
-        
-        private void Start()
-        {
-            originalMask = gameObject.layer;
+            OnPicked += RemoveSelfFromSpawnedList;
         }
 
         private void OnDisable()
         {
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
+            OnPicked -= RemoveSelfFromSpawnedList;
         }
 
         public void ChangeLayerOfBody(bool isTransparent)
         {
-            foreach (var render in Renderers) 
-                render.gameObject.layer = isTransparent ? TargetLayer : originalMask;
+            foreach (var render in Renderers)
+            {
+                render.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
+            }
+        }
+
+        private void RemoveSelfFromSpawnedList()
+        {
+            CoreManager.Instance.spawnManager.RemoveWeaponFromSpawnedList(gameObject);
         }
 
         public void OnInteract(GameObject ownerObj)

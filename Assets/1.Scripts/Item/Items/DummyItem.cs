@@ -10,19 +10,41 @@ namespace _1.Scripts.Item.Items
     public class DummyItem : MonoBehaviour, IInteractable
     {
         [field: Header("Dummy Item Settings")]
-        [field: SerializeField] public LayerMask TargetLayer { get; private set; }
         [field: SerializeField] public ItemType ItemType { get; private set; }
-
-        public event Action OnPicked;
+        [field: SerializeField] public Transform Body { get; private set; }
         
+        public event Action OnPicked;
+
+        private void Awake()
+        {
+            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+        }
+
+        private void Reset()
+        {
+            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+        }
+
         private void OnEnable()
         {
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
+            OnPicked += RemoveSelfFromSpawnedList;
         }
         
         private void OnDisable()
         {
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
+            OnPicked -= RemoveSelfFromSpawnedList;
+        }
+        
+        public void ChangeLayerOfBody(bool isTransparent)
+        {
+            Body.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
+        }
+
+        public void RemoveSelfFromSpawnedList()
+        {
+            CoreManager.Instance.spawnManager.RemoveItemFromSpawnedList(gameObject);
         }
 
         public void OnInteract(GameObject ownerObj)
@@ -35,10 +57,9 @@ namespace _1.Scripts.Item.Items
             }
             else
             {
-                Service.Log($"Failed to refill {ItemType}");
+                // Service.Log($"Failed to refill {ItemType}");
                 CoreManager.Instance.uiManager.InGameUI.ShowMessage("Failed to refill {ItemType}");
-            } 
-            // TODO: UI로 더 이상 아이템을 가질 수 없다는 문구 띄우기
+            }
         }
     }
 }
