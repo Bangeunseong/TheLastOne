@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
 using _1.Scripts.Item.Common;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -14,10 +15,10 @@ namespace _1.Scripts.Manager.Subs
     {
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
-
-        [Header("Spawned Enemies")]
-        private HashSet<GameObject> spawnedEnemies = new();
         
+        private HashSet<GameObject> spawnedEnemies = new();
+        private HashSet<GameObject> spawnedWeapons = new();
+        private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
 
         public void Start()
@@ -61,20 +62,30 @@ namespace _1.Scripts.Manager.Subs
             {
                 foreach (var val in pair.Value)
                 {
-                    UnityEngine.Object.Instantiate(
-                        coreManager.resourceManager.GetAsset<GameObject>(pair.Key + "_Dummy"), 
-                        val.position, val.rotation);
+                    var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
+                    obj.transform.SetPositionAndRotation(val.position, val.rotation);
+                    spawnedWeapons.Add(obj);
                 }
             }
             foreach (var pair in CurrentSpawnData.ItemSpawnPoints)
             {
                 foreach (var val in pair.Value)
                 {
-                    UnityEngine.Object.Instantiate(
-                        coreManager.resourceManager.GetAsset<GameObject>(pair.Key + "_Prefab"),
-                        val.position, val.rotation);
+                    var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
+                    obj.transform.SetPositionAndRotation(val.position, val.rotation);
+                    spawnedItems.Add(obj);
                 }
             }
+        }
+
+        public void RemoveWeaponFromSpawnedList(GameObject obj)
+        {
+            spawnedWeapons.Remove(obj);
+        }
+
+        public void RemoveItemFromSpawnedList(GameObject obj)
+        {
+            spawnedItems.Remove(obj);
         }
 
         /// <summary>
@@ -91,6 +102,21 @@ namespace _1.Scripts.Manager.Subs
                 }
                 // 이후 다른 컴포넌트도 추가
                 // 예시 : TryGetComponent<StencilAbleForGunner>
+            }
+        }
+
+        public void ChangeLayerOfWeaponsAndItems(bool isTransparent)
+        {
+            foreach (var obj in spawnedWeapons)
+            {
+                if (!obj.TryGetComponent(out DummyWeapon weapon)) continue;
+                weapon.ChangeLayerOfBody(isTransparent);
+            }
+
+            foreach (var obj in spawnedItems)
+            {
+                if (!obj.TryGetComponent(out DummyItem item)) continue;
+                item.ChangeLayerOfBody(isTransparent);
             }
         }
         

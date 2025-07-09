@@ -18,6 +18,8 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 10
   baseAttackRate: 1
+  armor: 0
+  maxArmor: 0
   moveSpeed: 8
   runMultiplier: 1
   walkMultiplier: 0.4
@@ -29,11 +31,11 @@ MonoBehaviour:
   focusGaugeRefillRate_OnKill: 0.05
   focusGaugeRefillRate_OnHeadShot: 0.05
   focusGaugeRefillRate_OnHacked: 0.1
-  focusSkillTime: 5
+  focusSkillTime: 10
   instinctGaugeRefillRate_OnHit: 0.15
   instinctGaugeRefillRate_OnIdle: 0.001
   instinctSkillMultiplier: 1.5
-  instinctSkillTime: 3
+  instinctSkillTime: 10
   jumpHeight: 1.2
   crouchMultiplier: 0.25
   consumeRateOfStamina: 10

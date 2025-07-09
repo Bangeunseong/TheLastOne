@@ -37,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (coreManager.gameManager.IsGamePaused || !playerCondition.IsPlayerHasControl) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
@@ -243,12 +243,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Aim 관련 메소드 - */
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
         }
         /* ----------------- */
@@ -256,7 +256,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.IsAttacking = true;
         }
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
@@ -272,7 +272,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Weapon Switch 관련 메소드 - */
         private void OnSwitchToMain(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             int weaponCount = playerCondition.Weapons.Count;
             
@@ -281,7 +281,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             int weaponCount = playerCondition.Weapons.Count;
             
@@ -290,7 +290,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
             int weaponCount = playerCondition.Weapons.Count;
 
@@ -300,7 +300,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void OnSwitchToCrossbow(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
             int weaponCount = playerCondition.Weapons.Count;
             if (weaponCount == 0) return;
@@ -308,7 +308,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             var value = context.ReadValue<Vector2>();
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
@@ -340,7 +340,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Interact 관련 메소드 - */
         protected virtual void OnInteractStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead) return;
+            if (playerCondition.IsDead || !playerCondition.IsPlayerHasControl) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
             switch (interactable)
@@ -358,10 +358,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Skill 관련 메소드 - */
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeFocusGauge()) return;
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeInstinctGauge()) return;
         }
         /* -------------------- */
@@ -369,6 +371,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Item 관련 메소드 - */
         protected virtual void OnItemActionStarted(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             stateMachine.Player.PlayerInventory.OnItemActionStarted();
         }
 
