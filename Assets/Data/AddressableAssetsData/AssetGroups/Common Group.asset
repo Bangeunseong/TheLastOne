@@ -150,7 +150,7 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
-    m_Address: StaminaPill
+    m_Address: EnergyBar_Prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
