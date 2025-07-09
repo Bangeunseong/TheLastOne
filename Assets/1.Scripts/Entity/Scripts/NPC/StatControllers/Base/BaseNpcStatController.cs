@@ -1,3 +1,4 @@
+using System;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Interfaces;
@@ -21,12 +22,19 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
         /// </summary>
+        [field:Header("StatData")]
         public abstract RuntimeEntityStatData RuntimeStatData { get; }
         
+        [Header("Base")]
         protected Animator animator;
-        
-        public bool isDead = false;
-        
+        public bool IsDead { get; protected set; }
+
+        protected virtual void Awake()
+        {
+            animator = GetComponent<Animator>();
+            IsDead = false;
+        }
+
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯에 특정 인터페이스가 있는지 검사 후, 그 인터페이스를 반환
         /// </summary>
@@ -59,6 +67,14 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         public virtual void Running(bool isRunning)
         {
             
+        }
+
+        /// <summary>
+        /// 외부에서 사망 처리 해야한다면 사용
+        /// </summary>
+        public void Dead()
+        {
+            IsDead = true;
         }
     }
 }

@@ -45,19 +45,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         private Coroutine hackingCoroutine;
         private bool isHacking = false;
         
-        
-        private void Awake()
+        protected override void Awake()
         {
             var reconDroneStatData = CoreManager.Instance.resourceManager.GetAsset<ReconDroneStatData>("ReconDroneStatData"); // 자신만의 데이터 가져오기
             runtimeReconDroneStatData = new RuntimeReconDroneStatData(reconDroneStatData); // 복사
-            animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             rootRenderer = this.TryGetChildComponent<GameObject>("body");
         }
 
         public void OnTakeDamage(int damage)
         {
-            if (!isDead)
+            if (!IsDead)
             {
                 float armorRatio = runtimeReconDroneStatData.Armor / runtimeReconDroneStatData.MaxArmor;
                 float reducePercent = Mathf.Clamp01(armorRatio); // 0.0 ~ 1.0 사이
@@ -78,7 +76,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
                     int randomIndex = UnityEngine.Random.Range(0, deathHashes.Length);
                     animator.SetTrigger(deathHashes[randomIndex]);
 
-                    isDead = true;
+                    IsDead = true;
                 }
                 else
                 {

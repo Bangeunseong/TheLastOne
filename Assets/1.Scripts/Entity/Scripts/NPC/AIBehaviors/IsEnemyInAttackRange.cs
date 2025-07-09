@@ -34,7 +34,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors
                 if (!collider.CompareTag("Player"))
                 {
                     var statController = collider.GetComponent<BaseNpcStatController>();
-                    if (statController == null || statController.isDead)
+                    if (statController == null || statController.IsDead)
                     {
                         continue;
                     }

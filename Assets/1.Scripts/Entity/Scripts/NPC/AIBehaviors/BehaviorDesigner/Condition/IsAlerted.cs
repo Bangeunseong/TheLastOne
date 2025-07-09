@@ -46,7 +46,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				if (!col.CompareTag("Player"))
 				{
 					var statCtrl = col.GetComponent<BaseNpcStatController>();
-					if (statCtrl == null || statCtrl.isDead)
+					if (statCtrl == null || statCtrl.IsDead)
 					{
 						continue;
 					}
@@ -73,7 +73,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 			if (!targetTransform.Value.CompareTag("Player")) // 예외처리 2 : 타겟이 사망했을 시
 			{
 				var stat = targetTransform.Value.GetComponent<BaseNpcStatController>();
-				if (stat == null || stat.isDead)
+				if (stat == null || stat.IsDead)
 				{
 					targetPos.Value = Vector3.zero;
 					targetTransform.Value = null;

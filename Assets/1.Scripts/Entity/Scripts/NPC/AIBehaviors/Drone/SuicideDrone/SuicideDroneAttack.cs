@@ -79,7 +79,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.Drone.SuicideDrone
                 droneCollider.enabled = false;
 
                 // 4. 드론 죽음 true (트리 정지)
-                droneController.statController.isDead = true;
+                droneController.statController.Dead();
 
                 // 5. 기다린 후 파괴
                 droneController.StartCoroutine(DelayedDestroy(droneController));
