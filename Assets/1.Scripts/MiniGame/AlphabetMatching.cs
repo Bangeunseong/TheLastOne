@@ -4,6 +4,7 @@ using System.Text;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 using UnityEngine.Events;
+using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
 namespace _1.Scripts.MiniGame
@@ -27,6 +28,7 @@ namespace _1.Scripts.MiniGame
         public UnityEvent OnSuccess;
 
         private CoreManager coreManager;
+        private Console console;
         private float startTime;
 
         private void Awake()
@@ -44,6 +46,11 @@ namespace _1.Scripts.MiniGame
             coreManager.gameManager.Player.Pov.m_VerticalAxis.Reset();
             coreManager.gameManager.Player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        public void Initialize(Console con)
+        {
+            console = con;
         }
 
         private void Update()
@@ -90,7 +97,7 @@ namespace _1.Scripts.MiniGame
 
         private void FinishGame(bool isSuccess)
         {
-            if (isSuccess) OnSuccess?.Invoke();
+            if (isSuccess) { OnSuccess?.Invoke(); console.OnCleared(); }
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
             enabled = false;
@@ -120,6 +127,7 @@ namespace _1.Scripts.MiniGame
                 yield return null;
             }
             startTime = Time.unscaledTime;
+            Service.Log($"Start Game!: {CurrentAlphabets}");
         }
     }
 }

@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/0.Scenes/TestScenes/Features/TestScene_Loading.unity
     guid: 9e694d2bac75c7448b151e86a4a3ff7e
   - enabled: 1
-    path: Assets/0.Scenes/TestScenes/Features/TestScene_Stage1.unity
+    path: Assets/2.Prefabs/Entity/TestScene_Stage1.unity
     guid: b71606a757e0c7346a3bbeb2baa00849
   - enabled: 1
     path: Assets/0.Scenes/TestScenes/Features2/TestScene2_IntroScene.unity
