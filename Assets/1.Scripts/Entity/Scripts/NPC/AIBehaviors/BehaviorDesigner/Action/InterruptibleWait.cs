@@ -38,6 +38,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 		public override TaskStatus OnUpdate()
 		{
+			if (statController.Value.RuntimeStatData.IsAlly)
+			{
+				return TaskStatus.Success;
+			}
+			
 			if (Time.time - startTime >= waitingTime)
 			{
 				return TaskStatus.Success;

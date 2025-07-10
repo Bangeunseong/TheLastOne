@@ -1,5 +1,6 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Interfaces.NPC;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -17,19 +18,29 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		
 		public SharedLight enemyLight;
 		public SharedLight allyLight;
+		public SharedFloat stoppingDistance;
 
-		public override TaskStatus OnUpdate()
+		public override void OnStart()
 		{
 			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed;
 			agent.Value.isStopped = false;
-			
-			Vector3 targetPosition = GetWanderLocation();
-			
-			agent.Value.SetDestination(targetPosition);
-			
 			enemyLight.Value.enabled = false;
 			allyLight.Value.enabled = false;
+		}
+
+		public override TaskStatus OnUpdate()
+		{
+			Vector3 targetPosition;
+			if (statController.Value.RuntimeStatData.IsAlly)
+			{
+				targetPosition = GetPlayerPosition();
+			}
+			else
+			{ 
+				targetPosition = GetWanderLocation();
+			}
 			
+			agent.Value.SetDestination(targetPosition);
 			return TaskStatus.Success;
 		}
 		
@@ -50,6 +61,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			while (Vector3.Distance(selfTransform.Value.position, hit.position) < detectable.DetectRange);
         
 			return hit.position;
+		}
+
+		Vector3 GetPlayerPosition()
+		{
+			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
+				
+			Vector3 directionToPlayer = (CoreManager.Instance.gameManager.Player.transform.position - selfTransform.Value.position).normalized;
+			Vector3 targetSpot = CoreManager.Instance.gameManager.Player.transform.position - directionToPlayer * stoppingDistance.Value;
+				
+			if (NavMesh.SamplePosition(targetSpot, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+			{
+				return hit.position;
+			}
+
+			return selfTransform.Value.position;
 		}
 	}
 }

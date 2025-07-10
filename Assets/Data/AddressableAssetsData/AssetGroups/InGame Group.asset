@@ -60,18 +60,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1274e3ac636ba8948a3566b702b6c14a
-    m_Address: SpawnPoints_Stage1
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cb232371e2c97d14ea3a69d5295aea08
     m_Address: HackingProgressUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1
     - Stage2
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fde9cff36a8707a48aad1d7a0be936bf
+    m_Address: SpawnPoints_Stage1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
