@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -14,13 +17,11 @@ namespace _1.Scripts.UI.Inventory
 {
     public class InventoryUI : MonoBehaviour
     {
+        [Header("SlotType")]
+        [SerializeField] private SlotType[] slotType;
+        
         [Header("Slot Buttons")]
         public List<Button> slotButtons;
-        
-        /*[Header("Preview")]
-        public Transform previewContainer;
-        public RawImage previewRawImage;
-        public RenderTexture previewTexture;*/
 
         [Header("StatsUI")] public Slider damageSlider;
         public Slider rpmSlider;
@@ -39,7 +40,6 @@ namespace _1.Scripts.UI.Inventory
         public TextMeshProUGUI descriptionText;
         
         private PlayerCondition playerCondition;
-        private GameObject currentPreview;
 
         private int maxDamage = 1000;
         private float maxRPM = 100f;
@@ -47,49 +47,19 @@ namespace _1.Scripts.UI.Inventory
         private float maxWeight = 1f;
         private int maxAmmo;
         
-        public Vector3 rotationSpeed = new Vector3(0f, 10f, 0f);
-
-        private const string PreviewLayerName = "WeaponPreview";
+        public static InventoryUI Instance { get; private set; }
+        private void Awake()
+        {
+            Instance = this;
+        }
         
-        
-
         private void Start()
         {
             playerCondition = FindObjectOfType<PlayerCondition>();
-            /*if (previewContainer == null)
-            {
-                var containerGO = GameObject.Find("PreviewContainer");
-                if (containerGO != null)
-                    previewContainer = containerGO.transform;
-                else
-                {
-                    Service.Log("InventoryUI: 씬에 previewContainer 없음.");
-                }
-            }
-
-            if (previewRawImage != null)
-            {
-                previewRawImage.maskable = false;
-            }
-
-            if (previewRawImage != null && previewTexture != null)
-            {
-                previewRawImage.texture = previewTexture;
-            }
-            else
-            {
-                Service.Log("InventoryUI: Texture가 할당되지 않음");
-            }*/
             CalculateMaxStats();
             InitializeSlots();
         }
-
-        private void Update()
-        {
-            if (currentPreview != null)
-                currentPreview.transform.Rotate(rotationSpeed * Time.unscaledDeltaTime, Space.World);
-        }
-
+        
         private void CalculateMaxStats()
         {
             if (playerCondition == null) return;
@@ -120,87 +90,75 @@ namespace _1.Scripts.UI.Inventory
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
 
-            int slotIndex = 0;
-            for (int i = 0; i < weapons.Count && slotIndex < slotButtons.Count; i++)
+            for (int i = 0; i < slotType.Length && i < slotButtons.Count; i++)
             {
-                var w = weapons[i];
-                if (w == null || w.name == "Hand" || !available[i])
-                    continue;
+                var slotWeapon = weapons.Where((w, idx) => available[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
+                    .FirstOrDefault();
 
-                var button = slotButtons[slotIndex];
-                button.gameObject.SetActive(true);
-                var label = button.GetComponentInChildren<TextMeshProUGUI>();
-                if (label != null)
-                    label.text = w.name;
+                var button = slotButtons[i];
+                if (slotWeapon != null)
+                {
+                    button.gameObject.SetActive(true);
+                    var label = button.GetComponentInChildren<TextMeshProUGUI>();
+                    if (label != null)
+                        label.text = SlotUtility.GetWeaponName(slotWeapon);
 
-                int idx = i;
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => ShowWeapon(idx));
-                slotIndex++;
+                    int idx = weapons.IndexOf(slotWeapon);
+                    button.onClick.RemoveAllListeners();
+                    button.onClick.AddListener(() => ShowWeapon(idx));
+                }
+                else
+                {
+                    button.gameObject.SetActive(false);
+                }
             }
 
-            for (int j = slotIndex; j < slotButtons.Count; j++)
+            for (int j = slotType.Length; j < slotButtons.Count; j++)
             {
                 slotButtons[j].gameObject.SetActive(false);
             }
         }
         public void ShowWeapon(int index)
         {
+            InitializeSlots();
             if (playerCondition == null) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
             if (index < 0 || index >= weapons.Count || !available[index]) return;
 
             var weapon = weapons[index];
-            if (weapon == null || weapon.name == "Hand")
-                return;
+            if (weapon == null) return;
             
-            /*if (currentPreview != null) Destroy(currentPreview);
+            int mag = 0;
+            float rpm = 0, recoil = 0, weight = 0;
+            int damage = 0;
 
-            if (previewContainer == null)
-            {
-                Service.Log("InventoryUI: previewContainer 할당되지 않음");
-                return;
-            }
-            
-            currentPreview = Instantiate(weapon.gameObject, previewContainer);
-            currentPreview.transform.localPosition = Vector3.zero;
-            currentPreview.transform.localRotation = Quaternion.identity;
-            currentPreview.SetActive(true);
-            
-            int layer = LayerMask.NameToLayer(PreviewLayerName);
-            SetLayerRecursively(currentPreview, layer);*/
+            var stat = SlotUtility.GetWeaponStat(weapon);
+            UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);
 
-            if (weapon is Gun gun)
-                UpdateStats(gun.GunData.GunStat, gun.MaxAmmoCountInMagazine, gun.GunData.GunStat.Rpm,
-                    gun.GunData.GunStat.Recoil, maxWeight);
-            else if (weapon is GrenadeLauncher gl)
-                UpdateStats(gl.GrenadeData.GrenadeStat, gl.MaxAmmoCountInMagazine, gl.GrenadeData.GrenadeStat.Rpm,
-                    gl.GrenadeData.GrenadeStat.Recoil, maxWeight);
-
-            if (titleText != null) titleText.text = weapon.name;
-            if (descriptionText != null) descriptionText.text = weapon.name + " needs Descriptions";
+            if (titleText != null) titleText.text = SlotUtility.GetWeaponName(weapon);
+            if (descriptionText != null) descriptionText.text = titleText.text + " needs Description";
         }
-        private void UpdateStats(WeaponStat stat, int ammoCount, float rpm, float recoil, float weight)
+        
+        public void RefreshInventoryUI()
         {
-            if (damageSlider != null) { damageSlider.value = (maxDamage > 0) ? stat.Damage / (float)maxDamage : 0f; }
-            if (rpmSlider != null) { rpmSlider.value = (maxRPM   > 0) ? rpm / maxRPM   : 0f; }
-            if (recoilSlider != null) { recoilSlider.value = (maxRecoil> 0) ? recoil / maxRecoil: 0f; }
-            if (ammoSlider != null) { ammoSlider.value = (maxAmmo   > 0) ? ammoCount / (float)maxAmmo : 0f; }
-            if (weightSlider != null) { weightSlider.value = (maxWeight > 0) ? weight / maxWeight: 0f; }
+            CalculateMaxStats();
+            InitializeSlots();
+        }
+        
+        private void UpdateStats(int damage, int ammoCount, float rpm, float recoil, float weight)
+        {
+            if (damageSlider != null) damageSlider.value = (maxDamage > 0) ? damage / (float)maxDamage : 0f;
+            if (rpmSlider != null) rpmSlider.value = (maxRPM > 0) ? rpm / maxRPM : 0f;
+            if (recoilSlider != null) recoilSlider.value = (maxRecoil > 0) ? recoil / maxRecoil : 0f;
+            if (ammoSlider != null) ammoSlider.value = (maxAmmo > 0) ? ammoCount / (float)maxAmmo : 0f;
+            if (weightSlider != null) weightSlider.value = (maxWeight > 0) ? weight / maxWeight : 0f;
 
-            if (damageText != null) damageText.text = stat.Damage.ToString();
+            if (damageText != null) damageText.text = damage.ToString();
             if (rpmText != null) rpmText.text = Mathf.RoundToInt(rpm).ToString();
             if (recoilText != null) recoilText.text = Mathf.RoundToInt(recoil).ToString();
             if (ammoText != null) ammoText.text = ammoCount.ToString();
             if (weightText != null) weightText.text = weight.ToString("F1");
-        }
-        
-        private void SetLayerRecursively(GameObject obj, int layer)
-        {
-            obj.layer = layer;
-            foreach (Transform child in obj.transform)
-                SetLayerRecursively(child.gameObject, layer);
-        }
+        }        
     }
 }

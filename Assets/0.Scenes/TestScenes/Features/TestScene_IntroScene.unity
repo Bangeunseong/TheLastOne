@@ -436,15 +436,14 @@ MonoBehaviour:
   sceneLoadManager:
     <PreviousScene>k__BackingField: 0
     <CurrentScene>k__BackingField: 0
+  spawnManager:
+    <CurrentSpawnData>k__BackingField: {fileID: 0}
   uiManager:
     <LoadedUI>k__BackingField:
       _serializedList: []
     <InGameUI>k__BackingField: {fileID: 0}
   resourceManager:
     resources:
-      _serializedList: []
-  objectPoolManager:
-    activeObjects:
       _serializedList: []
   soundManager:
     soundGroups:
