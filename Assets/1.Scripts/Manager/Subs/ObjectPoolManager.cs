@@ -27,7 +27,7 @@ namespace _1.Scripts.Manager.Subs
         private Transform poolRoot; // 풀들 부모
         private CoreManager coreManager;
         
-        private int defaultCapacity = 25; // 용량설정
+        private int defaultCapacity = 10; // 용량설정
         private int maxCapacity = 500;
         
         /// <summary>

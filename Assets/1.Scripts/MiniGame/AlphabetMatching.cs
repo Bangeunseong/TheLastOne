@@ -52,6 +52,10 @@ namespace _1.Scripts.MiniGame
             if (!IsPlaying)
             {
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    FinishGame(false); return;
+                }
                 StartCoroutine(StartCountdown_Coroutine());
                 IsPlaying = true;
                 return;
@@ -70,11 +74,12 @@ namespace _1.Scripts.MiniGame
             }
             
             // Minigame 메인 로직
-            if (Time.time - startTime >= Duration)
+            if (Time.unscaledTime - startTime >= Duration)
             {
                 FinishGame(false); return;
             }
             if (!Input.anyKeyDown) return;
+            if (Input.inputString == null) return;
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
@@ -88,7 +93,7 @@ namespace _1.Scripts.MiniGame
             if (isSuccess) OnSuccess?.Invoke();
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
-            gameObject.SetActive(false);
+            enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -114,7 +119,7 @@ namespace _1.Scripts.MiniGame
                 // TODO: Show Countdown UI 
                 yield return null;
             }
-            startTime = Time.time;
+            startTime = Time.unscaledTime;
         }
     }
 }
