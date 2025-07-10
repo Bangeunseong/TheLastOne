@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace _1.Scripts.Map.Console
 {
@@ -31,11 +29,6 @@ namespace _1.Scripts.Map.Console
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
-        private void Start()
-        {
-            AlphabetGame.Initialize(this);
-        }
-
         public void OnCleared()
         {
             IsCleared = true;
@@ -46,7 +39,9 @@ namespace _1.Scripts.Map.Console
         public void OnInteract(GameObject ownerObj)
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
+            Service.Log("Interacted!");
             if (IsCleared) return;
+            AlphabetGame.Initialize(this, player);
             AlphabetGame.enabled = true;
         }
     }

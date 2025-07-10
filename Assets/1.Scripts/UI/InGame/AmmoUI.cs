@@ -31,7 +31,7 @@ namespace _1.Scripts.UI.InGame
                 GameObject ammoIcon = poolManager.Get(ammoPrefab.name);
                 ammoIcon.transform.SetParent(ammoContainer, false);
                 ammoIcons.Add(ammoIcon);
-                Service.Log($"Create Ammo Icon : {ammoIcons.Count}");
+                // Service.Log($"Create Ammo Icon : {ammoIcons.Count}");
             }
 
             while (ammoIcons.Count > currentAmmo)
@@ -39,7 +39,7 @@ namespace _1.Scripts.UI.InGame
                 GameObject ammoIcon = ammoIcons[ammoIcons.Count - 1];
                 ammoIcons.RemoveAt(ammoIcons.Count - 1);
                 poolManager.Release(ammoIcon);
-                Service.Log($"Release Ammo Icon : {ammoIcons.Count}");
+                // Service.Log($"Release Ammo Icon : {ammoIcons.Count}");
             }
         }
     }

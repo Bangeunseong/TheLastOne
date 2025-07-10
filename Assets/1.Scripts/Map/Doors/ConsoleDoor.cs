@@ -51,6 +51,7 @@ namespace _1.Scripts.Map.Doors
             Vector3 upperDoorPosition = UpperDoor.localPosition;
             Vector3 lowerDoorPosition = LowerDoor.localPosition;
             
+            IsOpened = true;
             while (time < Duration)
             {
                 time += Time.deltaTime;
