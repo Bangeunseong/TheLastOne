@@ -83,6 +83,7 @@ namespace _1.Scripts.MiniGame
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
+                // TODO: Play UI Effect
                 CurrentIndex++;
             }
         }
