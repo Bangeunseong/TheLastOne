@@ -6,14 +6,18 @@ using UnityEngine;
 
 namespace _1.Scripts.Map.SpawnTriggers
 {
-    public class Stage1_Number1 : MonoBehaviour
+    public class SpawnEnemyByIndex : MonoBehaviour
     {
+        [SerializeField] private int spawnIndex;
         private bool isSpawned;
         
         private void OnTriggerEnter(Collider other)
         {
-            CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(1);
-            isSpawned = true;
+            if (!isSpawned)
+            {
+                CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
+                isSpawned = true;
+            }
         }
     }
 }

@@ -157,6 +157,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             if (rootRenderer.gameObject.layer == LayerConstants.StencilEnemy)
             {
+                NpcUtil.SetLayerRecursively(gameObject, LayerConstants.StencilAlly);
                 NpcUtil.SetLayerRecursively(rootRenderer.gameObject, LayerConstants.StencilAlly);
             }
             else
