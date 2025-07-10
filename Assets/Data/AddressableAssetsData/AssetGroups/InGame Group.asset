@@ -60,7 +60,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9ec16e51088c17a42b411e03bb26f5ed
+  - m_GUID: 1274e3ac636ba8948a3566b702b6c14a
     m_Address: SpawnPoints_Stage1
     m_ReadOnly: 0
     m_SerializedLabels:

@@ -34,10 +34,10 @@ MonoBehaviour:
     _serializedList:
     - Key: 0
       Value:
-      - position: {x: -22.611, y: 5.37, z: -33.91}
-        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
       - position: {x: -22.611, y: 5.37, z: -45.89}
         rotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
+      - position: {x: -22.611, y: 5.37, z: -33.91}
+        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
     - Key: 1
       Value:
       - position: {x: -23.587, y: 5.37, z: -33.91}
@@ -46,16 +46,16 @@ MonoBehaviour:
         rotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
     - Key: 2
       Value:
-      - position: {x: -24.56, y: 5.37, z: -33.91}
-        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
       - position: {x: -24.56, y: 5.37, z: -45.89}
         rotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
+      - position: {x: -24.56, y: 5.37, z: -33.91}
+        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
     - Key: 3
       Value:
-      - position: {x: -25.548, y: 5.37, z: -33.91}
-        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
       - position: {x: -25.548, y: 5.37, z: -45.89}
         rotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
+      - position: {x: -25.548, y: 5.37, z: -33.91}
+        rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   <EnemySpawnPoints>k__BackingField:
     _serializedList:
     - Key: 1
@@ -63,21 +63,9 @@ MonoBehaviour:
         _serializedList:
         - Key: 0
           Value:
-          - position: {x: 29.204105, y: 4.0210695, z: 26.369907}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
-          - position: {x: -20.66336, y: 3.9899035, z: 41.619816}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
-          - position: {x: 21.818838, y: 4.2400055, z: 3.6717181}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
-          - position: {x: 96.83, y: 4.2398996, z: 19.02}
-            rotation: {x: -0, y: 1, z: -0, w: 0}
-          - position: {x: -15.418411, y: 3.9899073, z: 59.008705}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
-          - position: {x: -20.450182, y: 4.239943, z: 16.894316}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
           - position: {x: 96.83, y: 4.2398996, z: 10.708099}
             rotation: {x: -0, y: 1, z: -0, w: 0}
           - position: {x: 96.83, y: 4.2398996, z: 1.61}
             rotation: {x: -0, y: 1, z: -0, w: 0}
-          - position: {x: -0.83641016, y: 4.239951, z: -25.746325}
-            rotation: {x: -0, y: -0, z: -0, w: 1}
+          - position: {x: 96.83, y: 4.2398996, z: 19.02}
+            rotation: {x: -0, y: 1, z: -0, w: 0}

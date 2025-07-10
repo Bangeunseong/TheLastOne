@@ -5,7 +5,6 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Pool;
 
 namespace _1.Scripts.Manager.Subs
@@ -62,16 +61,7 @@ namespace _1.Scripts.Manager.Subs
             parent.SetParent(poolRoot);
             
             var pool = new ObjectPool<GameObject>(
-                createFunc: () =>
-                {
-                    GameObject obj = UnityEngine.Object.Instantiate(prefab, parent);
-
-                    if (obj.TryGetComponent(out NavMeshAgent agent))
-                    {
-                        agent.enabled = false;
-                    }
-                    return obj;
-                },
+                createFunc: () => UnityEngine.Object.Instantiate(prefab, parent),
                 actionOnGet: item => item.gameObject.SetActive(true),
                 actionOnRelease: item =>
                 {

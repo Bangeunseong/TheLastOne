@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Interfaces.NPC;
-using _1.Scripts.Manager.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -56,7 +55,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         
         public void DestroyObjectForAnimationEvent()
         {
-            CoreManager.Instance.objectPoolManager.Release(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
