@@ -13,10 +13,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 	{
 		public SharedNavMeshAgent agent;
 		public SharedVector3 targetPosition;
-		public SharedBool shouldAlertNearBy;
+		public SharedBaseNpcStatController statController;
 		
 		public override TaskStatus OnUpdate()
 		{
+			if (statController.Value.RuntimeStatData.IsAlly && targetPosition.Value == Vector3.zero)
+			{
+				return TaskStatus.Success;
+			}
+			
 			if (!agent.Value.hasPath && targetPosition.Value == Vector3.zero)
 			{
 				return TaskStatus.Success;
@@ -25,4 +30,4 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 			return TaskStatus.Failure;
 		}
 	}
-}
+}	
