@@ -54,8 +54,7 @@ namespace _1.Scripts.MiniGame
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    FinishGame(false); gameObject.SetActive(false);
-                    return;
+                    FinishGame(false); return;
                 }
                 StartCoroutine(StartCountdown_Coroutine());
                 IsPlaying = true;
@@ -68,8 +67,7 @@ namespace _1.Scripts.MiniGame
                 CurrentLoopCount++;
                 if (!IsLoop || CurrentLoopCount >= LoopCount)
                 {
-                    FinishGame(true); 
-                    gameObject.SetActive(false); return;
+                    FinishGame(true); return;
                 }
                 ResetGame();
                 return;
@@ -78,8 +76,7 @@ namespace _1.Scripts.MiniGame
             // Minigame 메인 로직
             if (Time.unscaledTime - startTime >= Duration)
             {
-                FinishGame(false); 
-                gameObject.SetActive(false); return;
+                FinishGame(false); return;
             }
             if (!Input.anyKeyDown) return;
             if (Input.inputString == null) return;
@@ -95,6 +92,7 @@ namespace _1.Scripts.MiniGame
             if (isSuccess) OnSuccess?.Invoke();
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
+            enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
