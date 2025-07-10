@@ -65,7 +65,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
-            rootRenderer = this.TryGetChildComponent<Transform>("body"); // 다를 시 body로 체인지해서 묶을 것
+            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
             IsDead = false;
         }
 
@@ -157,6 +157,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             if (rootRenderer.gameObject.layer == LayerConstants.StencilEnemy)
             {
+                NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
                 NpcUtil.SetLayerRecursively(rootRenderer.gameObject, LayerConstants.StencilAlly);
             }
             else

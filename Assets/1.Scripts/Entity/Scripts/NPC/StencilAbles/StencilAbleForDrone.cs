@@ -16,7 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StencilAbles
         private void Awake()
         {
             statController = GetComponent<BaseNpcStatController>();
-            rootRenderer = this.TryGetChildComponent<Transform>("body");
+            rootRenderer = this.TryGetChildComponent<Transform>("DronBot");
         }
 
         public void StencilLayerOnOrNot(bool isOn)
