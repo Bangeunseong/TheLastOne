@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -22,6 +23,9 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
         [field: SerializeField] public bool IsPlaying { get; private set; }
+        
+        [field: Header("UI")]
+        [field: SerializeField] public MinigameUI ui;
         
         [Header("OnSuccess Callback")]
         public UnityEvent OnSuccess;
@@ -44,6 +48,7 @@ namespace _1.Scripts.MiniGame
             coreManager.gameManager.Player.Pov.m_VerticalAxis.Reset();
             coreManager.gameManager.Player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
+            // UI 띄우기
         }
 
         private void Update()
@@ -51,10 +56,16 @@ namespace _1.Scripts.MiniGame
             // Minigame 초입
             if (!IsPlaying)
             {
-                if (!Input.GetKeyDown(KeyCode.Return)) return;
+                if (!Input.GetKeyDown(KeyCode.Return))
+                {
+                    // Press Enter UI
+                    return;
+                }
+                // Press Enter UI 끄기
+                
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    FinishGame(false); gameObject.SetActive(false);
+                    FinishGame(false);
                     return;
                 }
                 StartCoroutine(StartCountdown_Coroutine());
@@ -66,6 +77,7 @@ namespace _1.Scripts.MiniGame
             if (CurrentIndex >= AlphabetLength)
             {
                 CurrentLoopCount++;
+                // 부분 성공 UI 업데이트
                 if (!IsLoop || CurrentLoopCount >= LoopCount)
                 {
                     FinishGame(true); return;
@@ -94,14 +106,16 @@ namespace _1.Scripts.MiniGame
             if (isSuccess) OnSuccess?.Invoke();
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
-            gameObject.SetActive(false);
+            enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
+            // 미니게임 전체 UI 끄기
         }
 
         private void ResetGame()
         {
             IsPlaying = false;
             CurrentAlphabets = GetAlphabets();
+            // UI 갱신
         }
 
         private string GetAlphabets()
@@ -121,6 +135,7 @@ namespace _1.Scripts.MiniGame
                 yield return null;
             }
             startTime = Time.unscaledTime;
+            // 알파벳 출력 UI 갱신
         }
     }
 }
