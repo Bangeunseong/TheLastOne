@@ -351,6 +351,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 case DummyItem item:
                     item.OnInteract(stateMachine.Player.gameObject);
                     break;
+                case null: break;
+                default: interactable.OnInteract(stateMachine.Player.gameObject); break;
             }
         }
         /* ---------------------- */

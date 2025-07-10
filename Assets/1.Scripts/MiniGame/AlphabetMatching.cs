@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.InGame;
 using UnityEngine;
 using UnityEngine.Events;
+using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
 namespace _1.Scripts.MiniGame
@@ -23,44 +24,30 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
         [field: SerializeField] public bool IsPlaying { get; private set; }
+        [field: SerializeField] public bool IsCounting { get; private set; }
         
-        [field: Header("UI")]
-        [field: SerializeField] public MinigameUI ui;
-        
-        [Header("OnSuccess Callback")]
-        public UnityEvent OnSuccess;
+        public event Action OnSuccess;
 
-        private CoreManager coreManager;
+        private Console console;
+        private Player player;
         private float startTime;
-
-        private void Awake()
-        {
-            coreManager = CoreManager.Instance;
-        }
 
         private void OnEnable()
         {
-            if (ui == null)
-            {
-                var uiRoot = GameObject.Find("MainCanvas")?.transform;
-                if (uiRoot == null) return;
-                var minigamePrefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>("MinigameUI");
-                if (minigamePrefab == null) return;
-                var instance = GameObject.Instantiate(minigamePrefab, uiRoot);
-                ui = instance.GetComponent<MinigameUI>();
-                if (ui == null) return;
-            }
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
             IsPlaying = false;
-            coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = false;
-            coreManager.gameManager.Player.Pov.m_HorizontalAxis.Reset();
-            coreManager.gameManager.Player.Pov.m_VerticalAxis.Reset();
-            coreManager.gameManager.Player.InputProvider.enabled = false;
+            player.PlayerCondition.IsPlayerHasControl = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
-            ui.ShowPanel();
-            if (IsLoop && LoopCount > 0)
-                ui.UpdateLoopCount(CurrentLoopCount, LoopCount);
+        }
+
+        public void Initialize(Console con, Player player)
+        {
+            console = con;
+            this.player = player;
         }
 
         private void Update()
@@ -68,41 +55,36 @@ namespace _1.Scripts.MiniGame
             // Minigame 초입
             if (!IsPlaying)
             {
-                if (!Input.GetKeyDown(KeyCode.Return))
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    ui.ShowEnterText(true);
+                    StartCoroutine(StartCountdown_Coroutine());
+                    IsCounting = IsPlaying = true;
                     return;
                 }
-                ui.ShowEnterText(false);
                 
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Z))
                 {
                     FinishGame(false);
-                    return;
                 }
-                StartCoroutine(StartCountdown_Coroutine());
-                IsPlaying = true;
                 return;
             }
+
+            if (IsCounting) return;
 
             // Minigame 달성 여부 확인
             if (CurrentIndex >= AlphabetLength)
             {
                 CurrentLoopCount++;
-                // 부분 성공 UI 업데이트
                 if (!IsLoop || CurrentLoopCount >= LoopCount)
                 {
                     FinishGame(true); return;
                 }
                 ResetGame();
-                ui.UpdateLoopCount(CurrentLoopCount, LoopCount);
                 return;
             }
             
             // Minigame 메인 로직
-            float remainTime = Duration - (Time.unscaledTime - startTime);
-            ui.UpdateTimeSlider(remainTime);
-            if (Time.unscaledTime - startTime >= Duration)
+            if (Time.time - startTime >= Duration)
             {
                 FinishGame(false); return;
             }
@@ -111,60 +93,46 @@ namespace _1.Scripts.MiniGame
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
-                ui.AlphabetAnim(CurrentIndex, true);
+                // TODO: Play UI Effect
                 CurrentIndex++;
             }
         }
 
         private void FinishGame(bool isSuccess)
         {
-            if (isSuccess)
-            {
-                ui.ShowClearText(true);
-                ui.SetClearText(true, "CLEAR!");
-                OnSuccess?.Invoke();
-            }
-            coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
-            coreManager.gameManager.Player.InputProvider.enabled = true;
+            Service.Log("Finished Game");
+            if (isSuccess) { console.OnCleared(); }
+            player.PlayerCondition.IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
             enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
-            ui.ShowClearText(false);
-            ui.HidePanel();
-            Destroy(ui.gameObject, 1f);
-            ui = null;
         }
 
         private void ResetGame()
         {
-            IsPlaying = false;
+            IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
-            ui.ShowPanel();
         }
 
         private string GetAlphabets()
         {
             StringBuilder builder = new();
-            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{'a' + Random.Range(0, 26)}");
+            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{(char)Random.Range('a', 'z' + 1)}");
             return builder.ToString();
         }
 
         private IEnumerator StartCountdown_Coroutine()
         {
-            ui.ShowCountdownText(true);
-            ui.SetCountdownText(Duration);
             var t = 0f;
             while (t < Delay)
             {
                 t += Time.unscaledDeltaTime;
-                ui.SetCountdownText(Delay - t);
+                // TODO: Show Countdown UI 
                 yield return null;
             }
-            ui.ShowCountdownText(false);
-            ui.ShowAlphabet(true);
-            ui.CreateAlphabet(CurrentAlphabets);
-            ui.ShowTimeSlider(true);
-            ui.SetTimeSlider(Duration, Duration);
+            IsCounting = false;
             startTime = Time.unscaledTime;
+            Service.Log($"Start Game!: {CurrentAlphabets}");
         }
     }
 }
