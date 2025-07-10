@@ -24,8 +24,7 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
         [field: SerializeField] public bool IsPlaying { get; private set; }
         
-        [Header("OnSuccess Callback")]
-        public UnityEvent OnSuccess;
+        public event Action OnSuccess;
 
         private CoreManager coreManager;
         private Console console;
@@ -51,6 +50,7 @@ namespace _1.Scripts.MiniGame
         public void Initialize(Console con)
         {
             console = con;
+            OnSuccess += con.OnCleared;
         }
 
         private void Update()

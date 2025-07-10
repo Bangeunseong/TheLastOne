@@ -1436,16 +1436,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 108539659730930011, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.664
-      objectReference: {fileID: 0}
-    - target: {fileID: 108539659730930011, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 3885555260052375890, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1496,30 +1486,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4962220780748429346, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.337
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962220780748429346, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 5635516836702039195, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Name
       value: Map_v1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7217932430748695327, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: OnSuccess.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7217932430748695327, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: OnSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
