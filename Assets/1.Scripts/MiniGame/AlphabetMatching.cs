@@ -40,6 +40,16 @@ namespace _1.Scripts.MiniGame
 
         private void OnEnable()
         {
+            if (ui == null)
+            {
+                var uiRoot = GameObject.Find("MainCanvas")?.transform;
+                if (uiRoot == null) return;
+                var minigamePrefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>("MinigameUI");
+                if (minigamePrefab == null) return;
+                var instance = GameObject.Instantiate(minigamePrefab, uiRoot);
+                ui = instance.GetComponent<MinigameUI>();
+                if (ui == null) return;
+            }
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
             IsPlaying = false;
@@ -48,7 +58,9 @@ namespace _1.Scripts.MiniGame
             coreManager.gameManager.Player.Pov.m_VerticalAxis.Reset();
             coreManager.gameManager.Player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
-            // UI 띄우기
+            ui.ShowPanel();
+            if (IsLoop && LoopCount > 0)
+                ui.UpdateLoopCount(CurrentLoopCount, LoopCount);
         }
 
         private void Update()
@@ -58,10 +70,10 @@ namespace _1.Scripts.MiniGame
             {
                 if (!Input.GetKeyDown(KeyCode.Return))
                 {
-                    // Press Enter UI
+                    ui.ShowEnterText(true);
                     return;
                 }
-                // Press Enter UI 끄기
+                ui.ShowEnterText(false);
                 
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -83,10 +95,13 @@ namespace _1.Scripts.MiniGame
                     FinishGame(true); return;
                 }
                 ResetGame();
+                ui.UpdateLoopCount(CurrentLoopCount, LoopCount);
                 return;
             }
             
             // Minigame 메인 로직
+            float remainTime = Duration - (Time.unscaledTime - startTime);
+            ui.UpdateTimeSlider(remainTime);
             if (Time.unscaledTime - startTime >= Duration)
             {
                 FinishGame(false); return;
@@ -96,26 +111,34 @@ namespace _1.Scripts.MiniGame
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
-                // TODO: Play UI Effect
+                ui.AlphabetAnim(CurrentIndex, true);
                 CurrentIndex++;
             }
         }
 
         private void FinishGame(bool isSuccess)
         {
-            if (isSuccess) OnSuccess?.Invoke();
+            if (isSuccess)
+            {
+                ui.ShowClearText(true);
+                ui.SetClearText(true, "CLEAR!");
+                OnSuccess?.Invoke();
+            }
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
             enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
-            // 미니게임 전체 UI 끄기
+            ui.ShowClearText(false);
+            ui.HidePanel();
+            Destroy(ui.gameObject, 1f);
+            ui = null;
         }
 
         private void ResetGame()
         {
             IsPlaying = false;
             CurrentAlphabets = GetAlphabets();
-            // UI 갱신
+            ui.ShowPanel();
         }
 
         private string GetAlphabets()
@@ -127,15 +150,21 @@ namespace _1.Scripts.MiniGame
 
         private IEnumerator StartCountdown_Coroutine()
         {
+            ui.ShowCountdownText(true);
+            ui.SetCountdownText(Duration);
             var t = 0f;
             while (t < Delay)
             {
                 t += Time.unscaledDeltaTime;
-                // TODO: Show Countdown UI 
+                ui.SetCountdownText(Delay - t);
                 yield return null;
             }
+            ui.ShowCountdownText(false);
+            ui.ShowAlphabet(true);
+            ui.CreateAlphabet(CurrentAlphabets);
+            ui.ShowTimeSlider(true);
+            ui.SetTimeSlider(Duration, Duration);
             startTime = Time.unscaledTime;
-            // 알파벳 출력 UI 갱신
         }
     }
 }

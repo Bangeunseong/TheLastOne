@@ -18,6 +18,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Slider timeSlider;
         [SerializeField] private GameObject clearPanel;
         [SerializeField] private TextMeshProUGUI clearText;
+        [SerializeField] private TextMeshProUGUI loopCountText;
         
         List<TextMeshProUGUI> alphabetCells = new List<TextMeshProUGUI>();
 
@@ -25,6 +26,11 @@ namespace _1.Scripts.UI.InGame
         {
             panel.SetActive(true);
             animator.SetTrigger("Show");
+            ShowEnterText(true);
+            ShowCountdownText(false);
+            ShowAlphabet(false);
+            ShowTimeSlider(false);
+            ShowClearText(false);
         }
 
         public void HidePanel()
@@ -99,6 +105,12 @@ namespace _1.Scripts.UI.InGame
         {
             clearText.text = text;
             clearText.gameObject.SetActive(show);
+        }
+
+        public void UpdateLoopCount(int current, int max)
+        {
+            if (loopCountText != null)
+                loopCountText.text = $"{current + 1}/{max}";
         }
     }
 }
