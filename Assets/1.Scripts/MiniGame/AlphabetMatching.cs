@@ -68,8 +68,7 @@ namespace _1.Scripts.MiniGame
                 CurrentLoopCount++;
                 if (!IsLoop || CurrentLoopCount >= LoopCount)
                 {
-                    FinishGame(true); 
-                    gameObject.SetActive(false); return;
+                    FinishGame(true); return;
                 }
                 ResetGame();
                 return;
@@ -78,14 +77,14 @@ namespace _1.Scripts.MiniGame
             // Minigame 메인 로직
             if (Time.unscaledTime - startTime >= Duration)
             {
-                FinishGame(false); 
-                gameObject.SetActive(false); return;
+                FinishGame(false); return;
             }
             if (!Input.anyKeyDown) return;
             if (Input.inputString == null) return;
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
+                // TODO: Play UI Effect
                 CurrentIndex++;
             }
         }
@@ -95,6 +94,7 @@ namespace _1.Scripts.MiniGame
             if (isSuccess) OnSuccess?.Invoke();
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
+            gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
 
