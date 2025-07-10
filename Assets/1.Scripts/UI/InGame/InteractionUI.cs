@@ -11,6 +11,7 @@ namespace _1.Scripts.UI.InGame
 
         public void Show()
         {
+            this.gameObject.SetActive(true);
             animator.ResetTrigger("Hide");
             animator.SetTrigger("Show");
         }
@@ -19,6 +20,7 @@ namespace _1.Scripts.UI.InGame
         {
             animator.ResetTrigger("Show");
             animator.SetTrigger("Hide");
+            this.gameObject.SetActive(false);
         }
     }
 }

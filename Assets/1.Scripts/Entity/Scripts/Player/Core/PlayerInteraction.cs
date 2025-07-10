@@ -15,8 +15,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [SerializeField] private GameObject detectedObject;
 
         [Header("Hover Prompt (World Space UI)")]
-        [SerializeField] private Vector3 promptOffset = new Vector3(0, 2.0f, 0);
-        
+        [SerializeField] private Vector3 offSet = new Vector3(0, 0, 0);
+        private Vector3 lastHitPoint;
         private InteractionUI interactionUI;
         private GameObject uiInstance;
         private bool isUIAppearing;
@@ -52,8 +52,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (Physics.Raycast(ray, out var hit, maxCheckDistance, interactableLayers))
             {
                 if (hit.collider.gameObject == detectedObject) return;
-                
+
                 detectedObject = hit.collider.gameObject;
+                lastHitPoint = hit.point;
                 Interactable = detectedObject.TryGetComponent<IInteractable>(out var interactable) ? interactable : null;
                 HandleUI();
             }
@@ -87,7 +88,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (Interactable != null && !isUIAppearing)
             {
-                uiInstance.transform.position = detectedObject.transform.position + promptOffset;
+                uiInstance.transform.position = lastHitPoint;
                 interactionUI.Show();
                 isUIAppearing = true;
             }

@@ -28,8 +28,7 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public bool IsCounting { get; private set; }
         
         
-        [field: Header("UI")]
-        [field: SerializeField] private MinigameUI ui;
+        private MinigameUI ui;
         
         public event Action OnSuccess;
 
@@ -39,16 +38,6 @@ namespace _1.Scripts.MiniGame
 
         private void OnEnable()
         {
-            if (ui == null)
-            {
-                var uiRoot = GameObject.Find("MainCanvas")?.transform;
-                if (uiRoot == null) return;
-                var minigamePrefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>("MinigameUI");
-                if (minigamePrefab == null) return;
-                var instance = GameObject.Instantiate(minigamePrefab, uiRoot);
-                ui = instance.GetComponent<MinigameUI>();
-                if (ui == null) return;
-            }
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
             IsPlaying = false;
@@ -57,10 +46,6 @@ namespace _1.Scripts.MiniGame
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
-
-            ui.ShowPanel();
-            if (IsLoop && LoopCount > 0)
-                ui.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
         }
 
         public void Initialize(Console con, Player player)
@@ -121,6 +106,16 @@ namespace _1.Scripts.MiniGame
             }
         }
 
+        public void StartMiniGame(Console con, Player ply)
+        {
+            console = con;
+            player = ply;
+            var uiManager = CoreManager.Instance.uiManager;
+
+            ui = uiManager.ShowMinigameUI();
+            ui.ShowPanel();
+        }
+
         private void FinishGame(bool isSuccess)
         {
             Service.Log("Finished Game");
@@ -134,8 +129,8 @@ namespace _1.Scripts.MiniGame
             player.InputProvider.enabled = true;
             Cursor.lockState = CursorLockMode.Locked;
 
-            ui.HidePanel();
-            CoreManager.Instance.objectPoolManager.Release(ui.gameObject);
+            ui.HidePanel(); 
+            CoreManager.Instance.uiManager.HideMinigameUI();
             ui = null;
             enabled = false;
         }

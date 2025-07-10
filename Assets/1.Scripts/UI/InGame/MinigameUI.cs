@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Subs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace _1.Scripts.UI.InGame
 {
-    public class MinigameUI : MonoBehaviour
+    public class MinigameUI : UIBase
     {
         [SerializeField] private GameObject panel;
         [SerializeField] private Animator animator;
@@ -22,10 +23,20 @@ namespace _1.Scripts.UI.InGame
         
         List<TextMeshProUGUI> alphabetCells = new List<TextMeshProUGUI>();
 
+        public override void Init(UIManager manager)
+        {
+            base.Init(manager);
+            panel.SetActive(false);
+        }
+        public override void SetActive(bool active)
+        {
+            gameObject.SetActive(active);
+        }
+        
         public void ShowPanel()
         {
             panel.SetActive(true);
-            animator.SetTrigger("Show");
+            animator.Play("Window In");
             ShowEnterText(true);
             ShowCountdownText(false);
             ShowAlphabet(false);
@@ -35,7 +46,7 @@ namespace _1.Scripts.UI.InGame
 
         public void HidePanel()
         {
-            animator.SetTrigger("Hide");
+            animator.Play("Window Out");
             panel.SetActive(false);
         }
 
