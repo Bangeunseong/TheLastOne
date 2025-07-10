@@ -8,6 +8,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.Manager.Subs
 {
@@ -49,6 +50,10 @@ namespace _1.Scripts.Manager.Subs
                         enemy.transform.position = val.position;
                         enemy.transform.rotation = val.rotation;
                         
+                        if (enemy.TryGetComponent(out NavMeshAgent agent))
+                        {
+                            agent.enabled = true;
+                        }
                         spawnedEnemies.Add(enemy);
                     }
                 }
