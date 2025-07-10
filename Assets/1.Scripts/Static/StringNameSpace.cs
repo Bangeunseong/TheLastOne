@@ -31,7 +31,8 @@ namespace _1.Scripts.Static
         {
             "ReconDrone",
             "SuicideDrone",
-            "HackingProgressUI"
+            "HackingProgressUI",
+            "InteractionUI"
         };
     }
 
