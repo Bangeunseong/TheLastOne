@@ -49,7 +49,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] private bool canBeHacked = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
-        [SerializeField] protected GameObject rootRenderer;
+        [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private Coroutine hackingCoroutine;
         private bool isHacking;
@@ -65,7 +65,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
-            rootRenderer = this.TryGetChildComponent<GameObject>("body"); // 다를 시 body로 체인지해서 묶을 것
+            rootRenderer = this.TryGetChildComponent<Transform>("body"); // 다를 시 body로 체인지해서 묶을 것
             IsDead = false;
         }
 
@@ -155,9 +155,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             RuntimeStatData.IsAlly = true;
 
-            if (rootRenderer.layer == LayerConstants.StencilEnemy)
+            if (rootRenderer.gameObject.layer == LayerConstants.StencilEnemy)
             {
-                NpcUtil.SetLayerRecursively(rootRenderer, LayerConstants.StencilAlly);
+                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, LayerConstants.StencilAlly);
             }
             else
             {
