@@ -54,8 +54,7 @@ namespace _1.Scripts.MiniGame
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    FinishGame(false); gameObject.SetActive(false);
-                    return;
+                    FinishGame(false); return;
                 }
                 StartCoroutine(StartCountdown_Coroutine());
                 IsPlaying = true;
@@ -94,7 +93,7 @@ namespace _1.Scripts.MiniGame
             if (isSuccess) OnSuccess?.Invoke();
             coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.Player.InputProvider.enabled = true;
-            gameObject.SetActive(false);
+            enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
