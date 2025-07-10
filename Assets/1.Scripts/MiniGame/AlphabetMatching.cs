@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 using UnityEngine.Events;
+using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
 namespace _1.Scripts.MiniGame
@@ -22,28 +24,30 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
         [field: SerializeField] public bool IsPlaying { get; private set; }
+        [field: SerializeField] public bool IsCounting { get; private set; }
         
-        [Header("OnSuccess Callback")]
-        public UnityEvent OnSuccess;
+        public event Action OnSuccess;
 
-        private CoreManager coreManager;
+        private Console console;
+        private Player player;
         private float startTime;
-
-        private void Awake()
-        {
-            coreManager = CoreManager.Instance;
-        }
 
         private void OnEnable()
         {
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
             IsPlaying = false;
-            coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = false;
-            coreManager.gameManager.Player.Pov.m_HorizontalAxis.Reset();
-            coreManager.gameManager.Player.Pov.m_VerticalAxis.Reset();
-            coreManager.gameManager.Player.InputProvider.enabled = false;
+            player.PlayerCondition.IsPlayerHasControl = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        public void Initialize(Console con, Player player)
+        {
+            console = con;
+            this.player = player;
         }
 
         private void Update()
@@ -51,15 +55,21 @@ namespace _1.Scripts.MiniGame
             // Minigame 초입
             if (!IsPlaying)
             {
-                if (!Input.GetKeyDown(KeyCode.Return)) return;
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    FinishGame(false); return;
+                    StartCoroutine(StartCountdown_Coroutine());
+                    IsCounting = IsPlaying = true;
+                    return;
                 }
-                StartCoroutine(StartCountdown_Coroutine());
-                IsPlaying = true;
+                
+                if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    FinishGame(false);
+                }
                 return;
             }
+
+            if (IsCounting) return;
 
             // Minigame 달성 여부 확인
             if (CurrentIndex >= AlphabetLength)
@@ -74,7 +84,7 @@ namespace _1.Scripts.MiniGame
             }
             
             // Minigame 메인 로직
-            if (Time.unscaledTime - startTime >= Duration)
+            if (Time.time - startTime >= Duration)
             {
                 FinishGame(false); return;
             }
@@ -90,23 +100,24 @@ namespace _1.Scripts.MiniGame
 
         private void FinishGame(bool isSuccess)
         {
-            if (isSuccess) OnSuccess?.Invoke();
-            coreManager.gameManager.Player.PlayerCondition.IsPlayerHasControl = true;
-            coreManager.gameManager.Player.InputProvider.enabled = true;
+            Service.Log("Finished Game");
+            if (isSuccess) { console.OnCleared(); }
+            player.PlayerCondition.IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
             enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void ResetGame()
         {
-            IsPlaying = false;
+            IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
         }
 
         private string GetAlphabets()
         {
             StringBuilder builder = new();
-            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{'a' + Random.Range(0, 26)}");
+            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{(char)Random.Range('a', 'z' + 1)}");
             return builder.ToString();
         }
 
@@ -119,7 +130,9 @@ namespace _1.Scripts.MiniGame
                 // TODO: Show Countdown UI 
                 yield return null;
             }
+            IsCounting = false;
             startTime = Time.unscaledTime;
+            Service.Log($"Start Game!: {CurrentAlphabets}");
         }
     }
 }

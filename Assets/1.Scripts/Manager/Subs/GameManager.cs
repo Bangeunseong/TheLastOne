@@ -157,7 +157,7 @@ namespace _1.Scripts.Manager.Subs
             if (!Player) return;
 
             IsGamePaused = false;
-            Player.InputProvider.enabled = true;
+            if (Player.PlayerCondition.IsPlayerHasControl) Player.InputProvider.enabled = true;
             Player.PlayerInput.enabled = true;
         }
     }
