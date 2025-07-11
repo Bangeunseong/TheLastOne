@@ -71,12 +71,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9071fdf08b063604d9f1ab48f37da3e0
-    m_Address: EmpExplode_Particle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
     m_Address: ButtonClick
     m_ReadOnly: 0
@@ -193,6 +187,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 275829ca509e5114ea5e3cdb171fb8bc
     m_Address: Rifle_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d84f2938b955b574789df5331b02a71a
+    m_Address: EmpGrenadeExplosion
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

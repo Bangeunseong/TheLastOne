@@ -11,7 +11,7 @@ namespace _1.Scripts.Static
             "Bullet",
             "BulletHole_Wall",
             "BulletHole_Ground",
-            "EmpExplode",
+            "EmpGrenadeExplosion",
             "Grenade",
             "SoundPlayer",
             "Pistol_Dummy",
