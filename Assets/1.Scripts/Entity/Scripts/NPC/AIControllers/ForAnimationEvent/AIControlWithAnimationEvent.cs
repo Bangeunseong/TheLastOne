@@ -56,6 +56,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         
         public void DestroyObjectForAnimationEvent()
         {
+            CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(this.gameObject);
             CoreManager.Instance.objectPoolManager.Release(this.gameObject);
         }
     }
