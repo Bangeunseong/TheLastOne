@@ -60,14 +60,28 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1274e3ac636ba8948a3566b702b6c14a
+  - m_GUID: cb232371e2c97d14ea3a69d5295aea08
+    m_Address: HackingProgressUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    - Stage2
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fde9cff36a8707a48aad1d7a0be936bf
     m_Address: SpawnPoints_Stage1
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cb232371e2c97d14ea3a69d5295aea08
-    m_Address: HackingProgressUI
+  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
+    m_Address: MinigameUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    - Stage2
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5808116dce9c094584a55f6eec0c67f
+    m_Address: InteractionUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

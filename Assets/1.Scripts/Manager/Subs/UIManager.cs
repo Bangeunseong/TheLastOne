@@ -30,7 +30,10 @@ namespace _1.Scripts.Manager.Subs
         
         [field: Header("InGameUI")]
         [field: SerializeField] public InGameUI InGameUI { get; private set; }
-        
+
+        [field: Header("MinigameUI")]
+        [field: SerializeField] public MinigameUI MinigameUI { get; private set; }
+
         private Transform uiRoot;
         private Transform popupRoot;
         private CurrentState currentState = CurrentState.None;
@@ -42,6 +45,7 @@ namespace _1.Scripts.Manager.Subs
         public LoadingUI LoadingUI => loadingUI;
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
+        private const string MINIGAME_UI_ADDRESS = "MiniGameUI";
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
@@ -92,6 +96,7 @@ namespace _1.Scripts.Manager.Subs
                     break;
                 case CurrentState.InGame:
                     InGameUI = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
+                    MinigameUI = LoadUI<MinigameUI>(state, MINIGAME_UI_ADDRESS);
                     break;
             }
         }
@@ -121,16 +126,20 @@ namespace _1.Scripts.Manager.Subs
             if (LoadedUI.TryGetValue(state, out var list))
             {
                 foreach (var existing in list)
-                    if (existing is T found) { found.SetActive(true); return found; }
+                    if (existing is T found) { Service.Log($"{found.name}"); found.SetActive(true); return found; }
             }
             
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
             if (prefab == null || uiRoot == null) return null;
-
+            
             var instance  = Object.Instantiate(prefab, uiRoot, false);
+            
             if (!instance.TryGetComponent(out T component)) return null;
             if (component is InGameUI inGameUI) inGameUI.Init(this);
-            component.SetActive(true);
+            else if(component is MinigameUI minigameUI) minigameUI.Init(this);
+            
+            if (LoadedUI.ContainsKey(state)) { LoadedUI[state].Add(component); return component; }
+            LoadedUI[state] = new List<UIBase> { component };
             return component;
         }
         
@@ -185,6 +194,27 @@ namespace _1.Scripts.Manager.Subs
             }
             Debug.LogWarning($"이름이 '{name}'인 UI 오브젝트를 씬에서 찾을 수 없습니다.");
             return null;
+        }
+
+        public MinigameUI ShowMinigameUI()
+        {
+            var ui = LoadUI<MinigameUI>(CurrentState.InGame, MINIGAME_UI_ADDRESS);
+            ui.SetActive(true);
+            return ui;
+        }
+
+        public void HideMinigameUI()
+        {
+            if (LoadedUI.TryGetValue(CurrentState.InGame, out var list))
+            {
+                foreach (var baseUi in list)
+                {
+                    if (baseUi is MinigameUI minigameUI)
+                    {
+                        minigameUI.HidePanel();
+                    }
+                }
+            }
         }
     }
 }

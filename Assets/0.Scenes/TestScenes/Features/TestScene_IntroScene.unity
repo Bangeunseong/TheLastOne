@@ -442,6 +442,7 @@ MonoBehaviour:
     <LoadedUI>k__BackingField:
       _serializedList: []
     <InGameUI>k__BackingField: {fileID: 0}
+    <MinigameUI>k__BackingField: {fileID: 0}
   resourceManager:
     resources:
       _serializedList: []
@@ -1867,6 +1868,21 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1637771529891487033, guid: 0b462468169f96f4e812900e4e71ddaf,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637771529891487033, guid: 0b462468169f96f4e812900e4e71ddaf,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637771529891487033, guid: 0b462468169f96f4e812900e4e71ddaf,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1670859891048992429, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2810,7 +2826,7 @@ PrefabInstance:
     - target: {fileID: 2675454756077613042, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0002746582
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 2905114171038030435, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -3520,7 +3536,7 @@ PrefabInstance:
     - target: {fileID: 6032747272231607277, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.20735872
+      value: 0.20660275
       objectReference: {fileID: 0}
     - target: {fileID: 6179374854659641797, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -4440,6 +4456,11 @@ PrefabInstance:
     - target: {fileID: 8757024573325919358, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758222668488460836, guid: 0b462468169f96f4e812900e4e71ddaf,
+        type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8769799614959046748, guid: 0b462468169f96f4e812900e4e71ddaf,

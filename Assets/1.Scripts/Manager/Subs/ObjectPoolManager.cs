@@ -5,6 +5,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Pool;
 
 namespace _1.Scripts.Manager.Subs
@@ -27,7 +28,7 @@ namespace _1.Scripts.Manager.Subs
         private Transform poolRoot; // 풀들 부모
         private CoreManager coreManager;
         
-        private int defaultCapacity = 25; // 용량설정
+        private int defaultCapacity = 10; // 용량설정
         private int maxCapacity = 500;
         
         /// <summary>
@@ -61,7 +62,17 @@ namespace _1.Scripts.Manager.Subs
             parent.SetParent(poolRoot);
             
             var pool = new ObjectPool<GameObject>(
-                createFunc: () => UnityEngine.Object.Instantiate(prefab, parent),
+                createFunc: () =>
+                {
+                    GameObject obj = UnityEngine.Object.Instantiate(prefab, parent);
+
+                    if (obj.TryGetComponent(out NavMeshAgent agent))
+                    {
+                        agent.enabled = false;
+                    }
+
+                    return obj;
+                },
                 actionOnGet: item => item.gameObject.SetActive(true),
                 actionOnRelease: item =>
                 {
@@ -117,9 +128,16 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="obj"></param>
         public void Release(GameObject obj)
         {
-            if (pools.TryGetValue(obj.name, out ObjectPool<GameObject> pool))
+            string originalName = obj.name;
+            string postfix = "(Clone)";
+            string cleanedName = "";
+            
+            if (obj.name.EndsWith(postfix)) { cleanedName = originalName.Substring(0, originalName.Length - postfix.Length); }
+            
+            if (pools.TryGetValue(cleanedName, out ObjectPool<GameObject> pool))
             {
-                if (activeObjects.TryGetValue(obj.name, out HashSet<GameObject> set))
+                // Service.Log("Found Pool");
+                if (activeObjects.TryGetValue(cleanedName, out HashSet<GameObject> set))
                 {
                     set.Remove(obj);
                 }

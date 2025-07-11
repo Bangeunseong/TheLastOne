@@ -47,7 +47,7 @@ namespace _1.Scripts.Map.Doors
             originalLowerPosition = LowerDoor.localPosition;
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             if (isOpen || ((1 << other.gameObject.layer) & TargetMask.value) == 0) return;
             if (doorCoroutine != null) return;

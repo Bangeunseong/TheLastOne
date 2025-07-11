@@ -226,7 +226,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     if (clipRef == null) 
                         continue;
-                    Service.Log(group.name);
+                    // Service.Log(group.name);
                     AudioClip clip;
 
                     if (clipRef.Asset is AudioClip existingClip)

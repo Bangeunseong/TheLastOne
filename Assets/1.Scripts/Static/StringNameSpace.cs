@@ -11,7 +11,7 @@ namespace _1.Scripts.Static
             "Bullet",
             "BulletHole_Wall",
             "BulletHole_Ground",
-            "EmpExplode",
+            "EmpGrenadeExplosion",
             "Grenade",
             "SoundPlayer",
             "Pistol_Dummy",
@@ -29,10 +29,9 @@ namespace _1.Scripts.Static
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "Shell",
             "ReconDrone",
             "SuicideDrone",
-            "HackingProgressUI"
+            "HackingProgressUI",
         };
     }
 

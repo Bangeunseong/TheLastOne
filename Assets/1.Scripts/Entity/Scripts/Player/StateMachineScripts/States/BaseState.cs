@@ -351,6 +351,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 case DummyItem item:
                     item.OnInteract(stateMachine.Player.gameObject);
                     break;
+                case null: break;
+                default: interactable.OnInteract(stateMachine.Player.gameObject); break;
             }
         }
         /* ---------------------- */
@@ -377,6 +379,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         protected virtual void OnItemActionCanceled(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             stateMachine.Player.PlayerInventory.OnItemActionCanceled();
         }
         /* ------------------- */

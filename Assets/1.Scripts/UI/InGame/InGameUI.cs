@@ -102,18 +102,6 @@ namespace _1.Scripts.UI.InGame
             base.Init(manager);
             
             if (playerCondition != null) UpdateStateUI();
-
-            if (manager.LoadedUI.TryGetValue(CurrentState.InGame, out var list))
-            {
-                // Service.Log($"{list}");
-                list.Add(this);
-            }
-            else
-            { 
-                // Service.Log("Trying to add new UI");
-                var uiList = new List<UIBase> { this }; 
-                manager.LoadedUI.Add(CurrentState.InGame, uiList);
-            }
         }
 
         public override void SetActive(bool active)
