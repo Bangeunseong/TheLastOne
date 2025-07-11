@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414738, b: 0.121078536, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -362,7 +362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &277653826
 Transform:
   m_ObjectHideFlags: 0
@@ -376,6 +376,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 662127075}
+  - {fileID: 1712574949}
   - {fileID: 260227960}
   - {fileID: 708709263}
   - {fileID: 1292598312}
@@ -958,6 +960,80 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6332601548635850232, guid: 01fa07436e3cb8f408006768e3adaca4,
     type: 3}
   m_PrefabInstance: {fileID: 451801677}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &662127074
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 277653826}
+    m_Modifications:
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 96.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.2398996
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_SuicideDrone_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c24cf88bd498f114292e45cb604fda4f, type: 3}
+--- !u!4 &662127075 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 662127074}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &708709262
 PrefabInstance:
@@ -4415,6 +4491,80 @@ MonoBehaviour:
   m_AmplitudeGain: 0
   m_FrequencyGain: 0
   mNoiseOffsets: {x: 21.395325, y: -512.9042, z: -381.71802}
+--- !u!1001 &1712574948
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 277653826}
+    m_Modifications:
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 96.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.2398996
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 17.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_SuicideDrone_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c24cf88bd498f114292e45cb604fda4f, type: 3}
+--- !u!4 &1712574949 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3215242652390162851, guid: c24cf88bd498f114292e45cb604fda4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1712574948}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1740458855
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using System.Threading;
+using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 {
@@ -25,9 +26,9 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             if (playerCondition.IsCrouching)
             {
                 playerCondition.IsCrouching = false;
-                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
-                crouchCoroutine =
-                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching, 0.1f));
+                if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
+                crouchCTS = new CancellationTokenSource();
+                _ = Crouch_Async(playerCondition.IsCrouching, 0.1f, crouchCTS.Token); 
             }
             base.OnCrouchStarted(context);
             stateMachine.ChangeState(stateMachine.WalkState);
