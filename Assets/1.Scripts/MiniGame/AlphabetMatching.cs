@@ -61,8 +61,9 @@ namespace _1.Scripts.MiniGame
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
+                    ui.ShowEnterText(false);
                     StartCoroutine(StartCountdown_Coroutine());
-                    ui.ShowAlphabet(true);
+                    ui.ShowAlphabet(false);
                     ui.CreateAlphabet(CurrentAlphabets);
                     ui.ShowTimeSlider(true);
                     ui.SetTimeSlider(Duration, Duration);
@@ -78,7 +79,11 @@ namespace _1.Scripts.MiniGame
             }
 
             if (IsCounting) return;
-
+            
+            float elapsed = Time.time - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            ui.UpdateTimeSlider(remaining);
+            
             // Minigame 달성 여부 확인
             if (CurrentIndex >= AlphabetLength)
             {

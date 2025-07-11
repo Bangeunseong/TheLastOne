@@ -12,7 +12,6 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private GameObject panel;
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject enterText;
-        [SerializeField] private TextMeshProUGUI pressEnterText;
         [SerializeField] private TextMeshProUGUI countdownText;
         [SerializeField] private Transform alphabetsLayout;
         [SerializeField] private GameObject alphabetPrefab;
@@ -53,7 +52,6 @@ namespace _1.Scripts.UI.InGame
         public void ShowEnterText(bool show)
         {
             enterText.SetActive(show);
-            pressEnterText.gameObject.SetActive(show);
         }
 
         public void ShowCountdownText(bool show)
@@ -110,7 +108,6 @@ namespace _1.Scripts.UI.InGame
         public void ShowClearText(bool show)
         {
             clearPanel.SetActive(show);
-            clearText.gameObject.SetActive(show);
         }
         public void SetClearText(bool show, string text)
         {
