@@ -20,18 +20,11 @@ namespace _1.Scripts.UI.Loading
             base.Init(manager);
         }
         
-        /*
-        public async void LoadScene(SceneType sceneType)
-        {
-            await uiManager.ShowPopup<LoadingUI>("LoadingUI");
-            await uiManager.LoadScene(sceneType);
-        }*/
         
         public override void SetActive(bool active)
         {
             gameObject.SetActive(active);
         }
-        
         
         public void UpdateLoadingProgress(float progress)
         {

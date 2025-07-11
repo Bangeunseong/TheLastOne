@@ -35,6 +35,8 @@ namespace _1.Scripts.UI.InGame
         {
             this.target = target;
             gameObject.SetActive(true);
+            animator.ResetTrigger("Success");
+            animator.ResetTrigger("Fail");
             animator.SetTrigger("Show");
         }
         
@@ -46,6 +48,8 @@ namespace _1.Scripts.UI.InGame
         public void OnSuccess()
         {
             Service.Log("Hacking Success");
+            animator.ResetTrigger("Success");
+            animator.ResetTrigger("Fail");
             animator.SetTrigger("Success");
             StartCoroutine(DisappearCoroutine(1f));
         }
@@ -53,6 +57,8 @@ namespace _1.Scripts.UI.InGame
         public void OnFail()
         {
             Service.Log("Hacking Fail");
+            animator.ResetTrigger("Success");
+            animator.ResetTrigger("Fail");
             animator.SetTrigger("Fail");
             StartCoroutine(DisappearCoroutine(1f));
         }
