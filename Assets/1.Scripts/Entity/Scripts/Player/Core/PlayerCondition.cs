@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
@@ -197,10 +196,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnTakeDamage(int damage)
         {
             if (IsDead) return;
-            if (CurrentShield <= 0) CurrentHealth -= damage;
+            if (CurrentShield <= 0)
+            {
+                CurrentHealth -= damage;
+                if (itemCTS != null) CancelItemUsage();
+            }
             else
             {
-                if (CurrentShield < damage) CurrentHealth += CurrentShield - damage;
+                if (CurrentShield < damage)
+                {
+                    CurrentHealth += CurrentShield - damage;
+                    if (itemCTS != null) CancelItemUsage();
+                }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
             }
             OnDamage?.Invoke();
@@ -773,15 +780,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Item 관련 메소드 - */
         public void OnItemUsed(BaseItem usedItem)
         {
-            if (itemCTS != null)
-            {
-                var inGameUI = coreManager.uiManager.InGameUI;
-                inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
-                itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null; return;
-            }
+            if (itemCTS != null) { CancelItemUsage(); return; }
             
             itemCTS = new CancellationTokenSource();
             _ = Item_Async(usedItem.ItemData, itemCTS.Token);
+        }
+
+        private void CancelItemUsage()
+        {
+            var inGameUI = coreManager.uiManager.InGameUI;
+            inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
+            itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
         }
         private async UniTaskVoid Item_Async(ItemData itemData, CancellationToken token)
         {

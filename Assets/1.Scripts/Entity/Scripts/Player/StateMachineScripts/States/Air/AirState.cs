@@ -1,4 +1,6 @@
-﻿namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
+﻿using System.Threading;
+
+namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
     public class AirState : BaseState
     {
@@ -14,9 +16,9 @@
             // Cancel Crouch
             if (playerCondition.IsCrouching)
             {
-                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
-                crouchCoroutine =
-                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching = false, 0.1f));
+                if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
+                crouchCTS = new CancellationTokenSource();
+                _ = Crouch_Async(playerCondition.IsCrouching = false, 0.1f, crouchCTS.Token); 
             }
             
             // Stop Reload Coroutine
