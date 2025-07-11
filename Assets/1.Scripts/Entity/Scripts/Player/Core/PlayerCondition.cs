@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
@@ -11,6 +12,7 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -77,10 +79,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private CoreManager coreManager;
         private Player player;
         private SoundPlayer reloadPlayer;
+
+        private CancellationTokenSource aimCTS;
+        private CancellationTokenSource switchCTS;
+        private CancellationTokenSource reloadCTS;
+        private CancellationTokenSource itemCTS;
+        private CancellationTokenSource focusCTS;
+        private CancellationTokenSource instinctCTS;
+        private CancellationTokenSource instinctRecoveryCTS;
         
-        private Coroutine switchCoroutine; 
-        private Coroutine aimCoroutine; 
-        private Coroutine reloadCoroutine;
         public Coroutine itemCoroutine;
         
         // Action events
@@ -175,14 +182,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
-            
-            StartCoroutine(InstinctRecover_Coroutine(1));
+
+            OnInstinctRecover_Idle();
             player.Controller.enabled = true;
         }
         
         private void OnDestroy()
         {
-            StopAllCoroutines();
+            StopAllUniTasks();
         }
 
         /// <summary>
@@ -358,15 +365,26 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     break;
             }
         }
+
+        private void StopAllUniTasks()
+        {
+            aimCTS?.Cancel(); aimCTS?.Dispose(); aimCTS = null;
+            switchCTS?.Cancel(); switchCTS?.Dispose();  switchCTS = null;
+            reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
+            focusCTS?.Cancel(); focusCTS?.Dispose(); focusCTS = null;
+            instinctCTS?.Cancel(); instinctCTS?.Dispose(); instinctCTS = null;
+            instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
+            itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
+        }
         
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
-            if (aimCoroutine != null){ StopCoroutine(aimCoroutine); IsAiming = !isAim; }
-            aimCoroutine = StartCoroutine(ChangeFoV_Coroutine(isAim, targetFoV, transitionTime));
-            
+            aimCTS?.Cancel(); aimCTS?.Dispose();
+            aimCTS = new CancellationTokenSource();
+            _ = AimAsync(isAim, targetFoV, transitionTime, aimCTS.Token);
         }
-        private IEnumerator ChangeFoV_Coroutine(bool isAim, float targetFoV, float transitionTime)
+        private async UniTaskVoid AimAsync(bool isAim, float targetFoV, float transitionTime, CancellationToken token)
         {
             float currentFoV = player.FirstPersonCamera.m_Lens.FieldOfView;
             WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.AimParameterHash, isAim);
@@ -378,12 +396,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 float t = time / transitionTime;
                 var value = Mathf.Lerp(currentFoV, targetFoV, t);
                 player.FirstPersonCamera.m_Lens.FieldOfView = value;
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             
             IsAiming = isAim;
             player.FirstPersonCamera.m_Lens.FieldOfView = targetFoV;
-            aimCoroutine = null;
+            aimCTS.Dispose(); aimCTS = null;
         }
         /* ----------------- */
         
@@ -398,61 +416,64 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     return false;
                 case Gun gun:
                 {
-                    if (reloadCoroutine != null)
+                    if (reloadCTS != null)
                     {
-                        StopCoroutine(reloadCoroutine); 
+                        reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         gun.IsReloading = false;
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
                     
                     // Play Reload AudioClip
-                    float clipLength = gun.GunData.GunStat.ReloadTime;
+                    float reloadTime = gun.GunData.GunStat.ReloadTime;
                     reloadPlayer = coreManager.soundManager.PlayUISFX(
-                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, clipLength);
+                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCoroutine = StartCoroutine(Reload_Coroutine(gun.GunData.GunStat.ReloadTime + 0.1f));
+                    reloadCTS = new CancellationTokenSource();
+                    _ = ReloadAsync(reloadTime, reloadCTS.Token);
                     break;
                 }
                 case GrenadeLauncher { IsReadyToReload: false }:
                     return false;
                 case GrenadeLauncher grenadeLauncher:
                 {
-                    if (reloadCoroutine != null)
+                    if (reloadCTS != null)
                     {
-                        StopCoroutine(reloadCoroutine);
+                        reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         grenadeLauncher.IsReloading = false;
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
 
                     // Player Reload AudioClip
-                    float clipLength = grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
-                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, clipLength);
+                    float reloadTime = grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCoroutine = StartCoroutine(Reload_Coroutine(grenadeLauncher.GrenadeData.GrenadeStat.ReloadTime + 0.3f));
+                    reloadCTS = new CancellationTokenSource();
+                    _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
                 case Crossbow {IsReadyToReload: false}:
                     return false;
                 case Crossbow crossbow:
                 {
-                    if (reloadCoroutine != null)
+                    if (reloadCTS != null)
                     {
-                        StopCoroutine(reloadCoroutine);
+                        reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         crossbow.IsReloading = false;
                         IsReloading = false;
                         WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
                     
                     // Player Reload AudioClip
-                    float clipLength = crossbow.HackData.HackStat.ReloadTime;
-                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, clipLength);
+                    float reloadTime = crossbow.HackData.HackStat.ReloadTime;
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCoroutine = StartCoroutine(Reload_Coroutine(crossbow.HackData.HackStat.ReloadTime + 0.3f));
+                    reloadCTS = new CancellationTokenSource();
+                    _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
             }
@@ -461,9 +482,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         public bool TryCancelReload()
         {
-            if (IsDead || EquippedWeaponIndex <= 0 || reloadCoroutine == null) return false;
+            if (IsDead || EquippedWeaponIndex <= 0) return false;
             
-            StopCoroutine(reloadCoroutine);
+            reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
             switch (Weapons[EquippedWeaponIndex])
             {
                 case Gun gun:
@@ -483,18 +504,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (reloadPlayer) reloadPlayer.Stop();
             reloadPlayer = null;
-            reloadCoroutine = null;
             IsReloading = false;
             return true;
         }
-        private IEnumerator Reload_Coroutine(float interval)
+        private async UniTaskVoid ReloadAsync(float interval, CancellationToken token)
         {
             var currentAnimator = WeaponAnimators[EquippedWeaponIndex];
             
             if (Weapons[EquippedWeaponIndex] is Gun gun)
             {
-                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine)
-                    yield break;
+                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) return;
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
@@ -520,8 +539,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                             currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                         t += Time.unscaledDeltaTime;
                     }
-                    yield return null;
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
+                
+                Service.Log("Gun reloaded");
                 gun.OnReload();
                 IsReloading = false;
                 gun.IsReloading = false;
@@ -532,8 +553,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             } else if (Weapons[EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
             {
-                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine == grenadeLauncher.MaxAmmoCountInMagazine) 
-                    yield break;
+                if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine ==
+                    grenadeLauncher.MaxAmmoCountInMagazine)
+                    return;
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
@@ -557,8 +579,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                             currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                         t += Time.unscaledDeltaTime;
                     }
-                    yield return null;
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
+                
+                Service.Log("GL reloaded");
                 grenadeLauncher.OnReload();
                 IsReloading = false;
                 grenadeLauncher.IsReloading = false;
@@ -569,8 +593,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             } else if (Weapons[EquippedWeaponIndex] is Crossbow crossbow)
             {
-                if(crossbow.CurrentAmmoCount <= 0 || crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
-                    yield break;
+                if (crossbow.CurrentAmmoCount <= 0 ||
+                    crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
+                    return;
                 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
@@ -594,8 +619,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                             currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                         t += Time.unscaledDeltaTime;
                     }
-                    yield return null;
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
+                
+                Service.Log("Crossbow reloaded");
                 crossbow.OnReload();
                 IsReloading = false;
                 crossbow.IsReloading = false;
@@ -606,7 +633,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
             }
             reloadPlayer = null;
-            reloadCoroutine = null;
+            reloadCTS.Dispose(); reloadCTS = null;
         }
         /* --------------------- */
         
@@ -618,20 +645,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             int previousWeaponIndex = EquippedWeaponIndex;
             EquippedWeaponIndex = currentWeaponIndex;
             
-            if (switchCoroutine != null){ StopCoroutine(switchCoroutine); IsSwitching = false; }
-            switchCoroutine = StartCoroutine(OnSwitchWeapon_Coroutine(previousWeaponIndex, currentWeaponIndex, duration));
+            if (switchCTS != null)
+            {
+                switchCTS?.Cancel(); switchCTS?.Dispose();
+                IsSwitching = false;
+            }
+
+            switchCTS = new CancellationTokenSource();
+            _ = SwitchAsync(previousWeaponIndex, currentWeaponIndex, duration, switchCTS.Token);
         }
-        private IEnumerator OnSwitchWeapon_Coroutine(int previousWeaponIndex, int currentWeaponIndex, float duration)
+        private async UniTaskVoid SwitchAsync(int previousWeaponIndex, int currentWeaponIndex, float duration, CancellationToken token)
         {
-            if (previousWeaponIndex == currentWeaponIndex) { switchCoroutine = null; yield break; }
+            if (previousWeaponIndex == currentWeaponIndex) { switchCTS = null; return; }
             IsSwitching = true;
             
-            Service.Log($"{previousWeaponIndex}, {currentWeaponIndex}");
+            Service.Log($"Switching from {previousWeaponIndex} to {currentWeaponIndex}");
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
             
-            Service.Log("Switch Weapon");
-            // 무기를 밑으로 먼저 내리기
-
             switch (previousWeaponIndex)
             {
                 case 0: WeaponAnimators[previousWeaponIndex].SetFloat(
@@ -651,27 +681,30 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     player.AnimationData.CrossbowToOtherWeaponClipTime / duration); break;
             }
             
+            Service.Log("Switch Weapon");
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
-            yield return new WaitForSecondsRealtime(duration);
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
-            yield return new WaitForEndOfFrame();
+            await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
-            yield return new WaitForSecondsRealtime(duration);
-            switchCoroutine = null;
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
             IsSwitching = false;
+            switchCTS = null;
         }
         /* --------------------- */
         
         /* - Skill 관련 메소드 - */
         private void OnFocusEngaged()
         {
-            StartCoroutine(Focus_Coroutine(StatData.focusSkillTime));
+            focusCTS?.Cancel(); focusCTS?.Dispose();
+            focusCTS = new CancellationTokenSource();
+            _ = FocusAsync(StatData.focusSkillTime, focusCTS.Token);
         }
-        private IEnumerator Focus_Coroutine(float duration)
+        private async UniTaskVoid FocusAsync(float duration, CancellationToken token)
         {
             IsUsingFocus = true;
             coreManager.timeScaleManager.ChangeTimeScale(0.5f);
@@ -680,17 +713,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             while (t < duration)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             RecoilMultiplier = 1f;
             coreManager.timeScaleManager.ChangeTimeScale(1f);
             IsUsingFocus = false;
+            focusCTS.Dispose(); focusCTS = null;
         }
         private void OnInstinctEngaged()
         {
-            StartCoroutine(Instinct_Coroutine(StatData.instinctSkillTime));
+            instinctCTS?.Cancel(); instinctCTS?.Dispose();
+            instinctCTS = new CancellationTokenSource();
+            _ = InstinctAsync(StatData.instinctSkillTime, instinctCTS.Token);
         }
-        private IEnumerator Instinct_Coroutine(float duration)
+        private async UniTaskVoid InstinctAsync(float duration, CancellationToken token)
         {
             IsUsingInstinct = true;
             coreManager.spawnManager.ChangeStencilLayerAllNpc(true);
@@ -700,23 +736,36 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             var t = 0f;
             while (t < duration)
             {
+                if (token.IsCancellationRequested)
+                {
+                    coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
+                    coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
+                    return;
+                }
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
             }
             SkillSpeedMultiplier = 1f;
             
             coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
             coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
             IsUsingInstinct = false;
+            instinctCTS.Dispose(); instinctCTS = null;
         }
-        private IEnumerator InstinctRecover_Coroutine(float delay)
+        private void OnInstinctRecover_Idle()
+        {
+            instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose();
+            instinctRecoveryCTS = new CancellationTokenSource();
+            _ = InstinctRecover_Async(1, instinctRecoveryCTS.Token);
+        }
+        private async UniTaskVoid InstinctRecover_Async(float delay, CancellationToken token)
         {
             while (!IsDead)
             {
-                if (coreManager.gameManager.IsGamePaused) { yield return null; }
+                if (coreManager.gameManager.IsGamePaused) { await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, true); }
                 else
                 {
-                    yield return new WaitForSecondsRealtime(delay);
+                    await UniTask.WaitForSeconds(delay, true, cancellationToken: token, cancelImmediately: true);
                     OnRecoverInstinctGauge(InstinctGainType.Idle);
                 }
             }
@@ -726,12 +775,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Item 관련 메소드 - */
         public void OnItemUsed(BaseItem usedItem)
         {
-            if (itemCoroutine != null) return;
-            itemCoroutine = StartCoroutine(Item_Coroutine(usedItem.ItemData));
+            if (itemCTS != null)
+            {
+                var inGameUI = coreManager.uiManager.InGameUI;
+                inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
+                itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null; return;
+            }
+            
+            itemCTS = new CancellationTokenSource();
+            _ = Item_Async(usedItem.ItemData, itemCTS.Token);
         }
-        private IEnumerator Item_Coroutine(ItemData itemData)
+        private async UniTaskVoid Item_Async(ItemData itemData, CancellationToken token)
         {
-            // TODO: Animation 재생
             if (!itemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
             var t = 0f;
             var inGameUI = coreManager.uiManager.InGameUI;
@@ -739,12 +794,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             inGameUI.UpdateItemProgress(0f);
             while (t < itemData.Delay)
             {
+                if (token.IsCancellationRequested)
+                {
+                    inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
+                    itemCTS.Dispose(); itemCTS = null; return;
+                }
                 if (!coreManager.gameManager.IsGamePaused)
                 {
                     t += Time.unscaledDeltaTime;
                     inGameUI.UpdateItemProgress(t / itemData.Delay);
                 }
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             
             inGameUI.UpdateItemProgress(1f);
@@ -759,7 +819,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 default: throw new ArgumentOutOfRangeException();
             }
             ItemSpeedMultiplier = 1f;
-            itemCoroutine = null;
+            itemCTS.Dispose(); itemCTS = null;
         }
         /* ------------------- */
     }

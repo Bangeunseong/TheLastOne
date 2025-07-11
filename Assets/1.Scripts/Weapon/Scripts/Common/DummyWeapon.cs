@@ -89,7 +89,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
             OnPicked?.Invoke();
-            InventoryUI.Instance.RefreshInventoryUI();
+            InventoryUI.Instance?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
