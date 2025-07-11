@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
@@ -12,6 +13,7 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.UI.InGame;
 using BehaviorDesigner.Runtime;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
@@ -42,17 +44,16 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
-        private Coroutine stunnedCoroutine;
+        private CancellationTokenSource stunToken;
         [SerializeField] protected ParticleSystem onStunParticle;
         
         [Header("Hacking")]
+        public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
         [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
-        private Coroutine hackingCoroutine;
-        private bool isHacking;
         private HackingProgressUI hackingProgressUI;
         
         protected abstract void PlayHitAnimation();
@@ -94,33 +95,28 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         #region 상호작용
         public void Hacking()
         {
-            if (!CanBeHacked) return;
-            if (isHacking || RuntimeStatData.IsAlly) return;
+            if (!CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
 
-            if (isStunned)
-            {
-                HackingSuccess();
-                return;
-            }
-
-            if (hackingCoroutine != null)
-            {
-                StopCoroutine(hackingCoroutine);
-            }
-
-            hackingCoroutine = StartCoroutine(HackingProcess());
-        }
-
-        private IEnumerator HackingProcess()
-        {
-            isHacking = true;
-            
             var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
             hackingProgressUI = obj.GetComponent<HackingProgressUI>();
             hackingProgressUI.SetTarget(transform);
             hackingProgressUI.gameObject.SetActive(true);
             hackingProgressUI.SetProgress(0f);
+            
+            if (isStunned)
+            {
+                hackingProgressUI.SetProgress(1f);
+                HackingSuccess();
+                return;
+            }
 
+            _ = HackingProcessAsync();
+        }
+
+        private async UniTaskVoid HackingProcessAsync()
+        {
+            isHacking = true;
+            
             // 1. 드론 멈추기
             float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
             OnStunned(stunDurationOnHacking);
@@ -131,7 +127,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             {
                 time += Time.deltaTime;
                 hackingProgressUI.SetProgress(time / hackingDuration);
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update);
             }
 
             // 3. 확률 판정
@@ -148,7 +144,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             isHacking = false;
-            hackingCoroutine = null;
         }
         
         private void HackingSuccess()
@@ -170,25 +165,21 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         }
         
         public void OnStunned(float duration = 3f)
+        {   
+            stunToken?.Cancel();
+            stunToken?.Dispose();
+            stunToken = new CancellationTokenSource();
+            _ = OnStunnedAsync(duration, stunToken.Token);
+        }
+        
+        private async UniTaskVoid OnStunnedAsync(float duration, CancellationToken token)
         {
-            if (isStunned) return;
-
             isStunned = true;
             behaviorTree.SetVariableValue("CanRun", false);
             ResetAIState();
-
-            if (stunnedCoroutine != null)
-            {
-                StopCoroutine(stunnedCoroutine);
-            }
-
-            stunnedCoroutine = StartCoroutine(Stunned(duration));
-        }
-
-        private IEnumerator Stunned(float duration)
-        {
+            
             onStunParticle.Play();
-            yield return new WaitForSeconds(duration); // 원하는 시간만큼 유지
+            await UniTask.WaitForSeconds(duration, cancellationToken:token); // 원하는 시간만큼 유지
 
             if (onStunParticle != null && onStunParticle.IsAlive())
             {
@@ -197,10 +188,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             isStunned = false;
             behaviorTree.SetVariableValue("CanRun", true);
-            stunnedCoroutine = null;
         }
         
-        private void ResetAIState()
+        protected virtual void ResetAIState()
         {
             behaviorTree.SetVariableValue("target_Transform", null);
             behaviorTree.SetVariableValue("target_Pos", Vector3.zero);

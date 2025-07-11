@@ -119,10 +119,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     {
                         var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
                         bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                        bulletHole.transform.SetParent(hit.transform);
                     } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
                     {
                         var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
                         bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                        bulletHole.transform.SetParent(hit.transform);
                     }
                 }
             }

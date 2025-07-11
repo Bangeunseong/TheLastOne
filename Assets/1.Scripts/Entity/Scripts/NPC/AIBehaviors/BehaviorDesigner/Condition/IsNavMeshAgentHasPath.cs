@@ -1,6 +1,4 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
-using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
-using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;

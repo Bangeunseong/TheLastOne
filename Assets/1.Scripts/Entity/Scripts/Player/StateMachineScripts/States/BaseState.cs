@@ -21,9 +21,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected CancellationTokenSource staminaCTS;
         protected CancellationTokenSource crouchCTS;
         
-        protected Coroutine staminaCoroutine;
-        protected Coroutine crouchCoroutine;
-        
         private float speed;
         private float smoothVelocity = 5f;
         private Vector3 recoilEuler;
@@ -112,7 +109,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
-            speed = speed switch
+            speed = currentHorizontalSpeed switch
             {
                 >= 0 and < 1 => 1,
                 >= 1 => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
@@ -153,16 +150,29 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
         {
             var currentPosition = stateMachine.Player.CameraPivot.localPosition;
+            var currentOffset = stateMachine.Player.Controller.center;
+            var currentHeight = stateMachine.Player.Controller.height;
+            
             var targetPosition = !isCrouch
-                ? stateMachine.Player.IdlePivot.localPosition
-                : stateMachine.Player.CrouchPivot.localPosition;
-
+                            ? stateMachine.Player.IdlePivot.localPosition
+                            : stateMachine.Player.CrouchPivot.localPosition;
+            var targetOffset = !isCrouch 
+                ? stateMachine.Player.OriginalOffset 
+                : stateMachine.Player.OriginalOffset - (stateMachine.Player.IdlePivot.localPosition - 
+                                                        stateMachine.Player.CrouchPivot.localPosition) / 2;
+            var targetHeight = !isCrouch
+                ? stateMachine.Player.OriginalHeight
+                : stateMachine.Player.OriginalHeight - (stateMachine.Player.IdlePivot.localPosition -
+                                                        stateMachine.Player.CrouchPivot.localPosition).y;
+            
             float t = 0f;
             while (t < duration)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 float elapsed = t / duration;
                 stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
+                stateMachine.Player.Controller.center = Vector3.Lerp(currentOffset, targetOffset, elapsed);
+                stateMachine.Player.Controller.height = Mathf.Lerp(currentHeight, targetHeight, elapsed);
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             

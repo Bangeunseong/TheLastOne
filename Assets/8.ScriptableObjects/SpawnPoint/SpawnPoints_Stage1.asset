@@ -81,3 +81,9 @@ MonoBehaviour:
             rotation: {x: -0, y: -0, z: -0, w: 1}
           - position: {x: -15.418411, y: 3.9899073, z: 59.008705}
             rotation: {x: -0, y: -0, z: -0, w: 1}
+        - Key: 1
+          Value:
+          - position: {x: 96.83, y: 4.2398996, z: 5.95}
+            rotation: {x: -0, y: -0, z: -0, w: 1}
+          - position: {x: 96.83, y: 4.2398996, z: 17.06}
+            rotation: {x: -0, y: -0, z: -0, w: 1}

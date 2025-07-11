@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
@@ -11,6 +12,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
@@ -20,6 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
+        private CancellationTokenSource penaltyToken;
         
         protected override void PlayDeathAnimation()
         {
@@ -48,19 +51,39 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         {
             int baseDamage = runtimeStatData.BaseDamage;
             float baseArmor = runtimeStatData.Armor;
-            StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
+            
+            penaltyToken?.Cancel();
+            penaltyToken?.Dispose();
+            penaltyToken = new CancellationTokenSource();
+            
+            _= DamageAndArmorIncrease(baseDamage, baseArmor, penaltyToken.Token);
             behaviorTree.SetVariableValue("shouldAlertNearBy", true);
         }
         
-        private IEnumerator DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        private async UniTaskVoid DamageAndArmorIncrease(int baseDamage, float baseArmor, CancellationToken token)
         {
             runtimeStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
             runtimeStatData.Armor = baseArmor + hackingFailArmorIncrease;
 
-            yield return new WaitForSeconds(hackingFailPenaltyDuration);
+            await UniTask.WaitForSeconds(hackingFailPenaltyDuration, cancellationToken:token);
 
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
+        }
+
+        protected override void ResetAIState()
+        {
+            base.ResetAIState();
+            
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (!stateInfo.IsName("DroneBot_Hit1") &&
+                !stateInfo.IsName("DroneBot_Hit2") &&
+                !stateInfo.IsName("DroneBot_Hit3") &&
+                !stateInfo.IsName("DroneBot_Hit4") &&
+                !stateInfo.IsName("DroneBot_Idle1"))
+            {
+                animator.SetTrigger(DroneAnimationHashData.Idle1);
+            }
         }
     }
 }

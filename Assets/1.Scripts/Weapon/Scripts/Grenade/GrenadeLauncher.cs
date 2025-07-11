@@ -135,8 +135,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             
             if (reloadableAmmoCount <= 0) return false;
             
-            if (isOwnedByPlayer) CurrentAmmoCount -= reloadableAmmoCount;
-            CurrentAmmoCountInMagazine += reloadableAmmoCount;
+            if (isOwnedByPlayer) CurrentAmmoCount -= 1;
+            CurrentAmmoCountInMagazine += 1;
             isEmpty = CurrentAmmoCountInMagazine <= 0;
             return true;
         }
