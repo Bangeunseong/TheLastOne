@@ -212,7 +212,6 @@ namespace _1.Scripts.Manager.Subs
                     if (baseUi is MinigameUI minigameUI)
                     {
                         minigameUI.HidePanel();
-                        minigameUI.SetActive(false);
                     }
                 }
             }

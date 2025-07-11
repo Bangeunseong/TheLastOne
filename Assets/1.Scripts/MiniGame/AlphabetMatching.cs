@@ -119,6 +119,7 @@ namespace _1.Scripts.MiniGame
 
             ui = uiManager.ShowMinigameUI();
             ui.ShowPanel();
+            enabled = true;
         }
 
         private void FinishGame(bool isSuccess)
@@ -130,14 +131,10 @@ namespace _1.Scripts.MiniGame
                 ui.SetClearText(true, "CLEAR!");
                 console.OnCleared();
             }
+            StartCoroutine(EndGameCoroutine());
             player.PlayerCondition.IsPlayerHasControl = true;
             player.InputProvider.enabled = true;
             Cursor.lockState = CursorLockMode.Locked;
-
-            ui.HidePanel(); 
-            CoreManager.Instance.uiManager.HideMinigameUI();
-            ui = null;
-            enabled = false;
         }
 
         private void ResetGame()
@@ -175,8 +172,18 @@ namespace _1.Scripts.MiniGame
             ui.ShowAlphabet(true);
             ui.CreateAlphabet(CurrentAlphabets);
             ui.ShowTimeSlider(true);
-            ui.SetTimeSlider(Duration, 0f);
+            ui.SetTimeSlider(Duration, Duration);
             Service.Log($"Start Game!: {CurrentAlphabets}");
+        }
+
+        private IEnumerator EndGameCoroutine()
+        {
+            ui.ShowAlphabet(false);
+            yield return new WaitForSeconds(1.5f);
+            
+            CoreManager.Instance.uiManager.HideMinigameUI();
+            ui = null;
+            enabled = false;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI loopCountText;
         
         List<TextMeshProUGUI> alphabetCells = new List<TextMeshProUGUI>();
+        List<Animator> alphabetAnimators = new List<Animator>();
 
         public override void Init(UIManager manager)
         {
@@ -45,8 +46,15 @@ namespace _1.Scripts.UI.InGame
 
         public void HidePanel()
         {
+            StartCoroutine(HidePanelCoroutine());
+        }
+
+        private IEnumerator HidePanelCoroutine()
+        {
             animator.Play("Window Out");
+            yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
+            yield return null;
         }
 
         public void ShowEnterText(bool show)
@@ -73,6 +81,7 @@ namespace _1.Scripts.UI.InGame
         {
             foreach (Transform child in alphabetsLayout) Destroy(child.gameObject);
             alphabetCells.Clear();
+            alphabetAnimators.Clear();
 
             for (int i = 0; i < alphabet.Length; i++)
             {
@@ -80,13 +89,15 @@ namespace _1.Scripts.UI.InGame
                 var text = alphabetCell.GetComponentInChildren<TextMeshProUGUI>();
                 text.text = alphabet[i].ToString();
                 alphabetCells.Add(text);
+                var animator = alphabetCell.GetComponent<Animator>();
+                if (animator != null) alphabetAnimators.Add(animator);
             }
         }
 
         public void AlphabetAnim(int index, bool isCorrect)
         {
             if (index < 0 || index >= alphabetCells.Count) return;
-            var animator = alphabetCells[index].GetComponent<Animator>();
+            var animator = alphabetAnimators[index];
             if (animator != null)
                 animator.SetTrigger(isCorrect ? "Correct" : "Wrong");
         }
@@ -120,5 +131,6 @@ namespace _1.Scripts.UI.InGame
             if (loopCountText != null)
                 loopCountText.text = $"{current + 1}/{max}";
         }
+        
     }
 }
