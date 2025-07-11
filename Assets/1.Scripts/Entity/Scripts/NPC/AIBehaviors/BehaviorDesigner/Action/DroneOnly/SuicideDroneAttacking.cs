@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone;
-using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;

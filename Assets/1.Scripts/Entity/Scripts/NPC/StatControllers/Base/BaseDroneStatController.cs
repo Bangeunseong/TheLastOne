@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
@@ -11,6 +12,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
@@ -48,16 +50,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         {
             int baseDamage = runtimeStatData.BaseDamage;
             float baseArmor = runtimeStatData.Armor;
-            StartCoroutine(DamageAndArmorIncrease(baseDamage, baseArmor));
+            _= DamageAndArmorIncrease(baseDamage, baseArmor);
             behaviorTree.SetVariableValue("shouldAlertNearBy", true);
         }
         
-        private IEnumerator DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        private async UniTaskVoid DamageAndArmorIncrease(int baseDamage, float baseArmor)
         {
             runtimeStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
             runtimeStatData.Armor = baseArmor + hackingFailArmorIncrease;
 
-            yield return new WaitForSeconds(hackingFailPenaltyDuration);
+            await UniTask.WaitForSeconds(hackingFailPenaltyDuration);
 
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
