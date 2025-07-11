@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
@@ -19,6 +20,7 @@ namespace _1.Scripts.Sound
         {
             audioSource.clip = clip;
             if (length >= 0f) { float speed = clip.length / length; audioSource.pitch = speed; }
+            else audioSource.pitch = 1f;
             audioSource.volume = volume;
             audioSource.spatialBlend = spatialBlend;
             audioSource.Play();
