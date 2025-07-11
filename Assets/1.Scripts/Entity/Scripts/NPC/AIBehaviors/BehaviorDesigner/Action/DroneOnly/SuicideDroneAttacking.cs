@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers.Drone;
-using _1.Scripts.Entity.Scripts.NPC.BehaviorTree;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
@@ -11,6 +9,7 @@ using _1.Scripts.Static;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DroneOnly
 {
@@ -79,18 +78,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             
             // 5. isDead = true
             isDead.Value = true;
+            statController.Value.Dead();
             
             // 6. 기다린 후 파괴
-            StartCoroutine(DelayedDestroy(selfTransform.Value));
+            _ = DelayedDestroy(selfTransform.Value.gameObject);
             
             isExploded = true;
             return TaskStatus.Running;
         }
-
-        private IEnumerator DelayedDestroy(Transform destroyTarget)
+        
+        private async UniTaskVoid DelayedDestroy(GameObject destroyTarget)
         {
-            yield return new WaitForSeconds(2.5f);
-            Object.Destroy(destroyTarget.gameObject);
+            await UniTask.WaitForSeconds(2.5f);
+            CoreManager.Instance.objectPoolManager.Release(destroyTarget);
         }
     }
 }
