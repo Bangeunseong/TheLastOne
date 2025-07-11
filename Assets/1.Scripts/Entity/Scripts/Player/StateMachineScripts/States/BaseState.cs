@@ -21,9 +21,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected CancellationTokenSource staminaCTS;
         protected CancellationTokenSource crouchCTS;
         
-        protected Coroutine staminaCoroutine;
-        protected Coroutine crouchCoroutine;
-        
         private float speed;
         private float smoothVelocity = 5f;
         private Vector3 recoilEuler;
