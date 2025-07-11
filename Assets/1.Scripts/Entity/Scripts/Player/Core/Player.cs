@@ -45,7 +45,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
         
         // Properties
-        public Camera cam { get; private set; }
+        public Camera Cam { get; private set; }
+        public Vector3 OriginalOffset { get; private set; }
+        public float OriginalHeight { get; private set; }
 
         private void Awake()
         {
@@ -100,8 +102,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             FirstPersonCamera.Follow = CameraPoint;
             ThirdPersonCamera.LookAt = CameraPivot;
-            cam = Camera.main;
-            MainCameraTransform = cam?.transform;
+            Cam = Camera.main;
+            OriginalOffset = Controller.center;
+            OriginalHeight = Controller.height;
+            MainCameraTransform = Cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
             StateMachine = new PlayerStateMachine(this);
