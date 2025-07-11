@@ -88,8 +88,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private CancellationTokenSource instinctCTS;
         private CancellationTokenSource instinctRecoveryCTS;
         
-        public Coroutine itemCoroutine;
-        
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
 
