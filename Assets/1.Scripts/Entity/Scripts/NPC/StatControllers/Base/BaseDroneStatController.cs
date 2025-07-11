@@ -70,5 +70,20 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
         }
+
+        protected override void ResetAIState()
+        {
+            base.ResetAIState();
+            
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (!stateInfo.IsName("DroneBot_Hit1") &&
+                !stateInfo.IsName("DroneBot_Hit2") &&
+                !stateInfo.IsName("DroneBot_Hit3") &&
+                !stateInfo.IsName("DroneBot_Hit4") &&
+                !stateInfo.IsName("DroneBot_Idle1"))
+            {
+                animator.SetTrigger(DroneAnimationHashData.Idle1);
+            }
+        }
     }
 }

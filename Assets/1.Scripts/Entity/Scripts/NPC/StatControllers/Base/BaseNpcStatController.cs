@@ -48,12 +48,12 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] protected ParticleSystem onStunParticle;
         
         [Header("Hacking")]
+        public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
         [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
-        private bool isHacking;
         private HackingProgressUI hackingProgressUI;
         
         protected abstract void PlayHitAnimation();
@@ -190,7 +190,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             behaviorTree.SetVariableValue("CanRun", true);
         }
         
-        private void ResetAIState()
+        protected virtual void ResetAIState()
         {
             behaviorTree.SetVariableValue("target_Transform", null);
             behaviorTree.SetVariableValue("target_Pos", Vector3.zero);
