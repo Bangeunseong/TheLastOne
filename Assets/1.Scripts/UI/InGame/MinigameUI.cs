@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,7 +57,7 @@ namespace _1.Scripts.UI.InGame
             panel.SetActive(false);
             yield return null;
         }
-
+        
         public void ShowEnterText(bool show)
         {
             enterText.SetActive(show);
