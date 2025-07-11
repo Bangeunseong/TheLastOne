@@ -45,7 +45,7 @@ namespace _1.Scripts.Manager.Subs
         public LoadingUI LoadingUI => loadingUI;
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
-        private const string MINIGAME_UI_ADDRESS = "MinigameUI";
+        private const string MINIGAME_UI_ADDRESS = "MiniGameUI";
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
@@ -97,7 +97,6 @@ namespace _1.Scripts.Manager.Subs
                 case CurrentState.InGame:
                     InGameUI = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
                     MinigameUI = LoadUI<MinigameUI>(state, MINIGAME_UI_ADDRESS);
-                    MinigameUI?.SetActive(false);
                     break;
             }
         }
@@ -127,19 +126,20 @@ namespace _1.Scripts.Manager.Subs
             if (LoadedUI.TryGetValue(state, out var list))
             {
                 foreach (var existing in list)
-                    if (existing is T found) { found.SetActive(true); return found; }
+                    if (existing is T found) { Service.Log($"{found.name}"); found.SetActive(true); return found; }
             }
             
             var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
             if (prefab == null || uiRoot == null) return null;
-
+            
             var instance  = Object.Instantiate(prefab, uiRoot, false);
+            
             if (!instance.TryGetComponent(out T component)) return null;
             if (component is InGameUI inGameUI) inGameUI.Init(this);
-            component.SetActive(true);
+            else if(component is MinigameUI minigameUI) minigameUI.Init(this);
             
-            if (!LoadedUI.ContainsKey(state)) LoadedUI[state] = new List<UIBase>();
-            LoadedUI[state].Add(component);
+            if (LoadedUI.ContainsKey(state)) { LoadedUI[state].Add(component); return component; }
+            LoadedUI[state] = new List<UIBase> { component };
             return component;
         }
         
@@ -199,7 +199,6 @@ namespace _1.Scripts.Manager.Subs
         public MinigameUI ShowMinigameUI()
         {
             var ui = LoadUI<MinigameUI>(CurrentState.InGame, MINIGAME_UI_ADDRESS);
-            ui.Init(this);
             ui.SetActive(true);
             return ui;
         }
