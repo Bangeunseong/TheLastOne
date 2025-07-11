@@ -22,6 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
+        private CancellationTokenSource penaltyToken;
         
         protected override void PlayDeathAnimation()
         {
@@ -50,16 +51,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         {
             int baseDamage = runtimeStatData.BaseDamage;
             float baseArmor = runtimeStatData.Armor;
-            _= DamageAndArmorIncrease(baseDamage, baseArmor);
+            
+            penaltyToken.Cancel();
+            penaltyToken.Dispose();
+            penaltyToken = new CancellationTokenSource();
+            
+            _= DamageAndArmorIncrease(baseDamage, baseArmor, penaltyToken.Token);
             behaviorTree.SetVariableValue("shouldAlertNearBy", true);
         }
         
-        private async UniTaskVoid DamageAndArmorIncrease(int baseDamage, float baseArmor)
+        private async UniTaskVoid DamageAndArmorIncrease(int baseDamage, float baseArmor, CancellationToken token)
         {
             runtimeStatData.BaseDamage = baseDamage + hackingFailAttackIncrease;
             runtimeStatData.Armor = baseArmor + hackingFailArmorIncrease;
 
-            await UniTask.WaitForSeconds(hackingFailPenaltyDuration);
+            await UniTask.WaitForSeconds(hackingFailPenaltyDuration, cancellationToken:token);
 
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
