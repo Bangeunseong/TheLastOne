@@ -52,8 +52,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             int baseDamage = runtimeStatData.BaseDamage;
             float baseArmor = runtimeStatData.Armor;
             
-            penaltyToken.Cancel();
-            penaltyToken.Dispose();
+            penaltyToken?.Cancel();
+            penaltyToken?.Dispose();
             penaltyToken = new CancellationTokenSource();
             
             _= DamageAndArmorIncrease(baseDamage, baseArmor, penaltyToken.Token);

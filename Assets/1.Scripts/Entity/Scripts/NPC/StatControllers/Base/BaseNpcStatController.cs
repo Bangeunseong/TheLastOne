@@ -97,8 +97,15 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             if (!CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
 
+            var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
+            hackingProgressUI = obj.GetComponent<HackingProgressUI>();
+            hackingProgressUI.SetTarget(transform);
+            hackingProgressUI.gameObject.SetActive(true);
+            hackingProgressUI.SetProgress(0f);
+            
             if (isStunned)
             {
+                hackingProgressUI.SetProgress(1f);
                 HackingSuccess();
                 return;
             }
@@ -110,12 +117,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             isHacking = true;
             
-            var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
-            hackingProgressUI = obj.GetComponent<HackingProgressUI>();
-            hackingProgressUI.SetTarget(transform);
-            hackingProgressUI.gameObject.SetActive(true);
-            hackingProgressUI.SetProgress(0f);
-
             // 1. 드론 멈추기
             float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
             OnStunned(stunDurationOnHacking);
