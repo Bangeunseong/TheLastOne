@@ -43,6 +43,7 @@ namespace _1.Scripts.Map.Console
             if (IsCleared) return;
             AlphabetGame.Initialize(this, player);
             AlphabetGame.enabled = true;
+            AlphabetGame.StartMiniGame(this, player);
         }
     }
 }

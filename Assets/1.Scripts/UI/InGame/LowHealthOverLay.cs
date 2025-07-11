@@ -21,14 +21,14 @@ namespace _1.Scripts.UI.InGame
         [Range(0,1)] public float threshold3 = 0.25f;
         
         public Color color0 = new Color(1f, 0.5f, 0.5f, 0f);
-        public Color color1 = new Color(1f, 0.5f, 0.5f, 0.5f);
-        public Color color2 = new Color(1f, 0.3f, 0.3f, 0.5f);
-        public Color color3 = new Color(0.3f, 0.1f, 0.1f, 0.5f);
+        public Color color1 = new Color(1f, 0.4f, 0.4f, 0.02f);
+        public Color color2 = new Color(0.9f, 0.4f, 0.4f, 0.1f);
+        public Color color3 = new Color(0.5f, 0.1f, 0.1f, 0.4f);
 
         private Color lastColor = Color.clear;
 
-        [SerializeField] private float flashStrength = 0.3f;
-        public float flashDuration = 0.2f;
+        [SerializeField] private float flashStrength = 0.05f;
+        public float flashDuration = 0.5f;
         private float flashAlpha;
         private Coroutine flashCoroutine;
 

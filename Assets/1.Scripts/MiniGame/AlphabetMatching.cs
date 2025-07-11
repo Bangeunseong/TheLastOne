@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame;
 using UnityEngine;
 using UnityEngine.Events;
 using Console = _1.Scripts.Map.Console.Console;
@@ -25,6 +26,9 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
         [field: SerializeField] public bool IsPlaying { get; private set; }
         [field: SerializeField] public bool IsCounting { get; private set; }
+        
+        
+        private MinigameUI ui;
         
         public event Action OnSuccess;
 
@@ -57,7 +61,12 @@ namespace _1.Scripts.MiniGame
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
+                    ui.ShowEnterText(false);
                     StartCoroutine(StartCountdown_Coroutine());
+                    ui.ShowAlphabet(false);
+                    ui.CreateAlphabet(CurrentAlphabets);
+                    ui.ShowTimeSlider(true);
+                    ui.SetTimeSlider(Duration, Duration);
                     IsCounting = IsPlaying = true;
                     return;
                 }
@@ -70,7 +79,11 @@ namespace _1.Scripts.MiniGame
             }
 
             if (IsCounting) return;
-
+            
+            float elapsed = Time.time - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            ui.UpdateTimeSlider(remaining);
+            
             // Minigame 달성 여부 확인
             if (CurrentIndex >= AlphabetLength)
             {
@@ -93,25 +106,47 @@ namespace _1.Scripts.MiniGame
             if (string.Compare(Input.inputString, CurrentAlphabets[CurrentIndex].ToString(),
                     StringComparison.OrdinalIgnoreCase) == 0)
             {
-                // TODO: Play UI Effect
+                ui.AlphabetAnim(CurrentIndex, true);
                 CurrentIndex++;
             }
+        }
+
+        public void StartMiniGame(Console con, Player ply)
+        {
+            console = con;
+            player = ply;
+            var uiManager = CoreManager.Instance.uiManager;
+
+            ui = uiManager.ShowMinigameUI();
+            ui.ShowPanel();
         }
 
         private void FinishGame(bool isSuccess)
         {
             Service.Log("Finished Game");
-            if (isSuccess) { console.OnCleared(); }
+            if (isSuccess)
+            {
+                ui.ShowClearText(true);
+                ui.SetClearText(true, "CLEAR!");
+                console.OnCleared();
+            }
             player.PlayerCondition.IsPlayerHasControl = true;
             player.InputProvider.enabled = true;
-            enabled = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+            ui.HidePanel(); 
+            CoreManager.Instance.uiManager.HideMinigameUI();
+            ui = null;
+            enabled = false;
         }
 
         private void ResetGame()
         {
             IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
+            ui.ShowPanel();
+            if (IsLoop && LoopCount > 0)
+                ui.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
         }
 
         private string GetAlphabets()
@@ -123,15 +158,24 @@ namespace _1.Scripts.MiniGame
 
         private IEnumerator StartCountdown_Coroutine()
         {
+            ui.ShowCountdownText(true);
+            ui.SetCountdownText(Delay);
+            
             var t = 0f;
             while (t < Delay)
             {
                 t += Time.unscaledDeltaTime;
-                // TODO: Show Countdown UI 
+                ui.SetCountdownText(Delay - t);
                 yield return null;
             }
             IsCounting = false;
             startTime = Time.unscaledTime;
+            
+            ui.ShowCountdownText(false);
+            ui.ShowAlphabet(true);
+            ui.CreateAlphabet(CurrentAlphabets);
+            ui.ShowTimeSlider(true);
+            ui.SetTimeSlider(Duration, 0f);
             Service.Log($"Start Game!: {CurrentAlphabets}");
         }
     }
