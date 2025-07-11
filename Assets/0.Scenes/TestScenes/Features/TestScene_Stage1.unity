@@ -1670,7 +1670,7 @@ PrefabInstance:
     - target: {fileID: 632477738957583129, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 893394623604249629, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
@@ -1687,6 +1687,11 @@ PrefabInstance:
       propertyPath: m_Carve
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1179034665588208088, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
     - target: {fileID: 1190841411518684727, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
@@ -1697,6 +1702,26 @@ PrefabInstance:
       propertyPath: m_Carve
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1485622756664379240, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485622756664379240, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.756
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485622756664379240, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1759433035179545749, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
     - target: {fileID: 1863146545293177619, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
@@ -1705,6 +1730,26 @@ PrefabInstance:
     - target: {fileID: 1952421442996081590, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2345161365022121920, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
+    - target: {fileID: 2671847863261670015, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2671847863261670015, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.038
+      objectReference: {fileID: 0}
+    - target: {fileID: 2671847863261670015, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2784933100375089038, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
@@ -1792,20 +1837,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map_v1
       objectReference: {fileID: 0}
+    - target: {fileID: 6178791538484638458, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
     - target: {fileID: 6275620299977816110, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6276763789363034375, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
       objectReference: {fileID: 0}
     - target: {fileID: 6403828993483104047, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 7000528755347511582, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
     - target: {fileID: 7573778348176863997, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573778348176863997, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8161478169413267309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <TargetMask>k__BackingField.m_Bits
+      value: 768
       objectReference: {fileID: 0}
     - target: {fileID: 8569121731230055861, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
