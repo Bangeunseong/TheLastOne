@@ -128,9 +128,16 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="obj"></param>
         public void Release(GameObject obj)
         {
-            if (pools.TryGetValue(obj.name, out ObjectPool<GameObject> pool))
+            string originalName = obj.name;
+            string postfix = "(Clone)";
+            string cleanedName = "";
+            
+            if (obj.name.EndsWith(postfix)) { cleanedName = originalName.Substring(0, originalName.Length - postfix.Length); }
+            
+            if (pools.TryGetValue(cleanedName, out ObjectPool<GameObject> pool))
             {
-                if (activeObjects.TryGetValue(obj.name, out HashSet<GameObject> set))
+                // Service.Log("Found Pool");
+                if (activeObjects.TryGetValue(cleanedName, out HashSet<GameObject> set))
                 {
                     set.Remove(obj);
                 }
