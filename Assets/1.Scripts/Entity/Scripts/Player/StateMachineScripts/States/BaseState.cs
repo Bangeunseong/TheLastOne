@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +17,9 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
         protected readonly CoreManager coreManager;
+        
+        protected CancellationTokenSource staminaCTS;
+        protected CancellationTokenSource crouchCTS;
         
         protected Coroutine staminaCoroutine;
         protected Coroutine crouchCoroutine;
@@ -145,43 +150,43 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             cameraPivotTransform.rotation = cameraTargetRotation;
         }
 
-        protected IEnumerator Crouch_Coroutine(bool isCrouch, float duration)
+        protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
         {
             var currentPosition = stateMachine.Player.CameraPivot.localPosition;
             var targetPosition = !isCrouch
                 ? stateMachine.Player.IdlePivot.localPosition
                 : stateMachine.Player.CrouchPivot.localPosition;
 
-            float t = 0;
+            float t = 0f;
             while (t < duration)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 float elapsed = t / duration;
                 stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             
             stateMachine.Player.CameraPivot.localPosition = targetPosition;
-            crouchCoroutine = null;
+            crouchCTS.Dispose(); crouchCTS = null;
         }
 
-        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
+        protected async UniTaskVoid RecoverStamina_Async(float recoverRate, float interval, CancellationToken token)
         {
             while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
             {
                 if (!coreManager.gameManager.IsGamePaused)
                     playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSecondsRealtime(interval);
+                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
             }
         }
-        
-        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
+
+        protected async UniTaskVoid ConsumeStamina_Async(float consumeRate, float interval, CancellationToken token)
         {
             while (playerCondition.CurrentStamina > 0)
             {
                 if (!coreManager.gameManager.IsGamePaused)
                     playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSecondsRealtime(interval);
+                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
             }
         }
         
