@@ -29,7 +29,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform IdlePivot { get; private set; }
         [field: SerializeField] public Transform CrouchPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
-        [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
         [field: SerializeField] public CinemachinePOV Pov { get; private set; }
         
@@ -66,7 +65,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -90,7 +88,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -101,7 +98,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Start()
         {
             FirstPersonCamera.Follow = CameraPoint;
-            ThirdPersonCamera.LookAt = CameraPivot;
             Cam = Camera.main;
             OriginalOffset = Controller.center;
             OriginalHeight = Controller.height;

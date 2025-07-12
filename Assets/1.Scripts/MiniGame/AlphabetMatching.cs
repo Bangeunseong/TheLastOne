@@ -3,7 +3,9 @@ using System.Collections;
 using System.Text;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using Console = _1.Scripts.Map.Console.Console;
@@ -27,14 +29,13 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public bool IsPlaying { get; private set; }
         [field: SerializeField] public bool IsCounting { get; private set; }
         
-        
         private MinigameUI ui;
-        
-        public event Action OnSuccess;
-
         private Console console;
+        private CoreManager coreManager;
+        private UIManager uiManager;
         private Player player;
         private float startTime;
+        private bool isFinished;
 
         private void OnEnable()
         {
@@ -51,22 +52,22 @@ namespace _1.Scripts.MiniGame
         public void Initialize(Console con, Player player)
         {
             console = con;
+            coreManager = CoreManager.Instance;
+            uiManager = coreManager.uiManager;
             this.player = player;
         }
 
         private void Update()
         {
+            if (coreManager.gameManager.IsGamePaused || isFinished) return;
+            
             // Minigame 초입
             if (!IsPlaying)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     ui.ShowEnterText(false);
-                    StartCoroutine(StartCountdown_Coroutine());
-                    ui.ShowAlphabet(false);
-                    ui.CreateAlphabet(CurrentAlphabets);
-                    ui.ShowTimeSlider(true);
-                    ui.SetTimeSlider(Duration, Duration);
+                    _ = StartCountdown_Async();
                     IsCounting = IsPlaying = true;
                     return;
                 }
@@ -115,7 +116,6 @@ namespace _1.Scripts.MiniGame
         {
             console = con;
             player = ply;
-            var uiManager = CoreManager.Instance.uiManager;
 
             ui = uiManager.ShowMinigameUI();
             ui.ShowPanel();
@@ -125,16 +125,8 @@ namespace _1.Scripts.MiniGame
         private void FinishGame(bool isSuccess)
         {
             Service.Log("Finished Game");
-            if (isSuccess)
-            {
-                ui.ShowClearText(true);
-                ui.SetClearText(true, "CLEAR!");
-                console.OnCleared();
-            }
-            StartCoroutine(EndGameCoroutine());
-            player.PlayerCondition.IsPlayerHasControl = true;
-            player.InputProvider.enabled = true;
-            Cursor.lockState = CursorLockMode.Locked;
+            isFinished = true;
+            _ = EndGame_Async(isSuccess);
         }
 
         private void ResetGame()
@@ -142,7 +134,7 @@ namespace _1.Scripts.MiniGame
             IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
             ui.ShowPanel();
-            if (IsLoop && LoopCount > 0)
+            if (IsLoop && LoopCount > 0) 
                 ui.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
         }
 
@@ -153,7 +145,7 @@ namespace _1.Scripts.MiniGame
             return builder.ToString();
         }
 
-        private IEnumerator StartCountdown_Coroutine()
+        private async UniTask StartCountdown_Async()
         {
             ui.ShowCountdownText(true);
             ui.SetCountdownText(Delay);
@@ -161,29 +153,33 @@ namespace _1.Scripts.MiniGame
             var t = 0f;
             while (t < Delay)
             {
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 ui.SetCountdownText(Delay - t);
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update);
             }
-            IsCounting = false;
-            startTime = Time.unscaledTime;
             
             ui.ShowCountdownText(false);
-            ui.ShowAlphabet(true);
-            ui.CreateAlphabet(CurrentAlphabets);
-            ui.ShowTimeSlider(true);
-            ui.SetTimeSlider(Duration, Duration);
-            Service.Log($"Start Game!: {CurrentAlphabets}");
+            ui.CreateAlphabet(CurrentAlphabets); ui.SetTimeSlider(Duration, Duration);
+            ui.ShowAlphabet(true); ui.ShowTimeSlider(true);
+            
+            IsCounting = false; 
+            startTime = Time.unscaledTime;
         }
 
-        private IEnumerator EndGameCoroutine()
+        private async UniTask EndGame_Async(bool success)
         {
+            if (success) { ui.ShowClearText(true); ui.SetClearText(true, "CLEAR!"); }
+            
             ui.ShowAlphabet(false);
-            yield return new WaitForSeconds(1.5f);
+            await UniTask.WaitForSeconds(1.5f, true);
             
             CoreManager.Instance.uiManager.HideMinigameUI();
+            player.PlayerCondition.IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
+            Cursor.lockState = CursorLockMode.Locked;
             ui = null;
-            enabled = false;
+            
+            if (success) console.OnCleared();
         }
     }
 }
