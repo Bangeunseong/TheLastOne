@@ -1512,40 +1512,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3908214036052950235, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.729977
-      objectReference: {fileID: 0}
-    - target: {fileID: 3908214036052950235, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.99
-      objectReference: {fileID: 0}
-    - target: {fileID: 3908214036052950235, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 32.52793
-      objectReference: {fileID: 0}
     - target: {fileID: 5635516836702039195, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Name
       value: Map_v1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6226210296249613105, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.729973
-      objectReference: {fileID: 0}
-    - target: {fileID: 6226210296249613105, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.239986
-      objectReference: {fileID: 0}
-    - target: {fileID: 6226210296249613105, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 32.52794
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
