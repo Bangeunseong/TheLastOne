@@ -146,10 +146,15 @@ namespace _1.Scripts.Manager.Subs
             if (!Player) return;
 
             IsGamePaused = true;
+            
             Player.Pov.m_HorizontalAxis.Reset();
             Player.Pov.m_VerticalAxis.Reset();
             Player.InputProvider.enabled = false;
             Player.PlayerInput.enabled = false;
+            
+            Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         public void ResumeGame()
@@ -157,7 +162,13 @@ namespace _1.Scripts.Manager.Subs
             if (!Player) return;
 
             IsGamePaused = false;
-            if (Player.PlayerCondition.IsPlayerHasControl) Player.InputProvider.enabled = true;
+            Time.timeScale = 1f;
+            if (Player.PlayerCondition.IsPlayerHasControl)
+            {
+                Player.InputProvider.enabled = true;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             Player.PlayerInput.enabled = true;
         }
     }

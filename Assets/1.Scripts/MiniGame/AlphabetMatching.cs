@@ -27,14 +27,11 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public bool IsPlaying { get; private set; }
         [field: SerializeField] public bool IsCounting { get; private set; }
         
-        
         private MinigameUI ui;
-        
-        public event Action OnSuccess;
-
         private Console console;
         private Player player;
         private float startTime;
+        private bool isFinished;
 
         private void OnEnable()
         {
@@ -56,6 +53,7 @@ namespace _1.Scripts.MiniGame
 
         private void Update()
         {
+            if (CoreManager.Instance.gameManager.IsGamePaused || isFinished) return;
             // Minigame 초입
             if (!IsPlaying)
             {
@@ -125,6 +123,7 @@ namespace _1.Scripts.MiniGame
         private void FinishGame(bool isSuccess)
         {
             Service.Log("Finished Game");
+            isFinished = true;
             if (isSuccess)
             {
                 ui.ShowClearText(true);
@@ -132,9 +131,6 @@ namespace _1.Scripts.MiniGame
                 console.OnCleared();
             }
             StartCoroutine(EndGameCoroutine());
-            player.PlayerCondition.IsPlayerHasControl = true;
-            player.InputProvider.enabled = true;
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void ResetGame()
@@ -169,21 +165,21 @@ namespace _1.Scripts.MiniGame
             startTime = Time.unscaledTime;
             
             ui.ShowCountdownText(false);
-            ui.ShowAlphabet(true);
             ui.CreateAlphabet(CurrentAlphabets);
-            ui.ShowTimeSlider(true);
             ui.SetTimeSlider(Duration, Duration);
-            Service.Log($"Start Game!: {CurrentAlphabets}");
+            ui.ShowAlphabet(true);
+            ui.ShowTimeSlider(true);
         }
 
         private IEnumerator EndGameCoroutine()
         {
             ui.ShowAlphabet(false);
             yield return new WaitForSeconds(1.5f);
-            
+            player.PlayerCondition.IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
+            Cursor.lockState = CursorLockMode.Locked;
             CoreManager.Instance.uiManager.HideMinigameUI();
             ui = null;
-            enabled = false;
         }
     }
 }

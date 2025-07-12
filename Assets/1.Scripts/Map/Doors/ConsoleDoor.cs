@@ -83,33 +83,5 @@ namespace _1.Scripts.Map.Doors
             
             doorCTS.Dispose(); doorCTS = null;
         }
-        
-        private IEnumerator OpenDoor_Coroutine()
-        {
-            var time = 0f;
-            Vector3 upperDoorPosition = UpperDoor.localPosition;
-            Vector3 lowerDoorPosition = LowerDoor.localPosition;
-            
-            IsOpened = true;
-            while (time < Duration)
-            {
-                time += Time.deltaTime;
-                float t = time / Duration;
-
-                // 곡선을 적용한 비율
-                float curveT = DoorAnimationCurve.Evaluate(t);
-                if (IsOpened)
-                {
-                    UpperDoor.localPosition = Vector3.Lerp(upperDoorPosition, UpperVector, curveT);
-                    LowerDoor.localPosition = Vector3.Lerp(lowerDoorPosition, LowerVector, curveT);
-                }
-                else
-                {
-                    // UpperDoor.localPosition = Vector3.Lerp(upperDoorPosition, originalUpperPosition, curveT);
-                    // LowerDoor.localPosition = Vector3.Lerp(lowerDoorPosition, originalLowerPosition, curveT);
-                }
-                yield return null;
-            }
-        }
     }
 }
