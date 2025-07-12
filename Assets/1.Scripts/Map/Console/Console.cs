@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
 using UnityEngine;
@@ -13,25 +15,40 @@ namespace _1.Scripts.Map.Console
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public bool IsCleared { get; private set; }
         [field: SerializeField] public List<ConsoleDoor> Doors { get; private set; }
+        [field: SerializeField] public Light Indicator { get; private set; }
         
         [field: Header("Minigames")]
         [field: SerializeField] public AlphabetMatching AlphabetGame { get; private set; }
 
+        private CoreManager coreManager;
+        
         private void Awake()
         {
             if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!Indicator) Indicator = this.TryGetChildComponent<Light>("Indicator"); 
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
         private void Reset()
         {
             if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!Indicator) Indicator = this.TryGetChildComponent<Light>("Indicator");
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
+        }
+
+        private void Start()
+        {
+            // TODO: Get Cleared Info. from DTO
+            
+            coreManager = CoreManager.Instance;
+            // IsCleared = coreManager.gameManager.SaveData...
+            foreach(var door in Doors) door.Initialize(IsCleared);
         }
 
         public void OnCleared()
         {
             IsCleared = true;
+            Indicator.color = Color.green;
             foreach (var door in Doors) door.OpenDoor();
             // TODO: Save cleared info. to DTO
         }
