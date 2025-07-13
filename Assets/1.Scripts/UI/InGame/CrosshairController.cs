@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using _1.Scripts.Manager.Subs;
 using UnityEngine.InputSystem;
 using PlayerInput = _1.Scripts.Entity.Scripts.Player.Core.PlayerInput;
 

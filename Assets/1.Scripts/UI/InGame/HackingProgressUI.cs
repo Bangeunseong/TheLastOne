@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,9 +31,8 @@ namespace _1.Scripts.UI.InGame
         public void SetTarget(Transform target)
         {
             this.target = target;
+            ResetUI();
             gameObject.SetActive(true);
-            animator.ResetTrigger("Success");
-            animator.ResetTrigger("Fail");
             animator.SetTrigger("Show");
         }
         
@@ -48,8 +44,7 @@ namespace _1.Scripts.UI.InGame
         public void OnSuccess()
         {
             Service.Log("Hacking Success");
-            animator.ResetTrigger("Success");
-            animator.ResetTrigger("Fail");
+            ResetUI();
             animator.SetTrigger("Success");
             StartCoroutine(DisappearCoroutine(1f));
         }
@@ -57,8 +52,7 @@ namespace _1.Scripts.UI.InGame
         public void OnFail()
         {
             Service.Log("Hacking Fail");
-            animator.ResetTrigger("Success");
-            animator.ResetTrigger("Fail");
+            ResetUI();
             animator.SetTrigger("Fail");
             StartCoroutine(DisappearCoroutine(1f));
         }
@@ -67,6 +61,21 @@ namespace _1.Scripts.UI.InGame
         {
             yield return new WaitForSeconds(delay);
             CoreManager.Instance.objectPoolManager.Release(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            animator.Rebind();
+            animator.Update(0);
+        }
+        
+        private void ResetUI()
+        {
+            animator.Play("Idle", 0, 0);
+            animator.ResetTrigger("Success");
+            animator.ResetTrigger("Fail");
+            animator.ResetTrigger("Show");
+            animator.Update(0);
         }
     }
 }

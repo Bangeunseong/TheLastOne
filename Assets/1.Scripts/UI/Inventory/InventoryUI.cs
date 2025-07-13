@@ -1,12 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.Util;
-using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using TMPro;
