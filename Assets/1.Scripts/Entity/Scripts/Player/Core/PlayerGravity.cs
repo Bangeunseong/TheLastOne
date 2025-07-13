@@ -6,8 +6,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [field: Header("Gravity Settings")]
         [field: SerializeField] public float Gravity { get; private set; } = -9.81f;
-        [field: SerializeField] public float GroundedOffset { get; private set; } = -0.14f;
-        [field: SerializeField] public float GroundedRadius { get; private set; } = 0.4f;
+        [field: SerializeField] public float GroundedOffset { get; private set; } = -0.24f;
+        [field: SerializeField] public float GroundedRadius { get; private set; } = 0.3f;
         [field: SerializeField] public LayerMask GroundLayers { get; private set; }
         [field: SerializeField] public bool IsGrounded { get; private set; } = true;
         
@@ -33,6 +33,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void Jump(float jumpForce)
         {
             verticalVelocity = Mathf.Sqrt(jumpForce * -2f * Gravity);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position - transform.up * GroundedOffset, GroundedRadius);
         }
     }
 }

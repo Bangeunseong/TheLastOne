@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _1.Scripts.Map.Doors
@@ -9,43 +12,56 @@ namespace _1.Scripts.Map.Doors
         [field: Header("Doors")]
         [field: SerializeField] public Transform LowerDoor { get; private set; }
         [field: SerializeField] public Transform UpperDoor { get; private set; }
-        [field: SerializeField] public Transform LowerTarget { get; private set; }
-        [field: SerializeField] public Transform UpperTarget { get; private set; }
+        [field: SerializeField] public Vector3 LowerVector { get; private set; }
+        [field: SerializeField] public Vector3 UpperVector { get; private set; }
+        
+        [field: Header("Lights")]
+        [field: SerializeField] public List<Light> Indicators { get; private set; }
         
         [field: Header("Door Settings")]
         [field: SerializeField] public AnimationCurve DoorAnimationCurve { get; private set; }
         [field: SerializeField] public float Duration { get; private set; }
         [field: SerializeField] public bool IsOpened { get; private set; }
         
+        private CancellationTokenSource doorCTS;
+        
         private void Awake()
         {
             if (!LowerDoor) LowerDoor = this.TryGetChildComponent<Transform>("LowerDoor");
             if (!UpperDoor) UpperDoor = this.TryGetChildComponent<Transform>("UpperDoor");
-            if (!LowerTarget) LowerTarget = this.TryGetChildComponent<Transform>("LowerTarget");
-            if (!UpperTarget) UpperTarget = this.TryGetChildComponent<Transform>("UpperTarget");
+            if (Indicators.Count <= 0) Indicators = new List<Light>(GetComponentsInChildren<Light>());
         }
 
         private void Reset()
         {
             if (!LowerDoor) LowerDoor = this.TryGetChildComponent<Transform>("LowerDoor");
             if (!UpperDoor) UpperDoor = this.TryGetChildComponent<Transform>("UpperDoor");
-            if (!LowerTarget) LowerTarget = this.TryGetChildComponent<Transform>("LowerTarget");
-            if (!UpperTarget) UpperTarget = this.TryGetChildComponent<Transform>("UpperTarget");
+            if (Indicators.Count <= 0) Indicators = new List<Light>(GetComponentsInChildren<Light>());
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            // TODO: Get Console Info.
-            // If Cleared, Open Doors
-            // OpenDoor();
+            doorCTS?.Cancel();
+            doorCTS?.Dispose();
+            doorCTS = null;
+        }
+
+        public void Initialize(bool isOpened)
+        {
+            IsOpened = isOpened;
+            if (!IsOpened) return;
+            LowerDoor.localPosition = LowerVector;
+            UpperDoor.localPosition = UpperVector;
         }
 
         public void OpenDoor()
         {
-            StartCoroutine(OpenDoor_Coroutine());
+            foreach (var indicator in Indicators) indicator.color = Color.green; 
+            doorCTS = new CancellationTokenSource();
+            _ = OpenDoor_Async();
         }
 
-        private IEnumerator OpenDoor_Coroutine()
+        private async UniTaskVoid OpenDoor_Async()
         {
             var time = 0f;
             Vector3 upperDoorPosition = UpperDoor.localPosition;
@@ -61,16 +77,18 @@ namespace _1.Scripts.Map.Doors
                 float curveT = DoorAnimationCurve.Evaluate(t);
                 if (IsOpened)
                 {
-                    UpperDoor.localPosition = Vector3.Lerp(upperDoorPosition, UpperTarget.localPosition, curveT);
-                    LowerDoor.localPosition = Vector3.Lerp(lowerDoorPosition, LowerTarget.localPosition, curveT);
+                    UpperDoor.localPosition = Vector3.Lerp(upperDoorPosition, UpperVector, curveT);
+                    LowerDoor.localPosition = Vector3.Lerp(lowerDoorPosition, LowerVector, curveT);
                 }
                 else
                 {
                     // UpperDoor.localPosition = Vector3.Lerp(upperDoorPosition, originalUpperPosition, curveT);
                     // LowerDoor.localPosition = Vector3.Lerp(lowerDoorPosition, originalLowerPosition, curveT);
                 }
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: doorCTS.Token, cancelImmediately: true);
             }
+            
+            doorCTS.Dispose(); doorCTS = null;
         }
     }
 }

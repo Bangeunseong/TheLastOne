@@ -47,7 +47,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				if (!collider.CompareTag("Player"))
 				{
 					var otherStatController = collider.GetComponent<BaseNpcStatController>();
-					if (otherStatController == null || otherStatController.IsDead)
+					if (otherStatController == null || otherStatController.IsDead || otherStatController.isHacking)
 					{
 						continue;
 					}

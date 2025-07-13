@@ -46,7 +46,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				if (!col.CompareTag("Player"))
 				{
 					var statCtrl = col.GetComponent<BaseNpcStatController>();
-					if (statCtrl == null || statCtrl.IsDead)
+					if (statCtrl == null || statCtrl.IsDead || statCtrl.isHacking)
 					{
 						continue;
 					}
@@ -70,10 +70,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				return TaskStatus.Failure;
 			}
 			
-			if (!targetTransform.Value.CompareTag("Player")) // 예외처리 2 : 타겟이 사망했을 시
+			if (!targetTransform.Value.CompareTag("Player")) // 예외처리 2 : 타겟이 사망했을 시 & 해킹당하는 중일때 & 지정했던 타겟이 아군이 됐을 때
 			{
 				var stat = targetTransform.Value.GetComponent<BaseNpcStatController>();
-				if (stat == null || stat.IsDead)
+				if (stat == null || stat.IsDead || stat.isHacking || stat.RuntimeStatData.IsAlly)
 				{
 					targetPos.Value = Vector3.zero;
 					targetTransform.Value = null;

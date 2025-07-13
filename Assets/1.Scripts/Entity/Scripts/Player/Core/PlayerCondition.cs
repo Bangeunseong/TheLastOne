@@ -74,7 +74,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsAiming { get; private set; }
         [field: SerializeField] public bool IsReloading { get; private set; }
         
-        // Coroutine Fields
+        // Fields
         private CoreManager coreManager;
         private Player player;
         private SoundPlayer reloadPlayer;
@@ -110,22 +110,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
-        private void Start()
-        {
-            coreManager = CoreManager.Instance;
-            player = coreManager.gameManager.Player;
-            StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
-            
-            // Initialize Player Stat.
-            Initialize(coreManager.gameManager.SaveData);
-        }
-
         /// <summary>
         /// Initialize Player Stat., using Saved data if exists.
         /// </summary>
         /// <param name="data">DataTransferObject of Saved Data</param>
         public void Initialize(DataTransferObject data)
         {
+            coreManager = CoreManager.Instance;
+            player = coreManager.gameManager.Player;
+            StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
+            
             // Initialize Weapons
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
             foreach (var weapon in listOfGuns)
@@ -135,9 +129,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 AvailableWeapons.Add(false);
             }
             if (AvailableWeapons.Count > 0) AvailableWeapons[0] = true;
-            
-            // Set Damage Event
-            OnDamage += () => OnRecoverInstinctGauge(InstinctGainType.Hit);
 
             // Initialize Damage Converters
             foreach (var converter in DamageConverters) converter.Initialize(this);
@@ -198,15 +189,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             if (CurrentShield <= 0)
             {
-                CurrentHealth -= damage;
+                CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
                 if (itemCTS != null) CancelItemUsage();
+                OnRecoverInstinctGauge(InstinctGainType.Hit);
             }
             else
             {
                 if (CurrentShield < damage)
                 {
-                    CurrentHealth += CurrentShield - damage;
+                    CurrentHealth = Mathf.Max(CurrentHealth + CurrentShield - damage, 0);
                     if (itemCTS != null) CancelItemUsage();
+                    OnRecoverInstinctGauge(InstinctGainType.Hit);
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
             }
@@ -369,6 +362,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                     break;
             }
+        }
+
+        public void OnEnablePlayerMovement()
+        {
+            IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
+        }
+
+        public void OnDisablePlayerMovement()
+        {
+            IsPlayerHasControl = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
         }
 
         private void StopAllUniTasks()
@@ -570,25 +577,27 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 grenadeLauncher.IsReloading = true;
                 IsReloading = true;
-                var t = 0f;
-                while (t < interval)
+                
+                while (true)
                 {
                     if (coreManager.gameManager.IsGamePaused)
                     {
                         if(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash) != 0f)
                             currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 0f);
+                        await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                     }
                     else
                     {
                         if (!Mathf.Approximately(currentAnimator.GetFloat(player.AnimationData.AniSpeedMultiplierHash), animationSpeed))
                             currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
-                        t += Time.unscaledDeltaTime;
+                        await UniTask.WaitForSeconds(interval / grenadeLauncher.MaxAmmoCountInMagazine, 
+                                                true, cancellationToken: token, cancelImmediately: true);
+                        if (grenadeLauncher.OnReload()) continue;
+                        reloadPlayer.Stop(); break;
                     }
-                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
                 
                 Service.Log("GL reloaded");
-                grenadeLauncher.OnReload();
                 IsReloading = false;
                 grenadeLauncher.IsReloading = false;
                 

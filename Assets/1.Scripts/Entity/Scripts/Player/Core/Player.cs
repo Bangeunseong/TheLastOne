@@ -9,6 +9,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
+    [RequireComponent(typeof(PlayerInventory))]
     
     public class Player : MonoBehaviour
     {
@@ -29,7 +30,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform IdlePivot { get; private set; }
         [field: SerializeField] public Transform CrouchPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
-        [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
         [field: SerializeField] public CinemachinePOV Pov { get; private set; }
         
@@ -43,9 +43,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         [field: Header("StateMachine")] 
         [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
+
+        private CoreManager coreManager;
         
         // Properties
-        public Camera cam { get; private set; }
+        public Camera Cam { get; private set; }
+        public Vector3 OriginalOffset { get; private set; }
+        public float OriginalHeight { get; private set; }
 
         private void Awake()
         {
@@ -64,7 +68,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -88,7 +91,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -98,12 +100,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Start is called before the first frame update
         private void Start()
         {
+            coreManager = CoreManager.Instance;
+            
             FirstPersonCamera.Follow = CameraPoint;
-            ThirdPersonCamera.LookAt = CameraPivot;
-            cam = Camera.main;
-            MainCameraTransform = cam?.transform;
+            Cam = Camera.main;
+            OriginalOffset = Controller.center;
+            OriginalHeight = Controller.height;
+            MainCameraTransform = Cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
+            PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
         }

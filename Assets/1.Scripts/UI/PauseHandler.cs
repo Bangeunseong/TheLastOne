@@ -42,12 +42,9 @@ namespace _1.Scripts.UI
         private void Pause()
         {
             coreManager.gameManager.PauseGame();
-            Time.timeScale = 0f;
             blurMgr.BlurInAnim();
             pauseCanvas.SetActive(true);
             pauseAnimator.Play("Window In");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
 
             if (settingsCanvas.alpha > 0f)
             {
@@ -61,7 +58,6 @@ namespace _1.Scripts.UI
         private void Resume()
         {
             coreManager.gameManager.ResumeGame();
-            Time.timeScale = 1f;
             blurMgr.BlurOutAnim();
             if (settingsCanvas.alpha > 0f)
             {
@@ -74,9 +70,6 @@ namespace _1.Scripts.UI
             pauseAnimator.Play("Window Out");
             
             pauseCanvas.SetActive(false);
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
 }
