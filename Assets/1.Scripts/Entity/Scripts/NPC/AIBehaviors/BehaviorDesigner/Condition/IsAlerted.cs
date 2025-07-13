@@ -21,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		public SharedVector3 targetPos;
 		
 		public SharedBaseNpcStatController statController;
+		public SharedBool isAlertedOnce;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -55,6 +56,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				Vector3 center = col.bounds.center;
 				if (NpcUtil.IsTargetVisible(selfCollider.Value.bounds.center, center, 100f, isAlly))
 				{
+					if (isAlertedOnce != null) isAlertedOnce.Value = true;
+					
 					targetTransform.Value = col.transform;
 					targetPos.Value = center;
 					return TaskStatus.Success;
@@ -82,7 +85,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					return TaskStatus.Failure;
 				}
 			}
-
+			
+			if (isAlertedOnce != null) isAlertedOnce.Value = true;
 			return TaskStatus.Success;
 		}
 	}

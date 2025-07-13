@@ -21,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     public enum EnemyType
     {
         ReconDrone,
+        BattleRoomReconDrone,
         SuicideDrone
     }
     
