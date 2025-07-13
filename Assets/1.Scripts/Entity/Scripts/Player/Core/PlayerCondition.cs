@@ -74,7 +74,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsAiming { get; private set; }
         [field: SerializeField] public bool IsReloading { get; private set; }
         
-        // Coroutine Fields
+        // Fields
         private CoreManager coreManager;
         private Player player;
         private SoundPlayer reloadPlayer;
@@ -110,22 +110,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
-        private void Start()
-        {
-            coreManager = CoreManager.Instance;
-            player = coreManager.gameManager.Player;
-            StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
-            
-            // Initialize Player Stat.
-            Initialize(coreManager.gameManager.SaveData);
-        }
-
         /// <summary>
         /// Initialize Player Stat., using Saved data if exists.
         /// </summary>
         /// <param name="data">DataTransferObject of Saved Data</param>
         public void Initialize(DataTransferObject data)
         {
+            coreManager = CoreManager.Instance;
+            player = coreManager.gameManager.Player;
+            StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
+            
             // Initialize Weapons
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
             foreach (var weapon in listOfGuns)
@@ -368,6 +362,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                     break;
             }
+        }
+
+        public void OnEnablePlayerMovement()
+        {
+            IsPlayerHasControl = true;
+            player.InputProvider.enabled = true;
+        }
+
+        public void OnDisablePlayerMovement()
+        {
+            IsPlayerHasControl = false;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
         }
 
         private void StopAllUniTasks()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -14,6 +15,9 @@ namespace _1.Scripts.Map.Doors
         [field: SerializeField] public Vector3 LowerVector { get; private set; }
         [field: SerializeField] public Vector3 UpperVector { get; private set; }
         
+        [field: Header("Lights")]
+        [field: SerializeField] public List<Light> Indicators { get; private set; }
+        
         [field: Header("Door Settings")]
         [field: SerializeField] public AnimationCurve DoorAnimationCurve { get; private set; }
         [field: SerializeField] public float Duration { get; private set; }
@@ -25,12 +29,14 @@ namespace _1.Scripts.Map.Doors
         {
             if (!LowerDoor) LowerDoor = this.TryGetChildComponent<Transform>("LowerDoor");
             if (!UpperDoor) UpperDoor = this.TryGetChildComponent<Transform>("UpperDoor");
+            if (Indicators.Count <= 0) Indicators = new List<Light>(GetComponentsInChildren<Light>());
         }
 
         private void Reset()
         {
             if (!LowerDoor) LowerDoor = this.TryGetChildComponent<Transform>("LowerDoor");
             if (!UpperDoor) UpperDoor = this.TryGetChildComponent<Transform>("UpperDoor");
+            if (Indicators.Count <= 0) Indicators = new List<Light>(GetComponentsInChildren<Light>());
         }
 
         private void OnDestroy()
@@ -50,6 +56,7 @@ namespace _1.Scripts.Map.Doors
 
         public void OpenDoor()
         {
+            foreach (var indicator in Indicators) indicator.color = Color.green; 
             doorCTS = new CancellationTokenSource();
             _ = OpenDoor_Async();
         }
