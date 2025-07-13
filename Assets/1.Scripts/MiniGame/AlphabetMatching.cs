@@ -131,7 +131,7 @@ namespace _1.Scripts.MiniGame
         private string GetAlphabets()
         {
             StringBuilder builder = new();
-            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{(char)Random.Range('a', 'z' + 1)}");
+            for (var i = 0; i < AlphabetLength; i++) builder.Append($"{(char)Random.Range('A', 'Z' + 1)}");
             return builder.ToString();
         }
 
