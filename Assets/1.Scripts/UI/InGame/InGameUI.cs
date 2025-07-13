@@ -1,19 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.Setting;
-using _1.Scripts.UI.Inventory;
-using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
-using Michsky.UI.Shift;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 

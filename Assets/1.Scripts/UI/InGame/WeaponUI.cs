@@ -6,10 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
-using _1.Scripts.Weapon.Scripts.Hack;
-using Unity.VisualScripting;
+
 
 namespace _1.Scripts.UI.InGame
 {

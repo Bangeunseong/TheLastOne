@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.Setting;
 using UnityEngine;
 using UnityEngine.UI;
 
