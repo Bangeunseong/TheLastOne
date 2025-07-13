@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Text;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
@@ -7,7 +6,6 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
@@ -41,20 +39,22 @@ namespace _1.Scripts.MiniGame
         {
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
+            isFinished = false;
             IsPlaying = false;
-            player.PlayerCondition.IsPlayerHasControl = false;
-            player.Pov.m_HorizontalAxis.Reset();
-            player.Pov.m_VerticalAxis.Reset();
-            player.InputProvider.enabled = false;
+            player.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
         }
 
-        public void Initialize(Console con, Player player)
+        public void StartMiniGame(Console con, Player ply)
         {
             console = con;
+            player = ply;
             coreManager = CoreManager.Instance;
             uiManager = coreManager.uiManager;
-            this.player = player;
+
+            ui = uiManager.ShowMinigameUI();
+            ui.ShowPanel();
+            enabled = true;
         }
 
         private void Update()
@@ -112,16 +112,6 @@ namespace _1.Scripts.MiniGame
             }
         }
 
-        public void StartMiniGame(Console con, Player ply)
-        {
-            console = con;
-            player = ply;
-
-            ui = uiManager.ShowMinigameUI();
-            ui.ShowPanel();
-            enabled = true;
-        }
-
         private void FinishGame(bool isSuccess)
         {
             Service.Log("Finished Game");
@@ -174,12 +164,11 @@ namespace _1.Scripts.MiniGame
             await UniTask.WaitForSeconds(1.5f, true);
             
             CoreManager.Instance.uiManager.HideMinigameUI();
-            player.PlayerCondition.IsPlayerHasControl = true;
-            player.InputProvider.enabled = true;
             Cursor.lockState = CursorLockMode.Locked;
             ui = null;
             
-            if (success) console.OnCleared();
+            console.OnCleared(success);
+            enabled = false;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
+    [RequireComponent(typeof(PlayerInventory))]
     
     public class Player : MonoBehaviour
     {
@@ -42,6 +43,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         [field: Header("StateMachine")] 
         [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
+
+        private CoreManager coreManager;
         
         // Properties
         public Camera Cam { get; private set; }
@@ -97,6 +100,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Start is called before the first frame update
         private void Start()
         {
+            coreManager = CoreManager.Instance;
+            
             FirstPersonCamera.Follow = CameraPoint;
             Cam = Camera.main;
             OriginalOffset = Controller.center;
@@ -104,6 +109,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = Cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
+            PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
         }
