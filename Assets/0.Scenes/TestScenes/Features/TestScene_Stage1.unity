@@ -1617,7 +1617,7 @@ PrefabInstance:
     - target: {fileID: 632477738957583129, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 730449671325979805, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
@@ -1797,7 +1797,7 @@ PrefabInstance:
     - target: {fileID: 7573778348176863997, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7948242213597082625, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
