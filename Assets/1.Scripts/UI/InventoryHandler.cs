@@ -1,6 +1,4 @@
-using System;
 using _1.Scripts.Manager.Core;
-using Cinemachine;
 using Michsky.UI.Shift;
 using UnityEngine;
 
