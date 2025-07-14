@@ -21,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     public enum EnemyType
     {
         ReconDrone,
+        BattleRoomReconDrone,
         SuicideDrone
     }
     
@@ -95,7 +96,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         #region 상호작용
         public void Hacking()
         {
-            if (!CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
+            if (IsDead || !CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
 
             var obj = CoreManager.Instance.objectPoolManager.Get("HackingProgressUI");
             hackingProgressUI = obj.GetComponent<HackingProgressUI>();
@@ -165,7 +166,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         }
         
         public void OnStunned(float duration = 3f)
-        {   
+        {
+            if (IsDead) return;
+            
             stunToken?.Cancel();
             stunToken?.Dispose();
             stunToken = new CancellationTokenSource();

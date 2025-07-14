@@ -30,6 +30,7 @@ namespace _1.Scripts.Static
         public static readonly HashSet<string> prefabs = new()
         {
             "ReconDrone",
+            "BattleRoomReconDrone",
             "SuicideDrone",
             "HackingProgressUI",
         };
