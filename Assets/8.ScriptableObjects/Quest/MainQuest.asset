@@ -40,3 +40,7 @@ MonoBehaviour:
     description: Kill all remaining drones
     type: 1
     requiredAmount: 8
+  - targetID: 6
+    description: Hack Single Drone
+    type: 3
+    requiredAmount: 1

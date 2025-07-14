@@ -136,7 +136,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (data == null)
             {
                 Service.Log("DataTransferObject is null");
-                MaxHealth = CurrentHealth = StatData.maxHealth;
+                MaxHealth = StatData.maxHealth;
+                CurrentHealth = 10;
                 MaxStamina = CurrentStamina = StatData.maxStamina;
                 MaxShield = (int)StatData.maxArmor; CurrentShield = 0;
                 Damage = StatData.baseDamage;

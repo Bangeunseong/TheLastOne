@@ -23,6 +23,10 @@ namespace _1.Scripts.Quests.Core
             GameEventSystem.Instance.UnregisterListener(this);
         }
 
+        /// <summary>
+        /// GameEventSystem에 등록되었을 때 이것이 불리게 되어 갱신하고 진행도 저장하는 함수
+        /// </summary>
+        /// <param name="eventID"></param>
         public void OnEventRaised(int eventID)
         {
             if (IsCompleted) return;
