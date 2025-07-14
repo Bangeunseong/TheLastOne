@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Mission
@@ -17,6 +20,7 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] float markerLifetime = 3f;
 
         NavigationPathFinder pathFinder;
+        CancellationTokenSource cts;
         
 
         void Awake()
@@ -33,40 +37,41 @@ namespace _1.Scripts.UI.InGame.Mission
         void OnEnable()
         {
             DistanceUI.OnTargetChanged += OnTargetChanged;
+            cts = new CancellationTokenSource();
+            PathUpdateLoop(cts.Token).Forget();
         }
 
         void OnDisable()
         {
             DistanceUI.OnTargetChanged -= OnTargetChanged;
+            cts = new CancellationTokenSource();
+            PathUpdateLoop(cts.Token).Forget();
         }
+        
         
         private void OnTargetChanged(Transform newTarget)
         {
             target = newTarget;
         }
         
-        void Start()
-        {
-            StartCoroutine(PathUpdateLoop());
-        }
 
-        IEnumerator PathUpdateLoop()
+        async UniTaskVoid PathUpdateLoop(CancellationToken token)
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 if (player == null || target == null)
                 {
-                    yield return new WaitForSeconds(updateInterval);
+                    await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
                     continue;
                 }
                 var corners = pathFinder.GetPathCorners(player.position, target.position);
                 if (corners.Length > 1)
-                    StartCoroutine(AnimateMarkerAlongPath(corners));
-                yield return new WaitForSeconds(updateInterval);
+                    AnimateMarkerAlongPath(corners, token).Forget();
+                await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
             }
         }
 
-        IEnumerator AnimateMarkerAlongPath(Vector3[] corners)
+        async UniTask AnimateMarkerAlongPath(Vector3[] corners, CancellationToken token)
         {
             corners[0] = player.position;
             var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity);
@@ -98,11 +103,11 @@ namespace _1.Scripts.UI.InGame.Mission
                         corners[i],
                         markerSpeed * Time.deltaTime
                     );
-                    yield return null;
+                    await UniTask.NextFrame(token);
                 }
             }
-
-            Destroy(marker, markerLifetime);
+            await UniTask.Delay(TimeSpan.FromSeconds(markerLifetime), cancellationToken: token);
+            if (marker != null) Destroy(marker);
         }
     }
 }
