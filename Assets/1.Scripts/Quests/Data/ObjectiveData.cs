@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace _1.Scripts.Quests.Data
 {
@@ -17,4 +18,4 @@ namespace _1.Scripts.Quests.Data
         public ObjectiveType type;
         public int requiredAmount;
     }
-}
+} 
