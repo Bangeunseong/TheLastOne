@@ -7,8 +7,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
 {
     public enum WeaponType
     {
-        Pistol,
         Rifle,
+        Pistol,
         GrenadeLauncher,
         Crossbow,
     }
