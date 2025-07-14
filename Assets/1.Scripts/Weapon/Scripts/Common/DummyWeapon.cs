@@ -2,6 +2,7 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Quests.Core;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -13,6 +14,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
+        [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public Transform[] Renderers { get; private set; }
         
@@ -68,8 +70,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
                     index = i; break;
                 }
             }
-            
-            Service.Log($"{index}");
 
             if (!player.PlayerCondition.AvailableWeapons[index])
             {
@@ -89,7 +89,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
             OnPicked?.Invoke();
-            InventoryUI.Instance?.RefreshInventoryUI();
+            GameEventSystem.Instance.RaiseEvent(Id);
+            InventoryUI.Instance.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }

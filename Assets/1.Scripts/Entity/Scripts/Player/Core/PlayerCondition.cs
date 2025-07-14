@@ -124,7 +124,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
             foreach (var weapon in listOfGuns)
             {
-                weapon.Initialize(gameObject);
+                weapon.Initialize(gameObject, data);
                 Weapons.Add(weapon);
                 AvailableWeapons.Add(false);
             }
@@ -173,6 +173,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+        }
+
+        public void UpdateLastSavedTransform()
+        {
+            LastSavedPosition = player.transform.position;
+            LastSavedRotation = player.transform.rotation;
         }
         
         private void OnDestroy()
@@ -338,6 +344,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnReset()
         {
             IsDead = false;
+            IsPlayerHasControl = true;
             CurrentHealth = MaxHealth;
             CurrentStamina = MaxStamina;
             player.InputProvider.enabled = true;

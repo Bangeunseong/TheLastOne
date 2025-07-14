@@ -18,6 +18,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public UIManager uiManager;
         [SerializeField] public ResourceManager resourceManager;
         [SerializeField] public ObjectPoolManager objectPoolManager;
+        [SerializeField] public QuestManager questManager;
         [SerializeField] public SoundManager soundManager;
         [SerializeField] public TimeScaleManager timeScaleManager;
         
@@ -43,6 +44,7 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
         }
@@ -57,7 +59,9 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            questManager = new QuestManager();
             soundManager = new SoundManager();
+            timeScaleManager = new TimeScaleManager();
         }
 
         // Start is called before the first frame update
@@ -71,9 +75,7 @@ namespace _1.Scripts.Manager.Core
             soundManager.Start(audioSource);
             timeScaleManager.Start();
             spawnManager.Start();
-
-            // gameManager.TryLoadSettingData().Wait();
-            // if (gameManager.SettingData != null) { }
+            questManager.Start();
         }
 
         // Update is called once per frame
@@ -81,6 +83,7 @@ namespace _1.Scripts.Manager.Core
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
             timeScaleManager.Update();
+            questManager.Update();
         }
 
         /// <summary>
