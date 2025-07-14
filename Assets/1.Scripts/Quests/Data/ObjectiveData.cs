@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace _1.Scripts.Quests.Data
 {
@@ -15,5 +16,6 @@ namespace _1.Scripts.Quests.Data
         public string description;
         public ObjectiveType type;
         public int requiredAmount;
+        public GameObject target;
     }
 }
