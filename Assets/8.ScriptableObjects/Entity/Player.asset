@@ -19,7 +19,7 @@ MonoBehaviour:
   baseDamage: 10
   baseAttackRate: 1
   armor: 0
-  maxArmor: 0
+  maxArmor: 50
   moveSpeed: 8
   runMultiplier: 1
   walkMultiplier: 0.4
@@ -27,7 +27,6 @@ MonoBehaviour:
   hitSounds: []
   deathSounds: []
   maxStamina: 100
-  maxShield: 50
   focusGaugeRefillRate_OnKill: 0.05
   focusGaugeRefillRate_OnHeadShot: 0.05
   focusGaugeRefillRate_OnHacked: 0.1
