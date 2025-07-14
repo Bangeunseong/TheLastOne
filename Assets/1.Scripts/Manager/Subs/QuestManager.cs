@@ -53,7 +53,8 @@ namespace _1.Scripts.Manager.Subs
         
         public void Update()
         {
-            foreach (var quest in activeQuests) { quest.Value.UpdateProgress(); }
+            foreach (var quest in activeQuests)
+                quest.Value.UpdateProgress();
         }
     }
 }
