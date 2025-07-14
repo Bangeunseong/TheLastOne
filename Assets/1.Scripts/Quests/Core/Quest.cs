@@ -27,6 +27,7 @@ namespace _1.Scripts.Quests.Core
             currentObjectiveIndex = 0;
             foreach(var objective in Objectives) objective.Activate();
             CurrentObjective = Objectives.First();
+            // TODO:
         }
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
@@ -48,6 +49,7 @@ namespace _1.Scripts.Quests.Core
                 } else Objectives[i].Activate();
             }
             CurrentObjective = Objectives[currentObjectiveIndex];
+            // TODO:
         }
 
         public void UpdateProgress()
@@ -67,6 +69,7 @@ namespace _1.Scripts.Quests.Core
                 if (currentObjectiveIndex < data.objectives.Count)
                 {
                     CurrentObjective = Objectives[currentObjectiveIndex];
+                    // TODO: 
                 } else 
                 {
                     Service.Log("Quest Completed!");
