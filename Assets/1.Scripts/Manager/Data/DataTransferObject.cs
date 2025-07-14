@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.Quests.Core;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Data
@@ -43,11 +46,17 @@ namespace _1.Scripts.Manager.Data
         public float instinctGauge;
     }
 
-    [Serializable]
-    public class WeaponInfo
+    [Serializable] public class WeaponInfo
     {
         public int currentAmmoCount;
         public int currentAmmoCountInMagazine;
+    }
+
+    [Serializable] public class QuestInfo
+    {
+        public int currentObjectiveIndex;
+        public List<int> progresses;
+        public List<bool> completionList;
     }
     
     [Serializable] public class DataTransferObject
@@ -67,6 +76,9 @@ namespace _1.Scripts.Manager.Data
         [SerializeField] public SerializableVector3 currentCharacterPosition;
         [SerializeField] public SerializableQuaternion currentCharacterRotation;
 
+        [field: Header("Quests")]
+        [field: SerializeField] public SerializedDictionary<int, QuestInfo> Quests { get; private set; } = new();
+
         public override string ToString()
         {
             return
@@ -74,13 +86,14 @@ namespace _1.Scripts.Manager.Data
                 $"{characterInfo.health}\n{characterInfo.damage}, " +
                 $"{characterInfo.attackRate}\n{characterInfo.level}, " +
                 $"{characterInfo.experience}" +
-                
+
                 "Weapon Info.\n" +
-                $"{Weapons}\n" + 
+                $"{Weapons}\n" +
                 $"{AvailableWeapons}\n" +
-                
+
                 $"Stage Info.\n{currentCharacterPosition.ToVector3()}, " +
-                $"{currentCharacterRotation.ToQuaternion()}";
+                $"{currentCharacterRotation.ToQuaternion()}" +
+                $"Quest Info.\n{Quests.Values}";
         }
     }
 }

@@ -22,14 +22,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Player player;
         private bool isPressed;
         private float timeSinceLastPressed;
-        
-        private void Start()
-        {
-            coreManager = CoreManager.Instance;
-            player = coreManager.gameManager.Player;
-            
-            Initialize(coreManager.gameManager.SaveData);
-        }
 
         private void Update()
         {
@@ -43,8 +35,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             player.InputProvider.enabled = false;
         }
 
-        private void Initialize(DataTransferObject dto = null)
+        public void Initialize(DataTransferObject dto = null)
         {
+            coreManager = CoreManager.Instance;
+            player = coreManager.gameManager.Player;
+            
             Items = new SerializedDictionary<ItemType, BaseItem>();
             foreach (ItemType type in Enum.GetValues(typeof(ItemType)))
             {

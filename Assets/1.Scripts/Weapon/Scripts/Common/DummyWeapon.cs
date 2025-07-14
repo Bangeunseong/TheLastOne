@@ -68,8 +68,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
                     index = i; break;
                 }
             }
-            
-            Service.Log($"{index}");
 
             if (!player.PlayerCondition.AvailableWeapons[index])
             {

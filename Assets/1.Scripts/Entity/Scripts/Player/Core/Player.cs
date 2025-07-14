@@ -110,6 +110,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
+            PlayerInventory.Initialize(coreManager.gameManager.SaveData);
+            
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
         }

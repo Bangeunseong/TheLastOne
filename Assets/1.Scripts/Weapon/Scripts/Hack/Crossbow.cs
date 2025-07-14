@@ -2,6 +2,7 @@
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -42,14 +43,6 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
         }
-        
-        private void Start()
-        {
-            coreManager = CoreManager.Instance;
-            timeSinceLastShotFired = 0f;
-            IsRecoiling = false;
-            MaxAmmoCountInMagazine = HackData.HackStat.MaxAmmoCountInMagazine;
-        }
 
         private void Update()
         {
@@ -61,15 +54,20 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             IsRecoiling = false;
         }
 
-        public override void Initialize(GameObject ownerObj)
+        public override void Initialize(GameObject ownerObj, DataTransferObject dto = null)
         {
+            coreManager = CoreManager.Instance;
+            timeSinceLastShotFired = 0f;
+            IsRecoiling = false;
+            MaxAmmoCountInMagazine = HackData.HackStat.MaxAmmoCountInMagazine;
+            
             owner = ownerObj;
             if (!ownerObj.TryGetComponent(out Player user)) return;
             player = user;
             isOwnedByPlayer = true;
-            if (CoreManager.Instance.gameManager.SaveData != null)
+            if (dto != null)
             {
-                var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)HackData.HackStat.Type];
+                var weapon = dto.Weapons[(int)HackData.HackStat.Type];
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;

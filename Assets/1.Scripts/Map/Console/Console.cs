@@ -4,6 +4,7 @@ using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
+using _1.Scripts.Quests.Core;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -38,11 +39,14 @@ namespace _1.Scripts.Map.Console
 
         private void Start()
         {
-            // TODO: Get Cleared Info. from DTO
             coreManager = CoreManager.Instance;
-            // IsCleared = coreManager.gameManager.SaveData...
-
             foreach(var door in Doors) door.Initialize(IsCleared);
+        }
+
+        public void OpenDoors()
+        {
+            IsCleared = true;
+            foreach(var door in Doors) door.Initialize(true);
         }
 
         public void OnCleared(bool success)
@@ -50,7 +54,6 @@ namespace _1.Scripts.Map.Console
             if (success)
             {
                 IsCleared = true; 
-                // TODO: Save cleared info. to DTO
                 OnClear();
             } else coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
         }
@@ -63,6 +66,7 @@ namespace _1.Scripts.Map.Console
                 foreach (var door in Doors) door.OpenDoor();
             }
             else CutScene.Play();
+            GameEventSystem.Instance.RaiseEvent(Id);
         }
 
         public void OnInteract(GameObject ownerObj)

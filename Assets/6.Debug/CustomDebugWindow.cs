@@ -44,28 +44,28 @@ namespace _6.Debug
             {
 #if UNITY_EDITOR
                 var itemSpawnObjects = GameObject.FindGameObjectsWithTag("ItemSpawnPoint");
-                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("_EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
-                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("_EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
                 
                 var weaponSpawnObjects = GameObject.FindGameObjectsWithTag("WeaponSpawnPoint");
                 var pistolSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_Pistol", StringComparison.OrdinalIgnoreCase))
-                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                    .Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
                 var rifleSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_Rifle", StringComparison.OrdinalIgnoreCase))
-                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                    .Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
                 var glSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_GL", StringComparison.OrdinalIgnoreCase))
-                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                    .Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
                 var crossbowSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_Crossbow", StringComparison.OrdinalIgnoreCase))
-                    .Select(obj => new Pair(obj.transform.position, obj.transform.rotation));
+                    .Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
                 
                 // 아이템들과는 달리 DroneSpawnPoints_indexone 이런식으로 하나하나 선언해야 함 (위치들만 찾는게 아니라 인덱스도 검사해야 함)
                 var enemySpawnObjects = GameObject.FindGameObjectsWithTag("EnemySpawnPoint"); 
-                var enemyDict = new Dictionary<(int, EnemyType), List<Pair>>();
+                var enemyDict = new Dictionary<(int, EnemyType), List<CustomTransform>>();
 
                 foreach (var obj in enemySpawnObjects)
                 {
@@ -77,10 +77,10 @@ namespace _6.Debug
                     ValueTuple<int, EnemyType> key = (index, enemyType);
                     if (!enemyDict.ContainsKey(key))
                     {
-                        enemyDict[key] = new List<Pair>();
+                        enemyDict[key] = new List<CustomTransform>();
                     }
 
-                    enemyDict[key].Add(new Pair(obj.transform.position, obj.transform.rotation));
+                    enemyDict[key].Add(new CustomTransform(obj.transform.position, obj.transform.rotation));
                 }
                 
                 var data = CreateInstance<SpawnData>();

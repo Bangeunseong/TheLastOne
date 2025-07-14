@@ -1,11 +1,12 @@
-﻿using _1.Scripts.Weapon.Scripts.Common;
+﻿using _1.Scripts.Manager.Data;
+using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Melee
 {
     public class Punch : BaseWeapon
     {
-        public override void Initialize(GameObject ownerObj)
+        public override void Initialize(GameObject ownerObj, DataTransferObject dto = null)
         {
             
         }
