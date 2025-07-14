@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using _1.Scripts.UI.Setting;
@@ -49,6 +50,8 @@ namespace _1.Scripts.Manager.Subs
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
+        private DistanceUI distanceUI;
+        
         public void Start()
         {
             var mainCanvas = GameObject.Find("MainCanvas");
@@ -73,6 +76,12 @@ namespace _1.Scripts.Manager.Subs
             loadingUI?.SetActive(false);
             
             ChangeState(CurrentState.Lobby);
+            
+            var found = FindUIComponent<DistanceUI>("DistanceUI");
+            if (found != null)
+            {
+                distanceUI = found;
+            }
         }
         
         public void ChangeState(CurrentState newState)
@@ -215,6 +224,11 @@ namespace _1.Scripts.Manager.Subs
                     }
                 }
             }
+        }
+        
+        public void SetDistanceTarget(Transform newTarget)
+        {
+            distanceUI?.SetTarget(newTarget);
         }
     }
 }
