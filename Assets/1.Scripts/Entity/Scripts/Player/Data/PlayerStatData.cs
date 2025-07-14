@@ -23,7 +23,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
     {
         [Header("Extra Stats")]
         public float maxStamina;
-        public int maxShield;
         public float focusGaugeRefillRate_OnKill;
         public float focusGaugeRefillRate_OnHeadShot;
         public float focusGaugeRefillRate_OnHacked;

@@ -76,19 +76,23 @@ namespace _1.Scripts.Manager.Subs
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = gun.CurrentAmmoCount,
-                            currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine
+                            currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine,
                         });
                         break;
                     case GrenadeLauncher grenadeThrower:
                         newWeaponInfo.Add(new WeaponInfo
                         {
-                            currentAmmoCount = grenadeThrower.CurrentAmmoCount
+                            currentAmmoCount = grenadeThrower.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = grenadeThrower.CurrentAmmoCountInMagazine,
+
                         });
                         break;
                     case Crossbow hackingGun:
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = hackingGun.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = hackingGun.CurrentAmmoCountInMagazine,
+
                         });
                         break;
                 }
