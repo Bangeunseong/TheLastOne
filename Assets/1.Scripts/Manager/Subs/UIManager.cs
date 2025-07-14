@@ -230,5 +230,23 @@ namespace _1.Scripts.Manager.Subs
         {
             distanceUI?.SetTarget(newTarget);
         }
+
+        public void HideInGameUI()
+        {
+            if (LoadedUI.TryGetValue(CurrentState.InGame, out var list))
+            {
+                foreach (var ui in list)
+                    ui.SetActive(false);
+            }
+        }
+
+        public void ShowInGameUI()
+        {
+            if (LoadedUI.TryGetValue(CurrentState.InGame, out var list))
+            {
+                foreach (var ui in list)
+                    ui.SetActive(true);
+            }
+        }
     }
 }
