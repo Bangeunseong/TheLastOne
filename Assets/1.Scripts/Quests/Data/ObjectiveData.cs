@@ -6,6 +6,7 @@ namespace _1.Scripts.Quests.Data
     {
         Console,
         KillDrones,
+        CollectItem,
     }
     
     [Serializable] public class ObjectiveData

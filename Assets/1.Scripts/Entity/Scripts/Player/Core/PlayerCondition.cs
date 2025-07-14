@@ -344,6 +344,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnReset()
         {
             IsDead = false;
+            IsPlayerHasControl = true;
             CurrentHealth = MaxHealth;
             CurrentStamina = MaxStamina;
             player.InputProvider.enabled = true;

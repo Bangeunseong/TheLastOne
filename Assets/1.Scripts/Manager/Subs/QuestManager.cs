@@ -45,8 +45,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     var val = new Quest { data = coreManager.resourceManager.GetAsset<QuestData>(quest.Key == 0 ? "MainQuest" : $"SubQuest_{quest.Key}") };
                     val.Initialize();
-                    var console = consoles.Where(con => con.Id < quest.Value.currentObjectiveIndex).ToArray();
-                    val.ResumeQuest(dto.Quests[quest.Key].currentObjectiveIndex, dto.Quests[quest.Key], console);
+                    val.ResumeQuest(dto.Quests[quest.Key].currentObjectiveIndex, dto.Quests[quest.Key], consoles);
                     activeQuests.TryAdd(val.data.questID, val);
                 }
             }

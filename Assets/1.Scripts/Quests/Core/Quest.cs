@@ -31,17 +31,21 @@ namespace _1.Scripts.Quests.Core
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
         {
-            if (currentObjectiveIndex >= Objectives.Count) { isCompleted = true; return; }
+            if (info.completionList.All(val => val)) { isCompleted = true; return; }
             currentObjectiveIndex = index;
             for (var i = 0; i < Objectives.Count; i++)
             {
                 Objectives[i].currentAmount = info.progresses[i];
-                if (i < currentObjectiveIndex)
+                if (Objectives[i].IsCompleted)
                 {
-                    foreach(var console in consoles) if(console.Id == i) console.OpenDoors();
+                    foreach (var console in consoles)
+                    {
+                        Service.Log($"{console.Id}, {Objectives[i].data.targetID}");
+                        if (console.Id == Objectives[i].data.targetID) { console.OpenDoors(); }
+                    }
+                        
                     Objectives[i].Deactivate();
-                }
-                else Objectives[i].Activate();
+                } else Objectives[i].Activate();
             }
             CurrentObjective = Objectives[currentObjectiveIndex];
         }

@@ -109,6 +109,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             MainCameraTransform = Cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
             
+            // Core Component 선언 -> Save Data에 영향을 받는 것들에게만 적용
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             

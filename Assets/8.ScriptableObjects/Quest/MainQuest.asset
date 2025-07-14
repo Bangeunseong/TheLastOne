@@ -16,6 +16,14 @@ MonoBehaviour:
   title: MainQuest
   description: 
   objectives:
+  - targetID: 4
+    description: Collect Pistol and Rifle
+    type: 2
+    requiredAmount: 2
+  - targetID: 5
+    description: Collect Items on the Table
+    type: 2
+    requiredAmount: 4
   - targetID: 0
     description: Hack the Sub Console to open the Lab
     type: 0
