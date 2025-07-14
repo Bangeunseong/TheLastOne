@@ -78,19 +78,19 @@ namespace _1.Scripts.UI.InGame.Mission
 
             var lt = marker.GetComponent<Light>() ?? marker.AddComponent<Light>();
             lt.type = LightType.Point;
-            lt.range = 4f;
-            lt.intensity = 3f;
+            lt.range = 1f;
+            lt.intensity = 1f;
             lt.color = Color.cyan;
 
             var trail = marker.GetComponent<TrailRenderer>() ?? marker.AddComponent<TrailRenderer>();
             trail.material = new Material(Shader.Find("Sprites/Default"));
             trail.time = 1.0f;
-            trail.startWidth = 0.2f;
+            trail.startWidth = 0.1f;
             trail.endWidth = 0.0f;
             var grad = new Gradient();
             grad.SetKeys(
                 new[] { new GradientColorKey(Color.cyan, 0f), new GradientColorKey(Color.cyan, 1f) },
-                new[] { new GradientAlphaKey(0.5f, 0f), new GradientAlphaKey(0f, 1f) }
+                new[] { new GradientAlphaKey(0.2f, 0f), new GradientAlphaKey(0f, 1f) }
             );
             trail.colorGradient = grad;
 

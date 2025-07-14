@@ -9,6 +9,7 @@ using _1.Scripts.UI.Lobby;
 using _1.Scripts.UI.Setting;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using UnityEngine.Playables;
 using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Subs
@@ -240,13 +241,31 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        public void ShowInGameUI()
+        private void ShowUIElements()
         {
             if (LoadedUI.TryGetValue(CurrentState.InGame, out var list))
             {
                 foreach (var ui in list)
                     ui.SetActive(true);
             }
+        }
+        public void ShowInGameUI()
+        {
+            var directors = Object.FindObjectsOfType<PlayableDirector>();
+            foreach (var dir in directors)
+            {
+                if (dir.state == PlayState.Playing)
+                {
+                    dir.stopped += OnCutsceneStopped;
+                    return;
+                }
+            }
+            ShowUIElements();
+        }
+        private void OnCutsceneStopped(PlayableDirector director)
+        {
+            director.stopped -= OnCutsceneStopped;
+            ShowUIElements();
         }
     }
 }

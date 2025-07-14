@@ -67,7 +67,12 @@ namespace _1.Scripts.Map.Console
                 coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
                 foreach (var door in Doors) door.OpenDoor();
             }
-            else CutScene.Play();
+            else
+            {
+                coreManager.uiManager.HideInGameUI();
+                CutScene.Play();
+                coreManager.uiManager.ShowInGameUI();
+            }
 
             if (shouldChangeBGM)
             {
