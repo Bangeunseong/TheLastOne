@@ -53,6 +53,10 @@ namespace _1.Scripts.Manager.Subs
         // Item SFX
         ItemPickup,
         
+        // Door SFX
+        DoorOpen,
+        DoorClose,
+        
         // Other
         HackingTry,
         HackingSuccess,
