@@ -1,6 +1,7 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         [field: SerializeField] public bool IsReloading { get; set; }
         
         private float timeSinceLastShotFired;
+        private CoreManager coreManager;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
         public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
@@ -47,16 +49,9 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
         }
 
-        private void Start()
-        {
-            timeSinceLastShotFired = 0f;
-            isRecoiling = false;
-            MaxAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
-        }
-
         private void Update()
         {
-            if (!isRecoiling) return;
+            if (!isRecoiling || coreManager.gameManager.IsGamePaused) return;
             timeSinceLastShotFired += Time.deltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GrenadeData.GrenadeStat.Rpm)) return;
@@ -64,16 +59,21 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             isRecoiling = false;
         }
 
-        public override void Initialize(GameObject ownerObj)
+        public override void Initialize(GameObject ownerObj, DataTransferObject dto = null)
         {
+            coreManager = CoreManager.Instance;
+            timeSinceLastShotFired = 0f;
+            isRecoiling = false;
+            MaxAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
+            
             owner = ownerObj;
             if (!ownerObj.TryGetComponent(out Player user)) return;
             
             player = user;
             isOwnedByPlayer = true;
-            if (CoreManager.Instance.gameManager.SaveData != null)
+            if (dto != null)
             {
-                var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)GrenadeData.GrenadeStat.Type];
+                var weapon = dto.Weapons[(int)GrenadeData.GrenadeStat.Type];
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;

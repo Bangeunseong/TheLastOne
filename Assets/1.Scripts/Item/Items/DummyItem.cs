@@ -3,6 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Quests.Core;
 using UnityEngine;
 
 namespace _1.Scripts.Item.Items
@@ -10,6 +11,7 @@ namespace _1.Scripts.Item.Items
     public class DummyItem : MonoBehaviour, IInteractable
     {
         [field: Header("Dummy Item Settings")]
+        [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public ItemType ItemType { get; private set; }
         [field: SerializeField] public Transform Body { get; private set; }
         
@@ -60,6 +62,7 @@ namespace _1.Scripts.Item.Items
                 // Service.Log($"Failed to refill {ItemType}");
                 CoreManager.Instance.uiManager.InGameUI.ShowMessage("Failed to refill {ItemType}");
             }
+            GameEventSystem.Instance.RaiseEvent(Id);
         }
     }
 }

@@ -3,6 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -53,14 +54,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
-        private void Start()
-        {
-            coreManager = CoreManager.Instance;
-            timeSinceLastShotFired = 0f;
-            IsRecoiling = false;
-            MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
-        }
-
         private void Update()
         {
             if (!IsRecoiling || coreManager.gameManager.IsGamePaused) return;
@@ -71,16 +64,21 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             IsRecoiling = false;
         }
 
-        public override void Initialize(GameObject ownerObj)
+        public override void Initialize(GameObject ownerObj, DataTransferObject dto = null)
         {
+            coreManager = CoreManager.Instance;
+            timeSinceLastShotFired = 0f;
+            IsRecoiling = false;
+            MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
+            
             owner = ownerObj;
             if (ownerObj.TryGetComponent(out Player user))
             {
                 player = user;
                 isOwnedByPlayer = true;
-                if (CoreManager.Instance.gameManager.SaveData != null)
+                if (dto != null)
                 {
-                    var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)GunData.GunStat.Type];
+                    var weapon = dto.Weapons[(int)GunData.GunStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                     if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;

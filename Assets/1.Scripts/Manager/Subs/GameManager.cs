@@ -24,13 +24,12 @@ namespace _1.Scripts.Manager.Subs
         private string SaveDirectoryPath = "Assets/Data/";
 
         [SerializeField, ReadOnly] private string SaveFileName = "SaveData.json";
-        [SerializeField, ReadOnly] private string SettingFileName = "Settings.json";
-        [field: SerializeField] public DataTransferObject SaveData { get; private set; }
-        [field: SerializeField] public SettingDTO SettingData { get; private set; }
         [field: SerializeField] public Player Player { get; private set; }
         [field: SerializeField] public bool IsGamePaused { get; set; }
 
         private CoreManager coreManager;
+        
+        public DataTransferObject SaveData { get; private set; }
 
         public void Start()
         {
@@ -47,7 +46,7 @@ namespace _1.Scripts.Manager.Subs
         public async Task TrySaveData()
         {
             if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
-
+            
             // Save Current Character Info.
             var save = new DataTransferObject
             {
@@ -104,25 +103,19 @@ namespace _1.Scripts.Manager.Subs
             var newItemCountList = (from ItemType type in Enum.GetValues(typeof(ItemType)) select Player.PlayerInventory.Items[type].CurrentItemCount).ToList();
             save.Items = newItemCountList.ToArray();
             
+            // Quest List
+            foreach (var quest in coreManager.questManager.activeQuests)
+            {
+                save.Quests[quest.Key] = new QuestInfo
+                {
+                    currentObjectiveIndex = quest.Value.currentObjectiveIndex,
+                    progresses = quest.Value.Objectives.Select(val => val.currentAmount).ToList(),
+                    completionList = quest.Value.Objectives.Select(val => val.IsCompleted).ToList()
+                };
+            }
+            
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
             await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);
-        }
-
-        public async Task TrySaveSettingData()
-        {
-            if (!Directory.Exists(SaveDirectoryPath)) Directory.CreateDirectory(SaveDirectoryPath);
-
-            var setting = new SettingDTO
-            {
-                resolution = new Resolution { width = 1920, height = 1080 },
-                isFullScreen = true,
-                masterVolume = coreManager.soundManager.MasterVolume,
-                bgmVolume = coreManager.soundManager.BgmVolume,
-                sfxVolume = coreManager.soundManager.SfxVolume,
-            };
-            
-            var json = JsonConvert.SerializeObject(setting, Formatting.Indented);
-            await File.WriteAllTextAsync(SaveDirectoryPath + SettingFileName, json);
         }
 
         public async Task TryLoadData()
@@ -133,16 +126,6 @@ namespace _1.Scripts.Manager.Subs
                 SaveData = JsonConvert.DeserializeObject<DataTransferObject>(str);
             }
             else SaveData = null;
-        }
-
-        public async Task TryLoadSettingData()
-        {
-            if (File.Exists(SaveDirectoryPath + SettingFileName))
-            {
-                var str = await File.ReadAllTextAsync(SaveDirectoryPath + SettingFileName);
-                SettingData = JsonConvert.DeserializeObject<SettingDTO>(str);
-            }
-            else SettingData = null;
         }
 
         public void PauseGame()

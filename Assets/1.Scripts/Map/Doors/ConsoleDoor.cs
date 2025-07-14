@@ -54,6 +54,7 @@ namespace _1.Scripts.Map.Doors
             if (!IsOpened) return;
             LowerDoor.localPosition = LowerVector;
             UpperDoor.localPosition = UpperVector;
+            foreach (var indicator in Indicators) indicator.color = Color.green; 
         }
 
         public void OpenDoor()

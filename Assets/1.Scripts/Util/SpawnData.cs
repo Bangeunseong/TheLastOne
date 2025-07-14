@@ -12,21 +12,21 @@ namespace _1.Scripts.Util
     public class SpawnData : ScriptableObject
     {
         [field: Header("Item Spawn Points")]
-        [field: SerializeField] public SerializedDictionary<ItemType, List<Pair>> ItemSpawnPoints { get; private set; }
+        [field: SerializeField] public SerializedDictionary<ItemType, List<CustomTransform>> ItemSpawnPoints { get; private set; }
         
         [field: Header("Weapon Spawn Points")]
-        [field: SerializeField] public SerializedDictionary<WeaponType, List<Pair>> WeaponSpawnPoints { get; private set; }
+        [field: SerializeField] public SerializedDictionary<WeaponType, List<CustomTransform>> WeaponSpawnPoints { get; private set; }
         
         [field: Header("Enemy Spawn Points")]
-        [field: SerializeField] public SerializedDictionary<int, SerializedDictionary<EnemyType, List<Pair>>> EnemySpawnPoints { get; private set; }
+        [field: SerializeField] public SerializedDictionary<int, SerializedDictionary<EnemyType, List<CustomTransform>>> EnemySpawnPoints { get; private set; }
         
-        public void SetSpawnPoints(int index, EnemyType enemyType, Pair[] spawnPoints)
+        public void SetSpawnPoints(int index, EnemyType enemyType, CustomTransform[] spawnPoints)
         {
-            EnemySpawnPoints ??= new SerializedDictionary<int, SerializedDictionary<EnemyType, List<Pair>>>();
+            EnemySpawnPoints ??= new SerializedDictionary<int, SerializedDictionary<EnemyType, List<CustomTransform>>>();
 
             if (!EnemySpawnPoints.TryGetValue(index, out var spawnInfo))
             {
-                spawnInfo = new SerializedDictionary<EnemyType, List<Pair>>();
+                spawnInfo = new SerializedDictionary<EnemyType, List<CustomTransform>>();
                 EnemySpawnPoints[index] = spawnInfo;
             }
 
@@ -40,16 +40,16 @@ namespace _1.Scripts.Util
             }
         }
         
-        public void SetSpawnPoints(ItemType type, Pair[] spawnPoints)
+        public void SetSpawnPoints(ItemType type, CustomTransform[] spawnPoints)
         {
-            ItemSpawnPoints ??= new SerializedDictionary<ItemType, List<Pair>>();
+            ItemSpawnPoints ??= new SerializedDictionary<ItemType, List<CustomTransform>>();
             if (ItemSpawnPoints.TryGetValue(type, out var list)) { list.AddRange(spawnPoints); }
             else { ItemSpawnPoints[type] = spawnPoints.ToList(); }
         }
         
-        public void SetSpawnPoints(WeaponType type, Pair[] spawnPoints)
+        public void SetSpawnPoints(WeaponType type, CustomTransform[] spawnPoints)
         {
-            WeaponSpawnPoints ??= new SerializedDictionary<WeaponType, List<Pair>>();
+            WeaponSpawnPoints ??= new SerializedDictionary<WeaponType, List<CustomTransform>>();
             if (WeaponSpawnPoints.TryGetValue(type, out var list)) { list.AddRange(spawnPoints); }
             else { WeaponSpawnPoints[type] = spawnPoints.ToList(); }
         }

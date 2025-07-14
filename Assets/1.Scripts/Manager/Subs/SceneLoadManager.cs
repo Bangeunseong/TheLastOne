@@ -160,6 +160,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.gameManager.Initialize_Player(player);
             player.PlayerCondition.IsPlayerHasControl = true;
             
+            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
 
             if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
