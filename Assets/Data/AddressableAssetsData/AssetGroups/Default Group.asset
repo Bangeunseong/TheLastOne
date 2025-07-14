@@ -163,6 +163,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16acfd4307f02824a80916f7a51dfc0a
+    m_Address: Stage1_Started
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48d3584653e323a449da569820ea4ef1
+    m_Address: Assets/3.Artworks/Sounds/BGM/Stage1/Stage1_Battle.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f85e9082576a78c49bc46da567812a60
+    m_Address: Assets/3.Artworks/Sounds/Sci-Fi Mechanical Doors SFX/Doors/Wav_DoorOpen15.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 92eb825a158d55a46bb2fe8d07054c22
+    m_Address: Assets/3.Artworks/Sounds/Sci-Fi Mechanical Doors SFX/Doors/DoorClose.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
