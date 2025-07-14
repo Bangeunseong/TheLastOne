@@ -14,6 +14,9 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] private float updateInterval = 0.1f;
 
         private float nextUpdateTime;
+        
+        public static Transform CurrentTarget { get; private set; }
+        public static event Action<Transform> OnTargetChanged;
 
         private void Start()
         {
@@ -24,6 +27,15 @@ namespace _1.Scripts.UI.InGame.Mission
             }
 
             if (distanceText == null) distanceText = GetComponent<TextMeshProUGUI>();
+
+            if (target == null)
+            {
+                target = GameObject.Find("Tutorial_Drone").transform;
+            }
+
+            CurrentTarget = target; 
+            OnTargetChanged?.Invoke(target);
+            
         }
         
         private void Update()
@@ -39,9 +51,11 @@ namespace _1.Scripts.UI.InGame.Mission
             }
         }
 
-        public void SetTarget(Transform target)
+        public void SetTarget(Transform newTarget)
         {
-            this.target = target;
+            this.target = newTarget;
+            CurrentTarget = newTarget;
+            OnTargetChanged?.Invoke(newTarget);
         }
     }
 }
