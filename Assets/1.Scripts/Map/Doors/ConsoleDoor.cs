@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -58,6 +60,8 @@ namespace _1.Scripts.Map.Doors
         public void OpenDoor()
         {
             foreach (var indicator in Indicators) indicator.color = Color.green; 
+            
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index:0);
             doorCTS = new CancellationTokenSource();
             _ = OpenDoor_Async();
         }

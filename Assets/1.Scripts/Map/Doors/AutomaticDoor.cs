@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -76,6 +78,15 @@ namespace _1.Scripts.Map.Doors
             var time = 0f;
             Vector3 upperDoorPosition = UpperDoor.localPosition;
             Vector3 lowerDoorPosition = LowerDoor.localPosition;
+            
+            if (isOpen)
+            {
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index: 0); // 열리는 소리
+            }
+            else
+            {
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index: 1); // 닫히는 소리
+            }
             
             while (time < Duration)
             {

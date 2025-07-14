@@ -162,6 +162,11 @@ namespace _1.Scripts.Manager.Subs
             
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
+
+            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
+            {
+                coreManager.soundManager.PlayBGM(bgmType, index:0);
+            }
         }
         
         private async Task WaitForUserInput()

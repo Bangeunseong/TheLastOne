@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
 using _1.Scripts.Quests.Core;
@@ -22,6 +24,9 @@ namespace _1.Scripts.Map.Console
 
         [field: Header("CutScene")]
         [field: SerializeField] public PlayableDirector CutScene { get; private set; }
+        
+        [SerializeField] private bool shouldChangeBGM = false;
+        [SerializeField] private int indexOfBGM;
         
         private CoreManager coreManager;
         
@@ -67,6 +72,14 @@ namespace _1.Scripts.Map.Console
             }
             else CutScene.Play();
             GameEventSystem.Instance.RaiseEvent(Id);
+
+            if (shouldChangeBGM)
+            {
+                if (Enum.TryParse(coreManager.sceneLoadManager.CurrentScene.ToString(), out BgmType bgmType))
+                {
+                    coreManager.soundManager.PlayBGM(bgmType, index:indexOfBGM);
+                }
+            }
         }
 
         public void OnInteract(GameObject ownerObj)

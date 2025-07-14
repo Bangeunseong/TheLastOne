@@ -79,6 +79,8 @@ namespace _1.Scripts.UI.InGame
         
         public void CreateAlphabet(string alphabet)
         {
+            string upperAlphabet = alphabet.ToUpper();
+            
             foreach (Transform child in alphabetsLayout) Destroy(child.gameObject);
             alphabetCells.Clear();
             alphabetAnimators.Clear();
@@ -87,7 +89,7 @@ namespace _1.Scripts.UI.InGame
             {
                 var alphabetCell = Instantiate(alphabetPrefab, alphabetsLayout);
                 var text = alphabetCell.GetComponentInChildren<TextMeshProUGUI>();
-                text.text = alphabet[i].ToString();
+                text.text = upperAlphabet[i].ToString();
                 alphabetCells.Add(text);
                 var animator = alphabetCell.GetComponent<Animator>();
                 if (animator != null) alphabetAnimators.Add(animator);
