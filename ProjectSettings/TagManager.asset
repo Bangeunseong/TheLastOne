@@ -11,6 +11,7 @@ TagManager:
   - WeaponSpawnPoint
   - ItemSpawnPoint
   - EnemySpawnPoint
+  - PatrolZone
   layers:
   - Default
   - TransparentFX
