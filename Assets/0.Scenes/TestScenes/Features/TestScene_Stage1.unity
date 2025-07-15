@@ -632,6 +632,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 451801677}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &463034256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 463034257}
+  m_Layer: 7
+  m_Name: MainConsoleTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &463034257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463034256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: -1.883}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2088319403}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &472984958
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,7 +673,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472984959}
   m_Layer: 7
-  m_Name: GameObject
+  m_Name: SubConsole1Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1123,7 +1154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 837886795}
   m_Layer: 7
-  m_Name: GameObject
+  m_Name: SubConsole2Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1463,37 +1494,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1069677130
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1069677131}
-  m_Layer: 7
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1069677131
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069677130}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.012, z: -1.853}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2088319403}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1074753605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1705,7 +1705,7 @@ MonoBehaviour:
   - questID: 1
     target: {fileID: 837886795}
   - questID: 2
-    target: {fileID: 1069677131}
+    target: {fileID: 463034257}
   - questID: 3
     target: {fileID: 1133865303}
   - questID: 6
@@ -1735,7 +1735,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133865303}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: AisleDoorTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1944,7 +1944,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8489793873629724613, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1069677131}
+      addedObject: {fileID: 463034257}
     - targetCorrespondingSourceObject: {fileID: 9221606563509486707, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       insertIndex: -1

@@ -39,6 +39,7 @@ namespace _1.Scripts.UI.InGame.Mission
             Debug.Log("[PathAnimator] OnEnable");
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
+            OnTargetChanged(DistanceUI.CurrentTarget);
             PathUpdateLoop(cts.Token).Forget();
         }
 
