@@ -42,7 +42,7 @@ namespace _1.Scripts.UI.Setting
             InitFullscreenModeSelector();
         }
 
-        private void Start()
+        public void Initialize()
         {
             LoadSettings();
             AddListeners();

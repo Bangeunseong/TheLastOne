@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.Quests.Core;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 

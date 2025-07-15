@@ -21,11 +21,6 @@ namespace _1.Scripts.Manager.Subs
             OriginalFixedDeltaTime = Time.fixedDeltaTime;
         }
 
-        public void Update()
-        {
-            CurrentTimeScale = Time.timeScale;
-        }
-
         public void Reset()
         {
             if (timeScaleCoroutine != null) 
