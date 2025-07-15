@@ -155,6 +155,30 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 824fc0ee614adcb40a26930412a8db8a
+    m_Address: Crossbow_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4bfefaa5dc578524281e9b9dac1400c7
+    m_Address: GrenadeLauncher_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0397f41e245f4ae45ae5a9b0681db6f9
+    m_Address: Pistol_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 275829ca509e5114ea5e3cdb171fb8bc
+    m_Address: Rifle_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
