@@ -49,7 +49,6 @@ namespace _1.Scripts.UI.InGame.Mission
 
         public void SetTarget(Transform newTarget)
         {
-            Debug.Log($"[DistanceUI] SetTarget 호출. newTarget: {newTarget?.name} ({newTarget?.position})");
             this.target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);
