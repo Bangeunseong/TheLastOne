@@ -82,7 +82,6 @@ namespace _1.Scripts.Manager.Core
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
-            timeScaleManager.Update();
             questManager.Update();
         }
 
