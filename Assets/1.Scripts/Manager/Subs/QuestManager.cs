@@ -49,6 +49,9 @@ namespace _1.Scripts.Manager.Subs
                     activeQuests.TryAdd(val.data.questID, val);
                 }
             }
+            Debug.Log($"퀘스트 초기화 완료: {activeQuests.Count}개 등록됨");
+            foreach(var q in activeQuests)
+                Debug.Log($"퀘스트ID: {q.Key} / {q.Value.data.questID}");
         }
         
         public void Update()
