@@ -130,7 +130,18 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
+            
+            IsLoading = false;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
 
+        /// <summary>
+        /// 씬 이동 시 내부에 있는 더미 건 컴포넌트를 찾아 저장 기능 부여, 나중에 특정 트리거를 찾아 저장하는 기능도 추가 가능
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
             switch (CurrentScene)
             { 
                 case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby);
@@ -144,17 +155,6 @@ namespace _1.Scripts.Manager.Subs
                 default: throw new ArgumentOutOfRangeException();
             }
             
-            IsLoading = false;
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        /// <summary>
-        /// 씬 이동 시 내부에 있는 더미 건 컴포넌트를 찾아 저장 기능 부여, 나중에 특정 트리거를 찾아 저장하는 기능도 추가 가능
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="mode"></param>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
