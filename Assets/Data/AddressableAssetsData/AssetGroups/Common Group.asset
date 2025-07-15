@@ -179,14 +179,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 71d01b6829cbd004b94ff7a40a085b70
-    m_Address: Assets/2.Prefabs/Item/Shield_Prefab.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0a45b4df6ea0ebb49bec9ba3c17a2935
-    m_Address: Assets/2.Prefabs/Item/NanoAmple_Prefab.prefab
+  - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
+    m_Address: Assets/2.Prefabs/Item/EnergyBar_Prefab.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -197,8 +191,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
-    m_Address: Assets/2.Prefabs/Item/EnergyBar_Prefab.prefab
+  - m_GUID: 0a45b4df6ea0ebb49bec9ba3c17a2935
+    m_Address: Assets/2.Prefabs/Item/NanoAmple_Prefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71d01b6829cbd004b94ff7a40a085b70
+    m_Address: Assets/2.Prefabs/Item/Shield_Prefab.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
