@@ -227,11 +227,6 @@ namespace _1.Scripts.Manager.Subs
                 }
             }
         }
-        
-        public void SetDistanceTarget(Transform newTarget)
-        {
-            distanceUI?.SetTarget(newTarget);
-        }
 
         public void HideInGameUI()
         {

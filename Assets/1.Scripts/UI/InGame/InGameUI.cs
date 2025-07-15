@@ -54,6 +54,9 @@ namespace _1.Scripts.UI.InGame
         [field: Header("미션 UI")]
         [field: SerializeField] public MissionUI MissionUI { get; private set; }
         
+        [field: Header("Distance UI")]
+        [field: SerializeField] public DistanceUI DistanceUI { get; private set; }
+        
         [Header("ItemUseUI")]
         [SerializeField] private Image progressFillImage;
         [SerializeField] private TextMeshProUGUI messageText;
@@ -68,6 +71,7 @@ namespace _1.Scripts.UI.InGame
                 progressFillImage.enabled = false;
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
             if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
+            if (!DistanceUI) DistanceUI = GetComponentInChildren<DistanceUI>(true);
         }
 
         private void Start()
@@ -103,7 +107,7 @@ namespace _1.Scripts.UI.InGame
             foreach (var kv in questManager.activeQuests)
             {
                 var quest = kv.Value;
-                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description);
+                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
             }
             Debug.Log($"InGameUI Init 호출 / 퀘스트 개수: {questManager.activeQuests.Count}");
             foreach(var kv in questManager.activeQuests)

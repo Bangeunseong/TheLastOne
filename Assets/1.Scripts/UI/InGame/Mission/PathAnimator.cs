@@ -36,6 +36,7 @@ namespace _1.Scripts.UI.InGame.Mission
         }
         void OnEnable()
         {
+            Debug.Log("[PathAnimator] OnEnable");
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
             PathUpdateLoop(cts.Token).Forget();
@@ -43,6 +44,7 @@ namespace _1.Scripts.UI.InGame.Mission
 
         void OnDisable()
         {
+            Debug.Log("[PathAnimator] OnDisable");
             DistanceUI.OnTargetChanged -= OnTargetChanged;
             if (cts != null)
             {
@@ -55,7 +57,28 @@ namespace _1.Scripts.UI.InGame.Mission
         
         private void OnTargetChanged(Transform newTarget)
         {
+            Debug.Log($"[PathAnimator] OnTargetChanged 호출! newTarget: {newTarget?.name} ({newTarget?.position})");
             target = newTarget;
+            target = newTarget;
+            if (player != null && target != null && pathFinder != null)
+            {
+                var corners = pathFinder.GetPathCorners(player.position, target.position);
+                Debug.Log($"[PathAnimator] 경로 코너 개수: {corners.Length}");
+                if (corners.Length > 1)
+                {
+                    AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();
+                    Debug.Log("[PathAnimator] 마커 애니메이션 실행!");
+                }
+                else
+                {
+                    Debug.LogWarning("[PathAnimator] corners.Length <= 1 : 경로가 없습니다. NavMesh, Target, Player 위치 확인 필요");
+                }
+                
+            }
+            else
+            {
+                Debug.LogWarning("[PathAnimator] player, target, pathFinder 중 하나가 null!");
+            }
         }
         
 
@@ -65,12 +88,17 @@ namespace _1.Scripts.UI.InGame.Mission
             {
                 if (player == null || target == null)
                 {
+                    Debug.LogWarning("[PathAnimator] 플레이어나 타겟이 null입니다.");
                     await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
                     continue;
                 }
                 var corners = pathFinder.GetPathCorners(player.position, target.position);
                 if (corners.Length > 1)
                     AnimateMarkerAlongPath(corners, token).Forget();
+                else
+                {
+                    Debug.LogWarning("[PathAnimator] corners.Length <= 1 : 경로가 없습니다. NavMesh, Target, Player 위치 확인 필요");
+                }
                 await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
             }
         }

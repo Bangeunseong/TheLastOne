@@ -34,11 +34,11 @@ namespace _1.Scripts.UI.InGame.Mission
         
         public void SetCurrentTarget(int targetId)
         {
-            if (bindings is not { Count: > 0 }) return;
-            Transform target = bindings[targetId].target;
+            var binding = bindings.Find(x => x.questID == targetId);
+            if (binding == null) 
+                return;
             
-            // 이게 문제의 시발점
-            CoreManager.Instance.uiManager.SetDistanceTarget(target);
+            CoreManager.Instance.uiManager.InGameUI.DistanceUI.SetTarget(binding.target);
         }
     }
 }

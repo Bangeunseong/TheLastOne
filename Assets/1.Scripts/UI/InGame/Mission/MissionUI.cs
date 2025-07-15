@@ -13,7 +13,7 @@ namespace _1.Scripts.UI.InGame.Mission
         private List<MissionSlot> slotList = new List<MissionSlot>();
         private Dictionary<int, MissionSlot> slotMap = new Dictionary<int, MissionSlot>();
 
-        public void AddMission(int questID, string missionText)
+        public void AddMission(int questID, string missionText, int currentAmount, int requiredAmount)
         {
             if (slotMap.ContainsKey(questID)) return;
 
@@ -23,7 +23,7 @@ namespace _1.Scripts.UI.InGame.Mission
             var go = Instantiate(slotPrefabGO, slotContainer);
             var slot = go.GetComponent<MissionSlot>();
 
-            slot.Initialize(questID, missionText, true);
+            slot.Initialize(questID, missionText, currentAmount, requiredAmount);
             slot.PlayNewMissionAnimation();
 
             slotList.Add(slot);
@@ -35,12 +35,30 @@ namespace _1.Scripts.UI.InGame.Mission
         public void CompleteMission(int questID)
         {
             if (!slotMap.TryGetValue(questID, out var slot)) return;
-            StartCoroutine(RemoveSlot(slot));
+            
             slotMap.Remove(questID);
+
+            if (!gameObject.activeInHierarchy)
+            {
+                slotList.Remove(slot);
+                Destroy(slot.gameObject);
+                SortSlots();
+            }
+            else
+            {
+                StartCoroutine(RemoveSlot(slot));
+            }
         }
         
         private IEnumerator RemoveSlot(MissionSlot slot)
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                slotList.Remove(slot);
+                Destroy(slot.gameObject);
+                SortSlots();
+                yield break;
+            }
             slot.PlayCompleteAnimation();
             yield return new WaitForSeconds(0.5f);
             slotList.Remove(slot);
@@ -54,6 +72,12 @@ namespace _1.Scripts.UI.InGame.Mission
             {
                 slotList[i].transform.SetSiblingIndex(i);
             }
+        }
+        
+        public void UpdateMissionProgress(int questID, int currentAmount, int requiredAmount)
+        {
+            if (!slotMap.TryGetValue(questID, out var slot)) return;
+            slot.UpdateProgress(currentAmount, requiredAmount);
         }
     }
 }
