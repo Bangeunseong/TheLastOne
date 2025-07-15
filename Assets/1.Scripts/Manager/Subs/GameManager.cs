@@ -128,6 +128,12 @@ namespace _1.Scripts.Manager.Subs
             else SaveData = null;
         }
 
+        public void TryRemoveSavedData()
+        {
+            if (!Directory.Exists(SaveDirectoryPath)) return;
+            File.Delete(SaveDirectoryPath + SaveFileName);
+        }
+        
         public void PauseGame()
         {
             if (!Player) return;

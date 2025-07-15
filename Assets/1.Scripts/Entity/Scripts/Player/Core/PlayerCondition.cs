@@ -174,6 +174,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+            
         }
 
         public void UpdateLastSavedTransform()
