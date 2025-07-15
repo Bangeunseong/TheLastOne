@@ -4,6 +4,7 @@ using System.Linq;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Data;
+using _1.Scripts.UI.InGame.Mission;
 using Console = _1.Scripts.Map.Console.Console;
 
 namespace _1.Scripts.Quests.Core
@@ -27,6 +28,8 @@ namespace _1.Scripts.Quests.Core
             currentObjectiveIndex = 0;
             foreach(var objective in Objectives) objective.Activate();
             CurrentObjective = Objectives.First();
+            QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
+            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
         }
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
@@ -48,6 +51,8 @@ namespace _1.Scripts.Quests.Core
                 } else Objectives[i].Activate();
             }
             CurrentObjective = Objectives[currentObjectiveIndex];
+            QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
+            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
         }
 
         public void UpdateProgress()
@@ -57,9 +62,16 @@ namespace _1.Scripts.Quests.Core
                 if (objective.IsCompleted && objective.IsActivated) { objective.Deactivate(); }
             }
             
+            CoreManager.Instance.uiManager.InGameUI.MissionUI.UpdateMissionProgress(
+                CurrentObjective.data.targetID,
+                CurrentObjective.currentAmount,
+                CurrentObjective.data.requiredAmount
+            );
+            
             if (CurrentObjective.IsCompleted)
             {
                 CurrentObjective.Deactivate();
+                CoreManager.Instance.uiManager.InGameUI.MissionUI.CompleteMission(CurrentObjective.data.targetID);
                 
                 currentObjectiveIndex++;
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
@@ -67,6 +79,8 @@ namespace _1.Scripts.Quests.Core
                 if (currentObjectiveIndex < data.objectives.Count)
                 {
                     CurrentObjective = Objectives[currentObjectiveIndex];
+                    QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
+                    CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
                 } else 
                 {
                     Service.Log("Quest Completed!");

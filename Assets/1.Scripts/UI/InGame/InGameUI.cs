@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame.Mission;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -50,6 +51,12 @@ namespace _1.Scripts.UI.InGame
         [field: Header("퀵 슬롯 UI")]
         [field: SerializeField] public QuickSlotUI QuickSlotUI { get; private set; }
         
+        [field: Header("미션 UI")]
+        [field: SerializeField] public MissionUI MissionUI { get; private set; }
+        
+        [field: Header("Distance UI")]
+        [field: SerializeField] public DistanceUI DistanceUI { get; private set; }
+        
         [Header("ItemUseUI")]
         [SerializeField] private Image progressFillImage;
         [SerializeField] private TextMeshProUGUI messageText;
@@ -63,6 +70,8 @@ namespace _1.Scripts.UI.InGame
             if (progressFillImage != null)
                 progressFillImage.enabled = false;
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
+            if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
+            if (!DistanceUI) DistanceUI = GetComponentInChildren<DistanceUI>(true);
         }
 
         private void Start()
@@ -93,6 +102,16 @@ namespace _1.Scripts.UI.InGame
             base.Init(manager);
             
             if (playerCondition != null) UpdateStateUI();
+
+            var questManager = CoreManager.Instance.questManager;
+            foreach (var kv in questManager.activeQuests)
+            {
+                var quest = kv.Value;
+                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
+            }
+            Debug.Log($"InGameUI Init 호출 / 퀘스트 개수: {questManager.activeQuests.Count}");
+            foreach(var kv in questManager.activeQuests)
+                Debug.Log($"퀘스트ID: {kv.Key} / {kv.Value.CurrentObjective.data.description}");
         }
 
         public override void SetActive(bool active)

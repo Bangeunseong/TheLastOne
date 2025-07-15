@@ -9,6 +9,8 @@ using _1.Scripts.Interfaces;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.UI.InGame;
@@ -161,6 +163,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
             }
 
+            if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage1)
+            { 
+                GameEventSystem.Instance.RaiseEvent(6); // 해킹 퀘스트 성공
+            }
+            
             CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
             hackingProgressUI.OnSuccess();
         }

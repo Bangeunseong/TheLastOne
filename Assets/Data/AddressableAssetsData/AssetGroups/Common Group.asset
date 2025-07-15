@@ -143,38 +143,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
-    m_Address: EnergyBar_Prefab
+  - m_GUID: d84f2938b955b574789df5331b02a71a
+    m_Address: EmpGrenadeExplosion
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 71d01b6829cbd004b94ff7a40a085b70
-    m_Address: Shield_Prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0a45b4df6ea0ebb49bec9ba3c17a2935
-    m_Address: NanoAmple_Prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d47da23e835d0a9478567dc004d94fe7
-    m_Address: Medkit_Prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4bfefaa5dc578524281e9b9dac1400c7
-    m_Address: GrenadeLauncher_Dummy
+  - m_GUID: 95aa330f3f2ec4542873179854a7efb4
+    m_Address: DoorSoundGroup
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 824fc0ee614adcb40a26930412a8db8a
     m_Address: Crossbow_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4bfefaa5dc578524281e9b9dac1400c7
+    m_Address: GrenadeLauncher_Dummy
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -191,14 +179,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d84f2938b955b574789df5331b02a71a
-    m_Address: EmpGrenadeExplosion
+  - m_GUID: 87078ceaa577f9a44bd7f10d7c0c4d8c
+    m_Address: Assets/2.Prefabs/Item/EnergyBar_Prefab.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 95aa330f3f2ec4542873179854a7efb4
-    m_Address: DoorSoundGroup
+  - m_GUID: d47da23e835d0a9478567dc004d94fe7
+    m_Address: Assets/2.Prefabs/Item/Medkit_Prefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0a45b4df6ea0ebb49bec9ba3c17a2935
+    m_Address: Assets/2.Prefabs/Item/NanoAmple_Prefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71d01b6829cbd004b94ff7a40a085b70
+    m_Address: Assets/2.Prefabs/Item/Shield_Prefab.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
