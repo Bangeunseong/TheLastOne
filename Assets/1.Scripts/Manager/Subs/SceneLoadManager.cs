@@ -130,19 +130,6 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-
-            switch (CurrentScene)
-            { 
-                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby);
-                    break;
-                case SceneType.Loading: 
-                    break;
-                case SceneType.Stage1:
-                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
-                case SceneType.EndingScene:
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
             
             IsLoading = false;
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -155,18 +142,33 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="mode"></param>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            switch (CurrentScene)
+            {
+                case SceneType.IntroScene:
+                    uiManager.ChangeState(CurrentState.Lobby);
+                    break;
+                case SceneType.Loading:
+                    break;
+                case SceneType.Stage1:
+                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
+                case SceneType.EndingScene:
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
+            {
+                coreManager.soundManager.PlayBGM(bgmType, index: 0);
+            }
+            
+            // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
             player.PlayerCondition.IsPlayerHasControl = true;
-            
+
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
-
-            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
-            {
-                coreManager.soundManager.PlayBGM(bgmType, index:0);
-            }
         }
         
         private async Task WaitForUserInput()

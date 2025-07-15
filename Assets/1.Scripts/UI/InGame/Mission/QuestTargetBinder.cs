@@ -5,6 +5,7 @@ using System.Linq;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 
 namespace _1.Scripts.UI.InGame.Mission
@@ -17,45 +18,26 @@ namespace _1.Scripts.UI.InGame.Mission
     }
     public class QuestTargetBinder : MonoBehaviour
     {
-        private QuestManager questManager;
+        [Header("Quest Target Bindings")]
         [SerializeField] private List<QuestTargetBinding> bindings;
+        
+        private QuestManager questManager;
+        
+        // Singleton
+        public static QuestTargetBinder Instance { get; private set; }
 
-
-        private int lastTargetIndex = -1;
-
-
-        private void Start()
+        private void Awake()
         {
-            if (questManager == null) questManager = CoreManager.Instance.questManager;
-            if (bindings == null || bindings.Count == 0) return;
-
-            lastTargetIndex = 0;
-            SetCurrentTarget(bindings[lastTargetIndex].target);
-        }
-
-        private void Update()
-        {
-            if (bindings == null || lastTargetIndex < 0 || lastTargetIndex >= bindings.Count) return;
-
-            var binding = bindings[lastTargetIndex];
-
-            if (questManager.activeQuests.TryGetValue(binding.questID, out var quest) && quest.isCompleted)
-            {
-                lastTargetIndex++;
-
-                if (lastTargetIndex >= bindings.Count)
-                {
-                    SetCurrentTarget(bindings[lastTargetIndex].target);
-                }
-                else
-                {
-                    CoreManager.Instance.uiManager.SetDistanceTarget(null);
-                }
-            }
+            if (!Instance) Instance = this;
+            else { if(Instance != this) Destroy(gameObject); }
         }
         
-        private void SetCurrentTarget(Transform target)
+        public void SetCurrentTarget(int targetId)
         {
+            if (bindings is not { Count: > 0 }) return;
+            Transform target = bindings[targetId].target;
+            
+            // 이게 문제의 시발점
             CoreManager.Instance.uiManager.SetDistanceTarget(target);
         }
     }

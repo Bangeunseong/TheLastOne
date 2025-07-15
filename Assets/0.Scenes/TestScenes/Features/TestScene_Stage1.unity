@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414738, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1590,9 +1590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce4c7e97b8ac884d8e4d864d099e8e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questManager:
-    activeQuests:
-      _serializedList: []
   bindings:
   - questID: 4
     target: {fileID: 1256476951}
@@ -6331,8 +6328,8 @@ SceneRoots:
   - {fileID: 277653826}
   - {fileID: 1385041868}
   - {fileID: 1063011939}
+  - {fileID: 1086465607}
   - {fileID: 1060212975}
   - {fileID: 1256476945}
   - {fileID: 900053060764606494}
   - {fileID: 1070521751526287027}
-  - {fileID: 1086465607}
