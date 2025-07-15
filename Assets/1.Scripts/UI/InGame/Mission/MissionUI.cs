@@ -7,29 +7,38 @@ namespace _1.Scripts.UI.InGame.Mission
     public class MissionUI : MonoBehaviour
     {
         [SerializeField] private Transform slotContainer;
-        [SerializeField] private MissionSlot slotPrefab;
+        [SerializeField] private GameObject slotPrefabGO;
         
-        private List<MissionSlot> slotList = new List<MissionSlot>();
 
-        public void AddMission(string missionText)
+        private List<MissionSlot> slotList = new List<MissionSlot>();
+        private Dictionary<int, MissionSlot> slotMap = new Dictionary<int, MissionSlot>();
+
+        public void AddMission(int questID, string missionText)
         {
-            MissionSlot slot = Instantiate(slotPrefab, slotContainer);
-            slot.SetMission(missionText, true);
-            slot.PlayNewMissionAnimation();
-            slotList.Add(slot);
+            if (slotMap.ContainsKey(questID)) return;
+
+            Debug.Log($"AddMission 호출: {questID} / {missionText}");
+            Debug.Log($"slotPrefabGO: {slotPrefabGO}");
             
+            var go = Instantiate(slotPrefabGO, slotContainer);
+            var slot = go.GetComponent<MissionSlot>();
+
+            slot.Initialize(questID, missionText, true);
+            slot.PlayNewMissionAnimation();
+
+            slotList.Add(slot);
+            slotMap[questID] = slot;
+
             SortSlots();
         }
 
-        public void CompleteMission(string missionText)
+        public void CompleteMission(int questID)
         {
-            var slot = slotList.Find(s => s.missionText.text == missionText);
-            if (slot != null)
-            {
-                StartCoroutine(RemoveSlot(slot));
-            }
+            if (!slotMap.TryGetValue(questID, out var slot)) return;
+            StartCoroutine(RemoveSlot(slot));
+            slotMap.Remove(questID);
         }
-
+        
         private IEnumerator RemoveSlot(MissionSlot slot)
         {
             slot.PlayCompleteAnimation();

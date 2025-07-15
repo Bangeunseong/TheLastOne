@@ -43,6 +43,7 @@ namespace _1.Scripts.Manager.Subs
         private LobbyUI lobbyUI;
         private LoadingUI loadingUI;
         private SettingUI settingUI;
+        private MissionUI missionUI;
 
         public LoadingUI LoadingUI => loadingUI;
         

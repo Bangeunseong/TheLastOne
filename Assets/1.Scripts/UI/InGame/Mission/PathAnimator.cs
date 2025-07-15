@@ -44,8 +44,12 @@ namespace _1.Scripts.UI.InGame.Mission
         void OnDisable()
         {
             DistanceUI.OnTargetChanged -= OnTargetChanged;
-            cts = new CancellationTokenSource();
-            PathUpdateLoop(cts.Token).Forget();
+            if (cts != null)
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+            }
         }
         
         
@@ -106,7 +110,6 @@ namespace _1.Scripts.UI.InGame.Mission
                     await UniTask.NextFrame(token);
                 }
             }
-            await UniTask.Delay(TimeSpan.FromSeconds(markerLifetime), cancellationToken: token);
             if (marker != null) Destroy(marker);
         }
     }

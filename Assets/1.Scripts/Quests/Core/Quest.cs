@@ -4,6 +4,7 @@ using System.Linq;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Data;
+using _1.Scripts.UI.InGame.Mission;
 using Console = _1.Scripts.Map.Console.Console;
 
 namespace _1.Scripts.Quests.Core
@@ -27,7 +28,7 @@ namespace _1.Scripts.Quests.Core
             currentObjectiveIndex = 0;
             foreach(var objective in Objectives) objective.Activate();
             CurrentObjective = Objectives.First();
-            // TODO:
+            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(data.questID, CurrentObjective.data.description);
         }
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
@@ -49,7 +50,7 @@ namespace _1.Scripts.Quests.Core
                 } else Objectives[i].Activate();
             }
             CurrentObjective = Objectives[currentObjectiveIndex];
-            // TODO:
+            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(data.questID, CurrentObjective.data.description);
         }
 
         public void UpdateProgress()
@@ -62,6 +63,7 @@ namespace _1.Scripts.Quests.Core
             if (CurrentObjective.IsCompleted)
             {
                 CurrentObjective.Deactivate();
+                CoreManager.Instance.uiManager.InGameUI.MissionUI.CompleteMission(data.questID);
                 
                 currentObjectiveIndex++;
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
@@ -69,7 +71,7 @@ namespace _1.Scripts.Quests.Core
                 if (currentObjectiveIndex < data.objectives.Count)
                 {
                     CurrentObjective = Objectives[currentObjectiveIndex];
-                    // TODO: 
+                    CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(data.questID, CurrentObjective.data.description);
                 } else 
                 {
                     Service.Log("Quest Completed!");

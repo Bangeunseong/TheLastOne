@@ -27,11 +27,7 @@ namespace _1.Scripts.UI.InGame.Mission
             }
 
             if (distanceText == null) distanceText = GetComponent<TextMeshProUGUI>();
-
-            if (target == null)
-            {
-                target = GameObject.Find("Tutorial_Drone").transform;
-            }
+            
 
             CurrentTarget = target; 
             OnTargetChanged?.Invoke(target);
