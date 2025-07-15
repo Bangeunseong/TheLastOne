@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e339f5f970108da40b7c0999e36e0198, type: 3}
+  m_Name: SuicideDroneStatData
+  m_EditorClassIdentifier: 
+  entityName: SuicideDrone
+  isPlayer: 0
+  isAlly: 0
+  maxHealth: 80
+  baseDamage: 50
+  baseAttackRate: 0
+  armor: 0
+  maxArmor: 10
+  moveSpeed: 10
+  runMultiplier: 0
+  walkMultiplier: 0
+  footStepSounds: []
+  hitSounds: []
+  deathSounds: []
+  attackRange: 4
+  boomRange: 10
+  detectRange: 20
+  alertDuration: 3
+  alertRadius: 0

@@ -1,0 +1,60 @@
+﻿using System.Threading;
+using UnityEngine.InputSystem;
+
+namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
+{
+    public class RunState : GroundState
+    {
+        public RunState(PlayerStateMachine machine) : base(machine)
+        {
+        }
+        
+        public override void Enter()
+        {
+            stateMachine.MovementSpeedModifier = playerCondition.RunSpeedModifier;
+            base.Enter();
+            
+            if (staminaCTS != null){ staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
+            staminaCTS = new CancellationTokenSource();
+            _ = ConsumeStamina_Async(playerCondition.StatData.consumeRateOfStamina * playerCondition.StatData.interval,
+                playerCondition.StatData.interval, staminaCTS.Token);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (playerCondition.CurrentStamina <= 0){ stateMachine.ChangeState(stateMachine.WalkState); }
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            staminaCTS?.Cancel(); staminaCTS?.Dispose(); staminaCTS = null;
+        }
+
+        protected override void OnCrouchStarted(InputAction.CallbackContext context)
+        {
+            base.OnCrouchStarted(context);
+            stateMachine.ChangeState(stateMachine.CrouchState);
+        }
+
+        protected override void OnRunStarted(InputAction.CallbackContext context)
+        {
+            base.OnRunStarted(context);
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
+
+        protected override void OnAimStarted(InputAction.CallbackContext context)
+        {
+            base.OnAimStarted(context);
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
+
+        protected override void OnFireStarted(InputAction.CallbackContext context)
+        {
+            base.OnFireStarted(context);
+            stateMachine.ChangeState(stateMachine.WalkState);
+        }
+    }
+}

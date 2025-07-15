@@ -3,40 +3,48 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CinemachineTarget
+  - Ally
+  - Enemy
+  - FxTemporaire
+  - WeaponSpawnPoint
+  - ItemSpawnPoint
+  - EnemySpawnPoint
+  - PatrolZone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
+  - Wall
+  - Interactable
+  - Ally
+  - Enemy
+  - Head_P
+  - Chest_P
+  - Arm_P
+  - Leg_P
+  - Belly_P
+  - Head_E
+  - Chest_E
+  - Arm_E
+  - Leg_E
+  - Belly_E
   - 
   - 
   - 
   - 
+  - WeaponPreview
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Stencil_Ally
+  - Stencil_Key
+  - Stencil_E
   m_SortingLayers:
   - name: Default
     uniqueID: 0
