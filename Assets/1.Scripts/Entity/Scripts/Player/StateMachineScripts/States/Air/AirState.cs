@@ -14,12 +14,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             
             // Cancel Crouch
-            if (playerCondition.IsCrouching)
-            {
-                if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
-                crouchCTS = new CancellationTokenSource();
-                _ = Crouch_Async(playerCondition.IsCrouching = false, 0.1f, crouchCTS.Token); 
-            }
+            playerCondition.OnCrouch(false, 0.1f);
             
             // Stop Reload Coroutine
             playerCondition.TryCancelReload();
