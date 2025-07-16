@@ -67,7 +67,7 @@ MonoBehaviour:
     - Stage1
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: de8ba1886ef12e64d82ba32eb6780f6b
+  - m_GUID: c5b5e3dfea3ea7847898347a9a554937
     m_Address: SpawnPoints_Stage1
     m_ReadOnly: 0
     m_SerializedLabels:
