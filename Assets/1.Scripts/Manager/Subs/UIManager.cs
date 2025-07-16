@@ -53,9 +53,9 @@ namespace _1.Scripts.Manager.Subs
             
             var mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas");
             if (mainCanvas) { uiRoot = mainCanvas.transform; }
-            
-            lobbyUI = GameObject.Find("LobbyUI")?.GetComponent<LobbyUI>();
-            loadingUI = GameObject.Find("LoadingUI")?.GetComponent<LoadingUI>();
+
+            lobbyUI = coreManager.GetComponentInChildrenOfTarget<LobbyUI>(coreManager.gameObject, "LobbyUI", true);
+            loadingUI = coreManager.GetComponentInChildrenOfTarget<LoadingUI>(coreManager.gameObject, "LoadingUI", true);
             
             lobbyUI?.Init(this);
             loadingUI?.Init(this);
@@ -102,7 +102,6 @@ namespace _1.Scripts.Manager.Subs
                 case CurrentState.Loading: loadingUI?.SetActive(false); break;
                 case CurrentState.InGame:
                     if (LoadedUI.TryGetValue(state, out var list)) { foreach (var ui in list) ui.SetActive(false); }
-                    InGameUI?.ResetUI();
                     break;
                 case CurrentState.None:
                     break;

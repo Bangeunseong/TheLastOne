@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -159,8 +160,51 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
+            uiManager.InGameUI?.ResetUI();
             gameManager.ExitGame();
             _ = LoadScene(SceneType.IntroScene);
         }
+
+        /* - Extensions for Sub Managers - */
+        public T GetComponentOfTarget<T>(GameObject target) where T : Component
+        {
+            if (!target) return null;
+            if (target.TryGetComponent(out T component)) return component;
+            Service.Log($"Can't find component of type {typeof(T)} in {target.name}");
+            return null;
+        }
+
+        public T GetComponentInChildrenOfTarget<T>(GameObject target, string childrenName = null, bool inActive = false) where T : Component
+        {
+            if (!target) return null;
+            if (childrenName == null)
+            {
+                var component = target.GetComponentInChildren<T>(inActive);
+                if (component != null) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in children of {target.name}");
+                return null;
+            }
+
+            var specificComponent = target.GetComponentsInChildren<T>(inActive);
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == childrenName);
+        }
+
+        public T GetComponentInParentOfTarget<T>(GameObject target, string parentName = null, bool inActive = false)
+            where T : Component
+        {
+            if (!target) return null;
+            if (parentName == null)
+            {
+                var component = target.GetComponentInParent<T>(inActive);
+                if (component != null) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in parent of {target.name}");
+                return null;
+            }
+            
+            var specificComponent = target.GetComponentsInParent<T>(inActive);
+            
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == parentName);
+        }
+        /* ------------------------------------- */
     }
 }
