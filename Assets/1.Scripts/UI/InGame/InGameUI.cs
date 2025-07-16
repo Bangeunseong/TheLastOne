@@ -61,6 +61,10 @@ namespace _1.Scripts.UI.InGame
         [field: Header("Inventory UI")]
         [field: SerializeField] public InventoryUI InventoryUI { get; private set; }
         
+        [field: Header("Game Control")]
+        [SerializeField] private Button exitGameButton;
+        [SerializeField] private Button loadGameButton;
+        
         [Header("ItemUseUI")]
         [SerializeField] private Image progressFillImage;
         [SerializeField] private TextMeshProUGUI messageText;
@@ -82,6 +86,9 @@ namespace _1.Scripts.UI.InGame
         private void Start()
         {
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
+            exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
+            loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
             
             if (healthSegmentPrefab != null && healthSegmentContainer != null)
             {
