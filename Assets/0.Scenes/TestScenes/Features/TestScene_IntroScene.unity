@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4805,7 +4805,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 764888563}
-  - {fileID: 2022546691}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1367050391
@@ -7287,7 +7286,7 @@ PrefabInstance:
     - target: {fileID: 337094675325196919, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1090
+      value: 822.96
       objectReference: {fileID: 0}
     - target: {fileID: 337094675325196919, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -7672,7 +7671,7 @@ PrefabInstance:
     - target: {fileID: 669376855791384773, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 334
+      value: 841.74
       objectReference: {fileID: 0}
     - target: {fileID: 669376855791384773, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -7907,7 +7906,7 @@ PrefabInstance:
     - target: {fileID: 1049606894127198300, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 37
+      value: 123.405
       objectReference: {fileID: 0}
     - target: {fileID: 1049606894127198300, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -8277,7 +8276,7 @@ PrefabInstance:
     - target: {fileID: 2149822977831963962, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 136
+      value: 358.11
       objectReference: {fileID: 0}
     - target: {fileID: 2149822977831963962, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -8562,7 +8561,7 @@ PrefabInstance:
     - target: {fileID: 2223613057965485987, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 235
+      value: 590.405
       objectReference: {fileID: 0}
     - target: {fileID: 2223613057965485987, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -8677,7 +8676,7 @@ PrefabInstance:
     - target: {fileID: 2518748126103160125, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1302
+      value: 1268.14
       objectReference: {fileID: 0}
     - target: {fileID: 2518748126103160125, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -10497,7 +10496,7 @@ PrefabInstance:
     - target: {fileID: 8321309956639709113, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1196
+      value: 1051.83
       objectReference: {fileID: 0}
     - target: {fileID: 8321309956639709113, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
@@ -11650,7 +11649,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1367050390}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2022546692
 MonoBehaviour:
@@ -12230,4 +12229,5 @@ SceneRoots:
   - {fileID: 1724977081}
   - {fileID: 1931378662}
   - {fileID: 1384705108}
+  - {fileID: 2022546691}
   - {fileID: 1367050390}

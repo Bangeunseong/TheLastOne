@@ -164,5 +164,13 @@ namespace _1.Scripts.Manager.Subs
             }
             Player.PlayerInput.enabled = true;
         }
+
+        public void ExitGame()
+        {
+            IsGamePaused = false;
+            Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }

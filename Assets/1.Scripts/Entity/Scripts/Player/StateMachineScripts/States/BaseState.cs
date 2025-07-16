@@ -18,7 +18,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerCondition playerCondition;
         protected readonly CoreManager coreManager;
         
-        protected CancellationTokenSource staminaCTS;
         protected CancellationTokenSource crouchCTS;
         
         private float speed;
@@ -145,59 +144,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
-        }
-
-        protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
-        {
-            var currentPosition = stateMachine.Player.CameraPivot.localPosition;
-            var currentOffset = stateMachine.Player.Controller.center;
-            var currentHeight = stateMachine.Player.Controller.height;
-            
-            var targetPosition = !isCrouch
-                            ? stateMachine.Player.IdlePivot.localPosition
-                            : stateMachine.Player.CrouchPivot.localPosition;
-            var targetOffset = !isCrouch 
-                ? stateMachine.Player.OriginalOffset 
-                : stateMachine.Player.OriginalOffset - (stateMachine.Player.IdlePivot.localPosition - 
-                                                        stateMachine.Player.CrouchPivot.localPosition) / 2;
-            var targetHeight = !isCrouch
-                ? stateMachine.Player.OriginalHeight
-                : stateMachine.Player.OriginalHeight - (stateMachine.Player.IdlePivot.localPosition -
-                                                        stateMachine.Player.CrouchPivot.localPosition).y;
-            
-            float t = 0f;
-            while (t < duration)
-            {
-                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                float elapsed = t / duration;
-                stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
-                stateMachine.Player.Controller.center = Vector3.Lerp(currentOffset, targetOffset, elapsed);
-                stateMachine.Player.Controller.height = Mathf.Lerp(currentHeight, targetHeight, elapsed);
-                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
-            }
-            
-            stateMachine.Player.CameraPivot.localPosition = targetPosition;
-            crouchCTS.Dispose(); crouchCTS = null;
-        }
-
-        protected async UniTaskVoid RecoverStamina_Async(float recoverRate, float interval, CancellationToken token)
-        {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
-            {
-                if (!coreManager.gameManager.IsGamePaused)
-                    playerCondition.OnRecoverStamina(recoverRate);
-                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
-            }
-        }
-
-        protected async UniTaskVoid ConsumeStamina_Async(float consumeRate, float interval, CancellationToken token)
-        {
-            while (playerCondition.CurrentStamina > 0)
-            {
-                if (!coreManager.gameManager.IsGamePaused)
-                    playerCondition.OnConsumeStamina(consumeRate);
-                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
-            }
         }
         
         private void AddInputActionCallbacks()

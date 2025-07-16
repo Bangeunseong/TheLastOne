@@ -87,10 +87,30 @@ namespace _1.Scripts.UI.InGame
 
         private void Start()
         {
-            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
-            
             exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
             loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
+        }
+
+        public override void Init(UIManager manager)
+        {
+            base.Init(manager);
+            
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
+            var questManager = CoreManager.Instance.questManager;
+            foreach (var kv in questManager.activeQuests)
+            {
+                var quest = kv.Value;
+                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
+            }
+            Debug.Log($"InGameUI Init 호출 / 퀘스트 개수: {questManager.activeQuests.Count}");
+            foreach(var kv in questManager.activeQuests)
+                Debug.Log($"퀘스트ID: {kv.Key} / {kv.Value.CurrentObjective.data.description}");
+        }
+
+        public void Initialize_HealthSegments()
+        {
+            if (healthSegments.Count > 0) return;
             
             if (healthSegmentPrefab != null && healthSegmentContainer != null)
             {
@@ -111,23 +131,6 @@ namespace _1.Scripts.UI.InGame
             prevhealth = playerCondition.CurrentHealth;
         }
 
-        public override void Init(UIManager manager)
-        {
-            base.Init(manager);
-            
-            if (playerCondition != null) UpdateStateUI();
-
-            var questManager = CoreManager.Instance.questManager;
-            foreach (var kv in questManager.activeQuests)
-            {
-                var quest = kv.Value;
-                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
-            }
-            Debug.Log($"InGameUI Init 호출 / 퀘스트 개수: {questManager.activeQuests.Count}");
-            foreach(var kv in questManager.activeQuests)
-                Debug.Log($"퀘스트ID: {kv.Key} / {kv.Value.CurrentObjective.data.description}");
-        }
-
         public override void SetActive(bool active)
         {
             gameObject.SetActive(active);
@@ -135,15 +138,11 @@ namespace _1.Scripts.UI.InGame
 
         void Update()
         {
-            if (playerCondition != null)
-            {
-                UpdateStateUI();
-            }
+            if (playerCondition) { UpdateStateUI(); }
         }
 
         private void UpdateStateUI()
         {
-            if (playerCondition == null) return;
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
             UpdateArmorSlider(playerCondition.CurrentShield, playerCondition.MaxShield);
