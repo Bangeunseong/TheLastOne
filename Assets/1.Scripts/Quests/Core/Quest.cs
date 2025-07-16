@@ -57,6 +57,7 @@ namespace _1.Scripts.Quests.Core
 
         public void UpdateProgress()
         {
+            if (isCompleted) return;
             foreach (var objective in Objectives)
             {
                 if (objective.IsCompleted && objective.IsActivated) { objective.Deactivate(); }

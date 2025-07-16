@@ -86,6 +86,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private CancellationTokenSource focusCTS;
         private CancellationTokenSource instinctCTS;
         private CancellationTokenSource instinctRecoveryCTS;
+        private CancellationTokenSource staminaCTS;
+        private CancellationTokenSource crouchCTS;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -174,7 +176,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
-            
         }
 
         public void UpdateLastSavedTransform()
@@ -396,7 +397,90 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             instinctCTS?.Cancel(); instinctCTS?.Dispose(); instinctCTS = null;
             instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
             itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
+            staminaCTS?.Cancel(); staminaCTS?.Dispose(); staminaCTS = null;
         }
+        
+        /* - Crouch 관련 메소드 - */
+        public void OnCrouch(bool isCrouch, float duration)
+        {
+            IsCrouching = isCrouch;
+            if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
+            crouchCTS = new CancellationTokenSource();
+            _ = Crouch_Async(IsCrouching, duration, crouchCTS.Token); 
+        }
+        
+        protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
+        {
+            var currentPosition = player.CameraPivot.localPosition;
+            var currentOffset = player.Controller.center;
+            var currentHeight = player.Controller.height;
+            
+            var targetPosition = !isCrouch
+                ? player.IdlePivot.localPosition
+                : player.CrouchPivot.localPosition;
+            var targetOffset = !isCrouch 
+                ? player.OriginalOffset 
+                : player.OriginalOffset - (player.IdlePivot.localPosition - 
+                                           player.CrouchPivot.localPosition) / 2;
+            var targetHeight = !isCrouch
+                ? player.OriginalHeight
+                : player.OriginalHeight - (player.IdlePivot.localPosition -
+                                           player.CrouchPivot.localPosition).y;
+            
+            float t = 0f;
+            while (t < duration)
+            {
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                float elapsed = t / duration;
+                player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
+                player.Controller.center = Vector3.Lerp(currentOffset, targetOffset, elapsed);
+                player.Controller.height = Mathf.Lerp(currentHeight, targetHeight, elapsed);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
+            }
+            
+            player.CameraPivot.localPosition = targetPosition;
+            crouchCTS.Dispose(); crouchCTS = null;
+        }
+        /* -------------------- */
+        
+        /* - Stamina 관련 메소드 - */
+        public void OnConsumeStamina(float consumeRate, float interval)
+        {
+            if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
+            staminaCTS = new CancellationTokenSource();
+            _ = ConsumeStamina_Async(consumeRate, interval, staminaCTS.Token);
+        }
+        public void OnRecoverStamina(float recoverRate, float interval)
+        {
+            if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
+            staminaCTS = new CancellationTokenSource();
+            _ = RecoverStamina_Async(recoverRate, interval, staminaCTS.Token);
+        }
+        public void CancelStaminaTask()
+        {
+            staminaCTS?.Cancel();
+            staminaCTS?.Dispose();
+            staminaCTS = null;
+        }
+        private async UniTaskVoid ConsumeStamina_Async(float consumeRate, float interval, CancellationToken token)
+        {
+            while (CurrentStamina > 0)
+            {
+                if (!coreManager.gameManager.IsGamePaused)
+                    OnConsumeStamina(consumeRate);
+                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
+            }
+        }
+        private async UniTaskVoid RecoverStamina_Async(float recoverRate, float interval, CancellationToken token)
+        {
+            while (CurrentStamina < MaxStamina)
+            {
+                if (!coreManager.gameManager.IsGamePaused)
+                    OnRecoverStamina(recoverRate);
+                await UniTask.WaitForSeconds(interval, true, cancellationToken: token, cancelImmediately: true);
+            }
+        }
+        /* --------------------- */
         
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
@@ -799,9 +883,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnItemUsed(BaseItem usedItem)
         {
             if (itemCTS != null) { CancelItemUsage(); return; }
-            
             itemCTS = new CancellationTokenSource();
-            _ = Item_Async(usedItem.ItemData, itemCTS.Token);
+            _ = Item_Async(usedItem, itemCTS.Token);
         }
         private void CancelItemUsage()
         {
@@ -809,14 +892,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
             itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
         }
-        private async UniTaskVoid Item_Async(ItemData itemData, CancellationToken token)
+        private async UniTaskVoid Item_Async(BaseItem item, CancellationToken token)
         {
-            if (!itemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
+            if (!item.ItemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
             var t = 0f;
             var inGameUI = coreManager.uiManager.InGameUI;
             inGameUI.ShowItemProgress();
             inGameUI.UpdateItemProgress(0f);
-            while (t < itemData.Delay)
+            while (t < item.ItemData.Delay)
             {
                 if (token.IsCancellationRequested)
                 {
@@ -826,7 +909,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 if (!coreManager.gameManager.IsGamePaused)
                 {
                     t += Time.unscaledDeltaTime;
-                    inGameUI.UpdateItemProgress(t / itemData.Delay);
+                    inGameUI.UpdateItemProgress(t / item.ItemData.Delay);
                 }
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
@@ -834,14 +917,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             inGameUI.UpdateItemProgress(1f);
             inGameUI.HideItemProgress();
             
-            switch (itemData.ItemType)
+            switch (item.ItemData.ItemType)
             {
                 case ItemType.Medkit: 
-                case ItemType.NanoAmple: OnRecoverHealth(itemData.Value); break;
-                case ItemType.EnergyBar: OnRecoverStamina(itemData.Value); break;
-                case ItemType.Shield: OnRecoverShield(itemData.Value); break;
+                case ItemType.NanoAmple: OnRecoverHealth(item.ItemData.Value); break;
+                case ItemType.EnergyBar: OnRecoverStamina(item.ItemData.Value); break;
+                case ItemType.Shield: OnRecoverShield(item.ItemData.Value); break;
                 default: throw new ArgumentOutOfRangeException();
             }
+            item.OnConsume();
             ItemSpeedMultiplier = 1f;
             itemCTS.Dispose(); itemCTS = null;
         }
