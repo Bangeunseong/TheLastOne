@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Util;
-using _1.Scripts.Weapon.Scripts.Common;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -91,7 +89,6 @@ namespace _1.Scripts.Manager.Subs
                 coreManager.soundManager.CacheSoundGroup();
                 await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
-                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
@@ -100,8 +97,6 @@ namespace _1.Scripts.Manager.Subs
             }
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
-            coreManager.soundManager.CacheSoundGroup();
-            await coreManager.soundManager.LoadClips();
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             await LoadSceneWithProgress(CurrentScene);
         }
@@ -150,11 +145,6 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.EndingScene: break;
             }
 
-            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
-            {
-                coreManager.soundManager.PlayBGM(bgmType, index: 0);
-            }
-            
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
@@ -164,12 +154,19 @@ namespace _1.Scripts.Manager.Subs
             switch (CurrentScene)
             {
                 case SceneType.Stage1:
-                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
+                case SceneType.Stage2:
+                    if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
+                        coreManager.soundManager.PlayBGM(bgmType, index: 0);
+                    uiManager.ChangeState(CurrentState.InGame);
+                    break;
             }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         
         private async Task WaitForUserInput()

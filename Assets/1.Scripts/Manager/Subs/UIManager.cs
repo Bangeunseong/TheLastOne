@@ -119,7 +119,12 @@ namespace _1.Scripts.Manager.Subs
             if (LoadedUI.TryGetValue(state, out var list))
             {
                 foreach (var existing in list)
-                    if (existing is T found) { Service.Log($"{found.name}"); found.Init(this); found.SetActive(true); return found; }
+                    if (existing is T found)
+                    {
+                        Service.Log($"{found.name}"); 
+                        found.Init(this); found.SetActive(true); 
+                        return found;
+                    }
             }
             
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
