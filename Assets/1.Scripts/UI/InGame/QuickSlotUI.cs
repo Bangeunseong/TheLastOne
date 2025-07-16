@@ -41,6 +41,31 @@ namespace _1.Scripts.UI.InGame
             RefreshQuickSlot();
         }
 
+        public void ResetUI()
+        {
+            inventory = null;
+            currentSlot = -1;
+            foreach (var icon in slotIcons)
+            {
+                icon.sprite = null;
+                icon.enabled = false;
+            }
+
+            foreach (var count in slotCounts)
+            {
+                count.text = "";
+                count.gameObject.SetActive(false);
+            }
+            quickSlotPanel.SetActive(false);
+            quickSlotGroup.alpha = 0;
+        }
+
+        public void Initialize(PlayerInventory newInventory)
+        {
+            inventory = newInventory;
+            RefreshQuickSlot();
+        }
+
         public void OpenQuickSlot()
         {
             currentSlot = -1;

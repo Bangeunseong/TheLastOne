@@ -46,8 +46,6 @@ namespace _1.Scripts.Manager.Subs
         
         private const string INGAME_UI_ADDRESS = "InGameUI";
         private const string MINIGAME_UI_ADDRESS = "MiniGameUI";
-        private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
-        private const string INVENTORY_UI_ADDRESS = "InventoryUI";
         
         private DistanceUI distanceUI;
         private CoreManager coreManager;
@@ -107,6 +105,7 @@ namespace _1.Scripts.Manager.Subs
                 case CurrentState.Loading: loadingUI?.SetActive(false); break;
                 case CurrentState.InGame:
                     if (LoadedUI.TryGetValue(state, out var list)) { foreach (var ui in list) ui.SetActive(false); }
+                    InGameUI?.ResetUI();
                     break;
                 case CurrentState.None:
                     break;
