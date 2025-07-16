@@ -53,21 +53,22 @@ namespace _1.Scripts.Manager.Subs
             IsLoading = true;
             PreviousScene = CurrentScene;
             
+            // Reset All Managers
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            
+            // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
+                CurrentScene = sceneName;
                 if (CurrentScene == SceneType.IntroScene)
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    Cursor.lockState = CursorLockMode.None;
                 }
-                
-                CurrentScene = sceneName;
             }
             
             var loadingScene = 
@@ -101,6 +102,10 @@ namespace _1.Scripts.Manager.Subs
             await LoadSceneWithProgress(CurrentScene);
         }
         
+        /// <summary>
+        /// Current Scene이 로드되는 Task (sceneLoaded event가 실행된다)
+        /// </summary>
+        /// <param name="sceneName"></param>
         private async Task LoadSceneWithProgress(SceneType sceneName)
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -140,7 +145,9 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby); break;
+                case SceneType.IntroScene: 
+                    coreManager.soundManager.PlayBGM(BgmType.Lobby, index: 0); 
+                    uiManager.ChangeState(CurrentState.Lobby); break;
                 case SceneType.Loading: break;
                 case SceneType.EndingScene: break;
             }

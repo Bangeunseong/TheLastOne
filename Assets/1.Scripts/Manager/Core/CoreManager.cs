@@ -66,7 +66,7 @@ namespace _1.Scripts.Manager.Core
         }
 
         // Start is called before the first frame update
-        private void Start()
+        private async void Start()
         {
             uiManager.Start();
             gameManager.Start();
@@ -77,6 +77,10 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Start();
             spawnManager.Start();
             questManager.Start();
+            
+            await resourceManager.LoadAssetsByLabelAsync("IntroScene");
+            soundManager.CacheSoundGroup();
+            await soundManager.LoadClips();
         }
 
         // Update is called once per frame

@@ -336,6 +336,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnDead()
         {
             IsDead = true;
+            IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;

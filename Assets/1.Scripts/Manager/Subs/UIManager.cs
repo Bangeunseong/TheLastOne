@@ -35,12 +35,12 @@ namespace _1.Scripts.Manager.Subs
 
         private Transform uiRoot;
         private CurrentState currentState = CurrentState.None;
-
         private LobbyUI lobbyUI;
         private LoadingUI loadingUI;
         private SettingUI settingUI;
         private MissionUI missionUI;
-        
+        private DistanceUI distanceUI;
+        private CoreManager coreManager;
 
         public LoadingUI LoadingUI => loadingUI;
         
@@ -48,9 +48,6 @@ namespace _1.Scripts.Manager.Subs
         private const string MINIGAME_UI_ADDRESS = "MiniGameUI";
         private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
         private const string INVENTORY_UI_ADDRESS = "InventoryUI";
-        
-        private DistanceUI distanceUI;
-        private CoreManager coreManager;
         
         public void Start()
         {
@@ -122,7 +119,7 @@ namespace _1.Scripts.Manager.Subs
                     if (existing is T found)
                     {
                         Service.Log($"{found.name}"); 
-                        found.Init(this); found.SetActive(true); 
+                        found.Init(this); found.SetActive(true);
                         return found;
                     }
             }

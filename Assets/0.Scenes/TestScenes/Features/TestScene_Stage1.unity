@@ -1987,6 +1987,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spanwer_Index2
       objectReference: {fileID: 0}
+    - target: {fileID: 5057052230064960691, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090568227269874423, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5635516836702039195, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Name
@@ -2027,6 +2037,11 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[0].second
       value: 
       objectReference: {fileID: 1917048629}
+    - target: {fileID: 6439485171167579673, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6552916662756706391, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve

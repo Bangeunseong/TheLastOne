@@ -22,9 +22,9 @@ namespace Michsky.UI.Shift
         private Button sourceButton;
         private SoundManager soundManager;
         
-        void Start()
+        private void Start()
         {
-            soundManager = CoreManager.Instance.soundManager;
+            soundManager = CoreManager.Instance?.soundManager;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
