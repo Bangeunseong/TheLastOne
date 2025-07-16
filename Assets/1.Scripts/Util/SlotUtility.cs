@@ -84,6 +84,15 @@ namespace _1.Scripts.Util
             }
             return new WeaponStatView();
         }
-        
+        public static SlotType GetSlotTypeFromWeapon(BaseWeapon weapon)
+        {
+            if (weapon is Gun gun)
+                return gun.GunData.GunStat.Type == WeaponType.Pistol ? SlotType.Pistol : SlotType.Main;
+            if (weapon is GrenadeLauncher)
+                return SlotType.GrenadeLauncher;
+            if (weapon is Crossbow)
+                return SlotType.Crossbow;
+            return SlotType.Main;
+        }
     }
 }
