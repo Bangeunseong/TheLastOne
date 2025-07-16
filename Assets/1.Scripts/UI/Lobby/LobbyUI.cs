@@ -35,7 +35,7 @@ namespace _1.Scripts.UI.Lobby
         
         private void OnLoadButtonClicked()
         {
-            CoreManager.Instance.StartGame();
+            CoreManager.Instance.ReloadGame();
         }
 
         private void OnQuitButtonClicked()
