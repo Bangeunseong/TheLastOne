@@ -86,11 +86,6 @@ namespace _1.Scripts.UI.InGame
             if (!InventoryUI) InventoryUI = GetComponentInChildren<InventoryUI>(true);
         }
 
-        private void Start()
-        {
-
-        }
-
         public override void Init(UIManager manager)
         {
             base.Init(manager);
@@ -138,6 +133,7 @@ namespace _1.Scripts.UI.InGame
 
         void Update()
         {
+            if (!gameObject.activeInHierarchy) return;
             if (playerCondition) { UpdateStateUI(); }
         }
 

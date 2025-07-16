@@ -34,7 +34,6 @@ namespace _1.Scripts.Quests.Core
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
         {
-            if (info.completionList.All(val => val)) { isCompleted = true; return; }
             currentObjectiveIndex = index;
             for (var i = 0; i < Objectives.Count; i++)
             {
@@ -50,6 +49,8 @@ namespace _1.Scripts.Quests.Core
                     Objectives[i].Deactivate();
                 } else Objectives[i].Activate();
             }
+            
+            if (info.completionList.All(val => val)) { isCompleted = true; return; }
             CurrentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
             CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
