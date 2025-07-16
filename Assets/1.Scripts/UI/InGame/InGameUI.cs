@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.InGame.Mission;
@@ -87,8 +88,7 @@ namespace _1.Scripts.UI.InGame
 
         private void Start()
         {
-            exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
-            loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
+
         }
 
         public override void Init(UIManager manager)
@@ -139,6 +139,34 @@ namespace _1.Scripts.UI.InGame
         void Update()
         {
             if (playerCondition) { UpdateStateUI(); }
+        }
+
+        public void ResetUI()
+        {
+            playerCondition = null;
+            
+            WeaponUI?.ResetUI();
+            InventoryUI?.ResetUI();
+            MissionUI?.ResetUI();
+            DistanceUI?.ResetUI();
+            QuickSlotUI?.ResetUI();
+            
+            exitGameButton.onClick.RemoveAllListeners();
+            loadGameButton.onClick.RemoveAllListeners();
+        }
+
+        public void InitializeUI(PlayerCondition newPlayerCondition, PlayerInventory newInventory, Transform playerTransform, Transform targetTransform)
+        {
+            playerCondition = newPlayerCondition;
+            
+            InventoryUI?.Initialize(newPlayerCondition);
+            WeaponUI?.Inititalize(newPlayerCondition);
+            //MissionUI?.Initialize();
+            DistanceUI?.Initialize(playerTransform, targetTransform);
+            QuickSlotUI?.Initialize(newInventory);
+            QuestTargetBinder.Instance.SetCurrentTarget(CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective.data.targetID);
+            exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
+            loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
         }
 
         private void UpdateStateUI()

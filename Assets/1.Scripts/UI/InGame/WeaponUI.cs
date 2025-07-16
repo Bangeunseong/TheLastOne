@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Util;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,16 +51,17 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float panelHideDelay = 3f;
         private Coroutine hideCoroutine;
 
-        private int lastSelectedIndex = -1;
+        private PlayerCondition  playerCondition;
         
-        private void Start()
+        private int lastSelectedIndex = -1;
+
+        private void Awake()
         {
-            int n = slotTransform.Length;
-            targetScales = new Vector3[n];
+            if (slotType != null) targetScales = new Vector3[slotType.Length];
             
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < slotType.Length; i++)
             {
-                slotTransform[i].localScale = normalScale;
+                if (slotTransform[i] != null) slotTransform[i].localScale = normalScale;
                 targetScales[i] = normalScale;
 
                 if (selectedSlotImage != null && i < selectedSlotImage.Length && selectedSlotImage[i] != null)
@@ -68,15 +70,12 @@ namespace _1.Scripts.UI.InGame
                     color.a = idleAlpha;
                     selectedSlotImage[i].color = color;
                 }
-                
-                if (slotAnimator != null && i < slotAnimator.Length && slotAnimator[i] != null)
-                {
-                    slotAnimator[i].enabled = false;
-                }
+                if (slotAnimator != null && i < slotAnimator.Length && slotAnimator[i] != null) slotAnimator[i].enabled = false;
             }
-            
-            if (panelAnimator != null)
-                panelAnimator.Play("Hidden", 0, 1f);
+        }
+        private void Start()
+        {
+            if (panelAnimator != null) panelAnimator.Play("Hidden", 0, 1f);
         }
         
         private void Update()
@@ -98,10 +97,37 @@ namespace _1.Scripts.UI.InGame
                 LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
             }
         }
+
+        public void ResetUI()
+        {
+            playerCondition = null;
+            lastSelectedIndex = -1;
+            ammoUI = null;
+        }
+
+        public void Inititalize(PlayerCondition newPlayerCondition)
+        {
+            if (ammoUI == null) ammoUI = GetComponentInChildren<AmmoUI>(true);
+            playerCondition = newPlayerCondition;
+            Refresh(playerCondition?.Weapons ?? new List<BaseWeapon>(),
+                playerCondition?.AvailableWeapons ?? new List<bool>(),
+                playerCondition?.EquippedWeaponIndex ?? -1);
+        }
         
         
         public void Refresh(List<BaseWeapon> weapons, List<bool> available, int selectedIndex)
-        {
+        { 
+            if (targetScales == null || slotType == null || slotTransform == null)
+            {
+                Debug.LogError("WeaponUI: 필드 미할당 (targetScales/slotType/slotTransform)");
+                return;
+            }
+            if (slotType.Length != slotTransform.Length || slotType.Length != targetScales.Length)
+            {
+                Debug.LogError($"WeaponUI: 배열 길이 불일치 - slotType:{slotType.Length}, slotTransform:{slotTransform.Length}, targetScales:{targetScales.Length}");
+                return;
+            }
+            
             BaseWeapon selectedWeapon = (selectedIndex >= 0 && selectedIndex < weapons.Count && available[selectedIndex]) ? weapons[selectedIndex] : null;
             int currentSlot = -1;
             
@@ -153,8 +179,7 @@ namespace _1.Scripts.UI.InGame
             {
                 magVal = SlotUtility.GetWeaponAmmo(sel).mag;
             }
-            ammoUI.UpdateAmmoUI(magVal);
-            
+            if (ammoUI != null && ammoUI.gameObject != null) ammoUI.UpdateAmmoUI(magVal);
             if (selectionChanged)
             {
                 if (currentSlot >= 0 && currentSlot < slotAnimator.Length && slotAnimator[currentSlot] != null)
