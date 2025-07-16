@@ -3,6 +3,7 @@ using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.Util;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using TMPro;
@@ -18,6 +19,12 @@ namespace _1.Scripts.UI.Inventory
         
         [Header("Slot Buttons")]
         public List<Button> slotButtons;
+        
+        [Header("Preview Image")]
+        [SerializeField] private List<GameObject> weaponPrefabs;
+        [SerializeField] private Transform previewSpawnPoint;
+        private Dictionary<SlotType, GameObject> previewPrefabs;
+        private GameObject currentPreviewWeapon;
 
         [Header("StatsUI")] public Slider damageSlider;
         public Slider rpmSlider;
@@ -43,10 +50,15 @@ namespace _1.Scripts.UI.Inventory
         private float maxWeight = 1f;
         private int maxAmmo;
         
-        public static InventoryUI Instance { get; private set; }
         private void Awake()
         {
-            Instance = this;
+            previewPrefabs = new Dictionary<SlotType, GameObject>();
+
+            foreach (var prefab in weaponPrefabs)
+            {
+                var info = prefab.GetComponent<PreviewWeaponHandler>();
+                if (info) previewPrefabs[info.slotType] = prefab;
+            }
         }
         
         private void Start()
@@ -85,7 +97,7 @@ namespace _1.Scripts.UI.Inventory
             if (playerCondition == null) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
-
+            
             for (int i = 0; i < slotType.Length && i < slotButtons.Count; i++)
             {
                 var slotWeapon = weapons.Where((w, idx) => available[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
@@ -116,7 +128,11 @@ namespace _1.Scripts.UI.Inventory
         }
         public void ShowWeapon(int index)
         {
-            InitializeSlots();
+            if (!previewSpawnPoint)
+            {
+                var found = GameObject.Find("PreviewSpawnPoint");
+                if (found) previewSpawnPoint = found.transform;
+            }
             if (playerCondition == null) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
@@ -124,17 +140,24 @@ namespace _1.Scripts.UI.Inventory
 
             var weapon = weapons[index];
             if (weapon == null) return;
-            
-            int mag = 0;
-            float rpm = 0, recoil = 0, weight = 0;
-            int damage = 0;
 
             var stat = SlotUtility.GetWeaponStat(weapon);
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);
 
             if (titleText != null) titleText.text = SlotUtility.GetWeaponName(weapon);
             if (descriptionText != null) descriptionText.text = titleText.text + " needs Description";
+            
+            if (currentPreviewWeapon != null)
+                Destroy(currentPreviewWeapon);
+
+            var slot = SlotUtility.GetSlotTypeFromWeapon(weapon);
+            if (previewPrefabs.TryGetValue(slot, out var prefab))
+                currentPreviewWeapon = Instantiate(prefab, previewSpawnPoint.position, previewSpawnPoint.rotation);
+            else
+                currentPreviewWeapon = null;
         }
+
+
         
         public void RefreshInventoryUI()
         {
@@ -155,6 +178,6 @@ namespace _1.Scripts.UI.Inventory
             if (recoilText != null) recoilText.text = Mathf.RoundToInt(recoil).ToString();
             if (ammoText != null) ammoText.text = ammoCount.ToString();
             if (weightText != null) weightText.text = weight.ToString("F1");
-        }        
+        }
     }
 }

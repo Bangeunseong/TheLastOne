@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -57,6 +58,9 @@ namespace _1.Scripts.UI.InGame
         [field: Header("Distance UI")]
         [field: SerializeField] public DistanceUI DistanceUI { get; private set; }
         
+        [field: Header("Inventory UI")]
+        [field: SerializeField] public InventoryUI InventoryUI { get; private set; }
+        
         [Header("ItemUseUI")]
         [SerializeField] private Image progressFillImage;
         [SerializeField] private TextMeshProUGUI messageText;
@@ -72,6 +76,7 @@ namespace _1.Scripts.UI.InGame
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
             if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
             if (!DistanceUI) DistanceUI = GetComponentInChildren<DistanceUI>(true);
+            if (!InventoryUI) InventoryUI = GetComponentInChildren<InventoryUI>(true);
         }
 
         private void Start()
