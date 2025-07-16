@@ -16,8 +16,6 @@ namespace _1.Scripts.UI.InGame
 
         private void Start()
         {
-            poolManager = CoreManager.Instance.objectPoolManager;
-            poolManager.CreatePool(ammoPrefab, maxAmmo, maxAmmo);
             UpdateAmmoUI(maxAmmo);
         }
 
@@ -27,18 +25,18 @@ namespace _1.Scripts.UI.InGame
 
             while (ammoIcons.Count < currentAmmo)
             {
-                GameObject ammoIcon = poolManager.Get(ammoPrefab.name);
+                GameObject ammoIcon = CoreManager.Instance.objectPoolManager.Get(ammoPrefab.name);
                 ammoIcon.transform.SetParent(ammoContainer, false);
                 ammoIcons.Add(ammoIcon);
-                // Service.Log($"Create Ammo Icon : {ammoIcons.Count}");
+                Service.Log($"Create Ammo Icon : {ammoIcons.Count}");
             }
 
             while (ammoIcons.Count > currentAmmo)
             {
                 GameObject ammoIcon = ammoIcons[ammoIcons.Count - 1];
                 ammoIcons.RemoveAt(ammoIcons.Count - 1);
-                poolManager.Release(ammoIcon);
-                // Service.Log($"Release Ammo Icon : {ammoIcons.Count}");
+                CoreManager.Instance.objectPoolManager.Release(ammoIcon);
+                Service.Log($"Release Ammo Icon : {ammoIcons.Count}");
             }
         }
     }

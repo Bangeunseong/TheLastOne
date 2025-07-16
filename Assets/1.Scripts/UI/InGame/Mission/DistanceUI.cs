@@ -17,26 +17,10 @@ namespace _1.Scripts.UI.InGame.Mission
         
         public static Transform CurrentTarget { get; private set; }
         public static event Action<Transform> OnTargetChanged;
-
-        private void Start()
-        {
-            if (player == null)
-            {
-                var go = GameObject.FindWithTag("Player");
-                if (go != null) player = go.transform;
-            }
-
-            if (distanceText == null) distanceText = GetComponent<TextMeshProUGUI>();
-            
-
-            CurrentTarget = target; 
-            OnTargetChanged?.Invoke(target);
-            
-        }
         
         private void Update()
         {
-            if (player == null || target == null || distanceText == null) return;
+            if (!player || !target || !distanceText) return;
 
             if (Time.time >= nextUpdateTime)
             {
@@ -57,6 +41,7 @@ namespace _1.Scripts.UI.InGame.Mission
         public void Initialize(Transform playerTransform, Transform targetTransform)
         {
             player = playerTransform;
+            distanceText = GetComponentInChildren<TextMeshProUGUI>();
             SetTarget(targetTransform);
         }
 

@@ -18,8 +18,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerCondition playerCondition;
         protected readonly CoreManager coreManager;
         
-        protected CancellationTokenSource crouchCTS;
-        
         private float speed;
         private float smoothVelocity = 5f;
         private Vector3 recoilEuler;
