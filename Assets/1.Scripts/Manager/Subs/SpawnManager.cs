@@ -40,6 +40,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void SpawnEnemyBySpawnData(int index)
         {
+            if (CurrentSpawnData == null) return;
             if (CurrentSpawnData.EnemySpawnPoints.TryGetValue(index, out var spawnPoints))
             {
                 foreach (var pair in spawnPoints)
@@ -132,7 +133,20 @@ namespace _1.Scripts.Manager.Subs
 
         public void ClearAllSpawnedEnemies()
         {
-            spawnedEnemies.Clear();
+            spawnedEnemies.Clear(); 
+        }
+
+        public void ClearAllProps()
+        {
+            spawnedWeapons.Clear();
+            spawnedItems.Clear();
+        }
+
+        public void Reset()
+        {
+            ClearAllSpawnedEnemies();
+            ClearAllProps();
+            CurrentSpawnData = null;
         }
     }
 }
