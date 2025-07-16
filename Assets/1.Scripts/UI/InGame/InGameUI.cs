@@ -159,8 +159,8 @@ namespace _1.Scripts.UI.InGame
         {
             playerCondition = newPlayerCondition;
             
-            InventoryUI?.Initialize(newPlayerCondition);
             WeaponUI?.Inititalize(newPlayerCondition);
+            InventoryUI?.Initialize(newPlayerCondition);
             //MissionUI?.Initialize();
             DistanceUI?.Initialize(playerTransform, targetTransform);
             QuickSlotUI?.Initialize(newInventory);
@@ -289,6 +289,7 @@ namespace _1.Scripts.UI.InGame
            int idx = playerCondition.EquippedWeaponIndex;
            
            WeaponUI.Refresh(weapons, available, idx);
+           InventoryUI.RefreshInventoryUI();
         }
 
         private IEnumerator FocusEffectCoroutine()
