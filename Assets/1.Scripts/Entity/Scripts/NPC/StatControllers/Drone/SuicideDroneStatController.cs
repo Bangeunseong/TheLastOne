@@ -1,3 +1,4 @@
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
@@ -8,6 +9,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
     public class SuicideDroneStatController : BaseDroneStatController
     {
         private RuntimeSuicideDroneStatData runtimeSuicideDroneStatData;
+        
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.SetTrigger(DroneAnimationHashData.Repair);
+            runtimeSuicideDroneStatData.ResetStats();
+        }
         
         protected override void Awake()
         {
