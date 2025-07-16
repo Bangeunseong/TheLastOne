@@ -174,6 +174,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+            
         }
 
         public void UpdateLastSavedTransform()
@@ -802,7 +803,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             itemCTS = new CancellationTokenSource();
             _ = Item_Async(usedItem.ItemData, itemCTS.Token);
         }
-
         private void CancelItemUsage()
         {
             var inGameUI = coreManager.uiManager.InGameUI;

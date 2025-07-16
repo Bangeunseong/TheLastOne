@@ -82,7 +82,6 @@ namespace _1.Scripts.Manager.Core
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
-            timeScaleManager.Update();
             questManager.Update();
         }
 
@@ -93,6 +92,12 @@ namespace _1.Scripts.Manager.Core
         public void SaveData_QueuedAsync()
         {
             saveTask = saveTask.ContinueWith(_ => gameManager.TrySaveData()).Unwrap();
+        }
+
+        public async Task LoadScene(SceneType sceneType)
+        {
+            while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
+            await sceneLoadManager.OpenScene(sceneType);
         }
 
         /// <summary>
@@ -116,9 +121,18 @@ namespace _1.Scripts.Manager.Core
         }
 
         /// <summary>
-        /// Start Game with the latest saved data
+        /// Start Game with new game data
         /// </summary>
         public void StartGame()
+        {
+            gameManager.TryRemoveSavedData();
+            _ = LoadScene(SceneType.Stage1);
+        }
+
+        /// <summary>
+        /// Reload Game with the latest saved data
+        /// </summary>
+        public void ReloadGame()
         {
             _ = LoadDataAndScene();
         }
@@ -128,17 +142,7 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void MoveToIntroScene() 
         {
-            _ = sceneLoadManager.OpenScene(SceneType.IntroScene);
-        }
-
-        /// <summary>
-        /// Save data and move to the next scene
-        /// </summary>
-        /// <param name="nextScene"></param>
-        public void MoveToNextGameScene(SceneType nextScene)
-        {
-            SaveData_QueuedAsync();
-            _ = LoadDataAndScene();
+            _ = LoadScene(SceneType.IntroScene);
         }
     }
 }

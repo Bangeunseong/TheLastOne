@@ -72,9 +72,10 @@ namespace _1.Scripts.Map.Console
             }
             else
             {
-                coreManager.uiManager.HideInGameUI();
+
+                CutScene.played += coreManager.uiManager.OnCutsceneStarted;
+                CutScene.stopped += coreManager.uiManager.OnCutsceneStopped;
                 CutScene.Play();
-                coreManager.uiManager.ShowInGameUI();
             }
             GameEventSystem.Instance.RaiseEvent(Id);
 

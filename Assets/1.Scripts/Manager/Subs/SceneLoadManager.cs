@@ -144,7 +144,7 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene:
+                case SceneType.IntroScene: 
                     uiManager.ChangeState(CurrentState.Lobby);
                     break;
                 case SceneType.Loading:

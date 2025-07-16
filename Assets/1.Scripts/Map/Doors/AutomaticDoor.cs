@@ -79,14 +79,8 @@ namespace _1.Scripts.Map.Doors
             Vector3 upperDoorPosition = UpperDoor.localPosition;
             Vector3 lowerDoorPosition = LowerDoor.localPosition;
             
-            if (isOpen)
-            {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index: 0); // 열리는 소리
-            }
-            else
-            {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index: 1); // 닫히는 소리
-            }
+            // 열리는 소리
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Door, transform.position, index: isOpen ? 0 : 1); // 닫히는 소리
             
             while (time < Duration)
             {
