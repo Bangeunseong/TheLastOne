@@ -23,6 +23,14 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
         }
+
+        public void OnDestroy()
+        {
+            foreach (var handles in handlesByLabel.Values)
+            { 
+                foreach (var handle in handles) Addressables.Release(handle);
+            }
+        }
         
         /// <summary>
         /// 씬 라벨을 기준으로 필요한 리소스들 전부 불러옴

@@ -11,24 +11,14 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public float CurrentTimeScale { get; private set; } = 1f;
         [field: SerializeField] public float TargetTimeScale { get; private set; } = 1f;
         
-        private Coroutine timeScaleCoroutine;
-        private CoreManager coreManager;
-        
         public void Start()
         {
-            coreManager = CoreManager.Instance;
             CurrentTimeScale = Time.timeScale;
             OriginalFixedDeltaTime = Time.fixedDeltaTime;
         }
 
         public void Reset()
         {
-            if (timeScaleCoroutine != null) 
-            {
-                coreManager.StopCoroutine(timeScaleCoroutine);
-                timeScaleCoroutine = null;
-            }
-            
             Time.timeScale = 1f;
             Time.fixedDeltaTime = OriginalFixedDeltaTime;
             CurrentTimeScale = 1f;

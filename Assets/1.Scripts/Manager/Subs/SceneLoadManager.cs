@@ -53,6 +53,7 @@ namespace _1.Scripts.Manager.Subs
             IsLoading = true;
             PreviousScene = CurrentScene;
             
+            coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
             if (PreviousScene != sceneName)
@@ -85,9 +86,6 @@ namespace _1.Scripts.Manager.Subs
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
-                coreManager.soundManager.StopBGM();
-                coreManager.soundManager.CacheSoundGroup();
-                await coreManager.soundManager.LoadClips();
                 await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
             }
             else
@@ -98,6 +96,8 @@ namespace _1.Scripts.Manager.Subs
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            coreManager.soundManager.CacheSoundGroup();
+            await coreManager.soundManager.LoadClips();
             await LoadSceneWithProgress(CurrentScene);
         }
         
