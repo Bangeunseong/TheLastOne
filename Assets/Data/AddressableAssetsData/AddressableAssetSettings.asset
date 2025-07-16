@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ef93f16b5ec1ef54395c6bc3705e6741
   m_currentHash:
     serializedVersion: 2
-    Hash: 1840806a53beab6b7aae7e0e5c675e12
+    Hash: 80e97fde9d3abf32512301794ecb3c28
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -89,6 +89,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - IntroScene
     - Common
     - Stage1
     - Stage2

@@ -113,6 +113,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
+            // Player Condition 내부 Param이 선언된 이후 Segments 생성
+            coreManager.uiManager.InGameUI.Initialize_HealthSegments();
+            
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
         }
@@ -134,11 +137,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void LateUpdate()
         {
             StateMachine.LateUpdate();
-        }
-
-        private void OnDestroy()
-        {
-            StopAllCoroutines();
         }
 
         /// <summary>

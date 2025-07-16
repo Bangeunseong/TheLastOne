@@ -52,8 +52,14 @@ namespace _1.Scripts.UI.InGame.Mission
                 cts = null;
             }
         }
-        
-        
+
+        private void OnDestroy()
+        {
+            cts?.Cancel();
+            cts?.Dispose();
+            cts = null;
+        }
+
         private void OnTargetChanged(Transform newTarget)
         {
             target = newTarget;
@@ -82,7 +88,7 @@ namespace _1.Scripts.UI.InGame.Mission
                 if (corners.Length > 1)
                     AnimateMarkerAlongPath(corners, token).Forget();
 
-                await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
+                await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token, cancelImmediately: true);
             }
         }
 
@@ -111,14 +117,14 @@ namespace _1.Scripts.UI.InGame.Mission
 
             for (int i = 1; i < corners.Length; i++)
             {
-                while (Vector3.Distance(marker.transform.position, corners[i]) > 0.05f)
+                while (marker && Vector3.Distance(marker.transform.position, corners[i]) > 0.05f)
                 {
                     marker.transform.position = Vector3.MoveTowards(
                         marker.transform.position,
                         corners[i],
                         markerSpeed * Time.deltaTime
                     );
-                    await UniTask.NextFrame(token);
+                    await UniTask.NextFrame(token, cancelImmediately: true);
                 }
             }
             if (marker != null) Destroy(marker);

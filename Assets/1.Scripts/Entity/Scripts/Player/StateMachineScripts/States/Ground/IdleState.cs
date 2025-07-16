@@ -15,17 +15,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             stateMachine.MovementSpeedModifier = 0f;
             base.Enter();
             
-            if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
-            staminaCTS = new CancellationTokenSource();
-            _ = RecoverStamina_Async(playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval,
-                playerCondition.StatData.interval, staminaCTS.Token);
+            playerCondition.OnRecoverStamina(
+                playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval, 
+                playerCondition.StatData.interval);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            staminaCTS?.Cancel(); staminaCTS?.Dispose(); staminaCTS = null;
+            playerCondition.CancelStaminaTask();
         }
         
         public override void Update()

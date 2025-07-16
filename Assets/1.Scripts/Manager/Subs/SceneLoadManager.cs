@@ -124,6 +124,7 @@ namespace _1.Scripts.Manager.Subs
             uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
+            isKeyPressed = false;
             
             sceneLoad!.allowSceneActivation = true;
             while (sceneLoad is { isDone: false }) 
@@ -144,16 +145,9 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene: 
-                    uiManager.ChangeState(CurrentState.Lobby);
-                    break;
-                case SceneType.Loading:
-                    break;
-                case SceneType.Stage1:
-                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
-                case SceneType.EndingScene:
-                    break;
-                default: throw new ArgumentOutOfRangeException();
+                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby); break;
+                case SceneType.Loading: break;
+                case SceneType.EndingScene: break;
             }
 
             if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
@@ -166,6 +160,12 @@ namespace _1.Scripts.Manager.Subs
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
             player.PlayerCondition.IsPlayerHasControl = true;
+
+            switch (CurrentScene)
+            {
+                case SceneType.Stage1:
+                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
+            }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);

@@ -23,13 +23,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         
         protected override void OnCrouchStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsCrouching)
-            {
-                playerCondition.IsCrouching = false;
-                if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
-                crouchCTS = new CancellationTokenSource();
-                _ = Crouch_Async(playerCondition.IsCrouching, 0.1f, crouchCTS.Token); 
-            }
+            playerCondition.OnCrouch(false, 0.1f);
             base.OnCrouchStarted(context);
             stateMachine.ChangeState(stateMachine.WalkState);
         }

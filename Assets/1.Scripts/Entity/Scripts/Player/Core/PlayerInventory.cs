@@ -88,17 +88,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             return Items[itemType].OnRefill();
         }
         
-        private void OnUseItem()
+        private bool OnUseItem()
         {
             Service.Log($"Attempting to use {CurrentItem}.");
             switch (Items[CurrentItem])
             {
-                case Medkit medkit: medkit.OnUse(gameObject); break;
-                case NanoAmple nanoAmple: nanoAmple.OnUse(gameObject); break;
-                case EnergyBar energyBar: energyBar.OnUse(gameObject); break;
-                case Shield shield: shield.OnUse(gameObject); break;
+                case Medkit medkit: return medkit.OnUse(gameObject);
+                case NanoAmple nanoAmple: return nanoAmple.OnUse(gameObject);
+                case EnergyBar energyBar: return energyBar.OnUse(gameObject);
+                case Shield shield: return shield.OnUse(gameObject);
                 default: throw new ArgumentOutOfRangeException();
             }
+            return false;
         }
     }
 }
