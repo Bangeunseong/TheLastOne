@@ -54,7 +54,7 @@ namespace _1.Scripts.Manager.Subs
                 Debug.Log($"퀘스트ID: {q.Key} / {q.Value.data.questID}");
         }
 
-        public void ResetQuests()
+        public void Reset()
         {
             activeQuests.Clear();
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -85,6 +86,11 @@ namespace _1.Scripts.Manager.Core
             questManager.Update();
         }
 
+        private void OnDestroy()
+        {
+            resourceManager.OnDestroy();
+        }
+
         /// <summary>
         /// Save User Data
         /// </summary>
@@ -134,7 +140,9 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void ReloadGame()
         {
-            questManager.ResetQuests();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
@@ -144,7 +152,9 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void MoveToIntroScene()
         {
-            questManager.ResetQuests();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
             gameManager.ExitGame();
             _ = LoadScene(SceneType.IntroScene);
         }
