@@ -128,11 +128,6 @@ namespace _1.Scripts.UI.Inventory
         }
         public void ShowWeapon(int index)
         {
-            if (!previewSpawnPoint)
-            {
-                var found = GameObject.Find("PreviewSpawnPoint");
-                if (found) previewSpawnPoint = found.transform;
-            }
             if (playerCondition == null) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
