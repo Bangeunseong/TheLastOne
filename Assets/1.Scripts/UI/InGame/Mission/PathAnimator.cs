@@ -33,9 +33,18 @@ namespace _1.Scripts.UI.InGame.Mission
             }
 
             target = DistanceUI.CurrentTarget;
+
+            if (pathFinder == null) Debug.LogError("PathAnimator: NavigationPathFinder not found");
+            if (markerPrefab == null) Debug.LogError("PathAnimator: markerPrefab not found");
         }
         void OnEnable()
-        {
+        {           
+            pathFinder = GetComponent<NavigationPathFinder>();
+            if (player == null)
+            {
+                var go = GameObject.FindWithTag("Player");
+                if (go != null) player = go.transform;
+            }
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
             OnTargetChanged(DistanceUI.CurrentTarget);

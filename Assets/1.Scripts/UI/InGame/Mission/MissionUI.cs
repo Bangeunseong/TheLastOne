@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Mission
@@ -9,10 +10,27 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] private Transform slotContainer;
         [SerializeField] private GameObject slotPrefabGO;
         
-
         private List<MissionSlot> slotList = new List<MissionSlot>();
         private Dictionary<int, MissionSlot> slotMap = new Dictionary<int, MissionSlot>();
 
+        public void ResetUI()
+        {
+            foreach (var slot in slotList)
+                Destroy(slot.gameObject);
+            slotList.Clear();
+            slotMap.Clear();
+        }
+
+        public void Initialize()
+        {
+            var questManager = CoreManager.Instance.questManager;
+            foreach (var kv in questManager.activeQuests)
+            {
+                var quest = kv.Value;
+                AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
+            }
+        }
+        
         public void AddMission(int questID, string missionText, int currentAmount, int requiredAmount)
         {
             if (slotMap.ContainsKey(questID)) return;
@@ -62,7 +80,7 @@ namespace _1.Scripts.UI.InGame.Mission
             slot.PlayCompleteAnimation();
             yield return new WaitForSeconds(0.5f);
             slotList.Remove(slot);
-            Destroy(slot.gameObject);
+            Destroy(slot.gameObject, 1f);
             SortSlots();
         }
 

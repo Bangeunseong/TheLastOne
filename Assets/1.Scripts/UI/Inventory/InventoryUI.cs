@@ -60,12 +60,32 @@ namespace _1.Scripts.UI.Inventory
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
         }
-        
-        private void Start()
+
+
+        public void ResetUI()
         {
-            playerCondition = FindObjectOfType<PlayerCondition>();
+            playerCondition = null;
+
+            foreach (var button in slotButtons)
+            {
+                button.gameObject.SetActive(false);
+                button.onClick.RemoveAllListeners();
+            }
+            titleText.text = "";
+            descriptionText.text = "";
+            if (currentPreviewWeapon != null)
+            {
+                Destroy(currentPreviewWeapon);
+                currentPreviewWeapon = null;
+            }
+        }
+
+        public void Initialize(PlayerCondition newPlayerCondition)
+        {
+            playerCondition = newPlayerCondition;
             CalculateMaxStats();
             InitializeSlots();
+            RefreshInventoryUI();
         }
         
         private void CalculateMaxStats()

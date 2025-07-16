@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame.Mission;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -171,6 +173,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+            uiManager.InGameUI?.InitializeUI(player.PlayerCondition,player.PlayerInventory,player.transform, null);
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
