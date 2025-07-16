@@ -26,8 +26,6 @@ namespace _1.Scripts.Manager.Subs
     {
         [field: Header("UI Components")]
         [field: SerializeField] public SerializedDictionary<CurrentState, List<UIBase>> LoadedUI { get; private set; } = new();
-        private Dictionary<string, UIPopup> loadedPopup = new();
-        private Stack<UIPopup> popupStack = new();
         
         [field: Header("InGameUI")]
         [field: SerializeField] public InGameUI InGameUI { get; private set; }
@@ -36,7 +34,6 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public MinigameUI MinigameUI { get; private set; }
 
         private Transform uiRoot;
-        private Transform popupRoot;
         private CurrentState currentState = CurrentState.None;
 
         private LobbyUI lobbyUI;
@@ -59,11 +56,8 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
             
-            var mainCanvas = GameObject.Find("MainCanvas");
+            var mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas");
             if (mainCanvas) { uiRoot = mainCanvas.transform; }
-            
-            var popupCanvas = GameObject.Find("PopupCanvas");
-            if (popupCanvas) { popupRoot = popupCanvas.transform; }
             
             lobbyUI = GameObject.Find("LobbyUI")?.GetComponent<LobbyUI>();
             loadingUI = GameObject.Find("LoadingUI")?.GetComponent<LoadingUI>();
@@ -141,43 +135,6 @@ namespace _1.Scripts.Manager.Subs
             LoadedUI[state] = new List<UIBase> { component };
             return component;
         }
-        
-        public T ShowPopup<T>(string address) where T : UIPopup
-        {
-            if (loadedPopup.TryGetValue(address, out UIPopup cachedPopup))
-            {
-                cachedPopup.transform.SetParent(popupRoot, false);
-                cachedPopup.transform.SetAsLastSibling();
-                cachedPopup.SetActive(true);
-                popupStack.Push(cachedPopup);
-                return cachedPopup as T;
-            }
-
-            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(address);
-            if (prefab != null && popupRoot != null)
-            {
-                var instance = Object.Instantiate(prefab, popupRoot, false);
-                var component = instance.GetComponent<T>();
-                if (component != null)
-                {
-                    component.Init(this);
-                    loadedPopup[address] = component;
-                    popupStack.Push(component);
-                    component.SetActive(true);
-                    return component;
-                }
-            }
-            return null;
-        }
-        
-        public void ClosePopup()
-        {
-            if (popupStack.Count > 0)
-            {
-                popupStack.Pop().SetActive(false);
-            }
-        }
-
         public MinigameUI ShowMinigameUI()
         {
             var ui = LoadUI<MinigameUI>(CurrentState.InGame, MINIGAME_UI_ADDRESS);
