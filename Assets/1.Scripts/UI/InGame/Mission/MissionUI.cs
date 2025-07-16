@@ -62,7 +62,7 @@ namespace _1.Scripts.UI.InGame.Mission
             slot.PlayCompleteAnimation();
             yield return new WaitForSeconds(0.5f);
             slotList.Remove(slot);
-            Destroy(slot.gameObject);
+            Destroy(slot.gameObject, 1f);
             SortSlots();
         }
 

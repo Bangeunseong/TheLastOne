@@ -7,6 +7,7 @@ using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 
@@ -46,9 +47,9 @@ namespace _1.Scripts.UI.InGame
         [Header("크로스 헤어")] 
         [SerializeField] private Image crosshairImage;
 
-        [Header("무기 정보")] 
-        [SerializeField] private WeaponUI weaponUI;
-        
+        [field: Header("무기 정보")]
+        [field: SerializeField] public WeaponUI WeaponUI { get; private set; }
+
         [field: Header("퀵 슬롯 UI")]
         [field: SerializeField] public QuickSlotUI QuickSlotUI { get; private set; }
         
@@ -77,6 +78,7 @@ namespace _1.Scripts.UI.InGame
         {
             if (progressFillImage != null)
                 progressFillImage.enabled = false;
+            if (!WeaponUI) WeaponUI = GetComponentInChildren<WeaponUI>(true);
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
             if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
             if (!DistanceUI) DistanceUI = GetComponentInChildren<DistanceUI>(true);
@@ -259,7 +261,7 @@ namespace _1.Scripts.UI.InGame
            var available = playerCondition.AvailableWeapons;
            int idx = playerCondition.EquippedWeaponIndex;
            
-           weaponUI.Refresh(weapons, available, idx);
+           WeaponUI.Refresh(weapons, available, idx);
         }
 
         private IEnumerator FocusEffectCoroutine()
