@@ -44,7 +44,8 @@ namespace _1.Scripts.UI.InGame.Mission
         public void UpdateProgress(int currentAmount, int requiredAmount)
         {
             missionCountText.text = $"{currentAmount} / {requiredAmount}";
-            missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, currentAmount / (float) requiredAmount, 0.1f);
+            if (currentAmount >= requiredAmount) missionCountSlider.value = 1;
+            else missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, currentAmount / (float) requiredAmount, 0.1f);
         }
     }
 }

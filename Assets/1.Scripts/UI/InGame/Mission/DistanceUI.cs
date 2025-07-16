@@ -47,6 +47,19 @@ namespace _1.Scripts.UI.InGame.Mission
             }
         }
 
+        public void ResetUI()
+        {
+            player = null;
+            target = null;
+            distanceText = null;
+        }
+
+        public void Initialize(Transform playerTransform, Transform targetTransform)
+        {
+            player = playerTransform;
+            SetTarget(targetTransform);
+        }
+
         public void SetTarget(Transform newTarget)
         {
             this.target = newTarget;

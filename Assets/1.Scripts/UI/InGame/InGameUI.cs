@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.InGame.Mission;
@@ -7,6 +8,7 @@ using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 
@@ -46,9 +48,9 @@ namespace _1.Scripts.UI.InGame
         [Header("크로스 헤어")] 
         [SerializeField] private Image crosshairImage;
 
-        [Header("무기 정보")] 
-        [SerializeField] private WeaponUI weaponUI;
-        
+        [field: Header("무기 정보")]
+        [field: SerializeField] public WeaponUI WeaponUI { get; private set; }
+
         [field: Header("퀵 슬롯 UI")]
         [field: SerializeField] public QuickSlotUI QuickSlotUI { get; private set; }
         
@@ -77,6 +79,7 @@ namespace _1.Scripts.UI.InGame
         {
             if (progressFillImage != null)
                 progressFillImage.enabled = false;
+            if (!WeaponUI) WeaponUI = GetComponentInChildren<WeaponUI>(true);
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
             if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
             if (!DistanceUI) DistanceUI = GetComponentInChildren<DistanceUI>(true);
@@ -85,8 +88,7 @@ namespace _1.Scripts.UI.InGame
 
         private void Start()
         {
-            exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
-            loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
+
         }
 
         public override void Init(UIManager manager)
@@ -137,6 +139,34 @@ namespace _1.Scripts.UI.InGame
         void Update()
         {
             if (playerCondition) { UpdateStateUI(); }
+        }
+
+        public void ResetUI()
+        {
+            playerCondition = null;
+            
+            WeaponUI?.ResetUI();
+            InventoryUI?.ResetUI();
+            MissionUI?.ResetUI();
+            DistanceUI?.ResetUI();
+            QuickSlotUI?.ResetUI();
+            
+            exitGameButton.onClick.RemoveAllListeners();
+            loadGameButton.onClick.RemoveAllListeners();
+        }
+
+        public void InitializeUI(PlayerCondition newPlayerCondition, PlayerInventory newInventory, Transform playerTransform, Transform targetTransform)
+        {
+            playerCondition = newPlayerCondition;
+            
+            WeaponUI?.Inititalize(newPlayerCondition);
+            InventoryUI?.Initialize(newPlayerCondition);
+            //MissionUI?.Initialize();
+            DistanceUI?.Initialize(playerTransform, targetTransform);
+            QuickSlotUI?.Initialize(newInventory);
+            QuestTargetBinder.Instance.SetCurrentTarget(CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective.data.targetID);
+            exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
+            loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
         }
 
         private void UpdateStateUI()
@@ -258,7 +288,8 @@ namespace _1.Scripts.UI.InGame
            var available = playerCondition.AvailableWeapons;
            int idx = playerCondition.EquippedWeaponIndex;
            
-           weaponUI.Refresh(weapons, available, idx);
+           WeaponUI.Refresh(weapons, available, idx);
+           InventoryUI.RefreshInventoryUI();
         }
 
         private IEnumerator FocusEffectCoroutine()
