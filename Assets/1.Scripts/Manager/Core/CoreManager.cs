@@ -134,7 +134,8 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void ReloadGame()
         {
-            gameManager.ResumeGame();
+            questManager.ResetQuests();
+            gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
         
@@ -143,7 +144,7 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void MoveToIntroScene()
         {
-            
+            questManager.ResetQuests();
             gameManager.ExitGame();
             _ = LoadScene(SceneType.IntroScene);
         }

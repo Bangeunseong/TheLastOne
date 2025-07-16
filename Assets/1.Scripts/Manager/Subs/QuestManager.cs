@@ -53,6 +53,11 @@ namespace _1.Scripts.Manager.Subs
             foreach(var q in activeQuests)
                 Debug.Log($"퀘스트ID: {q.Key} / {q.Value.data.questID}");
         }
+
+        public void ResetQuests()
+        {
+            activeQuests.Clear();
+        }
         
         public void Update()
         {
