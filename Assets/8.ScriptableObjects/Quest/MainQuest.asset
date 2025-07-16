@@ -24,6 +24,10 @@ MonoBehaviour:
     description: Collect Items on the Table
     type: 2
     requiredAmount: 4
+  - targetID: 6
+    description: Hack Single Drone
+    type: 3
+    requiredAmount: 1
   - targetID: 0
     description: Hack the Sub Console to open the Lab
     type: 0
@@ -40,7 +44,3 @@ MonoBehaviour:
     description: Kill all remaining drones
     type: 1
     requiredAmount: 6
-  - targetID: 6
-    description: Hack Single Drone
-    type: 3
-    requiredAmount: 1

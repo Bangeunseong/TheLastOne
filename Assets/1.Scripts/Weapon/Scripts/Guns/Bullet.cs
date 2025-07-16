@@ -8,7 +8,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     {
         [Header("Components")] 
         [SerializeField] private Rigidbody rigidBody;
-
+        [SerializeField] private TrailRenderer trailRenderer;
+        
         [Header("Bullet Presets")] 
         [SerializeField] private float appliedForce;
         [SerializeField] private float maxMoveDistance;
@@ -26,15 +27,18 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void Awake()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void Reset()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void OnEnable()
         {
+            trailRenderer.Clear();
             isAlreadyReached = false;
             rigidBody.useGravity = false;
             rigidBody.drag = 0f;
