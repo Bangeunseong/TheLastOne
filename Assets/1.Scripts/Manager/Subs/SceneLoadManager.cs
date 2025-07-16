@@ -169,6 +169,7 @@ namespace _1.Scripts.Manager.Subs
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
+            if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
         }
         
         private async Task WaitForUserInput()
