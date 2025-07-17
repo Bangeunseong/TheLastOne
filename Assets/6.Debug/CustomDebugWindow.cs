@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
+using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEditor;
@@ -105,6 +106,13 @@ namespace _6.Debug
                 AssetDatabase.CreateAsset(data, "Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints.asset");
                 AssetDatabase.SaveAssets();
 #endif
+            }
+
+            if (GUILayout.Button("Play WireConnection MiniGame"))
+            {
+                var game = GameObject.Find("WireConnectionGame");
+                if (!game.TryGetComponent(out WireGameController controller)) return;
+                controller.StartMiniGame();
             }
         }
     }

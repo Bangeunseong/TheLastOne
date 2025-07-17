@@ -64,5 +64,7 @@ namespace _1.Scripts.Item.Items
             }
             GameEventSystem.Instance.RaiseEvent(Id);
         }
+
+        public void OnCancelInteract() { }
     }
 }

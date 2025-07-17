@@ -60,8 +60,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             else
             {
-                detectedObject = null;
-                Interactable = null;
+                ResetParameters();
                 HandleUI();
             }
 
@@ -75,7 +74,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnInteract()
         {
             Interactable.OnInteract(gameObject);
-            ResetParameters();
+        }
+
+        public void OnCancelInteract()
+        {
+            Interactable?.OnCancelInteract();
         }
 
         public void ResetParameters()
