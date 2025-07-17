@@ -22,8 +22,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
+        private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
         private CancellationTokenSource penaltyToken;
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            CacheOriginalTransforms();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            ResetTransformsToOriginal();
+        }
+
         protected override void PlayDeathAnimation()
         {
             int[] deathHashes =
@@ -83,6 +96,34 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
                 !stateInfo.IsName("DroneBot_Idle1"))
             {
                 animator.SetTrigger(DroneAnimationHashData.Idle1);
+            }
+        }
+        
+        private void CacheOriginalTransforms(Transform parent = null)
+        {
+            if (parent == null) parent = transform;
+            
+            if (!originalTransforms.ContainsKey(parent))
+            {
+                originalTransforms.Add(parent, (parent.localPosition, parent.localRotation));
+            }
+
+            foreach (Transform child in parent)
+            {
+                CacheOriginalTransforms(child);
+            }
+        }
+
+        private void ResetTransformsToOriginal()
+        {
+            foreach (var kvp in originalTransforms)
+            {
+                if (kvp.Key != null)
+                {
+                    Service.Log("리셋 트랜스폼");
+                    kvp.Key.localPosition = kvp.Value.localPos;
+                    kvp.Key.localRotation = kvp.Value.localRot;
+                }
             }
         }
     }
