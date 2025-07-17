@@ -93,5 +93,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
             CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
+        public void OnCancelInteract() { }
     }
 }

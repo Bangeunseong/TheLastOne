@@ -118,7 +118,7 @@ namespace _1.Scripts.UI.InGame
             prevhealth = playerCondition.CurrentHealth;
         }
         
-        private void UpdateHealthSlider(float current, float max)
+        public void UpdateHealthSlider(float current, float max)
         {
             healthText.text = $"{current}";
             maxHealthText.text = $"{max}";
@@ -140,14 +140,14 @@ namespace _1.Scripts.UI.InGame
             prevhealth = current;
         }
 
-        private void UpdateStaminaSlider(float current, float max)
+        public void UpdateStaminaSlider(float current, float max)
         {
             float ratio = current / max; 
             staminaSlider.value = ratio;
             staminaAnimator.SetBool("IsLack", ratio < lackValue);
         }
 
-        private void UpdateArmorSlider(float current, float max)
+        public void UpdateArmorSlider(float current, float max)
         {
             if (armorSlider != null && max > 0)
             {
@@ -158,7 +158,7 @@ namespace _1.Scripts.UI.InGame
                 armorSlider.enabled = false;
         }
 
-        private void UpdateInstinct(float value)
+        public void UpdateInstinct(float value)
         {
             float instinct = Mathf.Clamp01(value);
             instinctGaugeImage.fillAmount = instinct;
@@ -171,7 +171,7 @@ namespace _1.Scripts.UI.InGame
             }
         }
 
-        private void UpdateFocus(float value)
+        public void UpdateFocus(float value)
         {
             float focus = Mathf.Clamp01(value);
             focusGaugeImage.fillAmount = focus;
@@ -184,7 +184,7 @@ namespace _1.Scripts.UI.InGame
             }
         }
 
-        private void UpdateLevelUI(int level) { levelText.text = $"Lvl. {level}"; }
+        public void UpdateLevelUI(int level) { levelText.text = $"Lvl. {level}"; }
         
 
         private IEnumerator FocusEffectCoroutine()

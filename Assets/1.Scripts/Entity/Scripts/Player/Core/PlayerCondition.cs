@@ -215,7 +215,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
             }
-            coreManager.uiManager.InGameUI?.UpdateHealthSlider(CurrentHealth, MaxHealth);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
             OnDamage?.Invoke();
             
             if (CurrentHealth <= 0) { OnDead(); }
@@ -229,7 +229,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
-            coreManager.uiManager.InGameUI?.UpdateHealthSlider(CurrentHealth, MaxHealth);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentShield = Mathf.Min(CurrentShield + value, MaxShield);
-            coreManager.uiManager.InGameUI?.UpdateArmorSlider(CurrentShield, MaxShield);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         { 
             if (IsDead) return; 
             CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
-            coreManager.uiManager.InGameUI?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
-            coreManager.uiManager.InGameUI?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
         
         /// <summary>
@@ -274,7 +274,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
-            coreManager.uiManager.InGameUI?.UpdateFocus(CurrentFocusGauge);
+            coreManager.uiManager.GetUI<InGameUI>().UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
             return true;
         }
@@ -295,7 +295,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
-            coreManager.uiManager.InGameUI?.UpdateFocus(CurrentFocusGauge);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateFocus(CurrentFocusGauge);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || CurrentHealth >= MaxHealth * 0.5f) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
-            coreManager.uiManager.InGameUI?.UpdateInstinct(CurrentInstinctGauge);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
             OnInstinctEngaged();
             return true;
         }
@@ -327,7 +327,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
-            coreManager.uiManager.InGameUI?.UpdateInstinct(CurrentInstinctGauge);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
         }
         
         public void OnTakeExp(int exp)
@@ -342,7 +342,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience -= Level * 120;
             Level++;
-            coreManager.uiManager.InGameUI?.UpdateLevelUI(Level);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateLevelUI(Level);
             CoreManager.Instance.SaveData_QueuedAsync();
         }
 
@@ -377,21 +377,21 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     if (gun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                        coreManager.uiManager.GetUI<WeaponUI>().Refresh();
                     }
                     break;
                 case GrenadeLauncher grenadeThrower:
                     if (grenadeThrower.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
                     }
                     break;
                 case Crossbow hackingGun:
                     if (hackingGun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
                     }
                     break;
             }
@@ -763,7 +763,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             reloadPlayer = null;
             reloadCTS.Dispose(); reloadCTS = null;
-            coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
         }
         /* --------------------- */
         
@@ -817,7 +817,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
-            coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
