@@ -75,7 +75,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// <summary>
         /// 풀링 사용하므로 반드시 생성될때마다 초기화 해야함
         /// </summary>
-        protected virtual void OnEnable()
+        protected virtual void OnDisable()
         {
             Service.Log("OnEnable");
             IsDead = false;
