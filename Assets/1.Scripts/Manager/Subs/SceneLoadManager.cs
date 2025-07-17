@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.InGame.Mission;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace _1.Scripts.Manager.Subs
@@ -150,7 +149,7 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.IntroScene: 
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, index: 0); 
                     uiManager.ChangeState(CurrentState.Lobby); break;
-                case SceneType.Loading: break;
+                case SceneType.Loading:
                 case SceneType.EndingScene: break;
             }
 
@@ -158,8 +157,7 @@ namespace _1.Scripts.Manager.Subs
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
-            player.PlayerCondition.IsPlayerHasControl = true;
-
+            
             switch (CurrentScene)
             {
                 case SceneType.Stage1:
@@ -173,6 +171,17 @@ namespace _1.Scripts.Manager.Subs
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+
+            // Play Cutscene If needed
+            var introGo = GameObject.Find("IntroOpening");
+            var playable = introGo?.GetComponentInChildren<PlayableDirector>();
+            if (playable && coreManager.gameManager.SaveData == null)
+            {
+                playable.played += OnCutSceneStarted;
+                playable.stopped += OnCutsceneStopped;
+                playable.Play();
+            } 
+            else player.PlayerCondition.IsPlayerHasControl = true;
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -184,6 +193,22 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
+        }
+
+        private void OnCutSceneStarted(PlayableDirector director)
+        {
+            coreManager.gameManager.PauseGame();
+        }
+
+        private void OnCutsceneStopped(PlayableDirector director)
+        {
+            var playerGo = GameObject.FindWithTag("Player");
+            if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
+            player.PlayerCondition.IsPlayerHasControl = true;
+            coreManager.gameManager.ResumeGame();
+
+            director.played -= OnCutSceneStarted;
+            director.stopped -= OnCutsceneStopped;
         }
 
         // Scene Loading Test Method (Deprecated)

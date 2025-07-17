@@ -158,7 +158,8 @@ namespace _1.Scripts.UI.InGame
             //MissionUI?.Initialize();
             DistanceUI?.Initialize(playerTransform, targetTransform);
             QuickSlotUI?.Initialize(newInventory);
-            QuestTargetBinder.Instance.SetCurrentTarget(CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective.data.targetID);
+            if (CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective != null)
+                QuestTargetBinder.Instance.SetCurrentTarget(CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective.data.targetID);
             exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
             loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
             
