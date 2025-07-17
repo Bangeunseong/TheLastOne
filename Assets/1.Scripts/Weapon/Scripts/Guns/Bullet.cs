@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces.Common;
+﻿using System;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -38,7 +39,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private void OnEnable()
         {
-            trailRenderer.Clear();
             isAlreadyReached = false;
             rigidBody.useGravity = false;
             rigidBody.drag = 0f;
@@ -53,6 +53,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             rigidBody.useGravity = true;
             rigidBody.drag = drag;
             isAlreadyReached = true;
+        }
+
+        private void OnDisable()
+        {
+            trailRenderer.Clear();
         }
 
         public void Initialize(Vector3 position, Vector3 dir, float maxDistance, float force, int dealtDamage, LayerMask hitLayer)

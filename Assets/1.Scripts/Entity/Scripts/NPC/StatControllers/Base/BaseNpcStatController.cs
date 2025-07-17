@@ -77,7 +77,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// </summary>
         protected virtual void OnDisable()
         {
-            Service.Log("OnEnable");
+            // Service.Log("OnEnable");
             IsDead = false;
             isHacking = false;
             isStunned = false;
