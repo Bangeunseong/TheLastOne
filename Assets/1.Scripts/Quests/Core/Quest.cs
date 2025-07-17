@@ -29,7 +29,7 @@ namespace _1.Scripts.Quests.Core
             foreach(var objective in Objectives) objective.Activate();
             CurrentObjective = Objectives.First();
             QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
-            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
+            CoreManager.Instance.uiManager.GetUI<MissionUI>()?.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
         }
 
         public void ResumeQuest(int index, QuestInfo info, Console[] consoles)
@@ -52,7 +52,7 @@ namespace _1.Scripts.Quests.Core
             }
             CurrentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
-            CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
+            CoreManager.Instance.uiManager.GetUI<MissionUI>()?.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
         }
 
         public void UpdateProgress()
@@ -64,7 +64,7 @@ namespace _1.Scripts.Quests.Core
                 if (objective.IsCompleted && objective.IsActivated) { objective.Deactivate(); }
             }
             
-            CoreManager.Instance.uiManager.InGameUI.MissionUI.UpdateMissionProgress(
+            CoreManager.Instance.uiManager.GetUI<MissionUI>()?.UpdateMissionProgress(
                 CurrentObjective.data.targetID,
                 CurrentObjective.currentAmount,
                 CurrentObjective.data.requiredAmount
@@ -73,7 +73,7 @@ namespace _1.Scripts.Quests.Core
             if (!CurrentObjective.IsCompleted) return;
             
             CurrentObjective.Deactivate();
-            CoreManager.Instance.uiManager.InGameUI.MissionUI.CompleteMission(CurrentObjective.data.targetID);
+            CoreManager.Instance.uiManager.GetUI<MissionUI>()?.CompleteMission(CurrentObjective.data.targetID);
                 
             currentObjectiveIndex++;
             CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
@@ -82,7 +82,7 @@ namespace _1.Scripts.Quests.Core
             {
                 CurrentObjective = Objectives[currentObjectiveIndex];
                 QuestTargetBinder.Instance.SetCurrentTarget(CurrentObjective.data.targetID);
-                CoreManager.Instance.uiManager.InGameUI.MissionUI.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
+                CoreManager.Instance.uiManager.GetUI<MissionUI>()?.AddMission(CurrentObjective.data.targetID, CurrentObjective.data.description, CurrentObjective.currentAmount, CurrentObjective.data.requiredAmount);
             } else 
             {
                 Service.Log("Quest Completed!");

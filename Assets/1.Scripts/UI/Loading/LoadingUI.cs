@@ -15,12 +15,13 @@ namespace _1.Scripts.UI.Loading
         public override void Init(UIManager manager)
         {
             base.Init(manager);
+            Hide();
         }
         
-        
-        public override void SetActive(bool active)
+        public override void ResetUI()
         {
-            gameObject.SetActive(active);
+            progressSlider.value = 0f;
+            progressText.text = "0.00%";
         }
         
         public void UpdateLoadingProgress(float progress)

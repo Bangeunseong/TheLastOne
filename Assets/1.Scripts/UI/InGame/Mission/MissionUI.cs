@@ -1,33 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Mission
 {
-    public class MissionUI : MonoBehaviour
+    public class MissionUI : UIBase
     {
         [SerializeField] private Transform slotContainer;
         [SerializeField] private GameObject slotPrefabGO;
         
-        private List<MissionSlot> slotList = new List<MissionSlot>();
-        private Dictionary<int, MissionSlot> slotMap = new Dictionary<int, MissionSlot>();
+        private List<MissionSlot> slotList = new();
+        private Dictionary<int, MissionSlot> slotMap = new();
 
-        public void ResetUI()
+        public override void Init(UIManager manager)
+        {
+            base.Init(manager);
+            RefreshMissions();
+        }
+
+        public override void ResetUI()
         {
             foreach (var slot in slotList)
                 Destroy(slot.gameObject);
             slotList.Clear();
             slotMap.Clear();
+            RefreshMissions();
+        }
+        public override void Show()
+        {
+            base.Show();
+            RefreshMissions();
         }
 
-        public void Initialize()
+        public override void Initialize(object param = null)
+        {
+            RefreshMissions();
+        }
+        
+        private void RefreshMissions()
         {
             var questManager = CoreManager.Instance.questManager;
             foreach (var kv in questManager.activeQuests)
             {
                 var quest = kv.Value;
-                AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
+                AddMission(
+                    quest.data.questID,
+                    quest.CurrentObjective.data.description,
+                    quest.CurrentObjective.currentAmount,
+                    quest.CurrentObjective.data.requiredAmount
+                );
             }
         }
         
@@ -35,9 +58,6 @@ namespace _1.Scripts.UI.InGame.Mission
         {
             if (slotMap.ContainsKey(questID)) return;
 
-            Debug.Log($"AddMission 호출: {questID} / {missionText}");
-            Debug.Log($"slotPrefabGO: {slotPrefabGO}");
-            
             var go = Instantiate(slotPrefabGO, slotContainer);
             var slot = go.GetComponent<MissionSlot>();
 
@@ -70,17 +90,10 @@ namespace _1.Scripts.UI.InGame.Mission
         
         private IEnumerator RemoveSlot(MissionSlot slot)
         {
-            if (!gameObject.activeInHierarchy)
-            {
-                slotList.Remove(slot);
-                Destroy(slot.gameObject);
-                SortSlots();
-                yield break;
-            }
             slot.PlayCompleteAnimation();
             yield return new WaitForSeconds(0.5f);
             slotList.Remove(slot);
-            Destroy(slot.gameObject, 1f);
+            Destroy(slot.gameObject);
             SortSlots();
         }
 

@@ -39,6 +39,12 @@ namespace _1.Scripts.UI
             else Resume();
         }
 
+        public void ClosePausePanel()
+        {
+            isPaused = false;
+            pauseCanvas?.SetActive(false);
+        }
+
         private void Pause()
         {
             coreManager.gameManager.PauseGame();

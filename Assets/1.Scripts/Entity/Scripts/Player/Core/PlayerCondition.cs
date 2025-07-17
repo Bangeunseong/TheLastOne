@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -888,7 +889,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         private void CancelItemUsage()
         {
-            var inGameUI = coreManager.uiManager.InGameUI;
+            var inGameUI = coreManager.uiManager.GetUI<InGameUI>();
             inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
             itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
         }
@@ -896,7 +897,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (!item.ItemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
             var t = 0f;
-            var inGameUI = coreManager.uiManager.InGameUI;
+            var inGameUI = coreManager.uiManager.GetUI<InGameUI>();
             inGameUI.ShowItemProgress();
             inGameUI.UpdateItemProgress(0f);
             while (t < item.ItemData.Delay)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
+using _1.Scripts.UI.Loading;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -241,7 +242,7 @@ namespace _1.Scripts.Manager.Subs
                 current++;
                 
                 float progress = (float)current / total;
-                coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
+                coreManager.uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield(); 
             }
         }

@@ -90,7 +90,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             
             OnPicked?.Invoke();
             GameEventSystem.Instance.RaiseEvent(Id);
-            CoreManager.Instance.uiManager.InGameUI.InventoryUI.RefreshInventoryUI();
+            CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }

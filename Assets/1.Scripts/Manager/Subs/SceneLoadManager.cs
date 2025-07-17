@@ -3,7 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.Inventory;
+using _1.Scripts.UI.Loading;
+using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -81,8 +85,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             LoadingProgress = 0f;
-            uiManager.ChangeState(CurrentState.Loading);
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            uiManager.ShowUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
@@ -93,7 +96,7 @@ namespace _1.Scripts.Manager.Subs
             else
             {
                 LoadingProgress = 0.4f;
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             }
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
@@ -110,24 +113,21 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
+                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
             LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
-            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
+            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
+            uiManager.GetUI<LoadingUI>()?.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;
             
             sceneLoad!.allowSceneActivation = true;
-            while (sceneLoad is { isDone: false }) 
-            {
-                await Task.Yield();
-            }
+            while (sceneLoad is { isDone: false }) { await Task.Yield(); }
             
             IsLoading = false;
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -142,8 +142,8 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby); break;
-                case SceneType.Loading: break;
+                case SceneType.IntroScene: uiManager.ShowUI<LobbyUI>(); break;
+                case SceneType.Loading: uiManager.ShowUI<LoadingUI>(); break;
                 case SceneType.EndingScene: break;
             }
 
@@ -159,14 +159,27 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.Stage2:
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
-                    uiManager.ChangeState(CurrentState.InGame);
+                    uiManager.HideUI<LoadingUI>();
+                    uiManager.HideUI<LobbyUI>();
+                    uiManager.ShowUI<InGameUI>();
+                    uiManager.ShowUI<WeaponUI>();
+                    uiManager.ShowUI<QuickSlotUI>();
+                    uiManager.ShowUI<MissionUI>();
+                    uiManager.ShowUI<InventoryUI>();
                     break;
             }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
-            uiManager.InGameUI?.InitializeUI(player.PlayerCondition,player.PlayerInventory,player.transform, null);
+            
+            uiManager.GetUI<InGameUI>()?.Initialize(player);
+            uiManager.GetUI<WeaponUI>()?.Initialize(player.PlayerCondition);
+            uiManager.GetUI<InventoryUI>()?.Initialize(player.PlayerCondition);
+            uiManager.GetUI<QuickSlotUI>()?.Initialize(player.PlayerInventory);
+            uiManager.GetUI<MissionUI>()?.Initialize(); 
+            Transform target = null; uiManager.GetUI<DistanceUI>()?.Initialize((player.transform, target));
+            uiManager.GetUI<MinigameUI>()?.Initialize();
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Loading;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -44,7 +45,7 @@ namespace _1.Scripts.Manager.Subs
             while (!handle.IsDone)
             {
                 float progress = handle.PercentComplete;
-                coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
+                coreManager.uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield();
             }
             coreManager.sceneLoadManager.LoadingProgress += 0.2f;

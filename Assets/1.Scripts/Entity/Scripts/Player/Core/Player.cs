@@ -2,6 +2,7 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
 using Cinemachine;
 using UnityEngine;
 
@@ -114,7 +115,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
             // Player Condition 내부 Param이 선언된 이후 Segments 생성
-            coreManager.uiManager.InGameUI.Initialize_HealthSegments();
+            coreManager.uiManager.GetUI<InGameUI>()?.Initialize_HealthSegments();
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

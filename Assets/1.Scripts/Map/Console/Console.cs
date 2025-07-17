@@ -72,7 +72,6 @@ namespace _1.Scripts.Map.Console
             }
             else
             {
-
                 CutScene.played += coreManager.uiManager.OnCutsceneStarted;
                 CutScene.stopped += coreManager.uiManager.OnCutsceneStopped;
                 CutScene.Play();

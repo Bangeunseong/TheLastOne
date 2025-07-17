@@ -9,18 +9,18 @@ namespace _1.Scripts.UI.InGame.Mission
 {
     public class MissionSlot : MonoBehaviour
     {
-        public TextMeshProUGUI missionText;
-        public TextMeshProUGUI missionCountText;
-        public Slider missionCountSlider;
-        public Animator animator;
+        [SerializeField] private TextMeshProUGUI missionText;
+        [SerializeField] private TextMeshProUGUI missionCountText;
+        [SerializeField] private Slider missionCountSlider;
+        [SerializeField] private Animator animator;
         [HideInInspector] public int questID;
 
+        
         public void Initialize(int id, string text, int currentAmount, int requiredAmount)
         {
             questID = id;
             missionText.text = text;
-            missionCountText.text = $"{currentAmount}/{requiredAmount}";
-            missionCountSlider.value = currentAmount / (float) requiredAmount;
+            UpdateProgress(currentAmount, requiredAmount, immediate: true);
         }
 
         public void PlayCompleteAnimation()
@@ -34,18 +34,26 @@ namespace _1.Scripts.UI.InGame.Mission
             ResetAnimation();
             animator.SetTrigger("NewMission");
         }
-        
+
         private void ResetAnimation()
         {
             animator.ResetTrigger("Complete");
             animator.ResetTrigger("NewMission");
         }
-        
-        public void UpdateProgress(int currentAmount, int requiredAmount)
+
+        public void UpdateProgress(int currentAmount, int requiredAmount, bool immediate = false)
         {
             missionCountText.text = $"{currentAmount} / {requiredAmount}";
-            if (currentAmount >= requiredAmount) missionCountSlider.value = 1;
-            else missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, currentAmount / (float) requiredAmount, 0.1f);
+            float targetValue = Mathf.Clamp01(currentAmount / (float)requiredAmount);
+            
+            if (immediate)
+            {
+                missionCountSlider.value = targetValue;
+            }
+            else
+            {
+                missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, targetValue, 0.1f);
+            }
         }
     }
 }

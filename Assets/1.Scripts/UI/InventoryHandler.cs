@@ -57,5 +57,11 @@ namespace _1.Scripts.UI
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        public void CloseInventoryPanel()
+        {
+            isPaused = false;
+            inventoryCanvas?.SetActive(false);
+        }
     }
 }

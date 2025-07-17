@@ -22,10 +22,6 @@ namespace _1.Scripts.UI.Lobby
             exitButton.onClick.AddListener(OnQuitButtonClicked);
         }
         
-        public override void SetActive(bool active)
-        {
-            gameObject.SetActive(active);
-        }
 
         private void OnStartButtonClicked()
         {
