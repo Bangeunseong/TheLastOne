@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,16 +30,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         protected override void Awake()
         {
             base.Awake();
+            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
+            
             if (originalTransforms.Count == 0) CacheOriginalTransforms();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            
+            ResetTransformsToOriginal();
+        }
+
+        protected virtual void OnEnable()
+        {
             animator.Rebind();
             animator.Update(0f);
-            ResetTransformsToOriginal();
         }
 
         protected override void PlayDeathAnimation()

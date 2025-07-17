@@ -13,10 +13,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         protected override void OnDisable()
         {
             base.OnDisable();
-            animator.SetTrigger(DroneAnimationHashData.Repair);
             runtimeSuicideDroneStatData.ResetStats();
         }
-        
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.SetTrigger(DroneAnimationHashData.Repair);
+        }
+
         protected override void Awake()
         {
             base.Awake();
