@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
@@ -16,6 +17,7 @@ using _1.Scripts.Util;
 using _1.Scripts.UI.InGame;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
@@ -58,12 +60,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private HackingProgressUI hackingProgressUI;
-        
-        protected abstract void PlayHitAnimation();
-        protected abstract void PlayDeathAnimation();
-
-        protected abstract void HackingFailurePenalty();
-
+        private Dictionary<Transform, int> originalLayers = new();
         
         protected virtual void Awake()
         {
@@ -71,12 +68,31 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             behaviorTree = GetComponent<BehaviorTree>();
             rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
             IsDead = false;
+            
+            CacheOriginalLayers(this.transform);
         }
+        
+        /// <summary>
+        /// 풀링 사용하므로 반드시 생성될때마다 초기화 해야함
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            Service.Log("OnEnable");
+            IsDead = false;
+            isHacking = false;
+            isStunned = false;
+            
+            ResetLayersToOriginal();
+        }
+        
+        protected abstract void PlayHitAnimation();
+        protected abstract void PlayDeathAnimation();
+        protected abstract void HackingFailurePenalty();
 
         public virtual void OnTakeDamage(int damage)
         {
             if (IsDead) return;
-
+            
             float armorRatio = RuntimeStatData.Armor / RuntimeStatData.MaxArmor;
             float reducePercent = Mathf.Clamp01(armorRatio);
             damage = (int)(damage * (1f - reducePercent));
@@ -256,6 +272,39 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         public void Dead()
         {
             IsDead = true;
+        }
+        
+        /// <summary>
+        /// 첫 레이어 상태들을 재귀적으로 저장
+        /// </summary>
+        /// <param name="parent"></param>
+        private void CacheOriginalLayers(Transform parent = null)
+        {
+            if (parent == null) parent = transform;
+            
+            if (!originalLayers.ContainsKey(parent))
+            {
+                originalLayers.Add(parent, parent.gameObject.layer);
+            }
+
+            foreach (Transform child in parent)
+            {
+                CacheOriginalLayers(child);
+            }
+        }
+        
+        /// <summary>
+        /// OnEnable 시 레이어 기본으로 되돌림
+        /// </summary>
+        private void ResetLayersToOriginal()
+        {
+            foreach (var kvp in originalLayers)
+            {
+                if (kvp.Key != null) // 혹시 파괴된 오브젝트가 있을 수 있으니 체크
+                {
+                    kvp.Key.gameObject.layer = kvp.Value;
+                }
+            }
         }
     }
 }

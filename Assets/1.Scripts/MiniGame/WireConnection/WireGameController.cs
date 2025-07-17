@@ -1,0 +1,234 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Console = _1.Scripts.Map.Console.Console;
+using Random = UnityEngine.Random;
+
+namespace _1.Scripts.MiniGame.WireConnection
+{
+    public class WireGameController : MonoBehaviour
+    {
+        [Header("Components")]
+        [SerializeField] private GameObject wirePrefab;
+        [SerializeField] private GameObject socketPrefab;
+        [SerializeField] private Transform top;
+        [SerializeField] private Transform bottom;
+        [SerializeField] private Canvas canvas;
+
+        [field: Header("Game Settings")]
+        [field: Range(2, 5)][field: SerializeField] public int SocketCount { get; private set; } = 3;
+        [field: SerializeField] public float Duration { get; private set; } = 5f;
+        [field: SerializeField] public float Delay { get; private set; } = 3f;
+        
+        [field: Header("Current Game State")]
+        [field: SerializeField] public bool IsPlaying { get; private set; }
+        [field: SerializeField] public bool IsCounting { get; private set; }
+        [field: SerializeField] public bool IsCleared { get; private set; }
+        private readonly List<(Socket, Socket, LineRenderer)> connections = new();
+        private readonly List<GameObject> sockets = new();
+        
+        private Console console;
+        private CoreManager coreManager;
+        private UIManager uiManager;
+        private Player player;
+        private float startTime;
+        private bool isFinished;
+
+        private void Awake()
+        {
+            if (!top) top = this.TryGetChildComponent<Transform>("Top");
+            if (!bottom) bottom = this.TryGetChildComponent<Transform>("Bottom");
+            if (!canvas) canvas = GetComponentInParent<Canvas>();
+        }
+
+        private void Reset()
+        {
+            if (!top) top = this.TryGetChildComponent<Transform>("Top");
+            if (!bottom) bottom = this.TryGetChildComponent<Transform>("Bottom");
+            if (!canvas) canvas = GetComponentInParent<Canvas>();
+        }
+
+        private void OnEnable()
+        {
+            isFinished = IsPlaying = IsCounting = false;
+            // player.PlayerCondition.OnDisablePlayerMovement();
+            // Cursor.lockState = CursorLockMode.None;
+        }
+
+        private void Update()
+        {
+            if (isFinished) return;
+
+            if (!IsPlaying)
+            {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    _ = StartCountdown_Async(); 
+                    IsCounting = IsPlaying = true; 
+                    return;
+                }
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
+                return;
+            }
+            
+            if (IsCounting) return;
+            if (!(Time.time - startTime >= Duration)) return;
+            FinishGame(false, 0f);
+        }
+        
+        private void OnDisable()
+        {
+            ResetAllConnections();
+            ResetAllSockets();
+        }
+        
+        public void StartMiniGame()
+        {
+            // console = con;
+            // player = ply;
+            // coreManager = CoreManager.Instance;
+            // uiManager = coreManager.uiManager;
+            
+            // Initialize MiniGame
+            CreateSockets();
+            enabled = true;
+        }
+
+        private void CreateSockets()
+        {
+            var colorList = GetRandomColors();
+            foreach (var color in colorList)
+            {
+                var topSocket = Instantiate(socketPrefab, top);
+                
+                if (topSocket.TryGetComponent(out Socket topSo)) topSo.Initialize(color, SocketType.Start); 
+                if (topSocket.TryGetComponent(out WireDragger topDrag)) topDrag.Initialize(canvas, this);
+                sockets.Add(topSocket);
+            }
+            
+            Shuffle(colorList);
+            foreach (var color in colorList)
+            {
+                var bottomSocket = Instantiate(socketPrefab, bottom);
+                if (bottomSocket.TryGetComponent(out Socket bottomSo)) bottomSo.Initialize(color, SocketType.End); 
+                if (bottomSocket.TryGetComponent(out WireDragger bottomDrag)) bottomDrag.Initialize(canvas, this);
+                sockets.Add(bottomSocket);                                                  
+            }
+        }
+
+        public void CancelMiniGame()
+        {
+            if (!isActiveAndEnabled || isFinished) return;
+            isFinished = true;
+            
+            // Clear all remaining sockets and line renderers
+            foreach (var connection in connections)
+            {
+                sockets.Remove(connection.Item1.gameObject);
+                sockets.Remove(connection.Item2.gameObject);
+                Destroy(connection.Item1.gameObject); 
+                Destroy(connection.Item2.gameObject); 
+                Destroy(connection.Item3.gameObject);
+            }
+            connections.Clear();
+            foreach (var socket in sockets) Destroy(socket);
+            sockets.Clear();
+            
+            FinishGame(false, 0f);
+        }
+        
+        private void FinishGame(bool isSuccess, float duration)
+        {
+            // Service.Log("Finished Game");
+            isFinished = true;
+            _ = EndGame_Async(isSuccess, duration);
+        }
+
+        public LineRenderer CreateLine(Transform wireContainer)
+        {
+            GameObject go = Instantiate(wirePrefab, wireContainer);
+            return go.GetComponent<LineRenderer>();
+        }
+
+        public void RegisterConnection(Socket start, Socket end, LineRenderer line)
+        {
+            connections.Add((start, end, line));
+            if (connections.Count < SocketCount) return;
+            IsCleared = true;
+            FinishGame(IsCleared, 1.5f);
+        }
+
+        private void ResetAllConnections()
+        {
+            foreach (var (start, end, line) in connections)
+            {
+                start.IsConnected = end.IsConnected = false;
+                Destroy(line.gameObject);
+            }
+            connections.Clear();
+        }
+
+        private void ResetAllSockets()
+        {
+            foreach (var socket in sockets) Destroy(socket);
+            sockets.Clear();
+        }
+        
+        private async UniTask StartCountdown_Async()
+        {
+            var t = 0f;
+            while (t < Delay)
+            {
+                // if (!coreManager.gameManager.IsGamePaused) 
+                t += Time.unscaledDeltaTime;
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+            
+            IsCounting = false; 
+            startTime = Time.unscaledTime;
+        }
+
+        private async UniTask EndGame_Async(bool success, float duration)
+        {
+            if (success)
+            {
+                // TODO: Show Clear UI
+                Service.Log("Cleared MiniGame!");
+            } else Service.Log("Better Luck NextTime");
+            
+            await UniTask.WaitForSeconds(duration, true);
+            
+            // console.OnCleared(success);
+            Cursor.lockState = CursorLockMode.Locked; 
+            Cursor.visible = false;
+            enabled = false;
+        }
+
+        private static void Shuffle<T>(List<T> list)
+        {
+            var rng = new System.Random();
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                (list[n], list[k]) = (list[k], list[n]);
+            }
+        }
+        
+        private List<SocketColor> GetRandomColors()
+        {
+            Array colors = Enum.GetValues(typeof(SocketColor));
+            var colorList = colors.Cast<SocketColor>().ToList();
+            for (var i = 0; i < colors.Length - SocketCount; i++)
+                colorList.RemoveAt(Random.Range(0, colorList.Count));
+            return colorList;
+        }
+    }
+}

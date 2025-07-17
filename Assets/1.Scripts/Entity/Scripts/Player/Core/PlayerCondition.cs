@@ -202,6 +202,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
                 if (itemCTS != null) CancelItemUsage();
                 OnRecoverInstinctGauge(InstinctGainType.Hit);
+                player.PlayerInteraction.OnCancelInteract();
             }
             else
             {
@@ -210,9 +211,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     CurrentHealth = Mathf.Max(CurrentHealth + CurrentShield - damage, 0);
                     if (itemCTS != null) CancelItemUsage();
                     OnRecoverInstinctGauge(InstinctGainType.Hit);
+                    player.PlayerInteraction.OnCancelInteract();
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
             }
+            coreManager.uiManager.InGameUI?.UpdateHealthSlider(CurrentHealth, MaxHealth);
             OnDamage?.Invoke();
             
             if (CurrentHealth <= 0) { OnDead(); }
@@ -222,40 +225,44 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// Recover Health Point
         /// </summary>
         /// <param name="value">Value of hp to recover</param>
-        public void OnRecoverHealth(int value)
+        private void OnRecoverHealth(int value)
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+            coreManager.uiManager.InGameUI?.UpdateHealthSlider(CurrentHealth, MaxHealth);
         }
 
         /// <summary>
         /// Recover Shield Point
         /// </summary>
         /// <param name="value">Value of shield to recover</param>
-        public void OnRecoverShield(int value)
+        private void OnRecoverShield(int value)
         {
             if (IsDead) return;
             CurrentShield = Mathf.Min(CurrentShield + value, MaxShield);
+            coreManager.uiManager.InGameUI?.UpdateArmorSlider(CurrentShield, MaxShield);
         }
 
         /// <summary>
         /// Consume Stamina Point
         /// </summary>
         /// <param name="stamina">Value to consume from player stamina point</param>
-        public void OnConsumeStamina(float stamina) 
+        private void OnConsumeStamina(float stamina) 
         { 
             if (IsDead) return; 
             CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
+            coreManager.uiManager.InGameUI?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
 
         /// <summary>
         /// Recover Stamina Point
         /// </summary>
         /// <param name="stamina">Value of stamina to recover</param>
-        public void OnRecoverStamina(float stamina)
+        private void OnRecoverStamina(float stamina)
         {
             if (IsDead) return;
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
+            coreManager.uiManager.InGameUI?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
         
         /// <summary>
@@ -267,6 +274,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
+            coreManager.uiManager.InGameUI?.UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
             return true;
         }
@@ -287,6 +295,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
+            coreManager.uiManager.InGameUI?.UpdateFocus(CurrentFocusGauge);
         }
 
         /// <summary>
@@ -298,6 +307,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || CurrentHealth >= MaxHealth * 0.5f) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            coreManager.uiManager.InGameUI?.UpdateInstinct(CurrentInstinctGauge);
             OnInstinctEngaged();
             return true;
         }
@@ -317,6 +327,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
+            coreManager.uiManager.InGameUI?.UpdateInstinct(CurrentInstinctGauge);
         }
         
         public void OnTakeExp(int exp)
@@ -331,12 +342,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience -= Level * 120;
             Level++;
+            coreManager.uiManager.InGameUI?.UpdateLevelUI(Level);
             CoreManager.Instance.SaveData_QueuedAsync();
         }
 
         private void OnDead()
         {
             IsDead = true;
+            IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -362,15 +375,24 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 case Gun gun:
                     if (gun.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                    }
                     break;
                 case GrenadeLauncher grenadeThrower:
                     if (grenadeThrower.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                    }
                     break;
                 case Crossbow hackingGun:
-                    if(hackingGun.OnShoot())
+                    if (hackingGun.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+                    }
                     break;
             }
         }
@@ -409,7 +431,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             crouchCTS = new CancellationTokenSource();
             _ = Crouch_Async(IsCrouching, duration, crouchCTS.Token); 
         }
-        
         protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
         {
             var currentPosition = player.CameraPivot.localPosition;
@@ -742,6 +763,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             reloadPlayer = null;
             reloadCTS.Dispose(); reloadCTS = null;
+            coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
         }
         /* --------------------- */
         
@@ -795,13 +817,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
+            coreManager.uiManager.InGameUI?.WeaponUI?.Refresh(Weapons, AvailableWeapons, EquippedWeaponIndex);
+            
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
             IsSwitching = false;
-            switchCTS = null;
+            switchCTS.Dispose(); switchCTS = null;
         }
         /* --------------------- */
         

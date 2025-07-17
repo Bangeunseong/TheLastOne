@@ -94,5 +94,10 @@ namespace _1.Scripts.Map.Console
             if (IsCleared) return;
             AlphabetGame.StartMiniGame(this, player);
         }
+
+        public void OnCancelInteract()
+        {
+            AlphabetGame?.CancelMiniGame();
+        }
     }
 }

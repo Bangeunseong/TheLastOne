@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414738, b: 0.121078536, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -362,7 +362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &277653826
 Transform:
   m_ObjectHideFlags: 0
@@ -791,7 +791,7 @@ PrefabInstance:
     - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_SuicideDrone_1
+      value: SpawnPoint_SuicideDrone_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1987,6 +1987,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spanwer_Index2
       objectReference: {fileID: 0}
+    - target: {fileID: 5057052230064960691, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090568227269874423, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5635516836702039195, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Name
@@ -2027,6 +2037,11 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[0].second
       value: 
       objectReference: {fileID: 1917048629}
+    - target: {fileID: 6439485171167579673, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6552916662756706391, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Carve
@@ -2870,7 +2885,7 @@ PrefabInstance:
     - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_SuicideDrone_1
+      value: SpawnPoint_SuicideDrone_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

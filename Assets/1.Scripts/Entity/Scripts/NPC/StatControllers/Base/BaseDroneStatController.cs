@@ -13,6 +13,7 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
+using RaycastPro;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
@@ -22,8 +23,24 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
+        public SerializableDictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
         private CancellationTokenSource penaltyToken;
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (originalTransforms.Count == 0) CacheOriginalTransforms();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            
+            animator.Rebind();
+            animator.Update(0f);
+            ResetTransformsToOriginal();
+        }
+
         protected override void PlayDeathAnimation()
         {
             int[] deathHashes =
@@ -83,6 +100,33 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
                 !stateInfo.IsName("DroneBot_Idle1"))
             {
                 animator.SetTrigger(DroneAnimationHashData.Idle1);
+            }
+        }
+        
+        private void CacheOriginalTransforms(Transform parent = null)
+        {
+            if (parent == null) parent = this.transform;
+            
+            if (!originalTransforms.ContainsKey(parent))
+            {
+                originalTransforms.Add(parent, (parent.localPosition, parent.localRotation));
+            }
+
+            foreach (Transform child in parent)
+            {
+                CacheOriginalTransforms(child);
+            }
+        }
+
+        private void ResetTransformsToOriginal()
+        {
+            foreach (var kvp in originalTransforms)
+            {
+                if (kvp.Key != null)
+                {
+                    kvp.Key.localPosition = kvp.Value.localPos;
+                    kvp.Key.localRotation = kvp.Value.localRot;
+                }
             }
         }
     }

@@ -20,8 +20,7 @@ MonoBehaviour:
   - m_GUID: e7350b1515d0e2d418e77380a02475c8
     m_Address: LobbyBGM
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - IntroScene
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfc5803fa8fa8924bbeaa34f4f689bb1
     m_Address: Click
