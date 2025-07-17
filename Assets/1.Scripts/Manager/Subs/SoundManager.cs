@@ -151,6 +151,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var obj = poolManager.Get("SoundPlayer");
+            if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
             soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
