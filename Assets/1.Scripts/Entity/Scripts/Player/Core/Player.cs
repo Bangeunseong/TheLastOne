@@ -115,6 +115,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             // Player Condition 내부 Param이 선언된 이후 Segments 생성
             coreManager.uiManager.InGameUI.Initialize_HealthSegments();
+            coreManager.uiManager.InGameUI.InitializeUI(PlayerCondition, PlayerInventory, transform, null);
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

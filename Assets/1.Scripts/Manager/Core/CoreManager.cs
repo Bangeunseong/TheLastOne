@@ -148,6 +148,7 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
+            uiManager.InGameUI?.ResetUI();
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }

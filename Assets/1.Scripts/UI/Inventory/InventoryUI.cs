@@ -90,7 +90,7 @@ namespace _1.Scripts.UI.Inventory
         
         private void CalculateMaxStats()
         {
-            if (playerCondition == null) return;
+            if (!playerCondition) return;
             foreach (var w in playerCondition.Weapons)
             {
                 if (w is Gun gun)
@@ -114,7 +114,7 @@ namespace _1.Scripts.UI.Inventory
 
         private void InitializeSlots()
         {
-            if (playerCondition == null) return;
+            if (!playerCondition) return;
             var weapons = playerCondition.Weapons;
             var available = playerCondition.AvailableWeapons;
             
@@ -124,12 +124,11 @@ namespace _1.Scripts.UI.Inventory
                     .FirstOrDefault();
 
                 var button = slotButtons[i];
-                if (slotWeapon != null)
+                if (slotWeapon)
                 {
                     button.gameObject.SetActive(true);
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
-                    if (label != null)
-                        label.text = SlotUtility.GetWeaponName(slotWeapon);
+                    if (label) label.text = SlotUtility.GetWeaponName(slotWeapon);
 
                     int idx = weapons.IndexOf(slotWeapon);
                     button.onClick.RemoveAllListeners();
@@ -171,8 +170,6 @@ namespace _1.Scripts.UI.Inventory
             else
                 currentPreviewWeapon = null;
         }
-
-
         
         public void RefreshInventoryUI()
         {

@@ -41,7 +41,8 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float scaleSpeed = 10f;
         private Vector3[] targetScales;
         
-        [Header("컬러 세팅")] [SerializeField] private Color selectedAmmoColor = Color.white;
+        [Header("컬러 세팅")] 
+        [SerializeField] private Color selectedAmmoColor = Color.white;
         [SerializeField] private Color selectedColor = Color.black;
         [SerializeField] private Image[] selectedSlotImage;
         [SerializeField] private float idleAlpha = 0.5f;
@@ -51,7 +52,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float panelHideDelay = 3f;
         private Coroutine hideCoroutine;
 
-        private PlayerCondition  playerCondition;
+        private PlayerCondition playerCondition;
         
         private int lastSelectedIndex = -1;
 
@@ -72,10 +73,6 @@ namespace _1.Scripts.UI.InGame
                 }
                 if (slotAnimator != null && i < slotAnimator.Length && slotAnimator[i] != null) slotAnimator[i].enabled = false;
             }
-        }
-        private void Start()
-        {
-            if (panelAnimator != null) panelAnimator.Play("Hidden", 0, 1f);
         }
         
         private void Update()
@@ -105,13 +102,15 @@ namespace _1.Scripts.UI.InGame
             ammoUI = null;
         }
 
-        public void Inititalize(PlayerCondition newPlayerCondition)
+        public void Initialize(PlayerCondition newPlayerCondition)
         {
             if (ammoUI == null) ammoUI = GetComponentInChildren<AmmoUI>(true);
             playerCondition = newPlayerCondition;
             Refresh(playerCondition?.Weapons ?? new List<BaseWeapon>(),
                 playerCondition?.AvailableWeapons ?? new List<bool>(),
                 playerCondition?.EquippedWeaponIndex ?? -1);
+            if (panelAnimator != null)
+                panelAnimator.Play("Hidden", 0, 1f);
         }
         
         
@@ -139,30 +138,23 @@ namespace _1.Scripts.UI.InGame
                 BaseWeapon slotWeapon = weapons.Where((w, idx) => available[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
-                if (slotWeapon != null)
-                {
-                   // slotImage[i].sprite = slotWeapon.iconSprite;
-                    slotImage[i].color  = Color.white;
-                }
-                else
-                {
-                    slotImage[i].color = Color.clear;
-                }
-                slotText[i].text = slotWeapon != null ? SlotUtility.GetWeaponName(slotWeapon) : string.Empty;
+                // slotImage[i].sprite = slotWeapon.iconSprite;
+                slotImage[i].color = slotWeapon ? Color.white : Color.clear;
+                slotText[i].text = slotWeapon ? SlotUtility.GetWeaponName(slotWeapon) : string.Empty;
 
                 var (mag, total) = SlotUtility.GetWeaponAmmo(slotWeapon);
                 bool hasAmmo = mag > 0 || total > 0;
                 slotAmmoText[i].text = hasAmmo ? $"{mag}/{total}" : string.Empty;
                 slotAmmoText[i].color = slotWeapon is Gun ? selectedColor : selectedAmmoColor;
 
-                bool isSelected = (slotWeapon != null && slotWeapon == selectedWeapon);
+                bool isSelected = slotWeapon && slotWeapon == selectedWeapon;
                 if (isSelected) 
                     currentSlot = i;
                 
                 slotText[i].enabled = isSelected;
                 slotAmmoText[i].enabled = isSelected && hasAmmo;
 
-                if (selectedSlotImage != null && i < selectedSlotImage.Length && selectedSlotImage[i] != null)
+                if (selectedSlotImage != null && i < selectedSlotImage.Length && selectedSlotImage[i])
                 {
                     var color = selectedSlotImage[i].color;
                     color.a = isSelected ? selectedSlotAlpha : idleAlpha;
@@ -175,11 +167,11 @@ namespace _1.Scripts.UI.InGame
                 ? weapons[selectedIndex]
                 : null;
             int magVal = 0;
-            if (sel != null)
+            if (sel)
             {
                 magVal = SlotUtility.GetWeaponAmmo(sel).mag;
             }
-            if (ammoUI != null && ammoUI.gameObject != null) ammoUI.UpdateAmmoUI(magVal);
+            if (ammoUI && ammoUI.gameObject) ammoUI.UpdateAmmoUI(magVal);
             if (selectionChanged)
             {
                 if (currentSlot >= 0 && currentSlot < slotAnimator.Length && slotAnimator[currentSlot] != null)
@@ -187,14 +179,13 @@ namespace _1.Scripts.UI.InGame
                     slotAnimator[currentSlot].enabled = false;
                     slotAnimator[currentSlot].enabled = true;
                 }
+
+                if (!panelAnimator) return;
                 
-                if (panelAnimator != null)
-                {
-                    panelAnimator.ResetTrigger("Hide");
-                    panelAnimator.SetTrigger("Show");
-                    if (hideCoroutine != null) StopCoroutine(hideCoroutine);
-                    hideCoroutine = StartCoroutine(HidePanelCoroutine());
-                }
+                panelAnimator.ResetTrigger("Hide");
+                panelAnimator.SetTrigger("Show");
+                if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+                hideCoroutine = StartCoroutine(HidePanelCoroutine());
             }
         }
         
@@ -202,9 +193,11 @@ namespace _1.Scripts.UI.InGame
         private IEnumerator HidePanelCoroutine()
         {
             yield return new WaitForSeconds(panelHideDelay);
-            if (panelAnimator != null)
+            if (panelAnimator)
+            {
                 panelAnimator.ResetTrigger("Show");
                 panelAnimator.SetTrigger("Hide");
+            }
             hideCoroutine = null;
         }
     }

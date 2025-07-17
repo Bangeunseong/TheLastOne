@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,7 @@ using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
-
 
 namespace _1.Scripts.UI.InGame
 {
@@ -23,13 +22,15 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI maxHealthText;
         [SerializeField] private TextMeshProUGUI levelText;
 
-        [Header("체력바")] [SerializeField] private Image healthSegmentPrefab;
+        [Header("체력바")]
+        [SerializeField] private Image healthSegmentPrefab;
         [SerializeField] private Transform healthSegmentContainer;
         [SerializeField] private int healthSegmentValue = 10;
         [SerializeField] private Animator healthBackgroundAnimator;
-        private List<Animator> healthSegmentAnimators = new List<Animator>();
-        private List<Image> healthSegments = new List<Image>();
-        private float prevhealth;
+        
+        private List<Animator> healthSegmentAnimators = new();
+        private List<Image> healthSegments = new();
+        private float prevHealth;
 
         [Header("스테미나")] 
         [SerializeField] private Animator staminaAnimator;
@@ -42,6 +43,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image instinctGaugeFrame;
         [SerializeField] private Animator instinctEffectAnimator;
         [SerializeField] private Animator focusEffectAnimator;
+        
         private Coroutine focusEffectCoroutine;
         private Coroutine instinctEffectCoroutine;
 
@@ -77,8 +79,7 @@ namespace _1.Scripts.UI.InGame
 
         private void Awake()
         {
-            if (progressFillImage != null)
-                progressFillImage.enabled = false;
+            if (progressFillImage != null) progressFillImage.enabled = false;
             if (!WeaponUI) WeaponUI = GetComponentInChildren<WeaponUI>(true);
             if (!QuickSlotUI) QuickSlotUI = GetComponentInChildren<QuickSlotUI>(true);
             if (!MissionUI) MissionUI = GetComponentInChildren<MissionUI>(true);
@@ -86,27 +87,34 @@ namespace _1.Scripts.UI.InGame
             if (!InventoryUI) InventoryUI = GetComponentInChildren<InventoryUI>(true);
         }
 
+        public override void SetActive(bool active)
+        {
+            gameObject.SetActive(active);
+        }
+
         public override void Init(UIManager manager)
         {
             base.Init(manager);
-            
+
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
-            
+
             var questManager = CoreManager.Instance.questManager;
             foreach (var kv in questManager.activeQuests)
             {
                 var quest = kv.Value;
-                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description, quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
+                MissionUI.AddMission(quest.data.questID, quest.CurrentObjective.data.description,
+                    quest.CurrentObjective.currentAmount, quest.CurrentObjective.data.requiredAmount);
             }
+
             Debug.Log($"InGameUI Init 호출 / 퀘스트 개수: {questManager.activeQuests.Count}");
-            foreach(var kv in questManager.activeQuests)
+            foreach (var kv in questManager.activeQuests)
                 Debug.Log($"퀘스트ID: {kv.Key} / {kv.Value.CurrentObjective.data.description}");
         }
 
         public void Initialize_HealthSegments()
         {
             if (healthSegments.Count > 0) return;
-            
+
             if (healthSegmentPrefab != null && healthSegmentContainer != null)
             {
                 int count = playerCondition.MaxHealth / healthSegmentValue;
@@ -121,20 +129,10 @@ namespace _1.Scripts.UI.InGame
                     if (animator != null)
                         healthSegmentAnimators.Add(animator);
                 }
+
                 healthSegmentPrefab.gameObject.SetActive(false);
             }
-            prevhealth = playerCondition.CurrentHealth;
-        }
-
-        public override void SetActive(bool active)
-        {
-            gameObject.SetActive(active);
-        }
-
-        void Update()
-        {
-            if (!gameObject.activeInHierarchy) return;
-            if (playerCondition) { UpdateStateUI(); }
+            prevHealth = playerCondition.CurrentHealth;
         }
 
         public void ResetUI()
@@ -155,7 +153,7 @@ namespace _1.Scripts.UI.InGame
         {
             playerCondition = newPlayerCondition;
             
-            WeaponUI?.Inititalize(newPlayerCondition);
+            WeaponUI?.Initialize(newPlayerCondition);
             InventoryUI?.Initialize(newPlayerCondition);
             //MissionUI?.Initialize();
             DistanceUI?.Initialize(playerTransform, targetTransform);
@@ -163,6 +161,8 @@ namespace _1.Scripts.UI.InGame
             QuestTargetBinder.Instance.SetCurrentTarget(CoreManager.Instance.questManager.activeQuests.First().Value.CurrentObjective.data.targetID);
             exitGameButton.onClick.AddListener(() => CoreManager.Instance.MoveToIntroScene());
             loadGameButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
+            
+            UpdateStateUI();
         }
 
         private void UpdateStateUI()
@@ -176,57 +176,39 @@ namespace _1.Scripts.UI.InGame
             UpdateWeaponInfo();
         }
 
-        private void UpdateHealthSlider(float current, float max)
+        public void UpdateHealthSlider(float current, float max)
         {
-            if (healthText != null)
-                healthText.text = $"{current}";
-            if (maxHealthText != null)
-                maxHealthText.text = $"{max}";
+            if (healthText) healthText.text = $"{current}";
+            if (maxHealthText) maxHealthText.text = $"{max}";
 
             int full = Mathf.FloorToInt(current / healthSegmentValue);
             float partial = (current % healthSegmentValue) / healthSegmentValue;
-            for (int i = 0; i < healthSegments.Count; i++)
+            for (var i = 0; i < healthSegments.Count; i++)
             {
-                if (i < full)
-                {
-                    healthSegments[i].fillAmount = 1f;
-                }
-                else if (i == full)
-                {
-                    healthSegments[i].fillAmount = partial;
-                }
-                else
-                {
-                    healthSegments[i].fillAmount = 0f;
-                }
+                if (i < full) healthSegments[i].fillAmount = 1f;
+                else if (i == full) healthSegments[i].fillAmount = partial;
+                else healthSegments[i].fillAmount = 0f;
             }
 
-            if (healthBackgroundAnimator != null && current < prevhealth)
-            {
+            if (healthBackgroundAnimator && current < prevHealth) 
                 healthBackgroundAnimator.SetTrigger("Damaged");
-            }
-
-            if (current < prevhealth && healthSegmentAnimators != null)
+            
+            if (current < prevHealth && healthSegmentAnimators != null)
             {
-                for (int i = 0; i < full && i < healthSegmentAnimators.Count; i++)
-                {
+                for (var i = 0; i < full && i < healthSegmentAnimators.Count; i++)
                     healthSegmentAnimators[i].SetTrigger("Damaged");
-                }
             }
-            prevhealth = current;
+            prevHealth = current;
         }
 
-        private void UpdateStaminaSlider(float current, float max)
+        public void UpdateStaminaSlider(float current, float max)
         {
             float ratio = current / max;
-            if (staminaSlider != null)
-                staminaSlider.value = ratio;
-            
-            if (staminaAnimator != null)
-                staminaAnimator.SetBool("IsLack", ratio < lackValue);
+            if (staminaSlider) staminaSlider.value = ratio;
+            if (staminaAnimator) staminaAnimator.SetBool("IsLack", ratio < lackValue);
         }
 
-        private void UpdateArmorSlider(float current, float max)
+        public void UpdateArmorSlider(float current, float max)
         {
             if (armorSlider != null && max > 0)
             {
@@ -237,11 +219,11 @@ namespace _1.Scripts.UI.InGame
                 armorSlider.enabled = false;
         }
 
-        private void UpdateInstinct(float value)
+        public void UpdateInstinct(float value)
         {
             float instinct = Mathf.Clamp01(value);
 
-            if (instinctGaugeImage != null)
+            if (instinctGaugeImage)
                 instinctGaugeImage.fillAmount = instinct;
 
             if (instinct >= 1f && instinctEffectCoroutine == null)
@@ -255,11 +237,11 @@ namespace _1.Scripts.UI.InGame
             }
         }
 
-        private void UpdateFocus(float value)
+        public void UpdateFocus(float value)
         {
             float focus = Mathf.Clamp01(value);
 
-            if (focusGaugeImage != null)
+            if (focusGaugeImage)
                 focusGaugeImage.fillAmount = focus;
             
             if (focus >= 1f && focusEffectCoroutine == null)
@@ -273,7 +255,7 @@ namespace _1.Scripts.UI.InGame
             }
         }
 
-        private void UpdateLevelUI(int level)
+        public void UpdateLevelUI(int level)
         {
             levelText.text = $"Lvl. {level}";
         }
@@ -292,8 +274,8 @@ namespace _1.Scripts.UI.InGame
         {
             while (true)
             {
-                focusEffectAnimator.SetTrigger("Full");
                 focusEffectAnimator.ResetTrigger("Full");
+                focusEffectAnimator.SetTrigger("Full");
                 yield return new WaitForSeconds(0.5f);
             }
         }
@@ -310,26 +292,22 @@ namespace _1.Scripts.UI.InGame
 
         public void ShowItemProgress()
         {
-            if (progressFillImage != null)
-                progressFillImage.enabled = true;
+            if (progressFillImage != null) progressFillImage.enabled = true;
         }
 
         public void HideItemProgress()
         {
-            if (progressFillImage != null)
-                progressFillImage.enabled = false;
+            if (progressFillImage) progressFillImage.enabled = false;
         }
 
         public void UpdateItemProgress(float progress)
         {
-            if (progressFillImage != null)
-                progressFillImage.fillAmount = Mathf.Clamp01(progress);
+            if (progressFillImage != null) progressFillImage.fillAmount = Mathf.Clamp01(progress);
         }
 
         public void ShowMessage(string message)
         {
-            if (messageText != null)
-                messageText.text = message;
+            if (messageText != null) messageText.text = message;
         }
     }
 }

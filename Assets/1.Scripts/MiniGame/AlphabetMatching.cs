@@ -57,6 +57,13 @@ namespace _1.Scripts.MiniGame
             enabled = true;
         }
 
+        public void CancelMiniGame()
+        {
+            if (!isActiveAndEnabled || isFinished) return;
+            isFinished = true;
+            FinishGame(false, 0f);
+        }
+
         private void Update()
         {
             if (coreManager.gameManager.IsGamePaused || isFinished) return;
@@ -74,7 +81,7 @@ namespace _1.Scripts.MiniGame
                 
                 if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    FinishGame(false);
+                    FinishGame(false, 1.5f);
                 }
                 return;
             }
@@ -91,7 +98,7 @@ namespace _1.Scripts.MiniGame
                 CurrentLoopCount++;
                 if (!IsLoop || CurrentLoopCount >= LoopCount)
                 {
-                    FinishGame(true); return;
+                    FinishGame(true, 1.5f); return;
                 }
                 ResetGame();
                 return;
@@ -100,7 +107,7 @@ namespace _1.Scripts.MiniGame
             // Minigame 메인 로직
             if (Time.time - startTime >= Duration)
             {
-                FinishGame(false); return;
+                FinishGame(false, 1.5f); return;
             }
             if (!Input.anyKeyDown) return;
             if (Input.inputString == null) return;
@@ -112,11 +119,11 @@ namespace _1.Scripts.MiniGame
             }
         }
 
-        private void FinishGame(bool isSuccess)
+        private void FinishGame(bool isSuccess, float duration)
         {
-            Service.Log("Finished Game");
+            // Service.Log("Finished Game");
             isFinished = true;
-            _ = EndGame_Async(isSuccess);
+            _ = EndGame_Async(isSuccess, duration);
         }
 
         private void ResetGame()
@@ -156,12 +163,12 @@ namespace _1.Scripts.MiniGame
             startTime = Time.unscaledTime;
         }
 
-        private async UniTask EndGame_Async(bool success)
+        private async UniTask EndGame_Async(bool success, float duration)
         {
             if (success) { ui.ShowClearText(true); ui.SetClearText(true, "CLEAR!"); }
             
             ui.ShowAlphabet(false);
-            await UniTask.WaitForSeconds(1.5f, true);
+            await UniTask.WaitForSeconds(duration, true);
             
             CoreManager.Instance.uiManager.HideMinigameUI();
             Cursor.lockState = CursorLockMode.Locked;
