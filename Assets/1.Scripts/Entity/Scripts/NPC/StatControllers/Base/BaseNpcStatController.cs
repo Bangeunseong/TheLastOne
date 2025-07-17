@@ -19,6 +19,7 @@ using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
@@ -45,7 +46,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Components")]
         protected Animator animator;
         protected BehaviorTree behaviorTree;
-
+        protected NavMeshAgent agent;
+        
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
@@ -66,6 +68,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
+            agent = GetComponent<NavMeshAgent>();
             IsDead = false;
             
             CacheOriginalLayers(this.transform);
@@ -79,6 +82,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             IsDead = false;
             isHacking = false;
             isStunned = false;
+            agent.enabled = false;
             
             ResetLayersToOriginal();
         }
