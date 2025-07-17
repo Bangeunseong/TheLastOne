@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414738, b: 0.121078536, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -362,7 +362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &277653826
 Transform:
   m_ObjectHideFlags: 0
@@ -791,7 +791,7 @@ PrefabInstance:
     - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_SuicideDrone_1
+      value: SpawnPoint_SuicideDrone_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2885,7 +2885,7 @@ PrefabInstance:
     - target: {fileID: 8086356697765483875, guid: c24cf88bd498f114292e45cb604fda4f,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_SuicideDrone_1
+      value: SpawnPoint_SuicideDrone_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
