@@ -66,7 +66,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
-            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
             IsDead = false;
             
             CacheOriginalLayers(this.transform);
@@ -77,14 +76,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// </summary>
         protected virtual void OnDisable()
         {
-            Service.Log("OnEnable");
             IsDead = false;
             isHacking = false;
             isStunned = false;
             
             ResetLayersToOriginal();
         }
-        
+
         protected abstract void PlayHitAnimation();
         protected abstract void PlayDeathAnimation();
         protected abstract void HackingFailurePenalty();
