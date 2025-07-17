@@ -120,11 +120,11 @@ namespace _1.Scripts.Manager.Subs
             UIStateCache.Clear();
         }
         
-        public void OnCutsceneStarted(UnityEngine.Playables.PlayableDirector _)
+        public void OnCutsceneStarted(PlayableDirector _)
         {
             HideAndSaveAllUI();
         }
-        public void OnCutsceneStopped(UnityEngine.Playables.PlayableDirector _)
+        public void OnCutsceneStopped(PlayableDirector _)
         {
             RestoreAllUI();
         }

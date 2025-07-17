@@ -15,6 +15,8 @@ namespace _1.Scripts.UI.Inventory
 {
     public class InventoryUI : UIBase
     {
+        [Header("UI")]
+        [SerializeField] private GameObject panel;
         [Header("SlotType")]
         [SerializeField] private SlotType[] slotType;
         
@@ -65,7 +67,8 @@ namespace _1.Scripts.UI.Inventory
             }
             Hide();
         }
-
+        public override void Show() { panel.SetActive(true); }
+        public override void Hide() { panel.SetActive(false); }
 
         public override void ResetUI()
         {

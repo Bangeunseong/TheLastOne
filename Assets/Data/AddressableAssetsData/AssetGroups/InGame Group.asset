@@ -41,13 +41,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c25f2806abf969d4aa8342237180121f
-    m_Address: InGameUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    - Stage2
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdc07fe471b3f1347b0fc9accb4c772f
     m_Address: ReconDrone
     m_ReadOnly: 0
