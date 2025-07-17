@@ -13,6 +13,7 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
+using RaycastPro;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
@@ -22,18 +23,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
-        private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
+        public SerializableDictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
         private CancellationTokenSource penaltyToken;
 
         protected override void Awake()
         {
             base.Awake();
-            CacheOriginalTransforms();
+            if (originalTransforms.Count == 0) CacheOriginalTransforms();
         }
 
-        protected override void OnEnable()
+        protected override void OnDisable()
         {
-            base.OnEnable();
+            base.OnDisable();
+            
+            animator.Rebind();
+            animator.Update(0f);
             ResetTransformsToOriginal();
         }
 
@@ -101,7 +105,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         
         private void CacheOriginalTransforms(Transform parent = null)
         {
-            if (parent == null) parent = transform;
+            if (parent == null) parent = this.transform;
             
             if (!originalTransforms.ContainsKey(parent))
             {
@@ -120,7 +124,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             {
                 if (kvp.Key != null)
                 {
-                    Service.Log("리셋 트랜스폼");
                     kvp.Key.localPosition = kvp.Value.localPos;
                     kvp.Key.localRotation = kvp.Value.localRot;
                 }
