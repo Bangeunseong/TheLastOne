@@ -183,7 +183,7 @@ namespace _1.Scripts.Manager.Core
             if (childrenName == null)
             {
                 var component = target.GetComponentInChildren<T>(inActive);
-                if (component != null) return component;
+                if (component) return component;
                 Service.Log($"Can't find component of type {typeof(T)} in children of {target.name}");
                 return null;
             }

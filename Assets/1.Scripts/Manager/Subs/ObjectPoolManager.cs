@@ -189,8 +189,8 @@ namespace _1.Scripts.Manager.Subs
                     // 부모오브젝트 찾아서 삭제
                     Transform parent = coreManager.GetComponentInChildrenOfTarget<Transform>(
                         poolRoot.gameObject, $"{prefabName}_Parent", true);
-                    if (parent != null) { UnityEngine.Object.Destroy(parent.gameObject); }
-                    Service.Log($"{parent.name}");
+                    if (parent) { UnityEngine.Object.Destroy(parent.gameObject); }
+                    // Service.Log($"{parent.name}");
                     
                     await Task.Yield(); // 한프레임 양보 (파괴작업이니까)
                 }
@@ -232,7 +232,7 @@ namespace _1.Scripts.Manager.Subs
             foreach (string prefabName in prefabNames)
             {
                 GameObject prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
-                if (prefab == null)
+                if (!prefab)
                 {
                     Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
                     continue;

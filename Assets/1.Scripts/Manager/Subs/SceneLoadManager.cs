@@ -55,8 +55,6 @@ namespace _1.Scripts.Manager.Subs
 
         public async Task OpenScene(SceneType sceneName)
         {
-            Service.Log($"OpenScene : {sceneName}");
-            Service.Log($"CurrentScene : {CurrentScene}, PreviousScene : {PreviousScene}");
             IsLoading = true;
             PreviousScene = CurrentScene;
             
@@ -69,39 +67,28 @@ namespace _1.Scripts.Manager.Subs
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
-
-
+                
+                CurrentScene = sceneName;
                 if (CurrentScene == SceneType.IntroScene)
                 {
-                    try
-                    {
-                        await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogError(e);
-                    }
+                    await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
                     Cursor.lockState = CursorLockMode.None;
                 }
-                
-                CurrentScene = sceneName;
+                Service.Log($"CurrentScene : {CurrentScene}, PreviousScene : {PreviousScene}");
             }
-            Debug.Log($"씬 전환 직전, 현재 활성 씬: {SceneManager.GetActiveScene().name}");
-            Debug.Log($"로드할 씬 이름: {(coreManager.IsDebug ? coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading))}");
+            
             var loadingScene = 
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
                     coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
-            Debug.Log($"SceneManager.LoadSceneAsync 반환값: {loadingScene}, isDone: {loadingScene?.isDone}");
-            if (loadingScene == null) Debug.LogError("씬 로드 핸들이 null임. 씬 이름, Build Settings 확인 필요!");
             while (!loadingScene!.isDone)
             {
                 await Task.Yield();
             }
-            Debug.Log("로딩 씬 전환 완료! (while 루프 탈출)");
+            
             LoadingProgress = 0f;
             uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
-            Debug.Log("Resource and Scene Load Started!");
+            Service.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");

@@ -1,16 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Serialization;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
-
 
 namespace _1.Scripts.UI.InGame
 {
@@ -85,7 +80,7 @@ namespace _1.Scripts.UI.InGame
 
         private void Awake() { progressFillImage.enabled = false; }
 
-        void Update() { if (playerCondition) { UpdateStateUI(); } }
+        private void Update() { if (playerCondition) { UpdateStateUI(); } }
 
         private void UpdateStateUI()
         {
@@ -100,7 +95,7 @@ namespace _1.Scripts.UI.InGame
         {
             if (healthSegments.Count > 0) return;
             
-            if (healthSegmentPrefab != null && healthSegmentContainer != null)
+            if (healthSegmentPrefab && healthSegmentContainer)
             {
                 int count = playerCondition.MaxHealth / healthSegmentValue;
                 for (int i = 0; i < count; i++)
@@ -110,8 +105,8 @@ namespace _1.Scripts.UI.InGame
                     segment.fillAmount = 1f;
                     healthSegments.Add(segment);
                     segment.gameObject.SetActive(true);
-                    var animator = segment.GetComponent<Animator>();
-                    if (animator != null) healthSegmentAnimators.Add(animator);
+                    if (segment.TryGetComponent(out Animator animator))
+                        healthSegmentAnimators.Add(animator);
                 }
                 healthSegmentPrefab.gameObject.SetActive(false);
             }
@@ -131,7 +126,7 @@ namespace _1.Scripts.UI.InGame
                 else healthSegments[i].fillAmount = 0f;
             }
 
-            if (healthBackgroundAnimator != null && current < prevhealth) healthBackgroundAnimator.SetTrigger("Damaged");
+            if (healthBackgroundAnimator && current < prevhealth) healthBackgroundAnimator.SetTrigger("Damaged");
             if (current < prevhealth && healthSegmentAnimators != null)
             {
                 for (int i = 0; i < full && i < healthSegmentAnimators.Count; i++)
@@ -149,12 +144,12 @@ namespace _1.Scripts.UI.InGame
 
         public void UpdateArmorSlider(float current, float max)
         {
-            if (armorSlider != null && max > 0)
+            if (armorSlider && max > 0)
             {
                 armorSlider.enabled = true;
                 armorSlider.value = current / max;
             }
-            else if (armorSlider == null || max == 0 || current == 0)
+            else if (armorSlider || max == 0 || current == 0)
                 armorSlider.enabled = false;
         }
 
@@ -185,7 +180,6 @@ namespace _1.Scripts.UI.InGame
         }
 
         public void UpdateLevelUI(int level) { levelText.text = $"Lvl. {level}"; }
-        
 
         private IEnumerator FocusEffectCoroutine()
         {

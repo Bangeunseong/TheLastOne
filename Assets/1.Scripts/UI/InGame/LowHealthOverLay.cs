@@ -41,7 +41,8 @@ namespace _1.Scripts.UI.InGame
             
             SetOverlayColer(Color.clear);
         }
-        void OnDestroy()
+
+        private void OnDestroy()
         {
             if (playerCondition != null) playerCondition.OnDamage -= HandleHit;
         }
