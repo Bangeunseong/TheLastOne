@@ -23,8 +23,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         
         public override TaskStatus OnUpdate()
         {
-            if (shouldLookTarget.Value) return TaskStatus.Failure;
-            
             targetTransform.Value = null;
             targetPos.Value = Vector3.zero;
             shouldLookTarget.Value = false;

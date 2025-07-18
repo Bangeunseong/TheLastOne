@@ -51,7 +51,7 @@ namespace _1.Scripts.Manager.Subs
                         enemy.transform.position = val.position;
                         enemy.transform.rotation = val.rotation;
                         
-                        if (enemy.TryGetComponent(out NavMeshAgent agent))
+                        if (enemy.TryGetComponent(out NavMeshAgent agent)) // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
                         {
                             agent.enabled = true;
                         }

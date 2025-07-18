@@ -21,7 +21,7 @@ MonoBehaviour:
   armor: 0
   maxArmor: 10
   moveSpeed: 3
-  runMultiplier: 1
+  runMultiplier: 2
   walkMultiplier: 0
   footStepSounds: []
   hitSounds: []
