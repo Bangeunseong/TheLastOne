@@ -737,6 +737,11 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1558577040}
+    - target: {fileID: 6120996571840135426, guid: d83aa36b1765e9948bcb80e95e93e264,
+        type: 3}
+      propertyPath: <Duration>k__BackingField
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 9202715797460669865, guid: d83aa36b1765e9948bcb80e95e93e264,
         type: 3}
       propertyPath: m_Name

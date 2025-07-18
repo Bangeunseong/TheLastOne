@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
@@ -57,7 +58,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         private void OnEnable()
         {
             isFinished = IsPlaying = IsCounting = false;
-            player.PlayerCondition.OnDisablePlayerMovement();
+            player?.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -96,7 +97,6 @@ namespace _1.Scripts.MiniGame.WireConnection
             uiManager = coreManager.uiManager;
             
             // Initialize MiniGame
-            CreateSockets();
             enabled = true;
         }
 
@@ -189,8 +189,9 @@ namespace _1.Scripts.MiniGame.WireConnection
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
-            IsCounting = false; 
-            startTime = Time.unscaledTime;
+            CreateSockets();
+            IsCounting = false;
+            startTime = Time.time;
         }
 
         private async UniTask EndGame_Async(bool success, float duration)

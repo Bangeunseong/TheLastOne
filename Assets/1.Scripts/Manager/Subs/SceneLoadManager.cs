@@ -177,7 +177,7 @@ namespace _1.Scripts.Manager.Subs
             var playable = introGo?.GetComponentInChildren<PlayableDirector>();
             if (playable && coreManager.gameManager.SaveData == null)
             {
-                playable.played += OnCutSceneStarted;
+                playable.played += OnCutsceneStarted;
                 playable.stopped += OnCutsceneStopped;
                 playable.Play();
             } 
@@ -195,7 +195,7 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        private void OnCutSceneStarted(PlayableDirector director)
+        private void OnCutsceneStarted(PlayableDirector director)
         {
             coreManager.gameManager.PauseGame();
         }
@@ -207,7 +207,7 @@ namespace _1.Scripts.Manager.Subs
             player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.ResumeGame();
 
-            director.played -= OnCutSceneStarted;
+            director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
         }
 

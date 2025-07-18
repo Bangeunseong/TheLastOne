@@ -400,6 +400,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
+            player.PlayerInput.enabled = true;
             player.InputProvider.enabled = true;
         }
 
@@ -408,6 +409,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
+            player.PlayerInput.enabled = false;
             player.InputProvider.enabled = false;
         }
 

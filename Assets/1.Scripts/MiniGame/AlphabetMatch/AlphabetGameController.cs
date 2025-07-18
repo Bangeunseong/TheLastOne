@@ -9,9 +9,9 @@ using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
-namespace _1.Scripts.MiniGame
+namespace _1.Scripts.MiniGame.AlphabetMatch
 {
-    public class AlphabetMatching : MonoBehaviour
+    public class AlphabetGameController : MonoBehaviour
     {
         [field: Header("Game Settings")]
         [field: SerializeField] public int AlphabetLength { get; private set; } = 3;

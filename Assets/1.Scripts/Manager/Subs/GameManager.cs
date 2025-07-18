@@ -159,13 +159,10 @@ namespace _1.Scripts.Manager.Subs
             if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
             else coreManager.timeScaleManager.ChangeTimeScale(1);
             
-            if (Player.PlayerCondition.IsPlayerHasControl)
-            {
-                Player.InputProvider.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
             Player.PlayerInput.enabled = true;
+            Player.InputProvider.enabled = true; 
+            Cursor.lockState = CursorLockMode.Locked; 
+            Cursor.visible = false;
         }
 
         public void ExitGame()

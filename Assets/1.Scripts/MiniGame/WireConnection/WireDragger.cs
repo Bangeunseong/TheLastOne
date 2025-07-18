@@ -59,13 +59,12 @@ namespace _1.Scripts.MiniGame.WireConnection
 
             GameObject target = eventData.pointerCurrentRaycast.gameObject;
 
-            if (!target.TryGetComponent(out Socket endSocket))
-            {
+            if (!target || !target.TryGetComponent(out Socket endSocket)) {
                 Destroy(lineRenderer.gameObject);
                 Debug.Log("Connection Failed!");
                 return;
             }
-            
+
             if (endSocket != AttachedSocket &&
                 endSocket.Type != AttachedSocket.Type &&
                 endSocket.Color == AttachedSocket.Color &&

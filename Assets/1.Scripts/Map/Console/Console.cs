@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
+using _1.Scripts.MiniGame.AlphabetMatch;
 using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace _1.Scripts.Map.Console
         [field: SerializeField] public List<ConsoleDoor> Doors { get; private set; }
         
         [field: Header("Minigames")]
-        [field: SerializeField] public AlphabetMatching AlphabetGame { get; private set; }
+        [field: SerializeField] public AlphabetGameController AlphabetGame { get; private set; }
         [field: SerializeField] public WireGameController WireConnectionGame { get; private set; }
 
         [field: Header("CutScene")]
@@ -35,14 +36,14 @@ namespace _1.Scripts.Map.Console
         
         private void Awake()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetGameController>();
             if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
         private void Reset()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetGameController>();
             if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
