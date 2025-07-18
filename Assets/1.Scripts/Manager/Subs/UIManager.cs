@@ -2,25 +2,23 @@ using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
-using _1.Scripts.UI.InGame;
-using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
-using _1.Scripts.UI.Setting;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Playables;
 using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
-    [Serializable] public class UIManager
+    [Serializable]
+    public class UIManager
     {
+        [field: Header("UI Mapping")]
+        [SerializeField] private Transform uiRoot;
         private Dictionary<Type, UIBase> uiMap = new();
-        private Transform uiRoot;
-        private CoreManager coreManager;
         private Dictionary<UIBase, bool> UIStateCache = new();
+        private CoreManager coreManager;
+        
         public void Start()
         {
             coreManager = CoreManager.Instance;
@@ -29,24 +27,31 @@ namespace _1.Scripts.Manager.Subs
             
             RegisterStaticUI<LoadingUI>();
             RegisterStaticUI<LobbyUI>();
+            ShowUI<LobbyUI>();
         }
         
         public T GetUI<T>() where T : UIBase
         {
+            Service.Log($"GetUI<{typeof(T).Name}> 사용");
             return uiMap.TryGetValue(typeof(T), out var ui) ? ui as T : null;
         }
 
         public T ShowUI<T>() where T : UIBase
         {
+            Debug.Log($"ShowUI<{typeof(T).Name}> 호출");
             var ui = GetUI<T>() ?? LoadUI<T>();
-            ui?.Show();
+            if (ui) ui.Show();
+            else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
+
             return ui;
         }
         
         public void HideUI<T>() where T : UIBase
         {
+            Debug.Log($"HideUI<{typeof(T).Name}> 호출");
             var ui = GetUI<T>();
-            ui?.Hide();
+            if (ui) ui.Hide();
+            else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
         }
 
         private T LoadUI<T>() where T : UIBase
@@ -58,6 +63,7 @@ namespace _1.Scripts.Manager.Subs
             if (!instance.TryGetComponent(out T component)) return null;
             component.Init(this);
             uiMap[typeof(T)] = component;
+            Service.Log($"UI {typeof(T).Name} Registered");
             return component;
         }
 
@@ -68,6 +74,7 @@ namespace _1.Scripts.Manager.Subs
             {
                 ui.Init(this);
                 uiMap.Add(typeof(T), ui);
+                Service.Log($"UI {typeof(T).Name} Registered");
             }
         }
 

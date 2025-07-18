@@ -114,20 +114,8 @@ MonoBehaviour:
     - Common
     - IntroScene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
-    m_Address: MinigameUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5808116dce9c094584a55f6eec0c67f
     m_Address: InteractionUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c25f2806abf969d4aa8342237180121f
-    m_Address: InGameUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -157,7 +145,7 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 63c260e7d7545c445ac28937f4c8af67
-    m_Address: InGameUI
+    m_Address: Assets/2.Prefabs/UI/InGame/InGameUI.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
