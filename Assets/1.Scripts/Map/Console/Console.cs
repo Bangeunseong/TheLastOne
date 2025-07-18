@@ -21,11 +21,11 @@ namespace _1.Scripts.Map.Console
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public bool IsCleared { get; private set; }
         [field: SerializeField] public List<ConsoleDoor> Doors { get; private set; }
-        
-        [field: Header("Minigames")]
-        [field: SerializeField] public AlphabetGameController AlphabetGame { get; private set; }
-        [field: SerializeField] public WireGameController WireConnectionGame { get; private set; }
 
+        [field: Header("Minigames")]
+        [field: SerializeField] public List<BaseMiniGame> MiniGames { get; private set; }
+        [field: SerializeField] public int CurrentMiniGame { get; private set; }
+        
         [field: Header("CutScene")]
         [field: SerializeField] public PlayableDirector CutScene { get; private set; }
         
@@ -36,15 +36,13 @@ namespace _1.Scripts.Map.Console
         
         private void Awake()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetGameController>();
-            if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
+            if (MiniGames.Count <= 0) MiniGames = new List<BaseMiniGame>(GetComponentsInChildren<BaseMiniGame>());
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
         private void Reset()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetGameController>();
-            if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
+            if (MiniGames.Count <= 0) MiniGames = new List<BaseMiniGame>(GetComponentsInChildren<BaseMiniGame>());
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
@@ -97,15 +95,15 @@ namespace _1.Scripts.Map.Console
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
             Service.Log("Interacted!");
+            
             if (IsCleared) return;
-            if (UnityEngine.Random.Range(0f, 1f) < 0.5f) AlphabetGame.StartMiniGame(this, player);
-            else WireConnectionGame.StartMiniGame(this, player);
+            CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
+            MiniGames[UnityEngine.Random.Range(0, MiniGames.Count)].StartMiniGame(this, player);
         }
 
         public void OnCancelInteract()
         {
-            AlphabetGame?.CancelMiniGame();
-            WireConnectionGame?.CancelMiniGame();
+            MiniGames[CurrentMiniGame].CancelMiniGame();
         }
     }
 }

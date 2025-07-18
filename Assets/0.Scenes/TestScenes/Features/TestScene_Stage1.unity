@@ -2010,46 +2010,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1298071269373815563, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1298071269373815563, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_CarveOnlyStationary
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1863146545293177619, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1993559397541543102, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 900053060764606496}
-    - target: {fileID: 2112628497605813949, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 13.505153
-      objectReference: {fileID: 0}
-    - target: {fileID: 2112628497605813949, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Center.x
-      value: 6.609707e-16
-      objectReference: {fileID: 0}
-    - target: {fileID: 2112628497605813949, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.17151165
-      objectReference: {fileID: 0}
-    - target: {fileID: 2338736533661410291, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: spawnIndex
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3885555260052375890, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2105,26 +2070,6 @@ PrefabInstance:
       propertyPath: m_SceneBindings.Array.data[0].value
       value: 
       objectReference: {fileID: 1074753609}
-    - target: {fileID: 4778357229909004939, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Name
-      value: Spanwer_Index2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5057052230064960691, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Convex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5090568227269874423, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Convex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5233354924769122450, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5635516836702039195, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Name
@@ -2150,11 +2095,6 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[2].second
       value: 
       objectReference: {fileID: 1917048629}
-    - target: {fileID: 6060587732018496934, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: <LowerVector>k__BackingField.y
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 6365674547828913228, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_SceneBindings.Array.data[0].value
@@ -2165,76 +2105,11 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[0].second
       value: 
       objectReference: {fileID: 1917048629}
-    - target: {fileID: 6439485171167579673, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Convex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552916662756706391, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552916662756706391, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_CarveOnlyStationary
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757402516686839309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 39.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757402516686839309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 3.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757402516686839309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757402516686839309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757402516686839309, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 7062424766055347884, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7062424766055347884, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_CarveOnlyStationary
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8360070918154499922, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8360070918154499922, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_CarveOnlyStationary
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8598486223725032148, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 900053060764606496}
-    - target: {fileID: 8818834991839397707, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: <LowerVector>k__BackingField.y
-      value: -1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

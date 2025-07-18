@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.Map.Console;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Console = _1.Scripts.Map.Console.Console;
 
 namespace _1.Scripts.MiniGame.ChargeBars
 {
-    public class ChargeGameController : MonoBehaviour
+    public class ChargeGameController : BaseMiniGame
     {
         [field: Header("Components")]
         [field: SerializeField] public GameObject BarPrefab { get; private set; }
@@ -23,32 +24,23 @@ namespace _1.Scripts.MiniGame.ChargeBars
         [field: SerializeField] public float Delay { get; private set; } = 3f;
         [field: SerializeField] public float ChargeRate { get; private set; } = 0.25f;
         [field: SerializeField] public float LossRate { get; private set; } = 0.1f;
-        
-        [field: Header("Current Game State")]
-        [field: SerializeField] public bool IsPlaying { get; private set; }
-        [field: SerializeField] public bool IsCounting { get; private set; }
-        [field: SerializeField] public bool IsCleared { get; private set; }
+        [field: SerializeField] public float Speed { get; private set; } = 5f;
         [field: SerializeField] public int CurrentBarIndex { get; private set; }
         
         private List<Bar> bars;
-        
-        private Console console;
-        private CoreManager coreManager;
-        private UIManager uiManager;
-        private Player player;
-        private float startTime;
-        private bool isFinished;
-        
-        private void OnEnable()
+        private Vector2 direction = Vector2.right;
+
+        protected override void Reset()
         {
-            isFinished = IsPlaying = IsCounting = false;
-            player.PlayerCondition.OnDisablePlayerMovement();
-            Cursor.lockState = CursorLockMode.None;
+            if (!BarLayout) BarLayout = this.TryGetChildComponent<RectTransform>("BarLayout");
+            if (!ControlLayout) ControlLayout = this.TryGetChildComponent<RectTransform>("ControlLayout");
+            if (!TargetObj) TargetObj = this.TryGetChildComponent<RectTransform>("TargetObj");
+            if (!ControlObj) ControlObj = this.TryGetChildComponent<RectTransform>("ControlObj");
         }
         
-        private void Update()
+        protected override void Update()
         {
-            if (isFinished) return;
+            if (coreManager.gameManager.IsGamePaused || isFinished) return;
 
             if (!IsPlaying)
             {
@@ -64,27 +56,33 @@ namespace _1.Scripts.MiniGame.ChargeBars
             
             if (IsCounting) return;
             
-            bars[CurrentBarIndex].DecreaseValue(LossRate * Time.deltaTime);
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                if (IsOverlapping(TargetObj, ControlObj))
+                {
+                    bars[CurrentBarIndex].IncreaseValue(ChargeRate);
+                    RepositionTargetObj();
+                }
+            }
+            if (CurrentBarIndex < BarCount)
+                bars[CurrentBarIndex].DecreaseValue(LossRate * Time.unscaledDeltaTime);
+            MoveControlObj();
             
             if (!(Time.time - startTime >= Duration)) return;
             FinishGame(false, 0f);
         }
         
-        public void StartMiniGame(Console con, Player ply)
+        public override void StartMiniGame(Console con, Player ply)
         {
-            console = con;
-            player = ply;
-            coreManager = CoreManager.Instance;
-            uiManager = coreManager.uiManager;
+            base.StartMiniGame(con, ply);
             
             // Initialize MiniGame
             enabled = true;
         }
         
-        public void CancelMiniGame()
+        public override void CancelMiniGame()
         {
-            if (!isActiveAndEnabled || isFinished) return;
-            isFinished = true;
+            base.CancelMiniGame();
             
             // Clear all remaining bars
             
@@ -110,29 +108,67 @@ namespace _1.Scripts.MiniGame.ChargeBars
                 bars.Add(bar);
             }
         }
-        
-        private void FinishGame(bool isSuccess, float duration)
+
+        private void MoveControlObj()
         {
-            // Service.Log("Finished Game");
-            isFinished = true;
-            _ = EndGame_Async(isSuccess, duration);
+            var offset = ControlObj.rect.width * 0.5f;
+            var farLeft = ControlLayout.rect.xMin + offset;
+            var farRight = ControlLayout.rect.xMax - offset;
+
+            var delta = direction * (Speed * Time.unscaledDeltaTime);
+            
+            if ((ControlObj.anchoredPosition + delta).x <= farLeft) {ControlObj.anchoredPosition = new Vector2(farLeft, ControlObj.anchoredPosition.y); direction = Vector2.right;}
+            else if ((ControlObj.anchoredPosition + delta).x >= farRight) {ControlObj.anchoredPosition = new Vector2(farRight, ControlObj.anchoredPosition.y); direction = Vector2.left;}
+            else ControlObj.anchoredPosition += delta;
+        }
+
+        private void RepositionTargetObj()
+        {
+            var offset = TargetObj.rect.width * 0.5f;
+            var xPos = UnityEngine.Random.Range(ControlLayout.rect.xMin + offset,  ControlLayout.rect.xMax - offset);
+            var yPos = ControlLayout.rect.center.y;
+            TargetObj.anchoredPosition = new Vector2(xPos, yPos);
         }
         
-        private async UniTask StartCountdown_Async()
+        private bool IsOverlapping(RectTransform rect1, RectTransform rect2)
+        {
+            // 바운드를 월드 공간으로 변환
+            var worldCorners1 = GetWorldRect(rect1);
+            var worldCorners2 = GetWorldRect(rect2);
+
+            return worldCorners1.Overlaps(worldCorners2);
+        }
+        
+        private static Rect GetWorldRect(RectTransform rt)
+        {
+            var corners = new Vector3[4];
+            rt.GetWorldCorners(corners); // 순서: 좌하, 좌상, 우상, 우하
+
+            float x = corners[0].x;
+            float y = corners[0].y;
+            float width = corners[2].x - corners[0].x;
+            float height = corners[2].y - corners[0].y;
+
+            return new Rect(x, y, width, height);
+        }
+        
+        protected override async UniTask StartCountdown_Async()
         {
             var t = 0f;
             while (t < Delay)
             {
-                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) 
+                    t += Time.unscaledDeltaTime;
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
             CreateBars();
+            RepositionTargetObj();
             IsCounting = false; 
             startTime = Time.unscaledTime;
         }
 
-        private async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool success, float duration)
         {
             if (success)
             {

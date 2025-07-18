@@ -14,7 +14,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
 
         public void Reset()
         {
-            if (!Img) Img = this.TryGetComponent<Image>();
+            if (!Img) Img = this.TryGetChildComponent<Image>("Body");
         }
 
         public void Initialize(ChargeGameController controller)
@@ -22,6 +22,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
             Controller = controller;
             CurrentValue = 0f;
             IsFilled = false;
+            Img.fillAmount = CurrentValue;
         }
         
         public void IncreaseValue(float amount)
