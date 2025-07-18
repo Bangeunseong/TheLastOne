@@ -60,12 +60,5 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
             CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(this.gameObject);
             CoreManager.Instance.objectPoolManager.Release(this.gameObject);
         }
-        
-        public void DestroyObjectAndQuestCountForAnimationEvent()
-        {
-            CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(this.gameObject);
-            CoreManager.Instance.objectPoolManager.Release(this.gameObject);
-            GameEventSystem.Instance.RaiseEvent(3);
-        }
     }
 }

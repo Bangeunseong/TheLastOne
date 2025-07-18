@@ -10,6 +10,7 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
@@ -21,11 +22,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 {
     public abstract class BaseDroneStatController : BaseNpcStatController
     {
+        [Header("hackingFailPenalty")]
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
-        public SerializableDictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
         private CancellationTokenSource penaltyToken;
+        
+        private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
 
         protected override void Awake()
         {
