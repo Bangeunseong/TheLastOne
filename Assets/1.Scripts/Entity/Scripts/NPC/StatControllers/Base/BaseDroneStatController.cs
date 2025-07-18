@@ -28,10 +28,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
         private CancellationTokenSource penaltyToken;
         
-        [Header("KillDrone_Quest")]
-        [SerializeField] private bool shouldCountKillDroneQuest;
-        [SerializeField] private int killDroneQuestIndex = 3;
-        
         private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
 
         protected override void Awake()
@@ -56,8 +52,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 
         protected override void PlayDeathAnimation()
         {
-            if (shouldCountKillDroneQuest && !RuntimeStatData.IsAlly) GameEventSystem.Instance.RaiseEvent(killDroneQuestIndex);
-            
             int[] deathHashes =
             {
                 DroneAnimationHashData.Dead1,

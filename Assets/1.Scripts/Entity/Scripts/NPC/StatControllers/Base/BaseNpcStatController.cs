@@ -66,9 +66,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         private HackingProgressUI hackingProgressUI;
         private Dictionary<Transform, int> originalLayers = new();
 
-        [Header("Hacking_Quest")] 
+        [Header("Hacking_Quest")] // 해킹 성공 시 올려야할 퀘스트 진행도들 
         [SerializeField] private bool shouldCountHackingQuest;
         [SerializeField] private int[] hackingQuestIndex;
+        
+        [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
+        [SerializeField] private bool shouldCountKillQuest;
+        [SerializeField] private int[] killQuestIndex;
         
         protected virtual void Awake()
         {
@@ -109,8 +113,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             RuntimeStatData.MaxHealth -= damage;
 
-            if (RuntimeStatData.MaxHealth <= 0)
+            if (RuntimeStatData.MaxHealth <= 0) // 사망
             {
+                if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
+                {
+                    foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
+                }
+
                 foreach (Light objlight in lights) { objlight.enabled = false; }
                 foreach (Collider coll in colliders) { coll.enabled = false; }
                 
