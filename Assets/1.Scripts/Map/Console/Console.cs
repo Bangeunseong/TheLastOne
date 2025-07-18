@@ -6,9 +6,11 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
+using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
 using UnityEngine.Playables;
+using Random = System.Random;
 
 namespace _1.Scripts.Map.Console
 {
@@ -21,6 +23,7 @@ namespace _1.Scripts.Map.Console
         
         [field: Header("Minigames")]
         [field: SerializeField] public AlphabetMatching AlphabetGame { get; private set; }
+        [field: SerializeField] public WireGameController WireConnectionGame { get; private set; }
 
         [field: Header("CutScene")]
         [field: SerializeField] public PlayableDirector CutScene { get; private set; }
@@ -33,12 +36,14 @@ namespace _1.Scripts.Map.Console
         private void Awake()
         {
             if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
         private void Reset()
         {
             if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (!WireConnectionGame) WireConnectionGame = this.TryGetComponent<WireGameController>();
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
@@ -72,7 +77,6 @@ namespace _1.Scripts.Map.Console
             }
             else
             {
-
                 CutScene.played += coreManager.uiManager.OnCutsceneStarted;
                 CutScene.stopped += coreManager.uiManager.OnCutsceneStopped;
                 CutScene.Play();
@@ -93,12 +97,14 @@ namespace _1.Scripts.Map.Console
             if (!ownerObj.TryGetComponent(out Player player)) return;
             Service.Log("Interacted!");
             if (IsCleared) return;
-            AlphabetGame.StartMiniGame(this, player);
+            if (UnityEngine.Random.Range(0f, 1f) < 0.5f) AlphabetGame.StartMiniGame(this, player);
+            else WireConnectionGame.StartMiniGame(this, player);
         }
 
         public void OnCancelInteract()
         {
             AlphabetGame?.CancelMiniGame();
+            WireConnectionGame?.CancelMiniGame();
         }
     }
 }

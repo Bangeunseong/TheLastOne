@@ -57,8 +57,8 @@ namespace _1.Scripts.MiniGame.WireConnection
         private void OnEnable()
         {
             isFinished = IsPlaying = IsCounting = false;
-            // player.PlayerCondition.OnDisablePlayerMovement();
-            // Cursor.lockState = CursorLockMode.None;
+            player.PlayerCondition.OnDisablePlayerMovement();
+            Cursor.lockState = CursorLockMode.None;
         }
 
         private void Update()
@@ -88,12 +88,12 @@ namespace _1.Scripts.MiniGame.WireConnection
             ResetAllSockets();
         }
         
-        public void StartMiniGame()
+        public void StartMiniGame(Console con, Player ply)
         {
-            // console = con;
-            // player = ply;
-            // coreManager = CoreManager.Instance;
-            // uiManager = coreManager.uiManager;
+            console = con;
+            player = ply;
+            coreManager = CoreManager.Instance;
+            uiManager = coreManager.uiManager;
             
             // Initialize MiniGame
             CreateSockets();
@@ -185,8 +185,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             var t = 0f;
             while (t < Delay)
             {
-                // if (!coreManager.gameManager.IsGamePaused) 
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
@@ -204,7 +203,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             
             await UniTask.WaitForSeconds(duration, true);
             
-            // console.OnCleared(success);
+            console.OnCleared(success);
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
             enabled = false;
