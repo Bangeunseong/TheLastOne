@@ -55,5 +55,17 @@ namespace _1.Scripts.UI.InGame.Mission
                 missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, targetValue, 0.1f);
             }
         }
+
+        public IEnumerator WaitCompleteAnimation()
+        {
+            while (missionCountSlider.value < 0.99f)
+            {
+                missionCountSlider.value = Mathf.Lerp(missionCountSlider.value, 1f, 0.1f);
+                yield return null;
+            }
+            
+            missionCountSlider.value = 1f;
+            missionCountText.text = "COMPLETE!";
+        }
     }
 }

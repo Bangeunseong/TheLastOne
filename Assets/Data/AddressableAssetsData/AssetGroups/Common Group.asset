@@ -145,7 +145,7 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 63c260e7d7545c445ac28937f4c8af67
-    m_Address: Assets/2.Prefabs/UI/InGame/InGameUI.prefab
+    m_Address: InGameUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -158,6 +158,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 13aa10e8af8905f458e078d1135949d4
     m_Address: WeaponUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 213568ebef49f984291c8d4a586fc61c
+    m_Address: DistanceUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23d4529403d8d8548a0ce48ab4699e65
+    m_Address: PauseMenuUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

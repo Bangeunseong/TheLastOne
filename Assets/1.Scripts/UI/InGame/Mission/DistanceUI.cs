@@ -42,6 +42,7 @@ namespace _1.Scripts.UI.InGame.Mission
         
         public void SetTarget(Transform newTarget)
         {
+            if (!player) player = CoreManager.Instance.gameManager.Player?.transform;
             target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);
@@ -57,7 +58,7 @@ namespace _1.Scripts.UI.InGame.Mission
             if (player == null || target == null) return;
 
             float distance = Vector3.Distance(player.position, target.position);
-            distanceText.text = $"{distance:0.00}m";
+            distanceText.text = $"{distance:0.0}m";
         }
     }
      

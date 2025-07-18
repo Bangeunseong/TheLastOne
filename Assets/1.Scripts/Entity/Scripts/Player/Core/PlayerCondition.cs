@@ -377,21 +377,21 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     if (gun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.GetUI<WeaponUI>().Refresh();
+                        coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
                     }
                     break;
                 case GrenadeLauncher grenadeThrower:
                     if (grenadeThrower.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
                 case Crossbow hackingGun:
                     if (hackingGun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
-                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
             }
@@ -477,6 +477,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
             staminaCTS = new CancellationTokenSource();
             _ = RecoverStamina_Async(recoverRate, interval, staminaCTS.Token);
+            CoreManager.Instance.uiManager.GetUI<InGameUI>().UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
         public void CancelStaminaTask()
         {
@@ -763,7 +764,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             reloadPlayer = null;
             reloadCTS.Dispose(); reloadCTS = null;
-            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
         }
         /* --------------------- */
         
@@ -817,7 +818,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
-            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh();
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(true);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);

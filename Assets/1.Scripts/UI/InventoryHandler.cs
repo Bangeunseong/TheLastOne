@@ -13,8 +13,10 @@ namespace _1.Scripts.UI
         [SerializeField] private PauseHandler pauseHandler;
         private InventoryUI inventoryUI;
         private CoreManager coreManager;
+
         bool isPaused;
         public bool IsInventoryOpen => isPaused;
+        public void SetPauseHandler(PauseHandler handler) => pauseHandler = handler;
         
         private void Start()
         {

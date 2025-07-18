@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,9 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image[] slotImage; 
         [SerializeField] private TextMeshProUGUI[] slotText;
         [SerializeField] private TextMeshProUGUI[] slotAmmoText;
+        [SerializeField] private TextMeshProUGUI currentAmmoText;
+        [SerializeField] private TextMeshProUGUI currentTotalAmmoText;
+        [SerializeField] private Image ammoSlotFrame;
 
         [Header("Scale 세팅")]
         [SerializeField] private Vector3 normalScale = Vector3.one;
@@ -47,9 +51,11 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float idleAlpha = 0.5f;
         [SerializeField] private float selectedSlotAlpha = 1f;
 
-        [Header("애니메이터")] [SerializeField] private Animator panelAnimator;
+        [Header("애니메이터")] 
+        [SerializeField] private Animator panelAnimator;
         [SerializeField] private float panelHideDelay = 3f;
         private Coroutine hideCoroutine;
+        private bool isPanelVisible = false;
 
         private PlayerCondition  playerCondition;
         private int lastSelectedIndex = -1;
@@ -96,11 +102,11 @@ namespace _1.Scripts.UI.InGame
         public void Initialize(PlayerCondition newPlayerCondition)
         {
             playerCondition = newPlayerCondition;
-            Refresh();
+            Refresh(false);
         }
         
         
-        public void Refresh()
+        public void Refresh(bool playShowAnimation = true)
         { 
             var weapons = playerCondition?.Weapons;
             var available = playerCondition?.AvailableWeapons;
@@ -110,6 +116,8 @@ namespace _1.Scripts.UI.InGame
 
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;
+            
+            UpdateCurrentAmmoText(weapons, available, selectedIndex);
 
             for (int i = 0; i < slotType.Length; i++)
             {      
@@ -136,21 +144,29 @@ namespace _1.Scripts.UI.InGame
                 SetSlotAlpha(i, isSelected ? selectedSlotAlpha : idleAlpha);
                 targetScales[i] = isSelected ? selectedScale : normalScale;
             }
-            if (selectionChanged && selectedIndex >= 0 && selectedIndex < slotAnimator.Length)
+            if (selectionChanged && playShowAnimation && selectedIndex >= 0 && selectedIndex < slotAnimator.Length)
             {
-                slotAnimator[selectedIndex]?.Rebind();
-                slotAnimator[selectedIndex]?.Play(0);
-                panelAnimator?.SetTrigger("Show");
+                if (!isPanelVisible)
+                {
+                    slotAnimator[selectedIndex]?.Rebind();
+                    slotAnimator[selectedIndex]?.Play(0);
+                    panelAnimator?.ResetTrigger("Show");
+                    panelAnimator?.ResetTrigger("Hide");
+                    panelAnimator?.SetTrigger("Show");
 
-                if (hideCoroutine != null) StopCoroutine(hideCoroutine);
-                hideCoroutine = StartCoroutine(HidePanelCoroutine());
+                    if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+                    hideCoroutine = StartCoroutine(HidePanelCoroutine());
+                }
             }
         }        
 
         private IEnumerator HidePanelCoroutine()
         {
             yield return new WaitForSeconds(panelHideDelay);
+            panelAnimator?.ResetTrigger("Show");
+            panelAnimator?.ResetTrigger("Hide");
             panelAnimator?.SetTrigger("Hide");
+            isPanelVisible = false;
             hideCoroutine = null;
         }
         
@@ -161,6 +177,32 @@ namespace _1.Scripts.UI.InGame
                 var color = selectedSlotImage[index].color;
                 color.a = alpha;
                 selectedSlotImage[index].color = color;
+            }
+        }
+
+        private void UpdateCurrentAmmoText(List<BaseWeapon> weapons, List<bool> available, int selectedIndex)
+        {
+            if (weapons == null || available == null || selectedIndex < 0 || selectedIndex >= weapons.Count)
+            {
+                ammoSlotFrame.gameObject.SetActive(false);
+                currentAmmoText.text = string.Empty;
+                currentTotalAmmoText.text = string.Empty;
+                return;
+            }
+
+            var currentWeapon = weapons[selectedIndex];
+            var (mag, total) = SlotUtility.GetWeaponAmmo(currentWeapon);
+            if (mag > 0 || total > 0)
+            {
+                ammoSlotFrame.gameObject.SetActive(true);
+                currentAmmoText.text = $"{mag}";
+                currentTotalAmmoText.text = $"{total}";
+            }
+            else
+            {
+                ammoSlotFrame.gameObject.SetActive(false);
+                currentAmmoText.text = string.Empty;
+                currentTotalAmmoText.text = string.Empty;
             }
         }
     }

@@ -41,6 +41,7 @@ namespace _1.Scripts.UI.InGame.Mission
         
         private void RefreshMissions()
         {
+            Service.Log("Refresh Missions");
             var questManager = CoreManager.Instance.questManager;
             foreach (var kv in questManager.activeQuests)
             {
@@ -51,6 +52,7 @@ namespace _1.Scripts.UI.InGame.Mission
                     quest.CurrentObjective.currentAmount,
                     quest.CurrentObjective.data.requiredAmount
                 );
+                Service.Log($"Add Mission {quest.data.questID}, {quest.CurrentObjective.data.description}");
             }
         }
         
@@ -90,6 +92,7 @@ namespace _1.Scripts.UI.InGame.Mission
         
         private IEnumerator RemoveSlot(MissionSlot slot)
         {
+            yield return slot.WaitCompleteAnimation();
             slot.PlayCompleteAnimation();
             yield return new WaitForSeconds(0.5f);
             slotList.Remove(slot);

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
+using _1.Scripts.UI.Common;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using UnityEngine;
@@ -32,23 +34,19 @@ namespace _1.Scripts.Manager.Subs
         
         public T GetUI<T>() where T : UIBase
         {
-            Service.Log($"GetUI<{typeof(T).Name}> 사용");
             return uiMap.TryGetValue(typeof(T), out var ui) ? ui as T : null;
         }
 
         public T ShowUI<T>() where T : UIBase
         {
-            Debug.Log($"ShowUI<{typeof(T).Name}> 호출");
             var ui = GetUI<T>() ?? LoadUI<T>();
-            if (ui) ui.Show();
-            else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
-
+            ui.Show();
+            InjectHandler(ui);
             return ui;
         }
         
         public void HideUI<T>() where T : UIBase
         {
-            Debug.Log($"HideUI<{typeof(T).Name}> 호출");
             var ui = GetUI<T>();
             if (ui) ui.Hide();
             else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
@@ -103,6 +101,7 @@ namespace _1.Scripts.Manager.Subs
         
         public void UnloadUI<T>() where T : UIBase
         {
+            Debug.Log($"UnloadUI {typeof(T).Name}");
             if (!uiMap.TryGetValue(typeof(T), out var ui)) return;
             Object.Destroy(ui.gameObject);
             uiMap.Remove(typeof(T));
@@ -134,6 +133,40 @@ namespace _1.Scripts.Manager.Subs
         public void OnCutsceneStopped(PlayableDirector _)
         {
             RestoreAllUI();
+        }
+
+        private void InjectHandler(UIBase ui)
+        {
+            var menuHandler = GameObject.FindObjectOfType<MenuHandler>();
+
+            if (ui is InventoryUI inventoryUI)
+            {
+                var inventoryHandler = inventoryUI.GetComponent<InventoryHandler>();
+                if (menuHandler && inventoryHandler)
+                    menuHandler.SetInventoryHandler(inventoryHandler);
+
+                var pauseHandler = CoreManager.Instance.uiManager.GetUI<PauseMenuUI>()?.GetComponent<PauseHandler>();
+                if (pauseHandler)
+                {
+                    pauseHandler.SetInventoryHandler(inventoryHandler);
+                    inventoryHandler.SetPauseHandler(pauseHandler);
+                }
+            }
+
+            if (ui is PauseMenuUI pauseMenuUI)
+            {
+                var pauseHandler = pauseMenuUI.GetComponent<PauseHandler>();
+                if (menuHandler && pauseHandler)
+                    menuHandler.SetPauseHandler(pauseHandler);
+                pauseHandler.SetPauseMenuUI(pauseMenuUI);
+
+                var inventoryHandler = CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.GetComponent<InventoryHandler>();
+                if (inventoryHandler)
+                {        
+                    pauseHandler.SetInventoryHandler(inventoryHandler);
+                    inventoryHandler.SetPauseHandler(pauseHandler);
+                }
+            }
         }
     }
 }

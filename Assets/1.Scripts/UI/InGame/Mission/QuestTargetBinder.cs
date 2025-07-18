@@ -37,7 +37,7 @@ namespace _1.Scripts.UI.InGame.Mission
             var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
             if (target == null) return;
 
-            var distanceUI = CoreManager.Instance.uiManager.ShowUI<DistanceUI>();
+            var distanceUI = CoreManager.Instance.uiManager.GetUI<DistanceUI>();
             distanceUI.SetTarget(target);
         }
     }

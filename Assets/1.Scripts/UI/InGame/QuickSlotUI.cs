@@ -120,7 +120,11 @@ namespace _1.Scripts.UI.InGame
 
         private void RefreshQuickSlot()
         {
-            if (inventory == null) return;
+            if (inventory == null)
+            {
+                Service.Log("QuickSlot UI : Inventory is null");
+                return;
+            }
             var items = inventory.Items;
             for (int i = 0; i < slotIcons.Length; i++)
             {
@@ -131,6 +135,7 @@ namespace _1.Scripts.UI.InGame
                     if (it.Key == type)
                     {
                         item = it.Value;
+                        Service.Log($"QuickSlot UI : {item.ItemData.Name} {item.CurrentItemCount}");
                         break;
                     }
                 }

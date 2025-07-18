@@ -10,15 +10,22 @@ namespace _1.Scripts.UI
         [SerializeField] private BlurManager blurMgr;
         [SerializeField] private Animator pauseAnimator;
         [SerializeField] private InventoryHandler inventoryHandler;
+        
+        [Header("Setting Panel")]
+        [SerializeField] private CanvasGroup settingPanel;
+        [SerializeField] private Animator settingAnimator;
+        
         private PauseMenuUI pauseMenuUI;
         private CoreManager coreManager;
+
         private bool isPaused;
         public bool IsPaused => isPaused;
+        public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
 
         private void Start()
         {
             coreManager = CoreManager.Instance;
-            pauseMenuUI = coreManager.uiManager.GetUI<PauseMenuUI>();
+            pauseMenuUI = coreManager.uiManager.GetUI<PauseMenuUI>(); ;
         }
 
         public void TogglePause()
@@ -44,6 +51,14 @@ namespace _1.Scripts.UI
             blurMgr.BlurInAnim();
             pauseMenuUI.Show();
             pauseAnimator.Play("Window In");
+
+            if (settingPanel != null && settingPanel.alpha > 0f)
+            {
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
+            }
         }
 
         private void Resume()
@@ -52,6 +67,21 @@ namespace _1.Scripts.UI
             blurMgr.BlurOutAnim();
             pauseAnimator.Play("Window Out");
             pauseMenuUI.Hide();
+            
+            if (settingPanel != null && settingPanel.alpha > 0f)
+            {
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
+            }
+        }
+
+        public void SetPauseMenuUI(PauseMenuUI ui)
+        {
+            pauseMenuUI = ui;
+            settingPanel = ui.SettingPanel;
+            settingAnimator = ui.SettingAnimator;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace _1.Scripts.UI.InGame.Mission
             }
         }
         void OnEnable()
-        {           
+        {                       
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
             if (DistanceUI.CurrentTarget != null)
@@ -59,8 +59,12 @@ namespace _1.Scripts.UI.InGame.Mission
         private void OnTargetChanged(Transform newTarget)
         {
             target = newTarget;
+            if (!player || !player.gameObject.activeInHierarchy)
+            {
+                var go = GameObject.FindWithTag("Player");
+                if (go != null) player = go.transform;
+            }
             if (player == null || target == null || pathFinder == null) return;
-
             var corners = pathFinder.GetPathCorners(player.position, target.position);
             if (corners.Length > 1)
                 AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();

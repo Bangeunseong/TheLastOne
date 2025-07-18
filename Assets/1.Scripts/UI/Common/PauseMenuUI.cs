@@ -11,20 +11,29 @@ namespace _1.Scripts.UI.Common
     {
         [Header("PauseMenu Elements")]
         [SerializeField] private GameObject panel;
+        [SerializeField] private CanvasGroup settingPanel;
+        [SerializeField] private Animator settingAnimator;
         [SerializeField] private Button resumeButton;
+        [SerializeField] private Button reloadButton;
         [SerializeField] private Button quitButton;
         private PauseHandler pauseHandler;
 
+        public CanvasGroup SettingPanel => settingPanel;
+        public Animator SettingAnimator => settingAnimator;
         
-        
-        public override void Show() { panel.SetActive(true); }
-        public override void Hide() { panel.SetActive(false); }
+        public override void Show() {  panel.SetActive(true); }
+
+        public override void Hide()
+        {
+            panel.SetActive(false);
+        }
         public override void ResetUI() { Hide(); }
 
-        private void Start()
+        private void Awake()
         {
             pauseHandler = FindObjectOfType<PauseHandler>();
             resumeButton.onClick.AddListener(() => pauseHandler.ClosePausePanel());
+            reloadButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
             quitButton.onClick.AddListener(() => { CoreManager.Instance.MoveToIntroScene(); });
             Hide();
         }

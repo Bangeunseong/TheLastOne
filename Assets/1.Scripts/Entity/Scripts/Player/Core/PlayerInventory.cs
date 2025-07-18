@@ -30,7 +30,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsOpenUIAction = Time.unscaledTime - timeSinceLastPressed >= HoldDurationToOpen;
 
             if (!IsOpenUIAction) return;
-            coreManager.uiManager?.ShowUI<QuickSlotUI>();
+            coreManager.uiManager?.GetUI<QuickSlotUI>().OpenQuickSlot();
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;

@@ -6,7 +6,9 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
+using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -73,6 +75,13 @@ namespace _1.Scripts.Manager.Subs
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
+                    uiManager.UnloadUI<InGameUI>();
+                    uiManager.UnloadUI<MissionUI>();
+                    uiManager.UnloadUI<DistanceUI>();
+                    uiManager.UnloadUI<InventoryUI>();
+                    uiManager.UnloadUI<QuickSlotUI>();
+                    uiManager.UnloadUI<PauseMenuUI>();
+                    uiManager.UnloadUI<WeaponUI>();
                     Cursor.lockState = CursorLockMode.None;
                 }
                 Service.Log($"CurrentScene : {CurrentScene}, PreviousScene : {PreviousScene}");
@@ -146,7 +155,8 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene: break;
+                case SceneType.IntroScene: uiManager.HideUI<LoadingUI>();
+                    uiManager.ShowUI<LobbyUI>(); break;
                 case SceneType.Loading: break;
                 case SceneType.EndingScene: break;
             }
@@ -164,10 +174,13 @@ namespace _1.Scripts.Manager.Subs
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     uiManager.HideUI<LoadingUI>();
-                    uiManager.ShowUI<InGameUI>();
-                    uiManager.ShowUI<MissionUI>();
-                    uiManager.ShowUI<WeaponUI>();
-                    uiManager.ShowUI<PauseMenuUI>();
+                    uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.ShowUI<MissionUI>()?.Initialize();
+                    uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
+                    uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.ShowUI<PauseMenuUI>().Initialize();
+                    uiManager.ShowUI<InventoryUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.ShowUI<QuickSlotUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerInventory);
                     break;
             }
 
