@@ -24,7 +24,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
-        public SerializableDictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
+        private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
         private CancellationTokenSource penaltyToken;
 
         protected override void Awake()

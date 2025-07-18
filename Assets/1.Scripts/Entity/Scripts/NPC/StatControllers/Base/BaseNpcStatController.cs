@@ -47,6 +47,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected Animator animator;
         protected BehaviorTree behaviorTree;
         protected NavMeshAgent agent;
+        private Light[] lights;
         
         [Header("Stunned")] 
         private bool isStunned;
@@ -69,6 +70,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
             agent = GetComponent<NavMeshAgent>();
+            lights = GetComponentsInChildren<Light>();
             IsDead = false;
             
             CacheOriginalLayers(this.transform);
@@ -104,6 +106,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             if (RuntimeStatData.MaxHealth <= 0)
             {
                 behaviorTree.SetVariableValue("IsDead", true);
+                foreach (Light objlight in lights) { objlight.enabled = false; }
                 PlayDeathAnimation();
                 IsDead = true;
             }
