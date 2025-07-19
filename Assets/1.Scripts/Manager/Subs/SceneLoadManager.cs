@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
@@ -76,7 +77,7 @@ namespace _1.Scripts.Manager.Subs
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
                     uiManager.UnloadUI<InGameUI>();
-                    uiManager.UnloadUI<MissionUI>();
+                    uiManager.UnloadUI<QuestUI>();
                     uiManager.UnloadUI<DistanceUI>();
                     uiManager.UnloadUI<InventoryUI>();
                     uiManager.UnloadUI<QuickSlotUI>();
@@ -175,7 +176,7 @@ namespace _1.Scripts.Manager.Subs
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     uiManager.HideUI<LoadingUI>();
                     uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<MissionUI>()?.Initialize();
+                    uiManager.ShowUI<QuestUI>();
                     uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
                     uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
                     uiManager.ShowUI<PauseMenuUI>().Initialize();
@@ -185,6 +186,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
+            uiManager.ShowUI<QuestUI>()?.Initialize();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             
@@ -199,7 +201,6 @@ namespace _1.Scripts.Manager.Subs
                 await Task.Yield();
             }
         }
-
         // Scene Loading Test Method (Deprecated)
         // private IEnumerator LoadMainScene()
         // {

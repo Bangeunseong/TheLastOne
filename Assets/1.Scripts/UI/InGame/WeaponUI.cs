@@ -87,7 +87,7 @@ namespace _1.Scripts.UI.InGame
             if (param is PlayerCondition newPlayerCondition)
             {
                 playerCondition = newPlayerCondition;
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -98,12 +98,6 @@ namespace _1.Scripts.UI.InGame
                 slotTransform[i].localScale = Vector3.Lerp(slotTransform[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
             }
         }
-
-        public void Initialize(PlayerCondition newPlayerCondition)
-        {
-            playerCondition = newPlayerCondition;
-            Refresh(false);
-        }
         
         
         public void Refresh(bool playShowAnimation = true)
@@ -113,6 +107,7 @@ namespace _1.Scripts.UI.InGame
             int selectedIndex = playerCondition?.EquippedWeaponIndex ?? -1;
 
             if (weapons == null || available == null) return;
+            if (weapons.Count <=0 || available.Count <=0) return;
 
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;

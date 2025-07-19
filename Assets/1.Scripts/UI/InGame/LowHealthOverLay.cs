@@ -56,7 +56,11 @@ namespace _1.Scripts.UI.InGame
             else if (ratio <= threshold1) tint = color1;
             else tint = color0;
             
-            float finalAlpha = Mathf.Clamp01(tint.a + flashAlpha);
+            float pulseSpeed = 2f;
+            float pulseStrength = -0.3f;
+            float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f * pulseStrength;
+            
+            float finalAlpha = Mathf.Clamp01(tint.a + pulse + flashAlpha);
             tint.a = finalAlpha;
 
             if (tint != lastColor)

@@ -47,36 +47,36 @@ namespace _1.Scripts.UI.InGame.Mission
             {
                 var quest = kv.Value;
                 AddMission(
-                    quest.data.questID,
+                    quest.CurrentObjective.data.targetID,
                     quest.CurrentObjective.data.description,
                     quest.CurrentObjective.currentAmount,
                     quest.CurrentObjective.data.requiredAmount
                 );
-                Service.Log($"Add Mission {quest.data.questID}, {quest.CurrentObjective.data.description}");
+                Service.Log($"Add Mission {quest.CurrentObjective.data.targetID}, {quest.CurrentObjective.data.description}");
             }
         }
         
-        public void AddMission(int questID, string missionText, int currentAmount, int requiredAmount)
+        public void AddMission(int targetID, string missionText, int currentAmount, int requiredAmount)
         {
-            if (slotMap.ContainsKey(questID)) return;
+            if (slotMap.ContainsKey(targetID)) return;
 
             var go = Instantiate(slotPrefabGO, slotContainer);
             var slot = go.GetComponent<MissionSlot>();
 
-            slot.Initialize(questID, missionText, currentAmount, requiredAmount);
+            slot.Initialize(targetID, missionText, currentAmount, requiredAmount);
             slot.PlayNewMissionAnimation();
 
             slotList.Add(slot);
-            slotMap[questID] = slot;
+            slotMap[targetID] = slot;
 
             SortSlots();
         }
 
-        public void CompleteMission(int questID)
+        public void CompleteMission(int targetID)
         {
-            if (!slotMap.TryGetValue(questID, out var slot)) return;
+            if (!slotMap.TryGetValue(targetID, out var slot)) return;
             
-            slotMap.Remove(questID);
+            if (!slotMap.Remove(targetID)) return;
 
             if (!gameObject.activeInHierarchy)
             {
