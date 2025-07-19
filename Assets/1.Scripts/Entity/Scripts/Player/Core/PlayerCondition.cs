@@ -214,6 +214,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     player.PlayerInteraction.OnCancelInteract();
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
+                coreManager.uiManager.InGameUI?.UpdateArmorSlider(CurrentShield, MaxShield);
             }
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
             OnDamage?.Invoke();

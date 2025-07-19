@@ -19,6 +19,7 @@ using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
@@ -45,14 +46,17 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Components")]
         protected Animator animator;
         protected BehaviorTree behaviorTree;
-
+        protected NavMeshAgent agent;
+        private Collider[] colliders;
+        private Light[] lights;
+        
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
         private CancellationTokenSource stunToken;
         [SerializeField] protected ParticleSystem onStunParticle;
         
-        [Header("Hacking")]
+        [Header("Hacking_Process")]
         public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
         [SerializeField] protected float hackingDuration = 3f;
@@ -61,30 +65,40 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private HackingProgressUI hackingProgressUI;
         private Dictionary<Transform, int> originalLayers = new();
+
+        [Header("Hacking_Quest")] // 해킹 성공 시 올려야할 퀘스트 진행도들 
+        [SerializeField] private bool shouldCountHackingQuest;
+        [SerializeField] private int[] hackingQuestIndex;
+        
+        [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
+        [SerializeField] private bool shouldCountKillQuest;
+        [SerializeField] private int[] killQuestIndex;
         
         protected virtual void Awake()
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
-            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
+            agent = GetComponent<NavMeshAgent>();
+            lights = GetComponentsInChildren<Light>();
+            colliders = GetComponentsInChildren<Collider>();
             IsDead = false;
             
             CacheOriginalLayers(this.transform);
         }
         
         /// <summary>
-        /// 풀링 사용하므로 반드시 생성될때마다 초기화 해야함
+        /// 풀링 사용하므로 반드시 반환될때마다 초기화 해야함
         /// </summary>
         protected virtual void OnDisable()
         {
-            Service.Log("OnEnable");
             IsDead = false;
             isHacking = false;
             isStunned = false;
+            agent.enabled = false;
             
             ResetLayersToOriginal();
         }
-        
+
         protected abstract void PlayHitAnimation();
         protected abstract void PlayDeathAnimation();
         protected abstract void HackingFailurePenalty();
@@ -99,8 +113,16 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             RuntimeStatData.MaxHealth -= damage;
 
-            if (RuntimeStatData.MaxHealth <= 0)
+            if (RuntimeStatData.MaxHealth <= 0) // 사망
             {
+                if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
+                {
+                    foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
+                }
+
+                foreach (Light objlight in lights) { objlight.enabled = false; }
+                foreach (Collider coll in colliders) { coll.enabled = false; }
+                
                 behaviorTree.SetVariableValue("IsDead", true);
                 PlayDeathAnimation();
                 IsDead = true;
@@ -179,9 +201,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
             }
 
-            if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage1)
-            { 
-                GameEventSystem.Instance.RaiseEvent(6); // 해킹 퀘스트 성공
+            if (shouldCountHackingQuest)
+            {
+                foreach (int index in hackingQuestIndex) {GameEventSystem.Instance.RaiseEvent(index);}
             }
             
             CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
