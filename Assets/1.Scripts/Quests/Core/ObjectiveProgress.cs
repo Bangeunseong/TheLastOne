@@ -6,6 +6,7 @@ namespace _1.Scripts.Quests.Core
 {
     [Serializable] public class ObjectiveProgress : IGameEventListener
     {
+        public int questId;
         public ObjectiveData data;
         public int currentAmount;
         public bool IsActivated;
@@ -37,6 +38,7 @@ namespace _1.Scripts.Quests.Core
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
                 CoreManager.Instance.SaveData_QueuedAsync();
                 Service.Log($"[Objective] {data.description} 진행도: {currentAmount}/{data.requiredAmount}");
+                CoreManager.Instance.questManager.UpdateProgress(questId, eventID);
             }
         }
     }

@@ -9,9 +9,9 @@ using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
 using Random = UnityEngine.Random;
 
-namespace _1.Scripts.MiniGame
+namespace _1.Scripts.MiniGame.AlphabetMatch
 {
-    public class AlphabetMatching : MonoBehaviour
+    public class AlphabetGameController : BaseMiniGame
     {
         [field: Header("Game Settings")]
         [field: SerializeField] public int AlphabetLength { get; private set; } = 3;
@@ -24,47 +24,17 @@ namespace _1.Scripts.MiniGame
         [field: SerializeField] public string CurrentAlphabets { get; private set; }
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
-        [field: SerializeField] public bool IsPlaying { get; private set; }
-        [field: SerializeField] public bool IsCounting { get; private set; }
-        
-        private MinigameUI ui;
-        private Console console;
-        private CoreManager coreManager;
-        private UIManager uiManager;
-        private Player player;
-        private float startTime;
-        private bool isFinished;
 
-        private void OnEnable()
+        private MinigameUI ui;
+        
+        protected override void OnEnable()
         {
             CurrentAlphabets = GetAlphabets();
             CurrentLoopCount = 0;
-            isFinished = false;
-            IsPlaying = false;
-            player.PlayerCondition.OnDisablePlayerMovement();
-            Cursor.lockState = CursorLockMode.None;
+            base.OnEnable();
         }
-
-        public void StartMiniGame(Console con, Player ply)
-        {
-            console = con;
-            player = ply;
-            coreManager = CoreManager.Instance;
-            uiManager = coreManager.uiManager;
-
-            ui = uiManager.ShowMinigameUI();
-            ui.ShowPanel();
-            enabled = true;
-        }
-
-        public void CancelMiniGame()
-        {
-            if (!isActiveAndEnabled || isFinished) return;
-            isFinished = true;
-            FinishGame(false, 0f);
-        }
-
-        private void Update()
+        
+        protected override void Update()
         {
             if (coreManager.gameManager.IsGamePaused || isFinished) return;
             
@@ -79,16 +49,13 @@ namespace _1.Scripts.MiniGame
                     return;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Z))
-                {
-                    FinishGame(false, 1.5f);
-                }
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
                 return;
             }
 
             if (IsCounting) return;
             
-            float elapsed = Time.time - startTime;
+            float elapsed = Time.unscaledTime - startTime;
             float remaining = Mathf.Max(0, Duration - elapsed);
             ui.UpdateTimeSlider(remaining);
             
@@ -105,7 +72,7 @@ namespace _1.Scripts.MiniGame
             }
             
             // Minigame 메인 로직
-            if (Time.time - startTime >= Duration)
+            if (Time.unscaledTime - startTime >= Duration)
             {
                 FinishGame(false, 1.5f); return;
             }
@@ -119,13 +86,21 @@ namespace _1.Scripts.MiniGame
             }
         }
 
-        private void FinishGame(bool isSuccess, float duration)
+        public override void StartMiniGame(Console con, Player ply)
         {
-            // Service.Log("Finished Game");
-            isFinished = true;
-            _ = EndGame_Async(isSuccess, duration);
+            base.StartMiniGame(con, ply);
+
+            ui = uiManager.ShowMinigameUI();
+            ui.ShowPanel();
+            enabled = true;
         }
 
+        public override void CancelMiniGame()
+        {
+            base.CancelMiniGame();
+            FinishGame(false, 0f);
+        }
+        
         private void ResetGame()
         {
             IsPlaying = IsCounting = false;
@@ -142,7 +117,7 @@ namespace _1.Scripts.MiniGame
             return builder.ToString();
         }
 
-        private async UniTask StartCountdown_Async()
+        protected override async UniTask StartCountdown_Async()
         {
             ui.ShowCountdownText(true);
             ui.SetCountdownText(Delay);
@@ -163,7 +138,7 @@ namespace _1.Scripts.MiniGame
             startTime = Time.unscaledTime;
         }
 
-        private async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool success, float duration)
         {
             if (success) { ui.ShowClearText(true); ui.SetClearText(true, "CLEAR!"); }
             
