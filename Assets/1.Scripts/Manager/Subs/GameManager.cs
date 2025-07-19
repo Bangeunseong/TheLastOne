@@ -10,6 +10,7 @@ using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -109,8 +110,8 @@ namespace _1.Scripts.Manager.Subs
                 save.Quests[quest.Key] = new QuestInfo
                 {
                     currentObjectiveIndex = quest.Value.currentObjectiveIndex,
-                    progresses = quest.Value.Objectives.Select(val => val.currentAmount).ToList(),
-                    completionList = quest.Value.Objectives.Select(val => val.IsCompleted).ToList()
+                    progresses = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.currentAmount),
+                    completionList = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted),
                 };
             }
             

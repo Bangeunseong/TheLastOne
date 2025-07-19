@@ -98,7 +98,8 @@ namespace _1.Scripts.Map.Console
             
             if (IsCleared) return;
             CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
-            MiniGames[UnityEngine.Random.Range(0, MiniGames.Count)].StartMiniGame(this, player);
+            CurrentMiniGame = 0;
+            MiniGames[CurrentMiniGame].StartMiniGame(this, player);
         }
 
         public void OnCancelInteract()
