@@ -61,6 +61,8 @@ namespace _1.Scripts.UI.InGame.Quest
         
         public void PlayCompleteAndDestroy(float duration = 0.3f)
         {
+            if (!gameObject.activeSelf)
+                gameObject.SetActive(true);
             if (expandCoroutine != null) StopCoroutine(expandCoroutine);
             expandCoroutine = StartCoroutine(FadeAndDestroy(duration));
         }
@@ -81,7 +83,7 @@ namespace _1.Scripts.UI.InGame.Quest
         
         public bool IsCompleted()
         {
-            return objective != null && objective.IsCompleted;
+            return objective is { IsCompleted: true };
         }
     }
 }

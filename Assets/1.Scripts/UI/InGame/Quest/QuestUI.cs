@@ -52,7 +52,7 @@ namespace _1.Scripts.UI.InGame.Quest
             }
         }
 
-        public void ClearAll()
+        private void ClearAll()
         {
             foreach (var slot in questSlots)
                 if (slot) Destroy(slot.gameObject);

@@ -16,7 +16,6 @@ namespace _1.Scripts.UI.InGame.Mission
         [Header("설정")] 
         [SerializeField] float updateInterval = 5f;
         [SerializeField] float markerSpeed = 30f;
-        [SerializeField] float markerLifetime = 3f;
 
         private Transform target;
         private NavigationPathFinder pathFinder;
@@ -82,8 +81,7 @@ namespace _1.Scripts.UI.InGame.Mission
                 }
 
                 var corners = pathFinder.GetPathCorners(player.position, target.position);
-                if (corners.Length > 1)
-                    AnimateMarkerAlongPath(corners, token).Forget();
+                if (corners.Length > 1) AnimateMarkerAlongPath(corners, token).Forget();
 
                 await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token, cancelImmediately: true);
             }
@@ -111,8 +109,7 @@ namespace _1.Scripts.UI.InGame.Mission
                 }
             }
 
-            if (marker != null)
-                Destroy(marker, markerLifetime);
+            if (marker) Destroy(marker, 0.5f);
         }
         
         private void SetupMarkerVisual(GameObject marker)
