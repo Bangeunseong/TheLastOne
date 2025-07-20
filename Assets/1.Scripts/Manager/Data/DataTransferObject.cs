@@ -54,8 +54,8 @@ namespace _1.Scripts.Manager.Data
     [Serializable] public class QuestInfo
     {
         public int currentObjectiveIndex;
-        public List<int> progresses;
-        public List<bool> completionList;
+        public Dictionary<int, int> progresses;
+        public Dictionary<int, bool> completionList;
     }
     
     [Serializable] public class DataTransferObject

@@ -107,13 +107,6 @@ namespace _6.Debug
                 AssetDatabase.SaveAssets();
 #endif
             }
-
-            if (GUILayout.Button("Play WireConnection MiniGame"))
-            {
-                var game = GameObject.Find("WireConnectionGame");
-                if (!game.TryGetComponent(out WireGameController controller)) return;
-                controller.StartMiniGame();
-            }
         }
     }
 }

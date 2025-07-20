@@ -12,6 +12,7 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using _1.Scripts.Weapon.Scripts.Melee;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
         [field: SerializeField] public float SkillSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float ItemSpeedMultiplier { get; private set; } = 1f;
+        [field: SerializeField] public float WeightSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
@@ -401,6 +403,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
+            player.PlayerInput.enabled = true;
             player.InputProvider.enabled = true;
         }
 
@@ -409,6 +412,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
+            player.PlayerInput.enabled = false;
             player.InputProvider.enabled = false;
         }
 
@@ -814,6 +818,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             
             Service.Log("Switch Weapon");
+            WeightSpeedMultiplier = 1f;
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
@@ -826,6 +831,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
+            WeightSpeedMultiplier = Weapons[EquippedWeaponIndex] switch
+            {
+                Gun gun => 1f - gun.GunData.GunStat.WeightPenalty,
+                GrenadeLauncher grenadeLauncher => 1f - grenadeLauncher.GrenadeData.GrenadeStat.WeightPenalty,
+                Crossbow crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
+                _ => 1f
+            };
             IsSwitching = false;
             switchCTS.Dispose(); switchCTS = null;
         }

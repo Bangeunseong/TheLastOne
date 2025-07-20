@@ -1,17 +1,10 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.Common;
-using _1.Scripts.UI.InGame;
-using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.InGame.Quest;
-using _1.Scripts.UI.Inventory;
-using _1.Scripts.UI.Loading;
-using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace _1.Scripts.Manager.Subs
@@ -61,31 +54,22 @@ namespace _1.Scripts.Manager.Subs
             IsLoading = true;
             PreviousScene = CurrentScene;
             
+            // Reset All Managers
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
-            uiManager.ShowUI<LoadingUI>();
-
+            
+            // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
-                
                 CurrentScene = sceneName;
                 if (CurrentScene == SceneType.IntroScene)
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    uiManager.UnloadUI<InGameUI>();
-                    uiManager.UnloadUI<QuestUI>();
-                    uiManager.UnloadUI<DistanceUI>();
-                    uiManager.UnloadUI<InventoryUI>();
-                    uiManager.UnloadUI<QuickSlotUI>();
-                    uiManager.UnloadUI<PauseMenuUI>();
-                    uiManager.UnloadUI<WeaponUI>();
-                    Cursor.lockState = CursorLockMode.None;
                 }
-                Service.Log($"CurrentScene : {CurrentScene}, PreviousScene : {PreviousScene}");
             }
             
             var loadingScene = 
@@ -95,10 +79,12 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-            
+
             LoadingProgress = 0f;
-            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
-            Service.Log("Resource and Scene Load Started!");
+            uiManager.ChangeState(CurrentState.Loading);
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            
+            Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
             {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
@@ -107,7 +93,7 @@ namespace _1.Scripts.Manager.Subs
             else
             {
                 LoadingProgress = 0.4f;
-                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
             }
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
@@ -117,6 +103,10 @@ namespace _1.Scripts.Manager.Subs
             await LoadSceneWithProgress(CurrentScene);
         }
         
+        /// <summary>
+        /// Current Scene이 로드되는 Task (sceneLoaded event가 실행된다)
+        /// </summary>
+        /// <param name="sceneName"></param>
         private async Task LoadSceneWithProgress(SceneType sceneName)
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -124,21 +114,21 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
+                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
             LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
-            uiManager.GetUI<LoadingUI>()?.UpdateProgressText("Press any key to continue...");
+            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;
             
             sceneLoad!.allowSceneActivation = true;
-            while (sceneLoad is { isDone: false })
+            while (sceneLoad is { isDone: false }) 
             {
                 await Task.Yield();
             }
@@ -156,9 +146,10 @@ namespace _1.Scripts.Manager.Subs
         {
             switch (CurrentScene)
             {
-                case SceneType.IntroScene: uiManager.HideUI<LoadingUI>();
-                    uiManager.ShowUI<LobbyUI>(); break;
-                case SceneType.Loading: break;
+                case SceneType.IntroScene: 
+                    coreManager.soundManager.PlayBGM(BgmType.Lobby, index: 0); 
+                    uiManager.ChangeState(CurrentState.Lobby); break;
+                case SceneType.Loading:
                 case SceneType.EndingScene: break;
             }
 
@@ -166,29 +157,31 @@ namespace _1.Scripts.Manager.Subs
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
-            player.PlayerCondition.IsPlayerHasControl = true;
-
+            
             switch (CurrentScene)
             {
                 case SceneType.Stage1:
                 case SceneType.Stage2:
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
-                    uiManager.HideUI<LoadingUI>();
-                    uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<QuestUI>();
-                    uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
-                    uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<PauseMenuUI>().Initialize();
-                    uiManager.ShowUI<InventoryUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<QuickSlotUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerInventory);
+                    uiManager.ChangeState(CurrentState.InGame);
                     break;
             }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
-            uiManager.ShowUI<QuestUI>()?.Initialize();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+
+            // Play Cutscene If needed
+            var introGo = GameObject.Find("IntroOpening");
+            var playable = introGo?.GetComponentInChildren<PlayableDirector>();
+            if (playable && coreManager.gameManager.SaveData == null)
+            {
+                playable.played += OnCutsceneStarted;
+                playable.stopped += OnCutsceneStopped;
+                playable.Play();
+            } 
+            else player.PlayerCondition.IsPlayerHasControl = true;
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -201,6 +194,23 @@ namespace _1.Scripts.Manager.Subs
                 await Task.Yield();
             }
         }
+
+        private void OnCutsceneStarted(PlayableDirector director)
+        {
+            coreManager.gameManager.PauseGame();
+        }
+
+        private void OnCutsceneStopped(PlayableDirector director)
+        {
+            var playerGo = GameObject.FindWithTag("Player");
+            if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
+            player.PlayerCondition.IsPlayerHasControl = true;
+            coreManager.gameManager.ResumeGame();
+
+            director.played -= OnCutsceneStarted;
+            director.stopped -= OnCutsceneStopped;
+        }
+
         // Scene Loading Test Method (Deprecated)
         // private IEnumerator LoadMainScene()
         // {

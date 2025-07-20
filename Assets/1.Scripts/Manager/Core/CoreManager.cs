@@ -88,7 +88,6 @@ namespace _1.Scripts.Manager.Core
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
-            questManager.Update();
         }
 
         private void OnDestroy()
