@@ -52,7 +52,7 @@ namespace _1.Scripts.Manager.Subs
             else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
         }
 
-        private T LoadUI<T>() where T : UIBase
+        public T LoadUI<T>() where T : UIBase
         {
             string address = typeof(T).Name;
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
@@ -64,7 +64,7 @@ namespace _1.Scripts.Manager.Subs
             Service.Log($"UI {typeof(T).Name} Registered");
             return component;
         }
-
+        
         private void RegisterStaticUI<T>() where T : UIBase
         {
             var ui = GameObject.FindObjectOfType<T>(true);

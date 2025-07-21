@@ -23,6 +23,13 @@ MonoBehaviour:
     m_SerializedLabels:
     - IntroScene
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
+    m_Address: PopupOpen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
     m_Address: ButtonClick
     m_ReadOnly: 0
@@ -30,8 +37,8 @@ MonoBehaviour:
     - Common
     - IntroScene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
-    m_Address: PopupOpen
+  - m_GUID: 7a447ca87ac65d74089aa47e2c046080
+    m_Address: SoundPlayer
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
