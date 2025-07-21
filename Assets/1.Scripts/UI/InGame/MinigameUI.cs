@@ -12,6 +12,7 @@ namespace _1.Scripts.UI.InGame
     {
         [Header("Minigame UI")]
         [SerializeField] private GameObject panel;
+        [SerializeField] private Animator animator;
         [SerializeField] private TextMeshProUGUI clearText;
         [SerializeField] private TextMeshProUGUI loopText;
         [SerializeField] private TextMeshProUGUI countdownText;
@@ -29,8 +30,29 @@ namespace _1.Scripts.UI.InGame
             ShowTimeSlider(false);
             ShowLoopText(false);
         }
-        
-        public void ShowPanel(bool show = true) => panel.SetActive(show);
+
+        public void ShowPanel(bool show = true)
+        {
+            panel.SetActive(show);
+            animator.Play("Window In");
+            ShowEnterText(true);
+            ShowCountdownText(false);
+            ShowTimeSlider(false);
+            ShowClearText(false);
+        }
+        public override void Hide()
+        {
+            StartCoroutine(HidePanelCoroutine());
+        }
+
+        private IEnumerator HidePanelCoroutine()
+        {
+            animator.Play("Window Out");
+            yield return new WaitForSeconds(0.5f);
+            panel.SetActive(false);
+            yield return null;
+        }
+
         public void ShowCountdownText(bool show = true) => countdownText.gameObject.SetActive(show);
         public void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
         public void ShowEnterText(bool show = true) => enterText.gameObject.SetActive(show);
@@ -46,7 +68,7 @@ namespace _1.Scripts.UI.InGame
 
         public void SetCountdownText(float t)
         {
-            countdownText.text = t > 0 ? t.ToString("F1") : "0";
+            countdownText.text = t > 0 ? t.ToString("F0") : "0";
         }
 
         public void SetClearText(bool success, string text)
