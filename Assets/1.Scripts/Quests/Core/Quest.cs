@@ -32,7 +32,8 @@ namespace _1.Scripts.Quests.Core
 
             var currentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(currentObjective.data.targetID);
-            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();}
+            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();
+        }
 
         public void ResumeQuest(QuestInfo info, Console[] consoles)
         {

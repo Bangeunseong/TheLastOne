@@ -30,7 +30,7 @@ namespace _1.Scripts.UI
 
         public void TogglePause()
         {
-            if (inventoryHandler != null && inventoryHandler.IsInventoryOpen)
+            if (inventoryHandler && inventoryHandler.IsInventoryOpen)
             {
                 inventoryHandler.ToggleInventory();
                 return;
@@ -52,7 +52,7 @@ namespace _1.Scripts.UI
             pauseMenuUI.Show();
             pauseAnimator.Play("Window In");
 
-            if (settingPanel != null && settingPanel.alpha > 0f)
+            if (settingPanel && settingPanel.alpha > 0f)
             {
                 settingAnimator?.Play("Panel Out");
                 settingPanel.alpha = 0f;
@@ -68,7 +68,7 @@ namespace _1.Scripts.UI
             pauseAnimator.Play("Window Out");
             pauseMenuUI.Hide();
             
-            if (settingPanel != null && settingPanel.alpha > 0f)
+            if (settingPanel && settingPanel.alpha > 0f)
             {
                 settingAnimator?.Play("Panel Out");
                 settingPanel.alpha = 0f;
