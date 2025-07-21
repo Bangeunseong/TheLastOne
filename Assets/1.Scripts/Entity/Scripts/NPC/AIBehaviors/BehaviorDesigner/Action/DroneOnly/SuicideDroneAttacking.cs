@@ -6,6 +6,7 @@ using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -21,6 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         public SharedBaseNpcStatController statController;
         public SharedParticleSystem explosionParticle;
         public SharedCollider myCollider;
+        public SharedNavMeshAgent agent;
         public SharedBool isDead;
         
         private bool isExploded = false;
@@ -57,8 +59,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
                 
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    Service.Log("데미지 입히기 실행");
-                    Service.Log($"{statController.Value.RuntimeStatData.BaseDamage}");
                     damagable.OnTakeDamage(statController.Value.RuntimeStatData.BaseDamage);
                 }
             }
@@ -83,6 +83,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             // 6. 기다린 후 파괴
             _ = DelayedDestroy(selfTransform.Value.gameObject);
             
+            // 7. 기존경로 비활성화
+            agent.Value.SetDestination(selfTransform.Value.position);
+            
             isExploded = true;
             return TaskStatus.Running;
         }
@@ -90,7 +93,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         private async UniTaskVoid DelayedDestroy(GameObject destroyTarget)
         {
             await UniTask.WaitForSeconds(2.5f);
-            CoreManager.Instance.objectPoolManager.Release(destroyTarget);
+            NpcUtil.DisableNpc(destroyTarget);
         }
     }
 }
