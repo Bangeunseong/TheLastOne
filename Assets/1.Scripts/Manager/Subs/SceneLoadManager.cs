@@ -188,6 +188,7 @@ namespace _1.Scripts.Manager.Subs
             uiManager.LoadUI<QuickSlotUI>();
             uiManager.LoadUI<MinigameUI>();
             uiManager.LoadUI<QuestUI>();
+            uiManager.LoadUI<GameOverUI>();
             uiManager.HideUI<FadeUI>();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
