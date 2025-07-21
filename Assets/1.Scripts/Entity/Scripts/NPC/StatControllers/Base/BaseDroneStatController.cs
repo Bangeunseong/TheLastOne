@@ -44,8 +44,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             ResetTransformsToOriginal();
         }
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             animator.Rebind();
             animator.Update(0f);
         }
