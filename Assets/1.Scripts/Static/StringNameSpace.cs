@@ -22,7 +22,6 @@ namespace _1.Scripts.Static
             "NanoAmple_Prefab",
             "Shield_Prefab",
             "EnergyBar_Prefab",
-            "AmmoIconPrefab",
         };
     }
 
