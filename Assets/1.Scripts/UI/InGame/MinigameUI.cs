@@ -16,8 +16,9 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI clearText;
         [SerializeField] private TextMeshProUGUI loopText;
         [SerializeField] private TextMeshProUGUI countdownText;
-        [SerializeField] private TextMeshProUGUI enterText;
+        [SerializeField] private GameObject enterText;
         [SerializeField] private Slider timeSlider;
+        [SerializeField] private TextMeshProUGUI timeText;
         [SerializeField] private Transform contentRoot;
         [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
 
@@ -81,11 +82,13 @@ namespace _1.Scripts.UI.InGame
         {
             timeSlider.maxValue = max;
             timeSlider.value = current;
+            timeText.text = $"{current:0.00}s";
         }
 
         public void UpdateTimeSlider(float current)
         {
             timeSlider.value = current;
+            timeText.text = $"{current:0.00}s";
         }
 
         public void UpdateLoopCount(int current, int max)

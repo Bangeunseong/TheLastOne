@@ -125,6 +125,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager.uiManager.InitializeUI<InventoryUI>(PlayerCondition);
             coreManager.uiManager.InitializeUI<QuickSlotUI>(PlayerInventory);
             coreManager.uiManager.InitializeUI<QuestUI>(transform);
+            coreManager.uiManager.InitializeUI<GameOverUI>(PlayerCondition);
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

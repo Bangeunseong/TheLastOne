@@ -134,6 +134,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             uiManager.GetUI<MinigameUI>().ShowCountdownText(true);
             uiManager.GetUI<MinigameUI>().SetCountdownText(Delay);
             uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
             uiManager.GetUI<MinigameUI>().ShowClearText(false);
             uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
             uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
