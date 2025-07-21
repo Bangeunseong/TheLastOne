@@ -106,7 +106,8 @@ namespace _1.Scripts.Manager.Core
         private void OnDestroy()
         {
             resourceManager.OnDestroy();
-            mainCTS?.Cancel(); mainCTS?.Dispose(); mainCTS = null;
+            mainCTS?.Cancel(); 
+            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); mainCTS?.Dispose();
         }
 
         /// <summary>
