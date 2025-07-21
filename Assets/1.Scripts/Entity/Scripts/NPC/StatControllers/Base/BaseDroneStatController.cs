@@ -29,7 +29,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         private CancellationTokenSource penaltyToken;
         
         private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
-
+        
         protected override void Awake()
         {
             base.Awake();
