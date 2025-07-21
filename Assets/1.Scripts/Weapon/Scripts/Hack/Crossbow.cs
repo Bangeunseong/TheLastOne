@@ -86,7 +86,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             if (!IsReady) return false;
             if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, HackData.HackStat.MaxWeaponRange, HittableLayer))
             {
-                if (hit.collider.TryGetComponent(out IHackable hackable)) { hackable.Hacking(); }
+                if (hit.collider.TryGetComponent(out IHackable hackable)) { hackable.Hacking(1f); }
             }
             
             IsRecoiling = true;

@@ -22,7 +22,6 @@ namespace _1.Scripts.Static
             "NanoAmple_Prefab",
             "Shield_Prefab",
             "EnergyBar_Prefab",
-            "AmmoIconPrefab",
         };
     }
 
@@ -30,9 +29,9 @@ namespace _1.Scripts.Static
     {
         public static HashSet<string> prefabs = new()
         {
-            "ReconDrone",
+            "ReconDroneNotHackable",
             "BattleRoomReconDrone",
-            "SuicideDrone",
+            "SuicideDroneNotHackable",
             "HackingProgressUI",
         };
     }
