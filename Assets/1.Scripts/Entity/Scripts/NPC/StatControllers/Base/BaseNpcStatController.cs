@@ -26,8 +26,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     public enum EnemyType
     {
         ReconDrone,
+        SuicideDrone,
+        ReconDroneNotHackable,
+        SuicideDroneNotHackable,
         BattleRoomReconDrone,
-        SuicideDrone
     }
     
     /// <summary>
@@ -59,6 +61,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Hacking_Process")]
         public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
+        [SerializeField] private bool useSelfDefinedChance = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
         [SerializeField] protected Transform rootRenderer;
@@ -139,7 +142,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         }
         
         #region 상호작용
-        public void Hacking()
+        public void Hacking(float chance)
         {
             if (IsDead || !CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
 
@@ -156,10 +159,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 return;
             }
 
-            _ = HackingProcessAsync();
+            float finalChance = useSelfDefinedChance ? successChance : chance;
+            _ = HackingProcessAsync(finalChance);
         }
 
-        private async UniTaskVoid HackingProcessAsync()
+        private async UniTaskVoid HackingProcessAsync(float chance)
         {
             isHacking = true;
             
@@ -177,7 +181,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             // 3. 확률 판정
-            bool success = UnityEngine.Random.value < successChance;
+            bool success = UnityEngine.Random.value < chance;
 
             if (success)
             {
