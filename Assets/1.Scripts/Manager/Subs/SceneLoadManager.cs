@@ -161,6 +161,7 @@ namespace _1.Scripts.Manager.Subs
             switch (CurrentScene)
             {
                 case SceneType.IntroScene: 
+                    coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>();
                     uiManager.ShowUI<LobbyUI>();
                     break;
