@@ -10,7 +10,7 @@ namespace _1.Scripts.UI.InGame.Minigame
     {
         [Header("AlphabetMatchingUI")]
         [SerializeField] private GameObject panel;
-        [SerializeField] private TMP_Text[] alphabetTexts;
+        [SerializeField] private TextMeshProUGUI[] alphabetTexts;
         
         public override void Show() { panel.SetActive(true); }
         public override void Hide() { panel.SetActive(false); HideAll(); }

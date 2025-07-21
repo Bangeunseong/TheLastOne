@@ -27,10 +27,7 @@ namespace _1.Scripts.UI.InGame.Quest
         {
             var questManager = CoreManager.Instance.questManager;
             questListCache = questManager.activeQuests.Values.Select(q => q.data).ToList();
-            objectiveDictCache = questManager.activeQuests.ToDictionary(
-                kv => kv.Key,
-                kv => kv.Value.Objectives
-            );
+            objectiveDictCache = questManager.activeQuests.ToDictionary(kv => kv.Key, kv => kv.Value.Objectives.Values.ToList());
             SetQuestSlots();
             Refresh();
             SetMainQuestNavigation();
@@ -77,7 +74,7 @@ namespace _1.Scripts.UI.InGame.Quest
             var questManager = CoreManager.Instance.questManager;
             if (questManager.activeQuests.TryGetValue(0, out var mainQuest))
             {
-                var targetObjective = mainQuest.Objectives.FirstOrDefault(obj => !obj.IsCompleted);
+                var targetObjective = mainQuest.Objectives.Values.FirstOrDefault(obj => !obj.IsCompleted);
                 if (targetObjective != null)
                     QuestTargetBinder.Instance.SetCurrentTarget(targetObjective.data.targetID);
             }
