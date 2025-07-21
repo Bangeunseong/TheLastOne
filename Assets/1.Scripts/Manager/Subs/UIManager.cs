@@ -112,7 +112,7 @@ namespace _1.Scripts.Manager.Subs
             UIStateCache.Clear();
             foreach (var ui in uiMap.Values)
             {
-                UIStateCache[ui] = ui.gameObject.activeSelf;
+                UIStateCache[ui] = ui.gameObject.activeInHierarchy;
                 ui.Hide();
             }
         }
@@ -128,10 +128,12 @@ namespace _1.Scripts.Manager.Subs
         
         public void OnCutsceneStarted(PlayableDirector _)
         {
+            Service.Log("OnCutsceneStarted");
             HideAndSaveAllUI();
         }
         public void OnCutsceneStopped(PlayableDirector _)
         {
+            Service.Log("OnCutsceneStopped");
             RestoreAllUI();
         }
 

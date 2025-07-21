@@ -213,6 +213,7 @@ namespace _1.Scripts.Manager.Subs
 
         private void OnCutsceneStarted(PlayableDirector director)
         {
+            coreManager.uiManager.OnCutsceneStarted(director);
             coreManager.gameManager.PauseGame();
         }
 
@@ -222,6 +223,7 @@ namespace _1.Scripts.Manager.Subs
             if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
             player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
 
             director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
