@@ -26,7 +26,6 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
 
-        private MinigameUI minigameUI;
         private AlphabetMatchingUI alphabetUI;
         
         protected override void OnEnable()
@@ -45,7 +44,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    minigameUI.ShowEnterText(false);
+                    coreManager.uiManager.GetUI<MinigameUI>().ShowPanel();
                     _ = StartCountdown_Async();
                     IsCounting = IsPlaying = true;
                     return;
@@ -59,7 +58,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             
             float elapsed = Time.unscaledTime - startTime;
             float remaining = Mathf.Max(0, Duration - elapsed);
-            minigameUI.UpdateTimeSlider(remaining);
+            coreManager.uiManager.GetUI<MinigameUI>().UpdateTimeSlider(remaining);
             
             // Minigame 달성 여부 확인
             if (CurrentIndex >= AlphabetLength)
@@ -92,16 +91,15 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
 
-            minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowPanel();
-            minigameUI.ShowClearText(false);
-            minigameUI.ShowEnterText(true);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowCountdownText(false);
-            minigameUI.ShowLoopText(IsLoop);
+            uiManager.ShowUI<MinigameUI>().ShowPanel();
+            uiManager.GetUI<MinigameUI>().ShowEnterText(true);
+            uiManager.GetUI<MinigameUI>().ShowClearText(false);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
+            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
 
-            minigameUI.ShowAlphabetMatching(true);
-            alphabetUI = minigameUI.GetAlphabetMatchingUI();
+            uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
+            alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
             enabled = true;
         }
@@ -116,10 +114,10 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
-            minigameUI.ShowPanel();
-            minigameUI.ShowLoopText(IsLoop);
+            uiManager.ShowUI<MinigameUI>().ShowPanel();
+            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
             if (IsLoop && LoopCount > 0) 
-                minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
             CurrentIndex = 0;
@@ -134,28 +132,28 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask StartCountdown_Async()
         {
-            minigameUI.ShowCountdownText(true);
-            minigameUI.SetCountdownText(Delay);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowClearText(false);
-            minigameUI.ShowLoopText(IsLoop);
-            minigameUI.ShowAlphabetMatching(true);
+            uiManager.GetUI<MinigameUI>().ShowCountdownText(true);
+            uiManager.GetUI<MinigameUI>().SetCountdownText(Delay);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowClearText(false);
+            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
+            uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
             
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                minigameUI.SetCountdownText(Delay - t);
+                uiManager.GetUI<MinigameUI>().SetCountdownText(Delay - t);
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
-            minigameUI.ShowCountdownText(false);
+            uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
-            minigameUI.ShowTimeSlider(true);
-            minigameUI.SetTimeSlider(Duration, Duration);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(true);
+            uiManager.GetUI<MinigameUI>().SetTimeSlider(Duration, Duration);
             if (IsLoop && LoopCount > 0)
-                minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             CurrentIndex = 0;
             IsCounting = false; 
             startTime = Time.unscaledTime;
@@ -163,15 +161,15 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask EndGame_Async(bool success, float duration)
         {
-            minigameUI.ShowClearText(true);
-            minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
+            uiManager.GetUI<MinigameUI>().ShowClearText(true);
+            uiManager.GetUI<MinigameUI>().SetClearText(success, success ? "CLEAR!" : "FAIL");
             alphabetUI.ShowAlphabet(false);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowLoopText(false);
-            minigameUI.ShowEnterText(false);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowLoopText(false);
+            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
             await UniTask.WaitForSeconds(duration, true);
             uiManager.HideUI<MinigameUI>();
-            minigameUI = null;
+            uiManager.UnloadUI<MinigameUI>();
             alphabetUI = null;
             Cursor.lockState = CursorLockMode.Locked;
             console.OnCleared(success);
