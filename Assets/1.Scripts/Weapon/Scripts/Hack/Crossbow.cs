@@ -4,6 +4,7 @@ using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
@@ -122,6 +123,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             CurrentAmmoCount -= reloadableAmmoCount;
             CurrentAmmoCountInMagazine += reloadableAmmoCount;
             IsEmpty = CurrentAmmoCountInMagazine <= 0;
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
             return true;
         }
 

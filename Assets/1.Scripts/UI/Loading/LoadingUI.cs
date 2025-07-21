@@ -9,18 +9,31 @@ namespace _1.Scripts.UI.Loading
     public class LoadingUI : UIBase
     {
         [Header("Loading UI")]
+            [SerializeField] private GameObject panel;
         public Slider progressSlider;
         public TextMeshProUGUI progressText;
         
         public override void Init(UIManager manager)
         {
             base.Init(manager);
+            Hide();
         }
         
-        
-        public override void SetActive(bool active)
+        public override void ResetUI()
         {
-            gameObject.SetActive(active);
+            progressSlider.value = 0f;
+            progressText.text = "0.00%";
+        }
+        
+        public override void Show()
+        {
+            Service.Log("Loading UI Show");
+            panel.SetActive(true);
+        }
+        public override void Hide()
+        {
+            Service.Log("Loading UI Hide");
+            panel.SetActive(false);
         }
         
         public void UpdateLoadingProgress(float progress)

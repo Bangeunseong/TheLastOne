@@ -1,4 +1,5 @@
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Common;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -6,25 +7,25 @@ namespace _1.Scripts.UI
 {
     public class PauseHandler : MonoBehaviour
     {
-        [Header("Pause Menu")]
-        [SerializeField] private GameObject pauseCanvas;
-        [SerializeField] private Animator pauseAnimator;
         [SerializeField] private BlurManager blurMgr;
-
-        [Header("Settings Panel")]
-        [SerializeField] private CanvasGroup settingsCanvas;
-        [SerializeField] private Animator settingsAnimator;
-        
+        [SerializeField] private Animator pauseAnimator;
         [SerializeField] private InventoryHandler inventoryHandler;
         
-        bool isPaused;
-        private CoreManager coreManager;
+        [Header("Setting Panel")]
+        [SerializeField] private CanvasGroup settingPanel;
+        [SerializeField] private Animator settingAnimator;
         
+        private PauseMenuUI pauseMenuUI;
+        private CoreManager coreManager;
+
+        private bool isPaused;
         public bool IsPaused => isPaused;
+        public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
 
         private void Start()
         {
             coreManager = CoreManager.Instance;
+            pauseMenuUI = coreManager.uiManager.GetUI<PauseMenuUI>(); ;
         }
 
         public void TogglePause()
@@ -39,19 +40,24 @@ namespace _1.Scripts.UI
             else Resume();
         }
 
+        public void ClosePausePanel()
+        {
+            Resume();
+        }
+
         private void Pause()
         {
             coreManager.gameManager.PauseGame();
             blurMgr.BlurInAnim();
-            pauseCanvas.SetActive(true);
+            pauseMenuUI.Show();
             pauseAnimator.Play("Window In");
 
-            if (settingsCanvas.alpha > 0f)
+            if (settingPanel != null && settingPanel.alpha > 0f)
             {
-                settingsAnimator.Play("Panel Out");
-                settingsCanvas.alpha = 0f;
-                settingsCanvas.interactable = false;
-                settingsCanvas.blocksRaycasts = false;
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
             }
         }
 
@@ -59,17 +65,23 @@ namespace _1.Scripts.UI
         {
             coreManager.gameManager.ResumeGame();
             blurMgr.BlurOutAnim();
-            if (settingsCanvas.alpha > 0f)
-            {
-                settingsAnimator.Play("Panel Out");
-                settingsCanvas.alpha = 0f;
-                settingsCanvas.interactable = false;
-                settingsCanvas.blocksRaycasts = false;
-            }
-            
             pauseAnimator.Play("Window Out");
+            pauseMenuUI.Hide();
             
-            pauseCanvas.SetActive(false);
+            if (settingPanel != null && settingPanel.alpha > 0f)
+            {
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
+            }
+        }
+
+        public void SetPauseMenuUI(PauseMenuUI ui)
+        {
+            pauseMenuUI = ui;
+            settingPanel = ui.SettingPanel;
+            settingAnimator = ui.SettingAnimator;
         }
     }
 }

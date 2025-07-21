@@ -114,26 +114,74 @@ MonoBehaviour:
     - Common
     - IntroScene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
-    m_Address: MinigameUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5808116dce9c094584a55f6eec0c67f
     m_Address: InteractionUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c25f2806abf969d4aa8342237180121f
+  - m_GUID: 41b689d766996904cbe4c03d34f36105
+    m_Address: AmmoIconPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20f88d3e874558f4bb6a6e5940b2dc54
+    m_Address: PanelManager
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d910db66ca228a4f9f8087c34d763c6
+    m_Address: QuickSlotUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e444dbfda52671d4e8d030f4399f87ef
+    m_Address: MissionUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63c260e7d7545c445ac28937f4c8af67
     m_Address: InGameUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 41b689d766996904cbe4c03d34f36105
-    m_Address: AmmoIconPrefab
+  - m_GUID: 5a37e0365b618a946957d3a32155b654
+    m_Address: InventoryUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13aa10e8af8905f458e078d1135949d4
+    m_Address: WeaponUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 213568ebef49f984291c8d4a586fc61c
+    m_Address: DistanceUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23d4529403d8d8548a0ce48ab4699e65
+    m_Address: PauseMenuUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2247b887ef3b580499b9219ffd2dc493
+    m_Address: Assets/2.Prefabs/UI/InGame/QuestUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
+    m_Address: MinigameUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

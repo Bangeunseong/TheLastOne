@@ -3,6 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
@@ -89,10 +90,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
             
             OnPicked?.Invoke();
             GameEventSystem.Instance.RaiseEvent(Id);
-            CoreManager.Instance.uiManager.InGameUI?.InventoryUI?.RefreshInventoryUI();
+            CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
-
         public void OnCancelInteract() { }
     }
 }

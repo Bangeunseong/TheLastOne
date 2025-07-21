@@ -6,9 +6,12 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
+using _1.Scripts.MiniGame.AlphabetMatch;
+using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
 using UnityEngine.Playables;
+using Random = System.Random;
 
 namespace _1.Scripts.Map.Console
 {
@@ -18,10 +21,11 @@ namespace _1.Scripts.Map.Console
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public bool IsCleared { get; private set; }
         [field: SerializeField] public List<ConsoleDoor> Doors { get; private set; }
-        
-        [field: Header("Minigames")]
-        [field: SerializeField] public AlphabetMatching AlphabetGame { get; private set; }
 
+        [field: Header("Minigames")]
+        [field: SerializeField] public List<BaseMiniGame> MiniGames { get; private set; }
+        [field: SerializeField] public int CurrentMiniGame { get; private set; }
+        
         [field: Header("CutScene")]
         [field: SerializeField] public PlayableDirector CutScene { get; private set; }
         
@@ -32,13 +36,13 @@ namespace _1.Scripts.Map.Console
         
         private void Awake()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (MiniGames.Count <= 0) MiniGames = new List<BaseMiniGame>(GetComponentsInChildren<BaseMiniGame>());
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
         private void Reset()
         {
-            if (!AlphabetGame) AlphabetGame = this.TryGetComponent<AlphabetMatching>();
+            if (MiniGames.Count <= 0) MiniGames = new List<BaseMiniGame>(GetComponentsInChildren<BaseMiniGame>());
             if (Doors.Count <= 0) Doors = new List<ConsoleDoor>(GetComponentsInChildren<ConsoleDoor>());
         }
 
@@ -72,7 +76,6 @@ namespace _1.Scripts.Map.Console
             }
             else
             {
-
                 CutScene.played += coreManager.uiManager.OnCutsceneStarted;
                 CutScene.stopped += coreManager.uiManager.OnCutsceneStopped;
                 CutScene.Play();
@@ -92,13 +95,16 @@ namespace _1.Scripts.Map.Console
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
             Service.Log("Interacted!");
+            
             if (IsCleared) return;
-            AlphabetGame.StartMiniGame(this, player);
+            CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
+            CurrentMiniGame = 0;
+            MiniGames[CurrentMiniGame].StartMiniGame(this, player);
         }
 
         public void OnCancelInteract()
         {
-            AlphabetGame?.CancelMiniGame();
+            MiniGames[CurrentMiniGame].CancelMiniGame();
         }
     }
 }

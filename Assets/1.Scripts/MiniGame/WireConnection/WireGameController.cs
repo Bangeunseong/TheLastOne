@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
@@ -12,58 +9,43 @@ using Random = UnityEngine.Random;
 
 namespace _1.Scripts.MiniGame.WireConnection
 {
-    public class WireGameController : MonoBehaviour
+    public class WireGameController : BaseMiniGame
     {
-        [Header("Components")]
+        [field: Header("Components")]
         [SerializeField] private GameObject wirePrefab;
         [SerializeField] private GameObject socketPrefab;
-        [SerializeField] private Transform top;
-        [SerializeField] private Transform bottom;
         [SerializeField] private Canvas canvas;
-
+        [SerializeField] private RectTransform top;
+        [SerializeField] private RectTransform bottom;
+        [field: SerializeField] public RectTransform WireContainer { get; private set; }
+        
         [field: Header("Game Settings")]
         [field: Range(2, 5)][field: SerializeField] public int SocketCount { get; private set; } = 3;
         [field: SerializeField] public float Duration { get; private set; } = 5f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
         
-        [field: Header("Current Game State")]
-        [field: SerializeField] public bool IsPlaying { get; private set; }
-        [field: SerializeField] public bool IsCounting { get; private set; }
-        [field: SerializeField] public bool IsCleared { get; private set; }
-        private readonly List<(Socket, Socket, LineRenderer)> connections = new();
+        private readonly List<(Socket, Socket, GameObject)> connections = new();
         private readonly List<GameObject> sockets = new();
-        
-        private Console console;
-        private CoreManager coreManager;
-        private UIManager uiManager;
-        private Player player;
-        private float startTime;
-        private bool isFinished;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (!top) top = this.TryGetChildComponent<Transform>("Top");
-            if (!bottom) bottom = this.TryGetChildComponent<Transform>("Bottom");
+            if (!top) top = this.TryGetChildComponent<RectTransform>("Top");
+            if (!bottom) bottom = this.TryGetChildComponent<RectTransform>("Bottom");
+            if (!WireContainer) WireContainer = this.TryGetChildComponent<RectTransform>("WireContainer");
             if (!canvas) canvas = GetComponentInParent<Canvas>();
         }
 
-        private void Reset()
+        protected override void Reset()
         {
-            if (!top) top = this.TryGetChildComponent<Transform>("Top");
-            if (!bottom) bottom = this.TryGetChildComponent<Transform>("Bottom");
+            if (!top) top = this.TryGetChildComponent<RectTransform>("Top");
+            if (!bottom) bottom = this.TryGetChildComponent<RectTransform>("Bottom");
+            if (!WireContainer) WireContainer = this.TryGetChildComponent<RectTransform>("WireContainer");
             if (!canvas) canvas = GetComponentInParent<Canvas>();
         }
 
-        private void OnEnable()
+        protected override void Update()
         {
-            isFinished = IsPlaying = IsCounting = false;
-            // player.PlayerCondition.OnDisablePlayerMovement();
-            // Cursor.lockState = CursorLockMode.None;
-        }
-
-        private void Update()
-        {
-            if (isFinished) return;
+            if (coreManager.gameManager.IsGamePaused || isFinished) return;
 
             if (!IsPlaying)
             {
@@ -78,28 +60,44 @@ namespace _1.Scripts.MiniGame.WireConnection
             }
             
             if (IsCounting) return;
-            if (!(Time.time - startTime >= Duration)) return;
+            if (!(Time.unscaledTime - startTime >= Duration)) return;
             FinishGame(false, 0f);
         }
         
-        private void OnDisable()
+        protected override void OnDisable()
         {
             ResetAllConnections();
             ResetAllSockets();
         }
         
-        public void StartMiniGame()
+        public override void StartMiniGame(Console con, Player ply)
         {
-            // console = con;
-            // player = ply;
-            // coreManager = CoreManager.Instance;
-            // uiManager = coreManager.uiManager;
+            base.StartMiniGame(con, ply);
             
             // Initialize MiniGame
-            CreateSockets();
             enabled = true;
         }
 
+        public override void CancelMiniGame()
+        {
+            base.CancelMiniGame();
+            
+            // Clear all remaining sockets and line renderers
+            foreach (var connection in connections)
+            {
+                sockets.Remove(connection.Item1.gameObject);
+                sockets.Remove(connection.Item2.gameObject);
+                Destroy(connection.Item1.gameObject); 
+                Destroy(connection.Item2.gameObject); 
+                Destroy(connection.Item3.gameObject);
+            }
+            connections.Clear();
+            foreach (var socket in sockets) Destroy(socket);
+            sockets.Clear();
+            
+            FinishGame(false, 0f);
+        }
+        
         private void CreateSockets()
         {
             var colorList = GetRandomColors();
@@ -122,41 +120,13 @@ namespace _1.Scripts.MiniGame.WireConnection
             }
         }
 
-        public void CancelMiniGame()
-        {
-            if (!isActiveAndEnabled || isFinished) return;
-            isFinished = true;
-            
-            // Clear all remaining sockets and line renderers
-            foreach (var connection in connections)
-            {
-                sockets.Remove(connection.Item1.gameObject);
-                sockets.Remove(connection.Item2.gameObject);
-                Destroy(connection.Item1.gameObject); 
-                Destroy(connection.Item2.gameObject); 
-                Destroy(connection.Item3.gameObject);
-            }
-            connections.Clear();
-            foreach (var socket in sockets) Destroy(socket);
-            sockets.Clear();
-            
-            FinishGame(false, 0f);
-        }
-        
-        private void FinishGame(bool isSuccess, float duration)
-        {
-            // Service.Log("Finished Game");
-            isFinished = true;
-            _ = EndGame_Async(isSuccess, duration);
-        }
-
-        public LineRenderer CreateLine(Transform wireContainer)
+        public GameObject CreateLine(Transform wireContainer)
         {
             GameObject go = Instantiate(wirePrefab, wireContainer);
-            return go.GetComponent<LineRenderer>();
+            return go;
         }
 
-        public void RegisterConnection(Socket start, Socket end, LineRenderer line)
+        public void RegisterConnection(Socket start, Socket end, GameObject line)
         {
             connections.Add((start, end, line));
             if (connections.Count < SocketCount) return;
@@ -169,7 +139,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             foreach (var (start, end, line) in connections)
             {
                 start.IsConnected = end.IsConnected = false;
-                Destroy(line.gameObject);
+                Destroy(line);
             }
             connections.Clear();
         }
@@ -180,21 +150,22 @@ namespace _1.Scripts.MiniGame.WireConnection
             sockets.Clear();
         }
         
-        private async UniTask StartCountdown_Async()
+        protected override async UniTask StartCountdown_Async()
         {
             var t = 0f;
             while (t < Delay)
             {
-                // if (!coreManager.gameManager.IsGamePaused) 
-                t += Time.unscaledDeltaTime;
+                if (!coreManager.gameManager.IsGamePaused)
+                    t += Time.unscaledDeltaTime;
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
-            IsCounting = false; 
+            CreateSockets();
+            IsCounting = false;
             startTime = Time.unscaledTime;
         }
-
-        private async UniTask EndGame_Async(bool success, float duration)
+        
+        protected override async UniTask EndGame_Async(bool success, float duration)
         {
             if (success)
             {
@@ -204,7 +175,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             
             await UniTask.WaitForSeconds(duration, true);
             
-            // console.OnCleared(success);
+            console.OnCleared(success);
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
             enabled = false;
