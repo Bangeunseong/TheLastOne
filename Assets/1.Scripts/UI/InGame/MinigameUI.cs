@@ -17,6 +17,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI countdownText;
         [SerializeField] private TextMeshProUGUI enterText;
         [SerializeField] private Slider timeSlider;
+        [SerializeField] private Transform contentRoot;
         [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
 
         public override void ResetUI()
@@ -35,6 +36,13 @@ namespace _1.Scripts.UI.InGame
         public void ShowEnterText(bool show = true) => enterText.gameObject.SetActive(show);
         public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
         public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
+
+        public void SetMinigameContent(GameObject contentPrefab)
+        {
+            foreach (Transform child in contentRoot) Destroy(child.gameObject);
+            var content = Instantiate(contentPrefab, contentRoot);
+            content.SetActive(true);
+        }
 
         public void SetCountdownText(float t)
         {

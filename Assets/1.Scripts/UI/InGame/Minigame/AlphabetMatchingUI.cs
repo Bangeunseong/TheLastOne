@@ -10,32 +10,39 @@ namespace _1.Scripts.UI.InGame.Minigame
     {
         [Header("AlphabetMatchingUI")]
         [SerializeField] private GameObject panel;
-        [SerializeField] private TextMeshProUGUI[] alphabetTexts;
-        
+        [SerializeField] private Transform cellRoot;
+        [SerializeField] private GameObject cellPrefab;
+        private List<AlphabetCell> cells = new();
         public override void Show() { panel.SetActive(true); }
         public override void Hide() { panel.SetActive(false); HideAll(); }
         public override void ResetUI() { Hide(); }
         
         public void CreateAlphabet(string s)
         {
-            for (int i = 0; i < alphabetTexts.Length; i++)
+            foreach (var cell in cells)
+                Destroy(cell.gameObject);
+            cells.Clear();
+
+            for (int i = 0; i < s.Length; i++)
             {
-                if (i < s.Length) { alphabetTexts[i].text = s[i].ToString(); alphabetTexts[i].gameObject.SetActive(true); }
-                else { alphabetTexts[i].text = ""; alphabetTexts[i].gameObject.SetActive(false); }
+                var go = Instantiate(cellPrefab, cellRoot);
+                var cell = go.GetComponent<AlphabetCell>();
+                cell.SetChar(s[i]);
+                cells.Add(cell);
             }
         }
-        public void ShowAlphabet(bool active) {
-            foreach (var t in alphabetTexts) t.gameObject.SetActive(active);
-        }
+        public void ShowAlphabet(bool active) { foreach (var cell in cells) cell.gameObject.SetActive(active); }
         public void AlphabetAnim(int index, bool correct)
         {
-            if (index < 0 || index >= alphabetTexts.Length) return;
-            var t = alphabetTexts[index];
-            t.color = correct ? Color.green : Color.red;
+            if (index < 0 || index >= cells.Count) return;
+            if (correct) cells[index].PlayCorrectAnim();
+            else cells[index].PlayWrongAnim();
         }
         private void HideAll()
         {
-            foreach (var t in alphabetTexts) { t.text = ""; t.gameObject.SetActive(false); t.color = Color.white; }
+            foreach (var cell in cells)
+                Destroy(cell.gameObject);
+            cells.Clear();
         }
     }
 }

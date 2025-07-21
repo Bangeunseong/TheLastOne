@@ -181,6 +181,7 @@ namespace _1.Scripts.Manager.Subs
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     uiManager.HideUI<LoadingUI>();
                     uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.GetUI<MinigameUI>();
                     uiManager.ShowUI<QuestUI>();
                     uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
                     uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
