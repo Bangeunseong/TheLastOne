@@ -65,7 +65,9 @@ namespace _1.Scripts.Manager.Subs
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            uiManager.ShowUI<FadeUI>();
             uiManager.ShowUI<LoadingUI>();
+            uiManager.HideUI<FadeUI>();
             
             // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
@@ -162,8 +164,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 case SceneType.IntroScene: 
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
+                    uiManager.ShowUI<FadeUI>();
                     uiManager.HideUI<LoadingUI>();
                     uiManager.ShowUI<LobbyUI>();
+                    uiManager.HideUI<FadeUI>();
                     break;
                 case SceneType.Loading:
                 case SceneType.EndingScene: break;
@@ -174,6 +178,7 @@ namespace _1.Scripts.Manager.Subs
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             
             coreManager.gameManager.Initialize_Player(player);
+            uiManager.ShowUI<FadeUI>();
             uiManager.HideUI<LoadingUI>();
             uiManager.LoadUI<InGameUI>();
             uiManager.LoadUI<DistanceUI>();
@@ -183,6 +188,7 @@ namespace _1.Scripts.Manager.Subs
             uiManager.LoadUI<QuickSlotUI>();
             uiManager.LoadUI<MinigameUI>();
             uiManager.LoadUI<QuestUI>();
+            uiManager.HideUI<FadeUI>();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
 

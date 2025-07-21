@@ -29,7 +29,9 @@ namespace _1.Scripts.Manager.Subs
             
             RegisterStaticUI<LoadingUI>();
             RegisterStaticUI<LobbyUI>();
+            RegisterStaticUI<FadeUI>();
             ShowUI<LobbyUI>();
+            HideUI<FadeUI>();
         }
         
         public T GetUI<T>() where T : UIBase
