@@ -128,12 +128,12 @@ namespace _1.Scripts.Manager.Subs
         
         public void OnCutsceneStarted(PlayableDirector _)
         {
-            Service.Log("OnCutsceneStarted");
             HideAndSaveAllUI();
         }
-        public void OnCutsceneStopped(PlayableDirector _)
+        public void OnCutsceneStopped(PlayableDirector director)
         {
-            Service.Log("OnCutsceneStopped");
+            director.played -= OnCutsceneStarted;
+            director.stopped -= OnCutsceneStopped;
             RestoreAllUI();
         }
 

@@ -182,7 +182,6 @@ namespace _1.Scripts.Manager.Subs
                     uiManager.HideUI<LoadingUI>();
                     break;
             }
-            uiManager.ShowUI<QuestUI>()?.Initialize();
             
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
