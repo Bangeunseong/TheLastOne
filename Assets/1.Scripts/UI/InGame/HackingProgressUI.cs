@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -16,8 +17,13 @@ namespace _1.Scripts.UI.InGame
 
         private void Awake()
         {
-            camera = Camera.main.transform;
             gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            var cam = Camera.main;
+            if (cam) camera = cam.transform;
         }
 
         private void LateUpdate()

@@ -7,10 +7,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Cursor = UnityEngine.Cursor;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 namespace _1.Scripts.UI.InGame
 {
-    public class QuickSlotUI : MonoBehaviour
+    public class QuickSlotUI : UIBase
     {
         [Header("QuickSlotUI")]
         [SerializeField] private GameObject quickSlotPanel;
@@ -21,27 +22,26 @@ namespace _1.Scripts.UI.InGame
         [Header("QuickSlot Elements")] 
         [SerializeField] public Image[] slotIcons;
         [SerializeField] private TextMeshProUGUI[] slotCounts;
-        private PlayerInventory inventory;
         
+        private PlayerInventory inventory;
         private int currentSlot = -1;
 
-        private void Start()
+        public override void Init(UIManager manager)
         {
-            inventory = CoreManager.Instance.gameManager.Player.PlayerInventory;
-            
+            base.Init(manager);
+            Hide();
+            quickSlotGroup.alpha = 0;
+            quickSlotPanel.SetActive(false);
             for (int i = 0; i < slotEvents.Length; i++)
             {
                 int idx = i;
                 slotEvents[i].enterEvent.AddListener(() => currentSlot = idx);
                 slotEvents[i].exitEvent.AddListener(() => currentSlot = -1);
             }
-            quickSlotGroup.alpha = 0;
-            quickSlotPanel.SetActive(false);
-            
-            RefreshQuickSlot();
+            ResetUI();
         }
-
-        public void ResetUI()
+        
+        public override void ResetUI()
         {
             inventory = null;
             currentSlot = -1;
@@ -50,7 +50,6 @@ namespace _1.Scripts.UI.InGame
                 icon.sprite = null;
                 icon.enabled = false;
             }
-
             foreach (var count in slotCounts)
             {
                 count.text = "";
@@ -60,10 +59,13 @@ namespace _1.Scripts.UI.InGame
             quickSlotGroup.alpha = 0;
         }
 
-        public void Initialize(PlayerInventory newInventory)
+        public override void Initialize(object param = null)
         {
-            inventory = newInventory;
-            RefreshQuickSlot();
+            if (param is PlayerInventory newInventory)
+            {
+                inventory = newInventory;
+                RefreshQuickSlot();
+            }
         }
 
         public void OpenQuickSlot()
@@ -73,8 +75,7 @@ namespace _1.Scripts.UI.InGame
             quickSlotGroup.alpha = 1;
             quickSlotGroup.blocksRaycasts = true;
             quickSlotPanelAnimator.Play("Panel In");
-            foreach (var slot in slotEvents)
-                slot.exitEvent.Invoke();
+            foreach (var slot in slotEvents) slot.exitEvent.Invoke();
             RefreshQuickSlot();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -119,22 +120,26 @@ namespace _1.Scripts.UI.InGame
 
         private void RefreshQuickSlot()
         {
+            if (inventory == null)
+            {
+                Service.Log("QuickSlot UI : Inventory is null");
+                return;
+            }
             var items = inventory.Items;
-            
             for (int i = 0; i < slotIcons.Length; i++)
             {
                 ItemType type = (ItemType)i;
-
                 BaseItem item = null;
                 foreach (var it in items)
                 {
                     if (it.Key == type)
                     {
                         item = it.Value;
+                        Service.Log($"QuickSlot UI : {item.ItemData.Name} {item.CurrentItemCount}");
                         break;
                     }
                 }
-                
+
                 if (item != null && item.CurrentItemCount > 0)
                 {
                     slotIcons[i].enabled = true;
@@ -149,7 +154,6 @@ namespace _1.Scripts.UI.InGame
                     slotCounts[i].text = "";
                     slotCounts[i].gameObject.SetActive(false);
                 }
-
             }
         }
     }

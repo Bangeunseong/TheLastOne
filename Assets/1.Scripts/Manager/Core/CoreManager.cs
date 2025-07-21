@@ -106,6 +106,7 @@ namespace _1.Scripts.Manager.Core
 
         public async Task LoadScene(SceneType sceneType)
         {
+            Service.Log($"Load Scene: {sceneType}");
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             await sceneLoadManager.OpenScene(sceneType);
         }
@@ -135,6 +136,7 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void StartGame()
         {
+            Service.Log("Start Game");
             gameManager.TryRemoveSavedData();
             _ = LoadScene(SceneType.Stage1);
         }
@@ -147,7 +149,7 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
-            uiManager.InGameUI?.ResetUI();
+            uiManager.ResetUI();
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
@@ -160,7 +162,7 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
-            uiManager.InGameUI?.ResetUI();
+            uiManager.ResetUI();
             gameManager.ExitGame();
             _ = LoadScene(SceneType.IntroScene);
         }
@@ -180,7 +182,7 @@ namespace _1.Scripts.Manager.Core
             if (childrenName == null)
             {
                 var component = target.GetComponentInChildren<T>(inActive);
-                if (component != null) return component;
+                if (component) return component;
                 Service.Log($"Can't find component of type {typeof(T)} in children of {target.name}");
                 return null;
             }

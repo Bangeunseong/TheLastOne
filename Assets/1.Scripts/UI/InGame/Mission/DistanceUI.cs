@@ -1,55 +1,65 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using TMPro;
 using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Mission
 {
-    public class DistanceUI : MonoBehaviour
+    public class DistanceUI : UIBase
     {
-        [SerializeField] private Transform player;
-        [SerializeField] private Transform target;
         [SerializeField] private TextMeshProUGUI distanceText;
-        [SerializeField] private float updateInterval = 0.1f;
+        [SerializeField] private PathAnimator pathAnimator;
 
-        private float nextUpdateTime;
-        
+        private Transform player;
+        private Transform target;
+
         public static Transform CurrentTarget { get; private set; }
         public static event Action<Transform> OnTargetChanged;
+
+        public override void Init(UIManager manager)
+        {
+            base.Init(manager);
+            player = CoreManager.Instance.gameManager.Player?.transform;
+            Hide();
+        }
+        
+        public override void ResetUI()
+        {
+            SetTarget(null);
+        }
+
+        public override void Initialize(object param = null)
+        {
+            if (param is (Transform playerTransform, Transform targetTransform))
+            {
+                player = playerTransform;
+                SetTarget(targetTransform);
+            }
+        }
+        
+        public void SetTarget(Transform newTarget)
+        {
+            if (!player) player = CoreManager.Instance.gameManager.Player?.transform;
+            target = newTarget;
+            CurrentTarget = newTarget;
+            OnTargetChanged?.Invoke(newTarget);
+            
+            if (newTarget != null) Show();
+            else Hide();
+        }
+
+
         
         private void Update()
         {
-            if (!player || !target || !distanceText) return;
+            if (player == null || target == null) return;
 
-            if (Time.time >= nextUpdateTime)
-            {
-                nextUpdateTime = Time.time + updateInterval;
-                float dist = Vector3.Distance(player.position, target.position);
-                
-                distanceText.text = $"{dist:F1} m";
-            }
-        }
-
-        public void ResetUI()
-        {
-            player = null;
-            target = null;
-            distanceText = null;
-        }
-
-        public void Initialize(Transform playerTransform, Transform targetTransform)
-        {
-            player = playerTransform;
-            distanceText = GetComponentInChildren<TextMeshProUGUI>();
-            SetTarget(targetTransform);
-        }
-
-        public void SetTarget(Transform newTarget)
-        {
-            this.target = newTarget;
-            CurrentTarget = newTarget;
-            OnTargetChanged?.Invoke(newTarget);
+            float distance = Vector3.Distance(player.position, target.position);
+            distanceText.text = $"{distance:0.0}m";
         }
     }
+     
 }

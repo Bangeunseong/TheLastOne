@@ -2,6 +2,13 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Common;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
+using _1.Scripts.UI.Inventory;
+using _1.Scripts.UI.Loading;
+using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -58,6 +65,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            uiManager.ShowUI<LoadingUI>();
             
             // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
@@ -69,6 +77,13 @@ namespace _1.Scripts.Manager.Subs
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
+                    uiManager.UnloadUI<InGameUI>();
+                    uiManager.UnloadUI<QuestUI>();
+                    uiManager.UnloadUI<DistanceUI>();
+                    uiManager.UnloadUI<InventoryUI>();
+                    uiManager.UnloadUI<QuickSlotUI>();
+                    uiManager.UnloadUI<PauseMenuUI>();
+                    uiManager.UnloadUI<WeaponUI>();
                 }
             }
             
@@ -81,8 +96,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             LoadingProgress = 0f;
-            uiManager.ChangeState(CurrentState.Loading);
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
@@ -93,7 +107,7 @@ namespace _1.Scripts.Manager.Subs
             else
             {
                 LoadingProgress = 0.4f;
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             }
             
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
@@ -114,15 +128,15 @@ namespace _1.Scripts.Manager.Subs
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
+                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
             LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
-            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
+            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
+            uiManager.GetUI<LoadingUI>()?.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;
@@ -147,8 +161,9 @@ namespace _1.Scripts.Manager.Subs
             switch (CurrentScene)
             {
                 case SceneType.IntroScene: 
-                    coreManager.soundManager.PlayBGM(BgmType.Lobby, index: 0); 
-                    uiManager.ChangeState(CurrentState.Lobby); break;
+                    uiManager.HideUI<LoadingUI>();
+                    uiManager.ShowUI<LobbyUI>();
+                    break;
                 case SceneType.Loading:
                 case SceneType.EndingScene: break;
             }
@@ -164,11 +179,20 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.Stage2:
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
-                    uiManager.ChangeState(CurrentState.InGame);
+                    uiManager.HideUI<LoadingUI>();
+                    uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.GetUI<MinigameUI>();
+                    uiManager.ShowUI<QuestUI>();
+                    uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
+                    uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.ShowUI<PauseMenuUI>().Initialize();
+                    uiManager.ShowUI<InventoryUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
+                    uiManager.ShowUI<QuickSlotUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerInventory);
                     break;
             }
 
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
+            uiManager.ShowUI<QuestUI>()?.Initialize();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
 

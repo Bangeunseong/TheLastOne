@@ -1,5 +1,6 @@
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Loading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ namespace _1.Scripts.UI.Lobby
     public class LobbyUI : UIBase
     {
         [Header("Lobby UI")] 
+        [SerializeField] private GameObject panel;
         [SerializeField] private Button startButton;
         [SerializeField] private Button loadButton;
         [SerializeField] private Button settingButton;
@@ -21,16 +23,24 @@ namespace _1.Scripts.UI.Lobby
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             exitButton.onClick.AddListener(OnQuitButtonClicked);
         }
-        
-        public override void SetActive(bool active)
+
+        public override void Show()
         {
-            gameObject.SetActive(active);
+            Service.Log("Lobby UI Show");
+            panel.SetActive(true);
+        }
+        
+        public override void Hide()
+        {
+            Service.Log("Lobby UI Hide");
+            panel.SetActive(false);
         }
 
         private void OnStartButtonClicked()
         {
             Debug.Log("Start Button Clicked");
             CoreManager.Instance.StartGame();
+            Hide();
         }
         
         private void OnLoadButtonClicked()
