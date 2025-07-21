@@ -482,7 +482,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
             staminaCTS = new CancellationTokenSource();
             _ = RecoverStamina_Async(recoverRate, interval, staminaCTS.Token);
-            CoreManager.Instance.uiManager.GetUI<InGameUI>().UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
         public void CancelStaminaTask()
         {

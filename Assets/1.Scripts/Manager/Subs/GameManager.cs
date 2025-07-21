@@ -10,7 +10,6 @@ using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -133,6 +132,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Directory.Exists(SaveDirectoryPath)) return;
             File.Delete(SaveDirectoryPath + SaveFileName);
+            SaveData = null;
         }
         
         public void PauseGame()

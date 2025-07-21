@@ -50,8 +50,6 @@ namespace _1.Scripts.UI.InGame.Mission
             if (newTarget != null) Show();
             else Hide();
         }
-
-
         
         private void Update()
         {

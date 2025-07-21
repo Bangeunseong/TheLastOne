@@ -31,6 +31,7 @@ namespace _1.Scripts.UI.InGame.Mission
                 if (go != null) player = go.transform;
             }
         }
+        
         void OnEnable()
         {                       
             DistanceUI.OnTargetChanged += OnTargetChanged;

@@ -79,9 +79,7 @@ namespace _1.Scripts.UI.InGame
         }
 
         private void Awake() { progressFillImage.enabled = false; }
-
-        private void Update() { if (playerCondition) { UpdateStateUI(); } }
-
+        
         private void UpdateStateUI()
         {
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
