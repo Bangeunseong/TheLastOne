@@ -1628,6 +1628,7 @@ GameObject:
   - component: {fileID: 1074753608}
   - component: {fileID: 1074753607}
   - component: {fileID: 1074753606}
+  - component: {fileID: 1074753611}
   - component: {fileID: 1074753610}
   - component: {fileID: 1074753609}
   m_Layer: 0
@@ -1789,6 +1790,31 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!169 &1074753611
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074753605}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1086465605
 GameObject:
   m_ObjectHideFlags: 0
@@ -3302,6 +3328,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.y
       value: -0.06325601
       objectReference: {fileID: 0}
+    - target: {fileID: 71050111894547790, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <LowPassFilter>k__BackingField
+      value: 
+      objectReference: {fileID: 1074753611}
     - target: {fileID: 442889878688765892, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalRotation.w

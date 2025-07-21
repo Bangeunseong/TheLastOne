@@ -12,7 +12,6 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
-using _1.Scripts.Weapon.Scripts.Melee;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -21,6 +20,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class PlayerCondition : MonoBehaviour
     {
+        [field: Header("Low Pass Filter Settings")]
+        [field: SerializeField] public AudioLowPassFilter LowPassFilter { get; private set; }
+        [field: SerializeField] public float LowestPoint { get; private set; }
+        [field: SerializeField] public float HighestPoint { get; private set; }
+        
         [field: Header("Base Condition Data")]
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
         
@@ -98,6 +102,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Awake()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
             
             if (DamageConverters.Count <= 0) 
                 DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
@@ -108,6 +113,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Reset()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
             
             if (DamageConverters.Count <= 0) 
                 DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
@@ -169,6 +175,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
                     AvailableWeapons[i] = data.AvailableWeapons[i];
+                
+                UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             }
 
             Speed = StatData.moveSpeed;
@@ -179,6 +187,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+        }
+
+        public void UpdateLowPassFilterValue(float value)
+        {
+            LowPassFilter.cutoffFrequency = value;
         }
 
         public void UpdateLastSavedTransform()
@@ -218,6 +231,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
                 coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
             }
+            
+            UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
             OnDamage?.Invoke();
             
@@ -232,6 +247,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+            UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
         }
 
