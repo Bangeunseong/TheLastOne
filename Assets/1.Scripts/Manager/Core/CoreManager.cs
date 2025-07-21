@@ -153,6 +153,16 @@ namespace _1.Scripts.Manager.Core
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
+
+        public void MoveToNextScene(SceneType sceneType)
+        {
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUI();
+            gameManager.ExitGame();
+            _ = LoadScene(sceneType);
+        }
         
         /// <summary>
         /// Back to Intro Scene
