@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
@@ -14,18 +15,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             stateMachine.MovementSpeedModifier = 0f;
             base.Enter();
             
-            if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
-            staminaCoroutine = stateMachine.Player.StartCoroutine(RecoverStamina_Coroutine(
-                playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval,
-                playerCondition.StatData.interval));
+            playerCondition.OnRecoverStamina(
+                playerCondition.StatData.recoverRateOfStamina_Idle * playerCondition.StatData.interval, 
+                playerCondition.StatData.interval);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            if (staminaCoroutine == null) return;
-            stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
+            playerCondition.CancelStaminaTask();
         }
         
         public override void Update()

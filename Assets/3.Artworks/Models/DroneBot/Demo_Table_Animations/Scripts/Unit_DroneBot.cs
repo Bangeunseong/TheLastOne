@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.AIControllers;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers.Base;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
 using _1.Scripts.Weapon.Scripts.Guns;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,14 +26,13 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  
 	private AudioSource m_AudioSource;
-
-	public AudioClip s_Fire, s_hit, s_dead, s_signal; //Sound effect 
 	public LayerMask hittableLayer;
-
-	public BaseDroneAIController controller;
 
 	private Coroutine gotDamagedCoroutine;
 	private float gotDamagedParticleDuration = 0.5f;
+
+	private BehaviorTree behaviorTree;
+	private BaseNpcStatController statController;
 	
 	// Use this for initialization
 	void Start()
@@ -40,20 +42,27 @@ public class Unit_DroneBot : MonoBehaviour
 
 	private void Awake()
 	{
-		controller = GetComponent<BaseDroneAIController>();
+		behaviorTree = GetComponent<BehaviorTree>();
+		statController = GetComponent<BaseNpcStatController>();
 	}
 
 	void f_hit() //hit
 	{
 		// 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 3);
-		if (!controller.CheckStunned())
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+		if (gotDamagedCoroutine != null)
 		{
-			if (gotDamagedCoroutine != null)
+			StopCoroutine(gotDamagedCoroutine);
+		}
+
+		var statController = behaviorTree.GetVariable("statController") as SharedBaseNpcStatController;
+
+		if (statController != null && statController.Value is IStunnable stunnable)
+		{
+			if (!stunnable.IsStunned)
 			{
-				StopCoroutine(gotDamagedCoroutine);
+				gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
 			}
-			gotDamagedCoroutine = StartCoroutine(DamagedParticleCoroutine());
 		}
 	}
 
@@ -87,7 +96,7 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_prevDead()
 	{
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 1);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
 	}
 
 	void f_dead() //dead
@@ -100,14 +109,18 @@ public class Unit_DroneBot : MonoBehaviour
 		p_dead.Play();
 		p_smoke.Play();
 		m_AudioSource.Stop();
-		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, 2);
+		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
 		m_AudioSource.loop = false;
 		restartRes = false;
 	}
 
 	void f_fire(int side) //shot 
 	{
-		if (controller.targetTransform == null) return;
+		var targetTransform = behaviorTree.GetVariable("target_Transform") as SharedTransform;
+		var targetPos = behaviorTree.GetVariable("target_Pos") as SharedVector3;
+		bool isAlly = statController.RuntimeStatData.IsAlly;
+
+		if (targetTransform == null || targetTransform.Value == null) return;
 		
 		if (side == 1)
 		{
@@ -120,9 +133,7 @@ public class Unit_DroneBot : MonoBehaviour
 			pos_side = Gun_EndL.transform;
 		}
 		
-		// 목표 방향 계산: 플레이어 위치 기준
-		Vector3 target = controller.targetPos;
-		Vector3 directionToPlayer = (target - pos_side.position).normalized;
+		Vector3 directionToTarget = (targetPos.Value - pos_side.position).normalized;
 		
 		// 총알 생성
 		var shell = CoreManager.Instance.objectPoolManager.Get("Bullet");
@@ -133,7 +144,7 @@ public class Unit_DroneBot : MonoBehaviour
 			int enemyMask = 1 << LayerConstants.Enemy;
 			int finalLayerMask = hittableLayer;
 
-			if (controller.statController.isAlly)
+			if (isAlly)
 			{
 				finalLayerMask &= ~allyMask; // Ally 제거
 				finalLayerMask |= enemyMask; // Enemy 추가
@@ -144,9 +155,9 @@ public class Unit_DroneBot : MonoBehaviour
 				finalLayerMask |= allyMask;   // Ally 추가
 			}
 			
-			bullet.Initialize(pos_side.position, directionToPlayer, 
+			bullet.Initialize(pos_side.position, directionToTarget, 
 				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
-				10, finalLayerMask);
+				statController.RuntimeStatData.BaseDamage, finalLayerMask);
 		}
 
 		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);

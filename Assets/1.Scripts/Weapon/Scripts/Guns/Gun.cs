@@ -3,7 +3,9 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
@@ -33,6 +35,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         
         // Fields
         private float timeSinceLastShotFired;
+        private CoreManager coreManager;
         
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
@@ -52,16 +55,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
-        private void Start()
-        {
-            timeSinceLastShotFired = 0f;
-            IsRecoiling = false;
-            MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
-        }
-
         private void Update()
         {
-            if (!IsRecoiling) return;
+            if (!IsRecoiling || coreManager.gameManager.IsGamePaused) return;
             timeSinceLastShotFired += Time.unscaledDeltaTime;
             
             if (!(timeSinceLastShotFired >= 60f / GunData.GunStat.Rpm)) return;
@@ -69,16 +65,21 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             IsRecoiling = false;
         }
 
-        public override void Initialize(GameObject ownerObj)
+        public override void Initialize(GameObject ownerObj, DataTransferObject dto = null)
         {
+            coreManager = CoreManager.Instance;
+            timeSinceLastShotFired = 0f;
+            IsRecoiling = false;
+            MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
+            
             owner = ownerObj;
             if (ownerObj.TryGetComponent(out Player user))
             {
                 player = user;
                 isOwnedByPlayer = true;
-                if (CoreManager.Instance.gameManager.SaveData != null)
+                if (dto != null)
                 {
-                    var weapon = CoreManager.Instance.gameManager.SaveData.Weapons[(int)GunData.GunStat.Type];
+                    var weapon = dto.Weapons[(int)GunData.GunStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                     if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
@@ -117,10 +118,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     {
                         var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
                         bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                        bulletHole.transform.SetParent(hit.transform);
                     } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
                     {
                         var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
                         bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                        bulletHole.transform.SetParent(hit.transform);
                     }
                 }
             }
@@ -170,6 +173,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         {
             if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
             return true;
         }
 

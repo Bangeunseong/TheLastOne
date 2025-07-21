@@ -21,11 +21,10 @@ namespace Michsky.UI.Shift
 
         private Button sourceButton;
         private SoundManager soundManager;
-
-        void OnEnable()
+        
+        private void Start()
         {
-            if (Application.isPlaying)
-                soundManager = CoreManager.Instance.soundManager;
+            soundManager = CoreManager.Instance?.soundManager;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -35,7 +34,7 @@ namespace Michsky.UI.Shift
 
             if (enableHoverSound == true)
             {
-                soundManager?.PlayUISFX(hoverSfxType, hoverIndex);
+                soundManager?.PlayUISFX(hoverSfxType, -1, hoverIndex);
             }
         }
 
@@ -46,7 +45,7 @@ namespace Michsky.UI.Shift
 
             if (enableClickSound == true)
             {
-                soundManager?.PlayUISFX(clickSfxType, clickIndex);
+                soundManager?.PlayUISFX(clickSfxType, -1, clickIndex);
             }
         }
     }

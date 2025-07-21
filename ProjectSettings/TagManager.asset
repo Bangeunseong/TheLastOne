@@ -8,6 +8,11 @@ TagManager:
   - Ally
   - Enemy
   - FxTemporaire
+  - WeaponSpawnPoint
+  - ItemSpawnPoint
+  - EnemySpawnPoint
+  - PatrolZone
+  - MainCanvas
   layers:
   - Default
   - TransparentFX
@@ -33,7 +38,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - WeaponPreview
   - 
   - 
   - 

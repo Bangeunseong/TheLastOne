@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Michsky.UI.Shift;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -44,7 +42,7 @@ namespace _1.Scripts.UI.Setting
             InitFullscreenModeSelector();
         }
 
-        private void Start()
+        public void Initialize()
         {
             LoadSettings();
             AddListeners();

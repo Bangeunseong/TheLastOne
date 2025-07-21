@@ -1,4 +1,6 @@
-﻿namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
+﻿using System.Threading;
+
+namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
     public class AirState : BaseState
     {
@@ -12,12 +14,7 @@
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             
             // Cancel Crouch
-            if (playerCondition.IsCrouching)
-            {
-                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
-                crouchCoroutine =
-                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching = false, 0.1f));
-            }
+            playerCondition.OnCrouch(false, 0.1f);
             
             // Stop Reload Coroutine
             playerCondition.TryCancelReload();

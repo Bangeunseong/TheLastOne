@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ef93f16b5ec1ef54395c6bc3705e6741
   m_currentHash:
     serializedVersion: 2
-    Hash: 1840806a53beab6b7aae7e0e5c675e12
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 4cb5458553a408040ac5ea0b3e47c06b, type: 2}
   - {fileID: 11400000, guid: c2c2983a6f2643a4d85077995574818d, type: 2}
+  - {fileID: 11400000, guid: f0a69f147f5a3314090cb09fd5fa5409, type: 2}
   - {fileID: 11400000, guid: 1f1ab1309271a3846a0e4ca41401dea3, type: 2}
   - {fileID: 11400000, guid: a4b4449053d679b49b43689b3cdf0a4e, type: 2}
   m_BuildSettings:
@@ -89,6 +90,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - IntroScene
     - Common
     - Stage1
     - Stage2

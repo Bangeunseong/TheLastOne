@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,11 +18,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly PlayerCondition playerCondition;
         protected readonly CoreManager coreManager;
         
-        protected Coroutine staminaCoroutine;
-        protected Coroutine crouchCoroutine;
-        
         private float speed;
-        private float smoothVelocity;
+        private float smoothVelocity = 5f;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -35,7 +36,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         public virtual void HandleInput()
         {
-            if (playerCondition.IsDead || coreManager.gameManager.IsGamePaused) { stateMachine.MovementDirection = Vector2.zero; return; }
+            if (coreManager.gameManager.IsGamePaused || !playerCondition.IsPlayerHasControl) { stateMachine.MovementDirection = Vector2.zero; return; }
             ReadMovementInput();
         }
 
@@ -104,9 +105,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
-            
-            speed = Mathf.SmoothDamp(currentHorizontalSpeed, targetSpeed,
-                ref smoothVelocity, 0.05f, Mathf.Infinity, Time.unscaledDeltaTime);
+
+            speed = currentHorizontalSpeed switch
+            {
+                >= 0 and < 1 => 1,
+                >= 1 => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
+                _ => throw new ArgumentOutOfRangeException()
+            };
             // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
@@ -120,7 +125,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         private float GetMovementSpeed()
         {
-            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.CurrentSpeedMultiplier;
+            var movementSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier * playerCondition.SkillSpeedMultiplier * playerCondition.ItemSpeedMultiplier * playerCondition.WeightSpeedMultiplier;
             return movementSpeed;
         }
 
@@ -137,44 +142,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             
             var cameraTargetRotation = Quaternion.LookRotation(direction);
             cameraPivotTransform.rotation = cameraTargetRotation;
-        }
-
-        protected IEnumerator Crouch_Coroutine(bool isCrouch, float duration)
-        {
-            var currentPosition = stateMachine.Player.CameraPivot.localPosition;
-            var targetPosition = !isCrouch
-                ? stateMachine.Player.IdlePivot.localPosition
-                : stateMachine.Player.CrouchPivot.localPosition;
-
-            float t = 0;
-            while (t < duration)
-            {
-                t += Time.unscaledDeltaTime;
-                float elapsed = t / duration;
-                stateMachine.Player.CameraPivot.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed);
-                yield return null;
-            }
-            
-            stateMachine.Player.CameraPivot.localPosition = targetPosition;
-            crouchCoroutine = null;
-        }
-
-        protected IEnumerator RecoverStamina_Coroutine(float recoverRate, float interval)
-        {
-            while (playerCondition.CurrentStamina < playerCondition.MaxStamina)
-            {
-                playerCondition.OnRecoverStamina(recoverRate);
-                yield return new WaitForSecondsRealtime(interval);
-            }
-        }
-        
-        protected IEnumerator ConsumeStamina_Coroutine(float consumeRate, float interval)
-        {
-            while (playerCondition.CurrentStamina > 0)
-            {
-                playerCondition.OnConsumeStamina(consumeRate);
-                yield return new WaitForSecondsRealtime(interval);
-            }
         }
         
         private void AddInputActionCallbacks()
@@ -194,8 +161,11 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
+            playerInput.PlayerActions.SwitchToHack.started += OnSwitchToCrossbow;
             playerInput.PlayerActions.Focus.started += OnFocusStarted;
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
+            playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
+            playerInput.PlayerActions.ItemAction.canceled += OnItemActionCanceled;
         }
         
         private void RemoveInputActionCallbacks()
@@ -215,26 +185,29 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
+            playerInput.PlayerActions.SwitchToHack.started -= OnSwitchToCrossbow;
             playerInput.PlayerActions.Focus.started -= OnFocusStarted;
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
+            playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
+            playerInput.PlayerActions.ItemAction.canceled -= OnItemActionCanceled;
         }
         
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
-        protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
-        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { }
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
+        protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
+        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
         /* -------------------- */
         
         /* - Aim 관련 메소드 - */
         protected virtual void OnAimStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.OnAim(true, stateMachine.Player.ZoomFoV, stateMachine.Player.TransitionTime);
         }
         protected virtual void OnAimCanceled(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.OnAim(false, stateMachine.Player.OriginalFoV, stateMachine.Player.TransitionTime);
         }
         /* ----------------- */
@@ -242,7 +215,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Fire & Reload 관련 메소드 - */
         protected virtual void OnFireStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             playerCondition.IsAttacking = true;
         }
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
@@ -251,45 +224,54 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
-            
+            if (!playerCondition.IsPlayerHasControl) return;
         }
         /* ---------------------------- */
         
         /* - Weapon Switch 관련 메소드 - */
         private void OnSwitchToMain(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             int weaponCount = playerCondition.Weapons.Count;
             
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[1]) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
         private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             int weaponCount = playerCondition.Weapons.Count;
             
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[2]) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
             int weaponCount = playerCondition.Weapons.Count;
 
-            if (weaponCount == 0) return;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[3]) return;
             playerCondition.OnSwitchWeapon(3, 1f);
+        }
+
+        private void OnSwitchToCrossbow(InputAction.CallbackContext context)
+        {
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
+
+            int weaponCount = playerCondition.Weapons.Count;
+            if (weaponCount == 0 || !playerCondition.AvailableWeapons[4]) return;
+            playerCondition.OnSwitchWeapon(4, 0.5f);
         }
         private  void OnSwitchByScroll(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsSwitching) return;
+            if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             var value = context.ReadValue<Vector2>();
             int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
-            playerCondition.OnSwitchWeapon(nextIndex, nextIndex > 1 ? 1f : 0.5f);
+            playerCondition.OnSwitchWeapon(nextIndex, nextIndex == (int)WeaponType.GrenadeLauncher + 1 ? 1f : 0.5f);
         }
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
@@ -317,13 +299,19 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Interact 관련 메소드 - */
         protected virtual void OnInteractStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead) return;
-            if (stateMachine.Player.PlayerInteraction.Interactable == null) return;
+            if (playerCondition.IsDead || !playerCondition.IsPlayerHasControl) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
-            if (interactable is DummyWeapon gun)
+            switch (interactable)
             {
-                gun.OnInteract(stateMachine.Player.gameObject);
+                case DummyWeapon gun:
+                    gun.OnInteract(stateMachine.Player.gameObject);
+                    break;
+                case DummyItem item:
+                    item.OnInteract(stateMachine.Player.gameObject);
+                    break;
+                case null: break;
+                default: interactable.OnInteract(stateMachine.Player.gameObject); break;
             }
         }
         /* ---------------------- */
@@ -331,12 +319,28 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Skill 관련 메소드 - */
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeFocusGauge()) return;
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeInstinctGauge()) return;
         }
         /* -------------------- */
+        
+        /* - Item 관련 메소드 - */
+        protected virtual void OnItemActionStarted(InputAction.CallbackContext context)
+        {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            stateMachine.Player.PlayerInventory.OnItemActionStarted();
+        }
+
+        protected virtual void OnItemActionCanceled(InputAction.CallbackContext context)
+        {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            stateMachine.Player.PlayerInventory.OnItemActionCanceled();
+        }
+        /* ------------------- */
     }
 }

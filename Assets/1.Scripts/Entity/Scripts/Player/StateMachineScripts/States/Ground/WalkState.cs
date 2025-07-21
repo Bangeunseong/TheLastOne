@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using System.Threading;
+using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 {
@@ -14,18 +15,16 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             base.Enter();
             
             // Start Stamina Recovery Coroutine 
-            if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
-            staminaCoroutine = stateMachine.Player.StartCoroutine(RecoverStamina_Coroutine(
+            playerCondition.OnRecoverStamina(
                 playerCondition.StatData.recoverRateOfStamina_Walk * playerCondition.StatData.interval,
-                playerCondition.StatData.interval));
+                playerCondition.StatData.interval);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            if (staminaCoroutine == null) return;
-            stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
+            playerCondition.CancelStaminaTask();
         }
 
         protected override void OnCrouchStarted(InputAction.CallbackContext context)

@@ -12,17 +12,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
     /// </summary>
     public class RuntimeEntityStatData
     {
-        public string entityName;
-        public bool isPlayer;
-        public bool isAlly;
-
-        public int maxHealth;
-        public int baseDamage;
-        public float baseAttackRate;
-
-        public float moveSpeed;
-        public float runMultiplier;
-        public float walkMultiplier;
+        private readonly EntityStatData originalSO;
+        
+        public string EntityName { get; set; }
+        public bool IsPlayer { get; set; }
+        public bool IsAlly { get; set; }
+        public float MaxHealth { get; set; }
+        public int BaseDamage { get; set; }
+        public float BaseAttackRate { get; set; }
+        public float Armor { get; set; }
+        public float MaxArmor { get; set; }
+        public float MoveSpeed { get; set; }
+        public float RunMultiplier { get; set; }
+        public float WalkMultiplier { get; set; } 
 
         public AudioClip[] footStepSounds;
         public AudioClip[] hitSounds;
@@ -30,26 +32,56 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         
         protected RuntimeEntityStatData(EntityStatData so)
         {
-            entityName = so.entityName;
-            isPlayer = so.isPlayer;
-            isAlly = so.isAlly;
+            originalSO = so;
+            
+            EntityName = so.entityName;
+            IsPlayer = so.isPlayer;
+            IsAlly = so.isAlly;
 
-            maxHealth = so.maxHealth;
-            baseDamage = so.baseDamage;
-            baseAttackRate = so.baseAttackRate;
-
-            moveSpeed = so.moveSpeed;
-            runMultiplier = so.runMultiplier;
-            walkMultiplier = so.walkMultiplier;
+            MaxHealth = so.maxHealth;
+            BaseDamage = so.baseDamage;
+            BaseAttackRate = so.baseAttackRate;
+            Armor = so.armor;
+            MaxArmor = so.maxArmor;
+            
+            MoveSpeed = so.moveSpeed;
+            RunMultiplier = so.runMultiplier;
+            WalkMultiplier = so.walkMultiplier;
 
             footStepSounds = so.footStepSounds;
             hitSounds = so.hitSounds;
             deathSounds = so.deathSounds;
         }
+        
+        /// <summary>
+        /// 공통 스탯 리셋
+        /// </summary>
+        public virtual void ResetStats()
+        {
+            EntityName = originalSO.entityName;
+            IsPlayer = originalSO.isPlayer;
+            IsAlly = originalSO.isAlly;
+            
+            MaxHealth = originalSO.maxHealth;
+            BaseDamage = originalSO.baseDamage;
+            BaseAttackRate = originalSO.baseAttackRate;
+            Armor = originalSO.armor;
+            MaxArmor = originalSO.maxArmor;
+            
+            MoveSpeed = originalSO.moveSpeed;
+            RunMultiplier = originalSO.runMultiplier;
+            WalkMultiplier = originalSO.walkMultiplier;
+            
+            footStepSounds = originalSO.footStepSounds;
+            hitSounds = originalSO.hitSounds;
+            deathSounds = originalSO.deathSounds;
+        }
     }
     
     public class RuntimeReconDroneStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
     {
+        private readonly ReconDroneStatData reconSO;
+        
         public float DetectRange { get; set; }
         public float AttackRange { get; set; }
         public float AlertDuration { get; set; }
@@ -62,6 +94,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         // 생성자: ReconDroneData(SO)에서 값 복사 + 베이스 생성자 호출
         public RuntimeReconDroneStatData(ReconDroneStatData so) : base(so)
         {
+            reconSO = so;
+            
             DetectRange = so.DetectRange;
             AttackRange = so.AttackRange;
             AlertDuration = so.AlertDuration;
@@ -71,10 +105,26 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MinWanderingDistance = so.MinWanderingDistance;
             MaxWanderingDistance = so.MaxWanderingDistance;
         }
+
+        public override void ResetStats()
+        {
+            base.ResetStats();
+            
+            DetectRange = reconSO.DetectRange;
+            AttackRange = reconSO.AttackRange;
+            AlertDuration = reconSO.AlertDuration;
+            AlertRadius = reconSO.AlertRadius;
+            MinWaitingDuration = reconSO.MinWaitingDuration;
+            MaxWaitingDuration = reconSO.MaxWaitingDuration;
+            MinWanderingDistance = reconSO.MinWanderingDistance;
+            MaxWanderingDistance = reconSO.MaxWanderingDistance;
+        }
     }
 
     public class RuntimeSuicideDroneStatData : RuntimeEntityStatData, IAlertable, IAttackable, IBoomable, IDetectable
     {
+        private readonly SuicideDroneStatData suicideSO; // 원본 SO 저장
+
         public float AttackRange { get; set; }
         public float AlertDuration { get; set; }
         public float AlertRadius { get; set; }
@@ -83,11 +133,23 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
 
         public RuntimeSuicideDroneStatData(SuicideDroneStatData so) : base(so)
         {
+            suicideSO = so;
             AttackRange = so.AttackRange;
             AlertDuration = so.AlertDuration;
             AlertRadius = so.AlertRadius;
             BoomRange = so.BoomRange;
             DetectRange = so.DetectRange;
+        }
+
+        public override void ResetStats()
+        {
+            base.ResetStats(); // 부모 공통 스탯 리셋
+
+            AttackRange = suicideSO.AttackRange;
+            AlertDuration = suicideSO.AlertDuration;
+            AlertRadius = suicideSO.AlertRadius;
+            BoomRange = suicideSO.BoomRange;
+            DetectRange = suicideSO.DetectRange;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces.Common;
+﻿using System;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     {
         [Header("Components")] 
         [SerializeField] private Rigidbody rigidBody;
-
+        [SerializeField] private TrailRenderer trailRenderer;
+        
         [Header("Bullet Presets")] 
         [SerializeField] private float appliedForce;
         [SerializeField] private float maxMoveDistance;
@@ -26,11 +28,13 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void Awake()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void Reset()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void OnEnable()
@@ -49,6 +53,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             rigidBody.useGravity = true;
             rigidBody.drag = drag;
             isAlreadyReached = true;
+        }
+
+        private void OnDisable()
+        {
+            trailRenderer.Clear();
         }
 
         public void Initialize(Vector3 position, Vector3 dir, float maxDistance, float force, int dealtDamage, LayerMask hitLayer)
@@ -71,7 +80,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         {
             if (((1 << other.gameObject.layer) & hittableLayer) != 0)
             {
-                Debug.Log(other.gameObject.layer);
+                // Debug.Log(other.gameObject.layer);
                 if (other.TryGetComponent(out IDamagable damagable)){ damagable.OnTakeDamage(damage); }
                 // else if()
                 CoreManager.Instance.objectPoolManager.Release(gameObject);

@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using System.Threading;
+using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 {
@@ -12,11 +13,9 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = playerCondition.RunSpeedModifier;
             base.Enter();
-            
-            if (staminaCoroutine != null) stateMachine.Player.StopCoroutine(staminaCoroutine);
-            staminaCoroutine = stateMachine.Player.StartCoroutine(ConsumeStamina_Coroutine(
-                playerCondition.StatData.consumeRateOfStamina * playerCondition.StatData.interval,
-                playerCondition.StatData.interval));
+            playerCondition.OnConsumeStamina(
+                playerCondition.StatData.consumeRateOfStamina * playerCondition.StatData.interval, 
+                playerCondition.StatData.interval);
         }
 
         public override void Update()
@@ -28,9 +27,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
-            
-            if (staminaCoroutine == null) return;
-            stateMachine.Player.StopCoroutine(staminaCoroutine); staminaCoroutine = null;
+            playerCondition.CancelStaminaTask();
         }
 
         protected override void OnCrouchStarted(InputAction.CallbackContext context)

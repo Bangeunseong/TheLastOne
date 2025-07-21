@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
@@ -12,13 +13,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Enter()
         {
             stateMachine.MovementSpeedModifier = playerCondition.CrouchSpeedModifier;
-            if (!playerCondition.IsCrouching)
-            {
-                playerCondition.IsCrouching = true;
-                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
-                crouchCoroutine =
-                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching, 0.1f));
-            }
+            playerCondition.OnCrouch(true, 0.1f);
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
         }
@@ -31,13 +26,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
 
         protected override void OnCrouchStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsCrouching)
-            {
-                playerCondition.IsCrouching = false;
-                if (crouchCoroutine != null) { stateMachine.Player.StopCoroutine(crouchCoroutine); }
-                crouchCoroutine =
-                    stateMachine.Player.StartCoroutine(Crouch_Coroutine(playerCondition.IsCrouching, 0.1f));
-            }
+            playerCondition.OnCrouch(false, 0.1f);
             base.OnCrouchStarted(context);
             stateMachine.ChangeState(stateMachine.IdleState);
         }

@@ -1,4 +1,6 @@
 ﻿using _1.Scripts.Interfaces.Player;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame;
 using Unity.Collections;
 using UnityEngine;
 
@@ -12,6 +14,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [SerializeField] private LayerMask interactableLayers;
         [SerializeField] private GameObject detectedObject;
 
+        [Header("Hover Prompt (World Space UI)")]
+        [SerializeField] private Vector3 offSet = new Vector3(0, 0, 0);
+        private Vector3 lastHitPoint;
+        private InteractionUI interactionUI;
+        private GameObject uiInstance;
+        private bool isUIAppearing;
+        
         // Fields
         [Header("Last Check Time")]
         [SerializeField, ReadOnly] private float timeSinceLastCheck;
@@ -25,6 +34,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             cam = Camera.main;
             timeSinceLastCheck = 0;
+            
+            uiInstance = CoreManager.Instance.objectPoolManager.Get("InteractionUI");
+            interactionUI = uiInstance.GetComponent<InteractionUI>();
+            uiInstance.transform.SetParent(null, false);
+            uiInstance.SetActive(false);
+            isUIAppearing = false;
         }
 
         // Update is called once per frame
@@ -37,27 +52,54 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (Physics.Raycast(ray, out var hit, maxCheckDistance, interactableLayers))
             {
                 if (hit.collider.gameObject == detectedObject) return;
-                
+
                 detectedObject = hit.collider.gameObject;
+                lastHitPoint = hit.point;
                 Interactable = detectedObject.TryGetComponent<IInteractable>(out var interactable) ? interactable : null;
+                HandleUI();
             }
             else
             {
-                detectedObject = null;
-                Interactable = null;
+                ResetParameters();
+                HandleUI();
+            }
+
+            if (isUIAppearing)
+            {
+                uiInstance.transform.LookAt(cam.transform.position);
+                uiInstance.transform.Rotate(0f, 180f, 0f);
             }
         }
 
         public void OnInteract()
         {
             Interactable.OnInteract(gameObject);
-            ResetParameters();
+        }
+
+        public void OnCancelInteract()
+        {
+            Interactable?.OnCancelInteract();
         }
 
         public void ResetParameters()
         {
             detectedObject = null;
             Interactable = null;
+        }
+
+        private void HandleUI()
+        {
+            if (Interactable != null && !isUIAppearing)
+            {
+                uiInstance.transform.position = lastHitPoint;
+                interactionUI.Show();
+                isUIAppearing = true;
+            }
+            else if (Interactable == null && isUIAppearing)
+            {
+                interactionUI.Hide();
+                isUIAppearing = false;
+            }
         }
     }
 }

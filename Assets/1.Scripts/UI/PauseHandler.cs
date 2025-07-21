@@ -1,4 +1,5 @@
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Common;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -6,68 +7,81 @@ namespace _1.Scripts.UI
 {
     public class PauseHandler : MonoBehaviour
     {
-        [Header("Pause Menu")]
-        [SerializeField] private GameObject pauseCanvas;
-        [SerializeField] private Animator pauseAnimator;
         [SerializeField] private BlurManager blurMgr;
-
-        [Header("Settings Panel")]
-        [SerializeField] private CanvasGroup settingsCanvas;
-        [SerializeField] private Animator settingsAnimator;
+        [SerializeField] private Animator pauseAnimator;
+        [SerializeField] private InventoryHandler inventoryHandler;
         
-        bool isPaused;
+        [Header("Setting Panel")]
+        [SerializeField] private CanvasGroup settingPanel;
+        [SerializeField] private Animator settingAnimator;
+        
+        private PauseMenuUI pauseMenuUI;
         private CoreManager coreManager;
+
+        private bool isPaused;
+        public bool IsPaused => isPaused;
+        public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
 
         private void Start()
         {
             coreManager = CoreManager.Instance;
+            pauseMenuUI = coreManager.uiManager.GetUI<PauseMenuUI>(); ;
         }
 
         public void TogglePause()
         {
+            if (inventoryHandler && inventoryHandler.IsInventoryOpen)
+            {
+                inventoryHandler.ToggleInventory();
+                return;
+            }
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();
         }
 
+        public void ClosePausePanel()
+        {
+            Resume();
+        }
+
         private void Pause()
         {
             coreManager.gameManager.PauseGame();
-            Time.timeScale = 0f;
             blurMgr.BlurInAnim();
-            pauseCanvas.SetActive(true);
+            pauseMenuUI.Show();
             pauseAnimator.Play("Window In");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
 
-            if (settingsCanvas.alpha > 0f)
+            if (settingPanel && settingPanel.alpha > 0f)
             {
-                settingsAnimator.Play("Panel Out");
-                settingsCanvas.alpha = 0f;
-                settingsCanvas.interactable = false;
-                settingsCanvas.blocksRaycasts = false;
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
             }
         }
 
         private void Resume()
         {
             coreManager.gameManager.ResumeGame();
-            Time.timeScale = 1f;
             blurMgr.BlurOutAnim();
-            if (settingsCanvas.alpha > 0f)
-            {
-                settingsAnimator.Play("Panel Out");
-                settingsCanvas.alpha = 0f;
-                settingsCanvas.interactable = false;
-                settingsCanvas.blocksRaycasts = false;
-            }
-            
             pauseAnimator.Play("Window Out");
+            pauseMenuUI.Hide();
             
-            pauseCanvas.SetActive(false);
+            if (settingPanel && settingPanel.alpha > 0f)
+            {
+                settingAnimator?.Play("Panel Out");
+                settingPanel.alpha = 0f;
+                settingPanel.interactable = false;
+                settingPanel.blocksRaycasts = false;
+            }
+        }
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+        public void SetPauseMenuUI(PauseMenuUI ui)
+        {
+            pauseMenuUI = ui;
+            settingPanel = ui.SettingPanel;
+            settingAnimator = ui.SettingAnimator;
         }
     }
 }

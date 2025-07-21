@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,14 +19,14 @@ namespace _1.Scripts.UI.InGame
         [Range(0,1)] public float threshold3 = 0.25f;
         
         public Color color0 = new Color(1f, 0.5f, 0.5f, 0f);
-        public Color color1 = new Color(1f, 0.5f, 0.5f, 0.5f);
-        public Color color2 = new Color(1f, 0.3f, 0.3f, 0.5f);
-        public Color color3 = new Color(0.3f, 0.1f, 0.1f, 0.5f);
+        public Color color1 = new Color(1f, 0.4f, 0.4f, 0.02f);
+        public Color color2 = new Color(0.9f, 0.4f, 0.4f, 0.1f);
+        public Color color3 = new Color(0.5f, 0.1f, 0.1f, 0.4f);
 
         private Color lastColor = Color.clear;
 
-        private float flashStrength = 0.1f;
-        public float flashDuration = 0.2f;
+        [SerializeField] private float flashStrength = 0.05f;
+        public float flashDuration = 0.5f;
         private float flashAlpha;
         private Coroutine flashCoroutine;
 
@@ -43,7 +41,8 @@ namespace _1.Scripts.UI.InGame
             
             SetOverlayColer(Color.clear);
         }
-        void OnDestroy()
+
+        private void OnDestroy()
         {
             if (playerCondition != null) playerCondition.OnDamage -= HandleHit;
         }
@@ -57,7 +56,11 @@ namespace _1.Scripts.UI.InGame
             else if (ratio <= threshold1) tint = color1;
             else tint = color0;
             
-            float finalAlpha = Mathf.Clamp01(tint.a + flashAlpha);
+            float pulseSpeed = 2f;
+            float pulseStrength = -0.3f;
+            float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f * pulseStrength;
+            
+            float finalAlpha = Mathf.Clamp01(tint.a + pulse + flashAlpha);
             tint.a = finalAlpha;
 
             if (tint != lastColor)

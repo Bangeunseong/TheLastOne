@@ -36,9 +36,11 @@ namespace _1.Scripts.Manager.Subs
         PistolShoot,
         RifleShoot,
         GrenadeLauncherShoot,
+        CrossbowShoot,
         PistolReload,
         RifleReload,
         GrenadeLauncherReload,
+        CrossbowReload,
         
         // Enemy SFX
         EnemyAttack,
@@ -50,6 +52,9 @@ namespace _1.Scripts.Manager.Subs
         
         // Item SFX
         ItemPickup,
+        
+        // Door SFX
+        Door,
         
         // Other
         HackingTry,
@@ -146,6 +151,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var obj = poolManager.Get("SoundPlayer");
+            if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
             soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
@@ -169,6 +175,8 @@ namespace _1.Scripts.Manager.Subs
                 return null;
             }
 
+            // Debug.Log(clip);
+            
             var obj = poolManager.Get("SoundPlayer");
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
@@ -220,7 +228,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     if (clipRef == null) 
                         continue;
-                    Service.Log(group.name);
+                    // Service.Log(group.name);
                     AudioClip clip;
 
                     if (clipRef.Asset is AudioClip existingClip)

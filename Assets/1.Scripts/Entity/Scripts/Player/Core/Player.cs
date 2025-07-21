@@ -2,6 +2,12 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Common;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
+using _1.Scripts.UI.Inventory;
+using _1.Scripts.UI.Loading;
 using Cinemachine;
 using UnityEngine;
 
@@ -9,6 +15,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
+    [RequireComponent(typeof(PlayerInventory))]
     
     public class Player : MonoBehaviour
     {
@@ -20,6 +27,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
         [field: SerializeField] public PlayerGravity PlayerGravity { get; private set; }
         [field: SerializeField] public PlayerRecoil PlayerRecoil { get; private set; }
+        [field: SerializeField] public PlayerInventory PlayerInventory { get; private set; }
         
         [field: Header("Camera Components")]
         [field: SerializeField] public Transform MainCameraTransform { get; private set; }
@@ -28,7 +36,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Transform IdlePivot { get; private set; }
         [field: SerializeField] public Transform CrouchPivot { get; private set; }
         [field: SerializeField] public CinemachineVirtualCamera FirstPersonCamera { get; private set; } // 플레이 전용
-        [field: SerializeField] public CinemachineVirtualCamera ThirdPersonCamera { get; private set; } // 연출용
         [field: SerializeField] public CinemachineInputProvider InputProvider { get; private set; }
         [field: SerializeField] public CinemachinePOV Pov { get; private set; }
         
@@ -42,9 +49,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         [field: Header("StateMachine")] 
         [field: SerializeField] public PlayerStateMachine StateMachine { get; private set; }
+
+        private CoreManager coreManager;
         
         // Properties
-        public Camera cam { get; private set; }
+        public Camera Cam { get; private set; }
+        public Vector3 OriginalOffset { get; private set; }
+        public float OriginalHeight { get; private set; }
 
         private void Awake()
         {
@@ -55,6 +66,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!PlayerRecoil) PlayerRecoil = this.TryGetChildComponent<PlayerRecoil>();
+            if (!PlayerInventory) PlayerInventory = this.TryGetChildComponent<PlayerInventory>();
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
@@ -62,7 +74,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -78,6 +89,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
             if (!PlayerRecoil) PlayerRecoil = this.TryGetChildComponent<PlayerRecoil>();
+            if (!PlayerInventory) PlayerInventory = this.TryGetChildComponent<PlayerInventory>();
             
             if (!CameraPivot) CameraPivot = this.TryGetChildComponent<Transform>("CameraPivot");
             if (!CameraPoint) CameraPoint = this.TryGetChildComponent<Transform>("CameraPoint");
@@ -85,7 +97,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!ThirdPersonCamera) ThirdPersonCamera = GameObject.Find("ThirdPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
             if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
@@ -95,11 +106,28 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         // Start is called before the first frame update
         private void Start()
         {
+            coreManager = CoreManager.Instance;
+            
             FirstPersonCamera.Follow = CameraPoint;
-            ThirdPersonCamera.LookAt = CameraPivot;
-            cam = Camera.main;
-            MainCameraTransform = cam?.transform;
+            Cam = Camera.main;
+            OriginalOffset = Controller.center;
+            OriginalHeight = Controller.height;
+            MainCameraTransform = Cam?.transform;
             OriginalFoV = FirstPersonCamera.m_Lens.FieldOfView;
+            
+            // Core Component 선언 -> Save Data에 영향을 받는 것들에게만 적용
+            PlayerCondition.Initialize(coreManager.gameManager.SaveData);
+            PlayerInventory.Initialize(coreManager.gameManager.SaveData);
+            
+            coreManager.uiManager.ShowUI<InGameUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.GetUI<MinigameUI>();
+            coreManager.uiManager.ShowUI<QuestUI>();
+            coreManager.uiManager.ShowUI<DistanceUI>()?.Initialize(transform);
+            coreManager.uiManager.ShowUI<WeaponUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.ShowUI<PauseMenuUI>().Initialize();
+            coreManager.uiManager.ShowUI<InventoryUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.ShowUI<QuickSlotUI>()?.Initialize(PlayerInventory);
+            coreManager.uiManager.ShowUI<QuestUI>()?.Initialize();
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
@@ -122,11 +150,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void LateUpdate()
         {
             StateMachine.LateUpdate();
-        }
-
-        private void OnDestroy()
-        {
-            StopAllCoroutines();
         }
 
         /// <summary>

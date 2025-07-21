@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using TMPro;
 using UnityEngine;
@@ -12,26 +9,32 @@ namespace _1.Scripts.UI.Loading
     public class LoadingUI : UIBase
     {
         [Header("Loading UI")]
+            [SerializeField] private GameObject panel;
         public Slider progressSlider;
         public TextMeshProUGUI progressText;
         
         public override void Init(UIManager manager)
         {
             base.Init(manager);
+            Hide();
         }
         
-        /*
-        public async void LoadScene(SceneType sceneType)
+        public override void ResetUI()
         {
-            await uiManager.ShowPopup<LoadingUI>("LoadingUI");
-            await uiManager.LoadScene(sceneType);
-        }*/
-        
-        public override void SetActive(bool active)
-        {
-            gameObject.SetActive(active);
+            progressSlider.value = 0f;
+            progressText.text = "0.00%";
         }
         
+        public override void Show()
+        {
+            Service.Log("Loading UI Show");
+            panel.SetActive(true);
+        }
+        public override void Hide()
+        {
+            Service.Log("Loading UI Hide");
+            panel.SetActive(false);
+        }
         
         public void UpdateLoadingProgress(float progress)
         {

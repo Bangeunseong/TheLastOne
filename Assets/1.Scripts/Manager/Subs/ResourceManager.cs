@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Loading;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -23,6 +24,14 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
         }
+
+        public void OnDestroy()
+        {
+            foreach (var handles in handlesByLabel.Values)
+            { 
+                foreach (var handle in handles) Addressables.Release(handle);
+            }
+        }
         
         /// <summary>
         /// 씬 라벨을 기준으로 필요한 리소스들 전부 불러옴
@@ -36,7 +45,7 @@ namespace _1.Scripts.Manager.Subs
             while (!handle.IsDone)
             {
                 float progress = handle.PercentComplete;
-                coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
+                coreManager.uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield();
             }
             coreManager.sceneLoadManager.LoadingProgress += 0.2f;
@@ -69,7 +78,9 @@ namespace _1.Scripts.Manager.Subs
         public T GetAsset<T>(string name) where T : Object
         {
             if (resources.TryGetValue(name, out Object obj))
+            {
                 return obj as T;
+            }
             return null;
         }
         
@@ -94,7 +105,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!handlesByLabel.TryGetValue(label, out var handles))
             {
-                Debug.LogWarning($"can't find AsyncOperationHandle {label}");
+                // Debug.LogWarning($"can't find AsyncOperationHandle {label}");
                 return;
             }
 

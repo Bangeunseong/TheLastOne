@@ -1,5 +1,6 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
+using _1.Scripts.Manager.Data;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -7,9 +8,10 @@ namespace _1.Scripts.Weapon.Scripts.Common
 {
     public enum WeaponType
     {
-        Pistol,
         Rifle,
-        GrenadeThrow,
+        Pistol,
+        GrenadeLauncher,
+        Crossbow,
     }
     
     public abstract class BaseWeapon : MonoBehaviour, IShootable
@@ -25,7 +27,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
         // private Enemy enemy;
         protected bool isOwnedByPlayer;
         
-        public abstract void Initialize(GameObject ownerObj);
+        public abstract void Initialize(GameObject ownerObj, DataTransferObject dto = null);
         public abstract bool OnShoot();
         public abstract bool OnRefillAmmo(int ammo);
     }

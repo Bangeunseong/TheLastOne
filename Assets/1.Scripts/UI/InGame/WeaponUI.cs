@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Util;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
+
 
 namespace _1.Scripts.UI.InGame
 {
@@ -14,12 +18,11 @@ namespace _1.Scripts.UI.InGame
     {
         Main,
         Pistol,
-        HackGun,
+        Crossbow,
         GrenadeLauncher,
     }
-    public class WeaponUI : MonoBehaviour
+    public class WeaponUI : UIBase
     {
-        [SerializeField] private AmmoUI ammoUI;
         
         [Header("SlotType")]
         [SerializeField] private SlotType[] slotType;
@@ -32,6 +35,9 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Image[] slotImage; 
         [SerializeField] private TextMeshProUGUI[] slotText;
         [SerializeField] private TextMeshProUGUI[] slotAmmoText;
+        [SerializeField] private TextMeshProUGUI currentAmmoText;
+        [SerializeField] private TextMeshProUGUI currentTotalAmmoText;
+        [SerializeField] private Image ammoSlotFrame;
 
         [Header("Scale 세팅")]
         [SerializeField] private Vector3 normalScale = Vector3.one;
@@ -45,177 +51,154 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private float idleAlpha = 0.5f;
         [SerializeField] private float selectedSlotAlpha = 1f;
 
-        [Header("애니메이터")] [SerializeField] private Animator panelAnimator;
+        [Header("애니메이터")] 
+        [SerializeField] private Animator panelAnimator;
         [SerializeField] private float panelHideDelay = 3f;
         private Coroutine hideCoroutine;
+        private bool isPanelVisible = false;
 
+        private PlayerCondition  playerCondition;
         private int lastSelectedIndex = -1;
-        
-        private void Start()
+
+        public override void Init(UIManager manager)
         {
-            int n = slotTransform.Length;
-            targetScales = new Vector3[n];
-            
-            for (int i = 0; i < n; i++)
+            base.Init(manager);
+            targetScales = new Vector3[slotType.Length];
+            for (int i = 0; i < slotType.Length; i++)
             {
                 slotTransform[i].localScale = normalScale;
                 targetScales[i] = normalScale;
-
-                if (selectedSlotImage != null && i < selectedSlotImage.Length && selectedSlotImage[i] != null)
-                {
-                    var color = selectedSlotImage[i].color;
-                    color.a = idleAlpha;
-                    selectedSlotImage[i].color = color;
-                }
-                
-                if (slotAnimator != null && i < slotAnimator.Length && slotAnimator[i] != null)
-                {
-                    slotAnimator[i].enabled = false;
-                }
+                SetSlotAlpha(i, idleAlpha);
+                if (slotAnimator[i]) slotAnimator[i].enabled = false;
             }
             
-            if (panelAnimator != null)
-                panelAnimator.Play("Hidden", 0, 1f);
+            if (panelAnimator) panelAnimator.Play("Hidden", 0, 1f);
+            Hide();
         }
         
+        public override void ResetUI()
+        {
+            playerCondition = null;
+            lastSelectedIndex = -1;
+        }
+
+        public override void Initialize(object param = null)
+        {
+            if (param is PlayerCondition newPlayerCondition)
+            {
+                playerCondition = newPlayerCondition;
+                Refresh(false);
+            }
+        }
+
         private void Update()
         {
-            bool needsLayout = false;
             for (int i = 0; i < slotTransform.Length; i++)
             {
-                Vector3 current = slotTransform[i].localScale;
-                Vector3 target = targetScales[i];
-                if ((current - target).sqrMagnitude > 0.0001f)
-                {
-                    slotTransform[i].localScale = Vector3.Lerp(current, target, Time.deltaTime * scaleSpeed);
-                    needsLayout = true;
-                }
-            }
-            if (needsLayout)
-            {
-                var parentRect = slotTransform[0].parent as RectTransform;
-                LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                slotTransform[i].localScale = Vector3.Lerp(slotTransform[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
             }
         }
         
         
-        public void Refresh(List<BaseWeapon> weapons, List<bool> available, int selectedIndex)
-        {
-            BaseWeapon selectedWeapon = (selectedIndex >= 0 && selectedIndex < weapons.Count && available[selectedIndex]) ? weapons[selectedIndex] : null;
-            int currentSlot = -1;
-            
+        public void Refresh(bool playShowAnimation = true)
+        { 
+            var weapons = playerCondition?.Weapons;
+            var available = playerCondition?.AvailableWeapons;
+            int selectedIndex = playerCondition?.EquippedWeaponIndex ?? -1;
+
+            if (weapons == null || available == null) return;
+            if (weapons.Count <=0 || available.Count <=0) return;
+
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;
             
+            UpdateCurrentAmmoText(weapons, available, selectedIndex);
+
             for (int i = 0; i < slotType.Length; i++)
             {      
-                BaseWeapon slotWeapon = weapons.Where((w, idx) => available[idx] && IsMatchSlot(w, slotType[i]))
-                    .FirstOrDefault();
+                BaseWeapon slotWeapon = null;
+                for (int idx = 0; idx < weapons.Count; idx++)
+                {
+                    if (available[idx] && SlotUtility.IsMatchSlot(weapons[idx], slotType[i]))
+                    {
+                        slotWeapon = weapons[idx];
+                        break;
+                    }
+                }
+                slotImage[i].color = slotWeapon ? Color.white : Color.clear;
+                slotText[i].text = slotWeapon ? SlotUtility.GetWeaponName(slotWeapon) : string.Empty;
 
-                if (slotWeapon != null)
-                {
-                    //slotImage[i].sprite = slotWeapon.IconSprite;
-                    slotImage[i].color  = Color.white;
-                }
-                else
-                {
-                    slotImage[i].color = Color.gray;
-                }
-                slotText[i].text = slotWeapon != null ? GetWeaponName(slotWeapon) : string.Empty;
+                var (mag, total) = SlotUtility.GetWeaponAmmo(slotWeapon);
+                slotAmmoText[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : string.Empty;
+                slotAmmoText[i].color = slotWeapon is Gun ? selectedColor : selectedAmmoColor;
 
-                bool hasAmmo = false;
-                
-                if (slotWeapon is Gun g)
-                {
-                    slotAmmoText[i].text = $"{g.CurrentAmmoCountInMagazine}/{g.CurrentAmmoCount}";
-                    slotAmmoText[i].color = selectedColor;
-                    hasAmmo = true;
-                }
-                else if (slotWeapon is GrenadeLauncher gl)
-                {
-                    slotAmmoText[i].text = $"{gl.CurrentAmmoCountInMagazine}/{gl.CurrentAmmoCount}";
-                    slotAmmoText[i].color = selectedAmmoColor;
-                    hasAmmo = true;
-                }
-                else
-                {
-                    slotAmmoText[i].text = string.Empty;
-                }
-
-                bool isSelected = (slotWeapon != null && slotWeapon == selectedWeapon);
-                if (isSelected) 
-                    currentSlot = i;
-                
+                bool isSelected = slotWeapon != null && weapons[selectedIndex] == slotWeapon;
                 slotText[i].enabled = isSelected;
-                slotAmmoText[i].enabled = isSelected && hasAmmo;
+                slotAmmoText[i].enabled = isSelected && (mag > 0 || total > 0);
 
-                if (selectedSlotImage != null && i < selectedSlotImage.Length && selectedSlotImage[i] != null)
-                {
-                    var color = selectedSlotImage[i].color;
-                    color.a = isSelected ? selectedSlotAlpha : idleAlpha;
-                    selectedSlotImage[i].color = color;
-                }
-                
+                SetSlotAlpha(i, isSelected ? selectedSlotAlpha : idleAlpha);
                 targetScales[i] = isSelected ? selectedScale : normalScale;
             }
-            BaseWeapon sel = (selectedIndex >= 0 && selectedIndex < weapons.Count && available[selectedIndex])
-                ? weapons[selectedIndex] : null;
-
-            if (sel is Gun gun)
-                ammoUI.UpdateAmmoUI(gun.CurrentAmmoCountInMagazine);
-            else if (sel is GrenadeLauncher gl)
-                ammoUI.UpdateAmmoUI(gl.CurrentAmmoCountInMagazine);
-            else
-                ammoUI.UpdateAmmoUI(0);
-            
-            if (selectionChanged)
+            if (selectionChanged && playShowAnimation && selectedIndex >= 0 && selectedIndex < slotAnimator.Length)
             {
-                if (currentSlot >= 0 && currentSlot < slotAnimator.Length && slotAnimator[currentSlot] != null)
+                if (!isPanelVisible)
                 {
-                    slotAnimator[currentSlot].enabled = false;
-                    slotAnimator[currentSlot].enabled = true;
-                }
-                
-                if (panelAnimator != null)
-                {
-                    panelAnimator.ResetTrigger("Hide");
-                    panelAnimator.SetTrigger("Show");
+                    slotAnimator[selectedIndex]?.Rebind();
+                    slotAnimator[selectedIndex]?.Play(0);
+                    panelAnimator?.ResetTrigger("Show");
+                    panelAnimator?.ResetTrigger("Hide");
+                    panelAnimator?.SetTrigger("Show");
+
                     if (hideCoroutine != null) StopCoroutine(hideCoroutine);
                     hideCoroutine = StartCoroutine(HidePanelCoroutine());
                 }
             }
-        }
-        private bool IsMatchSlot(BaseWeapon w, SlotType slot)
-        {
-            switch (slot)
-            {
-                case SlotType.Main:
-                    return w is Gun g1 && g1.GunData.GunStat.Type == WeaponType.Rifle;
-                case SlotType.Pistol:
-                    return w is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
-                //case SlotType.Hack:
-                    // return w is Gun g3 && g3.GunData.GunStat.Type == WeaponType.HackGun;
-                case SlotType.GrenadeLauncher:
-                    return w is GrenadeLauncher;
-                default:
-                    return false;
-            }
-        }
+        }        
 
         private IEnumerator HidePanelCoroutine()
         {
             yield return new WaitForSeconds(panelHideDelay);
-            if (panelAnimator != null)
-                panelAnimator.ResetTrigger("Show");
-                panelAnimator.SetTrigger("Hide");
+            panelAnimator?.ResetTrigger("Show");
+            panelAnimator?.ResetTrigger("Hide");
+            panelAnimator?.SetTrigger("Hide");
+            isPanelVisible = false;
             hideCoroutine = null;
         }
-
-        private string GetWeaponName(BaseWeapon w)
+        
+        private void SetSlotAlpha(int index, float alpha)
         {
-            if (w is Gun g) return g.GunData.GunStat.Type.ToString();
-            if (w is GrenadeLauncher gl)  return gl.GrenadeData.GrenadeStat.Type.ToString();
-            return w.GetType().Name;
+            if (selectedSlotImage[index])
+            {
+                var color = selectedSlotImage[index].color;
+                color.a = alpha;
+                selectedSlotImage[index].color = color;
+            }
+        }
+
+        private void UpdateCurrentAmmoText(List<BaseWeapon> weapons, List<bool> available, int selectedIndex)
+        {
+            if (weapons == null || available == null || selectedIndex < 0 || selectedIndex >= weapons.Count)
+            {
+                ammoSlotFrame.gameObject.SetActive(false);
+                currentAmmoText.text = string.Empty;
+                currentTotalAmmoText.text = string.Empty;
+                return;
+            }
+
+            var currentWeapon = weapons[selectedIndex];
+            var (mag, total) = SlotUtility.GetWeaponAmmo(currentWeapon);
+            if (mag > 0 || total > 0)
+            {
+                ammoSlotFrame.gameObject.SetActive(true);
+                currentAmmoText.text = $"{mag}";
+                currentTotalAmmoText.text = $"{total}";
+            }
+            else
+            {
+                ammoSlotFrame.gameObject.SetActive(false);
+                currentAmmoText.text = string.Empty;
+                currentTotalAmmoText.text = string.Empty;
+            }
         }
     }
 }

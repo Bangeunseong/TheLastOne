@@ -1,0 +1,83 @@
+using System.Collections;
+using System.Collections.Generic;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.Minigame;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace _1.Scripts.UI.InGame
+{
+    public class MinigameUI : UIBase
+    {
+        [Header("Minigame UI")]
+        [SerializeField] private GameObject panel;
+        [SerializeField] private TextMeshProUGUI clearText;
+        [SerializeField] private TextMeshProUGUI loopText;
+        [SerializeField] private TextMeshProUGUI countdownText;
+        [SerializeField] private TextMeshProUGUI enterText;
+        [SerializeField] private Slider timeSlider;
+        [SerializeField] private Transform contentRoot;
+        [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
+
+        public override void ResetUI()
+        {
+            ShowPanel(false);
+            ShowCountdownText(false);
+            ShowClearText(false);
+            ShowEnterText(false);
+            ShowTimeSlider(false);
+            ShowLoopText(false);
+        }
+        
+        public void ShowPanel(bool show = true) => panel.SetActive(show);
+        public void ShowCountdownText(bool show = true) => countdownText.gameObject.SetActive(show);
+        public void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
+        public void ShowEnterText(bool show = true) => enterText.gameObject.SetActive(show);
+        public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
+        public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
+
+        public void SetMinigameContent(GameObject contentPrefab)
+        {
+            foreach (Transform child in contentRoot) Destroy(child.gameObject);
+            var content = Instantiate(contentPrefab, contentRoot);
+            content.SetActive(true);
+        }
+
+        public void SetCountdownText(float t)
+        {
+            countdownText.text = t > 0 ? t.ToString("F1") : "0";
+        }
+
+        public void SetClearText(bool success, string text)
+        {
+            clearText.text = text;
+            clearText.color = success ? Color.cyan : Color.red;
+        }
+
+        public void SetTimeSlider(float current, float max)
+        {
+            timeSlider.maxValue = max;
+            timeSlider.value = current;
+        }
+
+        public void UpdateTimeSlider(float current)
+        {
+            timeSlider.value = current;
+        }
+
+        public void UpdateLoopCount(int current, int max)
+        {
+            loopText.text = $"{current}/{max}";
+        }
+
+        public void ShowAlphabetMatching(bool show = true)
+        {
+            alphabetMatchingUI.gameObject.SetActive(show);
+            if (!show) alphabetMatchingUI.ResetUI();
+        }
+
+        public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
+        
+    }
+}

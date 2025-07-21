@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -18,6 +20,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public UIManager uiManager;
         [SerializeField] public ResourceManager resourceManager;
         [SerializeField] public ObjectPoolManager objectPoolManager;
+        [SerializeField] public QuestManager questManager;
         [SerializeField] public SoundManager soundManager;
         [SerializeField] public TimeScaleManager timeScaleManager;
         
@@ -43,6 +46,7 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
         }
@@ -57,11 +61,13 @@ namespace _1.Scripts.Manager.Core
             uiManager = new UIManager();
             resourceManager = new ResourceManager();
             objectPoolManager = new ObjectPoolManager();
+            questManager = new QuestManager();
             soundManager = new SoundManager();
+            timeScaleManager = new TimeScaleManager();
         }
 
         // Start is called before the first frame update
-        private void Start()
+        private async void Start()
         {
             uiManager.Start();
             gameManager.Start();
@@ -70,16 +76,23 @@ namespace _1.Scripts.Manager.Core
             resourceManager.Start();
             soundManager.Start(audioSource);
             timeScaleManager.Start();
-
-            // gameManager.TryLoadSettingData().Wait();
-            // if (gameManager.SettingData != null) { }
+            spawnManager.Start();
+            questManager.Start();
+            
+            await resourceManager.LoadAssetsByLabelAsync("IntroScene");
+            soundManager.CacheSoundGroup();
+            await soundManager.LoadClips();
         }
 
         // Update is called once per frame
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
-            timeScaleManager.Update();
+        }
+
+        private void OnDestroy()
+        {
+            resourceManager.OnDestroy();
         }
 
         /// <summary>
@@ -89,6 +102,13 @@ namespace _1.Scripts.Manager.Core
         public void SaveData_QueuedAsync()
         {
             saveTask = saveTask.ContinueWith(_ => gameManager.TrySaveData()).Unwrap();
+        }
+
+        public async Task LoadScene(SceneType sceneType)
+        {
+            Service.Log($"Load Scene: {sceneType}");
+            while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
+            await sceneLoadManager.OpenScene(sceneType);
         }
 
         /// <summary>
@@ -103,38 +123,90 @@ namespace _1.Scripts.Manager.Core
             DataTransferObject loadedData = gameManager.SaveData;
             if (loadedData == null)
             {
-                Service.Log("DataTransferObject is null");
+                // Service.Log("DataTransferObject is null");
                 await sceneLoadManager.OpenScene(SceneType.Stage1);
                 return;
             }
-            Service.Log("DataTransferObject is not null");
+            // Service.Log("DataTransferObject is not null");
             await sceneLoadManager.OpenScene(loadedData.currentSceneId);
         }
 
         /// <summary>
-        /// Start Game with the latest saved data
+        /// Start Game with new game data
         /// </summary>
         public void StartGame()
         {
+            Service.Log("Start Game");
+            gameManager.TryRemoveSavedData();
+            _ = LoadScene(SceneType.Stage1);
+        }
+
+        /// <summary>
+        /// Reload Game with the latest saved data
+        /// </summary>
+        public void ReloadGame()
+        {
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUI();
+            gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
         
         /// <summary>
         /// Back to Intro Scene
         /// </summary>
-        public void MoveToIntroScene() 
+        public void MoveToIntroScene()
         {
-            _ = sceneLoadManager.OpenScene(SceneType.IntroScene);
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUI();
+            gameManager.ExitGame();
+            _ = LoadScene(SceneType.IntroScene);
         }
 
-        /// <summary>
-        /// Save data and move to the next scene
-        /// </summary>
-        /// <param name="nextScene"></param>
-        public void MoveToNextGameScene(SceneType nextScene)
+        /* - Extensions for Sub Managers - */
+        public T GetComponentOfTarget<T>(GameObject target) where T : Component
         {
-            SaveData_QueuedAsync();
-            _ = LoadDataAndScene();
+            if (!target) return null;
+            if (target.TryGetComponent(out T component)) return component;
+            Service.Log($"Can't find component of type {typeof(T)} in {target.name}");
+            return null;
         }
+
+        public T GetComponentInChildrenOfTarget<T>(GameObject target, string childrenName = null, bool inActive = false) where T : Component
+        {
+            if (!target) return null;
+            if (childrenName == null)
+            {
+                var component = target.GetComponentInChildren<T>(inActive);
+                if (component) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in children of {target.name}");
+                return null;
+            }
+
+            var specificComponent = target.GetComponentsInChildren<T>(inActive);
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == childrenName);
+        }
+
+        public T GetComponentInParentOfTarget<T>(GameObject target, string parentName = null, bool inActive = false)
+            where T : Component
+        {
+            if (!target) return null;
+            if (parentName == null)
+            {
+                var component = target.GetComponentInParent<T>(inActive);
+                if (component != null) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in parent of {target.name}");
+                return null;
+            }
+            
+            var specificComponent = target.GetComponentsInParent<T>(inActive);
+            
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == parentName);
+        }
+        /* ------------------------------------- */
     }
 }

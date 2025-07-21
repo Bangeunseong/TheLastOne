@@ -23,18 +23,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7a447ca87ac65d74089aa47e2c046080
-    m_Address: SoundPlayer
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 021fa873ab7a4db4eab29c778d0a632a
-    m_Address: Lobby
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d33ed68d394a68145b1568c6ace35839
     m_Address: PlayerFootStep
     m_ReadOnly: 0
@@ -47,44 +35,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1d85fd7eef814904d9f9f170dd542779
-    m_Address: BulletHole_Wall_Particle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6e42ded71bdce4c49a682b2d95248533
-    m_Address: BulletHole_Ground_Particle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 73a100272e614dd4d965b1a1963b9462
-    m_Address: Bullet
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5bfbf94d3051dd44cbf3443bb2c3a4b5
-    m_Address: Grenade
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9071fdf08b063604d9f1ab48f37da3e0
-    m_Address: EmpExplode_Particle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
-    m_Address: ButtonClick
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
-    m_Address: PopupOpen
+  - m_GUID: cb232371e2c97d14ea3a69d5295aea08
+    m_Address: HackingProgressUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -121,6 +73,115 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab7d0c36bf7a79d48a91d533c4d27447
     m_Address: GrenadeLauncherReload
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76a27d646e1c6da4f9d0e1ea30385c2d
+    m_Address: Assets/8.ScriptableObjects/Item/Shield.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b982e092974aa804895647ccee1229b3
+    m_Address: Assets/8.ScriptableObjects/Item/EnergyBar.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb9a1b05a05ddb640a166a05fd191d17
+    m_Address: Assets/8.ScriptableObjects/Item/NanoAmple.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 325f0a3de529e894abc34cf76095af37
+    m_Address: Assets/8.ScriptableObjects/Item/Medkit.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95aa330f3f2ec4542873179854a7efb4
+    m_Address: DoorSoundGroup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a447ca87ac65d74089aa47e2c046080
+    m_Address: SoundPlayer
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5808116dce9c094584a55f6eec0c67f
+    m_Address: InteractionUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 41b689d766996904cbe4c03d34f36105
+    m_Address: AmmoIconPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20f88d3e874558f4bb6a6e5940b2dc54
+    m_Address: PanelManager
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d910db66ca228a4f9f8087c34d763c6
+    m_Address: QuickSlotUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e444dbfda52671d4e8d030f4399f87ef
+    m_Address: MissionUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63c260e7d7545c445ac28937f4c8af67
+    m_Address: InGameUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a37e0365b618a946957d3a32155b654
+    m_Address: InventoryUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13aa10e8af8905f458e078d1135949d4
+    m_Address: WeaponUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 213568ebef49f984291c8d4a586fc61c
+    m_Address: DistanceUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23d4529403d8d8548a0ce48ab4699e65
+    m_Address: PauseMenuUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2247b887ef3b580499b9219ffd2dc493
+    m_Address: Assets/2.Prefabs/UI/InGame/QuestUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
+    m_Address: MinigameUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

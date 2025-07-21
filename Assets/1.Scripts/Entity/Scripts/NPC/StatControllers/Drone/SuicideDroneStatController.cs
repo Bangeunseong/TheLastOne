@@ -1,79 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
-using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
 using _1.Scripts.Manager.Core;
-using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
 {
-    public class SuicideDroneStatController : BaseNpcStatController
+    public class SuicideDroneStatController : BaseDroneStatController
     {
         private RuntimeSuicideDroneStatData runtimeSuicideDroneStatData;
-        public override RuntimeEntityStatData RuntimeStatData => runtimeSuicideDroneStatData; // 부모에게 자신의 스탯 전송
-
-        [Header("속도 저장용")]
-        private float baseMoveSpeed;
         
-        private void Awake()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+            runtimeSuicideDroneStatData.ResetStats();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.SetTrigger(DroneAnimationHashData.Repair);
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
             var suicideDroneStatData = CoreManager.Instance.resourceManager.GetAsset<SuicideDroneStatData>("SuicideDroneStatData"); // 자신만의 데이터 가져오기
-            runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData); // 복사
-            baseMoveSpeed = runtimeSuicideDroneStatData.moveSpeed;
-            animator = GetComponent<Animator>();
+            runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData);
+            runtimeStatData = runtimeSuicideDroneStatData;
         }
-
-        private void Update()
-        {
-            runtimeSuicideDroneStatData.isAlly = isAlly;
-        }
-
-        public override void OnTakeDamage(int damage)
-        {
-            if (!isDead)
-            {
-                runtimeSuicideDroneStatData.maxHealth -= damage;
-                if (runtimeSuicideDroneStatData.maxHealth <= 0)
-                {
-                    int[] deathHashes = new int[]
-                    {
-                        DroneAnimationHashData.Dead1,
-                        DroneAnimationHashData.Dead2,
-                        DroneAnimationHashData.Dead3
-                    };
-
-                    int randomIndex = UnityEngine.Random.Range(0, deathHashes.Length);
-                    animator.SetTrigger(deathHashes[randomIndex]);
-
-                    isDead = true;
-                }
-                else
-                {
-                    animator.SetTrigger(DroneAnimationHashData.Hit3);
-                }
-            }
-        }
-
-        public override void ModifySpeed(float percent)
-        {
-            runtimeSuicideDroneStatData.moveSpeed *= percent;
-        }
-
-        public override void Running(bool isRunning)
-        {
-            runtimeSuicideDroneStatData.moveSpeed = isRunning ? baseMoveSpeed + runtimeSuicideDroneStatData.runMultiplier : baseMoveSpeed;
-        }
-
-        public void DestroyObjectForAnimationEvent()
-        {
-            Destroy(gameObject);
-        }
-
-        public override void Hacking()
-        {
-            runtimeSuicideDroneStatData.isAlly = true;
-        }
+        // 이후 runtimeSuicideDroneStatData 수정 시 베이스에 반영
     }
 }
