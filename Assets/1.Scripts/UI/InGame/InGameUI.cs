@@ -82,6 +82,7 @@ namespace _1.Scripts.UI.InGame
         
         private void UpdateStateUI()
         {
+            Initialize_HealthSegments();
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
             UpdateArmorSlider(playerCondition.CurrentShield, playerCondition.MaxShield);
