@@ -173,6 +173,8 @@ namespace _1.Scripts.Manager.Subs
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             
+            coreManager.gameManager.Initialize_Player(player);
+            uiManager.HideUI<LoadingUI>();
             uiManager.LoadUI<InGameUI>();
             uiManager.LoadUI<DistanceUI>();
             uiManager.LoadUI<WeaponUI>();
@@ -180,7 +182,6 @@ namespace _1.Scripts.Manager.Subs
             uiManager.LoadUI<InventoryUI>();
             uiManager.LoadUI<QuickSlotUI>();
             uiManager.LoadUI<QuestUI>();
-            coreManager.gameManager.Initialize_Player(player);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
 
@@ -217,7 +218,6 @@ namespace _1.Scripts.Manager.Subs
                     break;
             }
             
-            uiManager.HideUI<LoadingUI>();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
