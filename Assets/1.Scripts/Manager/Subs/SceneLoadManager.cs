@@ -181,6 +181,7 @@ namespace _1.Scripts.Manager.Subs
             uiManager.LoadUI<PauseMenuUI>();
             uiManager.LoadUI<InventoryUI>();
             uiManager.LoadUI<QuickSlotUI>();
+            uiManager.LoadUI<MinigameUI>();
             uiManager.LoadUI<QuestUI>();
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
@@ -194,7 +195,9 @@ namespace _1.Scripts.Manager.Subs
                     if (playable && coreManager.gameManager.SaveData == null)
                     {
                         playable.played += OnCutsceneStarted_IntroOfStage1;
+                        playable.played += coreManager.uiManager.OnCutsceneStarted;
                         playable.stopped += OnCutsceneStopped_IntroOfStage1;
+                        playable.stopped += coreManager.uiManager.OnCutsceneStopped;
                         playable.Play();
                     }
                     else
@@ -234,7 +237,6 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager.gameManager.PauseGame();
             coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
-            coreManager.uiManager.OnCutsceneStarted(director);
         }
 
         private void OnCutsceneStopped_IntroOfStage1(PlayableDirector director)
@@ -246,10 +248,6 @@ namespace _1.Scripts.Manager.Subs
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
-            
-            director.played -= OnCutsceneStarted_IntroOfStage1;
-            director.stopped -= OnCutsceneStopped_IntroOfStage1;
-            coreManager.uiManager.OnCutsceneStopped(director);
             
             coreManager.uiManager.ShowUI<InGameUI>();
             coreManager.uiManager.ShowUI<DistanceUI>();

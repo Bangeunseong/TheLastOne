@@ -44,7 +44,6 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    coreManager.uiManager.GetUI<MinigameUI>().ShowPanel();
                     _ = StartCountdown_Async();
                     IsCounting = IsPlaying = true;
                     return;
@@ -97,8 +96,8 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
             uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
             uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
-
             uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
+            
             alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
             enabled = true;
@@ -148,12 +147,14 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             }
             
             uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
+            
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
             uiManager.GetUI<MinigameUI>().ShowTimeSlider(true);
             uiManager.GetUI<MinigameUI>().SetTimeSlider(Duration, Duration);
             if (IsLoop && LoopCount > 0)
                 uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+            
             CurrentIndex = 0;
             IsCounting = false; 
             startTime = Time.unscaledTime;
@@ -163,6 +164,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             uiManager.GetUI<MinigameUI>().ShowClearText(true);
             uiManager.GetUI<MinigameUI>().SetClearText(success, success ? "CLEAR!" : "FAIL");
+            
             alphabetUI.ShowAlphabet(false);
             uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
             uiManager.GetUI<MinigameUI>().ShowLoopText(false);
@@ -171,6 +173,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             uiManager.HideUI<MinigameUI>();
             uiManager.UnloadUI<MinigameUI>();
             alphabetUI = null;
+            
             Cursor.lockState = CursorLockMode.Locked;
             console.OnCleared(success);
             enabled = false;
