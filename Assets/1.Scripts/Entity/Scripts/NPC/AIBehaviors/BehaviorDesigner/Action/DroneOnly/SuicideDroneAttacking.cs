@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
@@ -26,6 +27,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         public SharedBool isDead;
         
         private bool isExploded = false;
+        private CancellationTokenSource destroyCts;
         
         public override TaskStatus OnUpdate()
         {
@@ -81,7 +83,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             statController.Value.Dead();
             
             // 6. 기다린 후 파괴
-            _ = DelayedDestroy(selfTransform.Value.gameObject);
+            destroyCts = NpcUtil.CreateLinkedNpcToken();
+            _ = DelayedDestroy(selfTransform.Value.gameObject, destroyCts);
             
             // 7. 기존경로 비활성화
             agent.Value.SetDestination(selfTransform.Value.position);
@@ -90,10 +93,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             return TaskStatus.Running;
         }
         
-        private async UniTaskVoid DelayedDestroy(GameObject destroyTarget)
+        private async UniTaskVoid DelayedDestroy(GameObject destroyTarget, CancellationTokenSource token)
         {
-            await UniTask.WaitForSeconds(2.5f);
-            NpcUtil.DisableNpc(destroyTarget);
+            try
+            {
+                await UniTask.WaitForSeconds(2.5f, cancellationToken: token.Token);
+            }
+            finally
+            {
+                NpcUtil.DisableNpc(destroyTarget);
+                destroyCts?.Dispose();
+                destroyCts = null;
+            }
         }
     }
 }
