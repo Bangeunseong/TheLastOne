@@ -107,21 +107,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7a447ca87ac65d74089aa47e2c046080
-    m_Address: SoundPlayer
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    - IntroScene
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5808116dce9c094584a55f6eec0c67f
     m_Address: InteractionUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 41b689d766996904cbe4c03d34f36105
-    m_Address: AmmoIconPrefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
@@ -188,6 +175,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: af415b3cd1648e3418cd925bf93fda27
     m_Address: SpawnPoints_Stage1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3af02a90ab8effb4389161e38b353092
+    m_Address: FadeInOut
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a764735c3f7d7fb46948da0559c51795
+    m_Address: GameOverUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common

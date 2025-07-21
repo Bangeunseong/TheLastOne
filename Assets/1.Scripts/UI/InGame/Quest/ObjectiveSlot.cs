@@ -57,12 +57,12 @@ namespace _1.Scripts.UI.InGame.Quest
             }
             transform.localScale = new Vector3(scale.x, to, scale.z);
             if (to == 0) gameObject.SetActive(false);
+            expandCoroutine = null;
         }
         
         public void PlayCompleteAndDestroy(float duration = 0.3f)
         {
-            if (!gameObject.activeSelf)
-                gameObject.SetActive(true);
+            if (!gameObject.activeInHierarchy) return;
             if (expandCoroutine != null) StopCoroutine(expandCoroutine);
             expandCoroutine = StartCoroutine(FadeAndDestroy(duration));
         }
@@ -73,12 +73,14 @@ namespace _1.Scripts.UI.InGame.Quest
             Vector3 scale = transform.localScale;
             while (t < duration)
             {
+                if (!gameObject.activeInHierarchy) yield break;
                 t += Time.deltaTime;
                 float y = Mathf.Lerp(1f, 0f, t / duration);
                 transform.localScale = new Vector3(scale.x, y, scale.z);
                 yield return null;
             }
             Destroy(gameObject);
+            expandCoroutine = null;
         }
         
         public bool IsCompleted()

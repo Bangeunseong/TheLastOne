@@ -119,15 +119,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
-            coreManager.uiManager.ShowUI<InGameUI>()?.Initialize(PlayerCondition);
-            coreManager.uiManager.GetUI<MinigameUI>();
-            coreManager.uiManager.ShowUI<QuestUI>();
-            coreManager.uiManager.ShowUI<DistanceUI>()?.Initialize(transform);
-            coreManager.uiManager.ShowUI<WeaponUI>()?.Initialize(PlayerCondition);
-            coreManager.uiManager.ShowUI<PauseMenuUI>().Initialize();
-            coreManager.uiManager.ShowUI<InventoryUI>()?.Initialize(PlayerCondition);
-            coreManager.uiManager.ShowUI<QuickSlotUI>()?.Initialize(PlayerInventory);
-            coreManager.uiManager.ShowUI<QuestUI>()?.Initialize();
+            coreManager.uiManager.InitializeUI<InGameUI>(PlayerCondition);
+            coreManager.uiManager.InitializeUI<DistanceUI>(transform);
+            coreManager.uiManager.InitializeUI<WeaponUI>(PlayerCondition);
+            coreManager.uiManager.InitializeUI<InventoryUI>(PlayerCondition);
+            coreManager.uiManager.InitializeUI<QuickSlotUI>(PlayerInventory);
+            coreManager.uiManager.InitializeUI<QuestUI>(transform);
+            coreManager.uiManager.InitializeUI<GameOverUI>(PlayerCondition);
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

@@ -21,7 +21,7 @@ namespace _1.Scripts.MiniGame
         protected float startTime;
         protected bool isFinished;
 
-        protected virtual void Awake() { }
+        protected virtual void Awake() { coreManager = CoreManager.Instance;}
         protected virtual void Reset() { }
         protected virtual void Start() { }
         protected virtual void Update() { }
