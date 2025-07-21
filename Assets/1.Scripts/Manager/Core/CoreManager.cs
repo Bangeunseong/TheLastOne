@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
@@ -27,8 +28,15 @@ namespace _1.Scripts.Manager.Core
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
         [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
-        
+
+        // Fields
         private Task saveTask = Task.CompletedTask;
+        private CancellationTokenSource mainCTS;
+        
+        // Properties
+        public CancellationTokenSource PlayerCTS { get; private set; } 
+        public CancellationTokenSource NpcCTS { get; private set; }
+        public CancellationTokenSource UiCTS { get; private set; }
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -69,6 +77,11 @@ namespace _1.Scripts.Manager.Core
         // Start is called before the first frame update
         private async void Start()
         {
+            mainCTS = new CancellationTokenSource(); 
+            PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
+            NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            
             uiManager.Start();
             gameManager.Start();
             sceneLoadManager.Start();
@@ -93,6 +106,7 @@ namespace _1.Scripts.Manager.Core
         private void OnDestroy()
         {
             resourceManager.OnDestroy();
+            mainCTS?.Cancel(); mainCTS?.Dispose(); mainCTS = null;
         }
 
         /// <summary>
@@ -146,6 +160,8 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void ReloadGame()
         {
+            PlayerCTS?.Cancel();
+            NpcCTS?.Cancel();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
@@ -153,12 +169,26 @@ namespace _1.Scripts.Manager.Core
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
+
+        public void MoveToNextScene(SceneType sceneType)
+        {
+            PlayerCTS?.Cancel();
+            NpcCTS?.Cancel();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUI();
+            gameManager.ExitGame();
+            _ = LoadScene(sceneType);
+        }
         
         /// <summary>
         /// Back to Intro Scene
         /// </summary>
         public void MoveToIntroScene()
         {
+            PlayerCTS?.Cancel();
+            NpcCTS?.Cancel();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
