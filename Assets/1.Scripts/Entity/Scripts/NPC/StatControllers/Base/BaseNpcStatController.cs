@@ -99,6 +99,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             ResetLayersToOriginal();
         }
 
+        protected virtual void OnEnable()
+        { 
+            foreach (Collider coll in colliders) { coll.enabled = true; }
+        }
+
         protected abstract void PlayHitAnimation();
         protected abstract void PlayDeathAnimation();
         protected abstract void HackingFailurePenalty();
