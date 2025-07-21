@@ -180,6 +180,13 @@ namespace _1.Scripts.Manager.Subs
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     uiManager.HideUI<LoadingUI>();
+                    uiManager.LoadUI<InGameUI>();
+                    uiManager.LoadUI<DistanceUI>();
+                    uiManager.LoadUI<WeaponUI>();
+                    uiManager.LoadUI<PauseMenuUI>();
+                    uiManager.LoadUI<InventoryUI>();
+                    uiManager.LoadUI<QuickSlotUI>();
+                    uiManager.LoadUI<QuestUI>();
                     break;
             }
             
@@ -192,11 +199,22 @@ namespace _1.Scripts.Manager.Subs
             var playable = introGo?.GetComponentInChildren<PlayableDirector>();
             if (playable && coreManager.gameManager.SaveData == null)
             {
+                coreManager.uiManager.OnCutsceneStarted(playable);
                 playable.played += OnCutsceneStarted;
                 playable.stopped += OnCutsceneStopped;
                 playable.Play();
-            } 
-            else player.PlayerCondition.IsPlayerHasControl = true;
+            }
+            else
+            {
+                player.PlayerCondition.IsPlayerHasControl = true;
+                coreManager.uiManager.ShowUI<InGameUI>();
+                coreManager.uiManager.ShowUI<DistanceUI>();
+                coreManager.uiManager.ShowUI<WeaponUI>();
+                coreManager.uiManager.ShowUI<PauseMenuUI>();
+                coreManager.uiManager.ShowUI<InventoryUI>();
+                coreManager.uiManager.ShowUI<QuickSlotUI>();
+                coreManager.uiManager.ShowUI<QuestUI>();
+            }
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -211,9 +229,9 @@ namespace _1.Scripts.Manager.Subs
         }
 
         private void OnCutsceneStarted(PlayableDirector director)
-        {
-            coreManager.uiManager.OnCutsceneStarted(director);
+        { 
             coreManager.gameManager.PauseGame();
+            coreManager.uiManager.OnCutsceneStarted(director);
         }
 
         private void OnCutsceneStopped(PlayableDirector director)
@@ -223,7 +241,15 @@ namespace _1.Scripts.Manager.Subs
             player.PlayerCondition.IsPlayerHasControl = true;
             coreManager.gameManager.ResumeGame();
             coreManager.uiManager.OnCutsceneStopped(director);
-
+            
+            coreManager.uiManager.ShowUI<InGameUI>();
+            coreManager.uiManager.ShowUI<DistanceUI>();
+            coreManager.uiManager.ShowUI<WeaponUI>();
+            coreManager.uiManager.ShowUI<PauseMenuUI>();
+            coreManager.uiManager.ShowUI<InventoryUI>();
+            coreManager.uiManager.ShowUI<QuickSlotUI>();
+            coreManager.uiManager.ShowUI<QuestUI>();
+            
             director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
         }
