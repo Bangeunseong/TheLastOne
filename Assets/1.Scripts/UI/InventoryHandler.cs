@@ -26,7 +26,7 @@ namespace _1.Scripts.UI
 
         public void ToggleInventory()
         {
-            if (!isPaused && pauseHandler != null && pauseHandler.IsPaused)
+            if (!isPaused && pauseHandler && pauseHandler.IsPaused)
                 return;
             isPaused = !isPaused;
             if (isPaused) Pause();

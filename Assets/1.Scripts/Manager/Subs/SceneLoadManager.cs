@@ -180,19 +180,11 @@ namespace _1.Scripts.Manager.Subs
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     uiManager.HideUI<LoadingUI>();
-                    uiManager.ShowUI<InGameUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.GetUI<MinigameUI>();
-                    uiManager.ShowUI<QuestUI>();
-                    uiManager.ShowUI<DistanceUI>()?.Initialize(player.transform);
-                    uiManager.ShowUI<WeaponUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<PauseMenuUI>().Initialize();
-                    uiManager.ShowUI<InventoryUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerCondition);
-                    uiManager.ShowUI<QuickSlotUI>()?.Initialize(CoreManager.Instance.gameManager.Player.PlayerInventory);
                     break;
             }
-
-            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             uiManager.ShowUI<QuestUI>()?.Initialize();
+            
+            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
 

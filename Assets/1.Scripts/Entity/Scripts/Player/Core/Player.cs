@@ -2,7 +2,12 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
+using _1.Scripts.UI.Inventory;
+using _1.Scripts.UI.Loading;
 using Cinemachine;
 using UnityEngine;
 
@@ -114,8 +119,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
-            // Player Condition 내부 Param이 선언된 이후 Segments 생성
-            coreManager.uiManager.GetUI<InGameUI>()?.Initialize_HealthSegments();
+            coreManager.uiManager.ShowUI<InGameUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.GetUI<MinigameUI>();
+            coreManager.uiManager.ShowUI<QuestUI>();
+            coreManager.uiManager.ShowUI<DistanceUI>()?.Initialize(transform);
+            coreManager.uiManager.ShowUI<WeaponUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.ShowUI<PauseMenuUI>().Initialize();
+            coreManager.uiManager.ShowUI<InventoryUI>()?.Initialize(PlayerCondition);
+            coreManager.uiManager.ShowUI<QuickSlotUI>()?.Initialize(PlayerInventory);
+            coreManager.uiManager.ShowUI<QuestUI>()?.Initialize();
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

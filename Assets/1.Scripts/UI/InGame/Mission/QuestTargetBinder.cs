@@ -38,7 +38,7 @@ namespace _1.Scripts.UI.InGame.Mission
             if (target == null) return;
 
             var distanceUI = CoreManager.Instance.uiManager.GetUI<DistanceUI>();
-            distanceUI.SetTarget(target);
+            distanceUI?.SetTarget(target);
         }
     }
 }
