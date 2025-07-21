@@ -68,7 +68,7 @@ namespace _1.Scripts.UI.InGame
 
         public void SetCountdownText(float t)
         {
-            countdownText.text = t > 0 ? t.ToString("F1") : "0";
+            countdownText.text = t > 0 ? t.ToString("F0") : "0";
         }
 
         public void SetClearText(bool success, string text)
