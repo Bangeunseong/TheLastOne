@@ -43,19 +43,13 @@ MonoBehaviour:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdc07fe471b3f1347b0fc9accb4c772f
-    m_Address: ReconDrone
+    m_Address: ReconDroneNotHackable
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d7631e67b59a9a46b7bea54c29461a4
-    m_Address: SuicideDrone
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e72bebb943fb5ef469d919e1fabece81
-    m_Address: SpawnPoints_Stage1
+    m_Address: SuicideDroneNotHackable
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

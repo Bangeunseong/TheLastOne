@@ -161,6 +161,7 @@ namespace _1.Scripts.Manager.Subs
             switch (CurrentScene)
             {
                 case SceneType.IntroScene: 
+                    coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>();
                     uiManager.ShowUI<LobbyUI>();
                     break;
@@ -171,33 +172,38 @@ namespace _1.Scripts.Manager.Subs
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
-            coreManager.gameManager.Initialize_Player(player);
             
+            coreManager.gameManager.Initialize_Player(player);
+            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
+            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
+
             switch (CurrentScene)
             {
-                case SceneType.Stage1:
+                case SceneType.Stage1: 
+                    // Play Cutscene If needed
+                    var introGo = GameObject.Find("IntroOpening");
+                    var playable = introGo?.GetComponentInChildren<PlayableDirector>();
+                    if (playable && coreManager.gameManager.SaveData == null)
+                    {
+                        playable.played += OnCutsceneStarted_IntroOfStage1;
+                        playable.stopped += OnCutsceneStopped_IntroOfStage1;
+                        playable.Play();
+                    }
+                    else
+                    {
+                        player.PlayerCondition.IsPlayerHasControl = true;
+                        coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+                    }
+                    if (Enum.TryParse(CurrentScene.ToString(), out BgmType type)) 
+                        coreManager.soundManager.PlayBGM(type, index: 0);
+                    break;
                 case SceneType.Stage2:
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
-                    uiManager.HideUI<LoadingUI>();
                     break;
             }
             
-            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
-            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
-            if (CurrentScene == SceneType.Stage1) coreManager.spawnManager.SpawnEnemyBySpawnData(1);
-
-            // Play Cutscene If needed
-            var introGo = GameObject.Find("IntroOpening");
-            var playable = introGo?.GetComponentInChildren<PlayableDirector>();
-            if (playable && coreManager.gameManager.SaveData == null)
-            {
-                playable.played += OnCutsceneStarted;
-                playable.stopped += OnCutsceneStopped;
-                playable.Play();
-            } 
-            else player.PlayerCondition.IsPlayerHasControl = true;
-            
+            uiManager.HideUI<LoadingUI>();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -210,20 +216,24 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        private void OnCutsceneStarted(PlayableDirector director)
+        private void OnCutsceneStarted_IntroOfStage1(PlayableDirector director)
         {
             coreManager.gameManager.PauseGame();
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
         }
 
-        private void OnCutsceneStopped(PlayableDirector director)
+        private void OnCutsceneStopped_IntroOfStage1(PlayableDirector director)
         {
             var playerGo = GameObject.FindWithTag("Player");
             if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
             player.PlayerCondition.IsPlayerHasControl = true;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            
+            coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
-
-            director.played -= OnCutsceneStarted;
-            director.stopped -= OnCutsceneStopped;
+            
+            director.played -= OnCutsceneStarted_IntroOfStage1;
+            director.stopped -= OnCutsceneStopped_IntroOfStage1;
         }
 
         // Scene Loading Test Method (Deprecated)
