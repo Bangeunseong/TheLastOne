@@ -83,5 +83,11 @@ namespace _1.Scripts.UI.InGame
             animator.ResetTrigger("Show");
             animator.Update(0);
         }
+
+        public void OnCanceled()
+        {
+            ResetUI();
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
+        }
     }
 }

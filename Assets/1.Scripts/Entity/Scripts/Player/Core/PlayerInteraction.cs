@@ -16,15 +16,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         [Header("Hover Prompt (World Space UI)")]
         [SerializeField] private Vector3 offSet = new Vector3(0, 0, 0);
+        
+        [Header("Last Check Time")]
+        [SerializeField, ReadOnly] private float timeSinceLastCheck;
+        
+        // Fields
+        private Camera cam;
         private Vector3 lastHitPoint;
         private InteractionUI interactionUI;
         private GameObject uiInstance;
         private bool isUIAppearing;
-        
-        // Fields
-        [Header("Last Check Time")]
-        [SerializeField, ReadOnly] private float timeSinceLastCheck;
-        private Camera cam;
         
         // Properties
         public IInteractable Interactable { get; private set; }

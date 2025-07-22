@@ -173,7 +173,19 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: af415b3cd1648e3418cd925bf93fda27
+  - m_GUID: 3af02a90ab8effb4389161e38b353092
+    m_Address: FadeInOut
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a764735c3f7d7fb46948da0559c51795
+    m_Address: GameOverUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0e56b714f87ecb94c873054c36abf506
     m_Address: SpawnPoints_Stage1
     m_ReadOnly: 0
     m_SerializedLabels:

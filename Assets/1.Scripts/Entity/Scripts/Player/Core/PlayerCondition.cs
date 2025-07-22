@@ -406,7 +406,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
-                case Crossbow hackingGun:
+                case HackGun hackingGun:
                     if (hackingGun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
@@ -434,14 +434,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void StopAllUniTasks()
         {
-            aimCTS?.Cancel(); aimCTS?.Dispose(); aimCTS = null;
-            switchCTS?.Cancel(); switchCTS?.Dispose();  switchCTS = null;
-            reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
-            focusCTS?.Cancel(); focusCTS?.Dispose(); focusCTS = null;
-            instinctCTS?.Cancel(); instinctCTS?.Dispose(); instinctCTS = null;
-            instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
-            itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
-            staminaCTS?.Cancel(); staminaCTS?.Dispose(); staminaCTS = null;
+            coreManager.PlayerCTS?.Cancel();
+            crouchCTS?.Dispose(); staminaCTS?.Dispose();
+            reloadCTS?.Dispose(); itemCTS?.Dispose();
+            aimCTS?.Dispose(); switchCTS?.Dispose();
+            focusCTS?.Dispose(); instinctCTS?.Dispose();
+            instinctRecoveryCTS?.Dispose();
         }
         
         /* - Crouch 관련 메소드 - */
@@ -449,10 +447,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             IsCrouching = isCrouch;
             if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
-            crouchCTS = new CancellationTokenSource();
+            crouchCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = Crouch_Async(IsCrouching, duration, crouchCTS.Token); 
         }
-        protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
+        private async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
         {
             var currentPosition = player.CameraPivot.localPosition;
             var currentOffset = player.Controller.center;
@@ -490,13 +488,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnConsumeStamina(float consumeRate, float interval)
         {
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
-            staminaCTS = new CancellationTokenSource();
+            staminaCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = ConsumeStamina_Async(consumeRate, interval, staminaCTS.Token);
         }
         public void OnRecoverStamina(float recoverRate, float interval)
         {
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
-            staminaCTS = new CancellationTokenSource();
+            staminaCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = RecoverStamina_Async(recoverRate, interval, staminaCTS.Token);
         }
         public void CancelStaminaTask()
@@ -529,7 +527,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
             aimCTS?.Cancel(); aimCTS?.Dispose();
-            aimCTS = new CancellationTokenSource();
+            aimCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = AimAsync(isAim, targetFoV, transitionTime, aimCTS.Token);
         }
         private async UniTaskVoid AimAsync(bool isAim, float targetFoV, float transitionTime, CancellationToken token)
@@ -578,7 +576,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime, reloadCTS.Token);
                     break;
                 }
@@ -599,13 +597,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
-                case Crossbow {IsReadyToReload: false}:
+                case HackGun {IsReadyToReload: false}:
                     return false;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                 {
                     if (reloadCTS != null)
                     {
@@ -620,7 +618,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
@@ -643,7 +641,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     grenadeLauncher.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                     crossbow.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
@@ -741,7 +739,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
-            } else if (Weapons[EquippedWeaponIndex] is Crossbow crossbow)
+            } else if (Weapons[EquippedWeaponIndex] is HackGun crossbow)
             {
                 if (crossbow.CurrentAmmoCount <= 0 ||
                     crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
@@ -802,7 +800,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 IsSwitching = false;
             }
 
-            switchCTS = new CancellationTokenSource();
+            switchCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = SwitchAsync(previousWeaponIndex, currentWeaponIndex, duration, switchCTS.Token);
         }
         private async UniTaskVoid SwitchAsync(int previousWeaponIndex, int currentWeaponIndex, float duration, CancellationToken token)
@@ -850,7 +848,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 Gun gun => 1f - gun.GunData.GunStat.WeightPenalty,
                 GrenadeLauncher grenadeLauncher => 1f - grenadeLauncher.GrenadeData.GrenadeStat.WeightPenalty,
-                Crossbow crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
+                HackGun crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
                 _ => 1f
             };
             IsSwitching = false;
@@ -862,7 +860,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnFocusEngaged()
         {
             focusCTS?.Cancel(); focusCTS?.Dispose();
-            focusCTS = new CancellationTokenSource();
+            focusCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = FocusAsync(StatData.focusSkillTime, focusCTS.Token);
         }
         private async UniTaskVoid FocusAsync(float duration, CancellationToken token)
@@ -884,7 +882,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnInstinctEngaged()
         {
             instinctCTS?.Cancel(); instinctCTS?.Dispose();
-            instinctCTS = new CancellationTokenSource();
+            instinctCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = InstinctAsync(StatData.instinctSkillTime, instinctCTS.Token);
         }
         private async UniTaskVoid InstinctAsync(float duration, CancellationToken token)
@@ -916,7 +914,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnInstinctRecover_Idle()
         {
             instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose();
-            instinctRecoveryCTS = new CancellationTokenSource();
+            instinctRecoveryCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = InstinctRecover_Async(1, instinctRecoveryCTS.Token);
         }
         private async UniTaskVoid InstinctRecover_Async(float delay, CancellationToken token)
@@ -937,7 +935,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnItemUsed(BaseItem usedItem)
         {
             if (itemCTS != null) { CancelItemUsage(); return; }
-            itemCTS = new CancellationTokenSource();
+            itemCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = Item_Async(usedItem, itemCTS.Token);
         }
         private void CancelItemUsage()
