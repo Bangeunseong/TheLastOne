@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using UnityEngine;
@@ -77,6 +78,15 @@ namespace _1.Scripts.Util
         {
             CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(targetObj);
             CoreManager.Instance.objectPoolManager.Release(targetObj);
+        }
+        
+        /// <summary>
+        /// NpcCTS 토큰과 연결되는 토큰 생성
+        /// </summary>
+        /// <returns></returns>
+        public static CancellationTokenSource CreateLinkedNpcToken()
+        {
+            return CancellationTokenSource.CreateLinkedTokenSource(CoreManager.Instance.NpcCTS.Token);
         }
     }
 }

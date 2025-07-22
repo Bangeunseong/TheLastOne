@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
@@ -123,6 +124,15 @@ namespace _1.Scripts.Manager.Subs
             {
                 if (!obj.TryGetComponent(out DummyItem item)) continue;
                 item.ChangeLayerOfBody(isTransparent);
+            }
+        }
+
+        public void DisposeAllUniTasksFromSpawnedEnemies()
+        {
+            foreach (var obj in spawnedEnemies)
+            {
+                if (!obj.TryGetComponent(out BaseNpcStatController statController)) continue;
+                statController.DisposeAllUniTasks();
             }
         }
         
