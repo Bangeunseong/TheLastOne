@@ -3,6 +3,7 @@ using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
 using UnityEngine;
@@ -68,7 +69,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             var explosionParticle = coreManager.objectPoolManager.Get("EmpGrenadeExplosion");
             if (explosionParticle.TryGetComponent(out EmpExplosionParticle particle))
                 particle.Initialize(transform.position, Quaternion.identity);
-
+            coreManager.soundManager.PlaySFX(SfxType.GrenadeExplode, transform.position);
+            
             Collider[] colliders = Physics.OverlapSphere(transform.position, Radius, HittableLayer);
             foreach (var obj in colliders)
             {
@@ -85,6 +87,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                     damagable.OnTakeDamage(Mathf.CeilToInt(Damage));
             }
             Service.Log("Grenade exploded!");
+            
             coreManager.objectPoolManager.Release(gameObject);
         }
         

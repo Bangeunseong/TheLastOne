@@ -19,7 +19,7 @@ MonoBehaviour:
     <Damage>k__BackingField: 10
     <WeightPenalty>k__BackingField: 0.3
     <Force>k__BackingField: 15
-    <Radius>k__BackingField: 5
+    <Radius>k__BackingField: 10
     <Delay>k__BackingField: 3
     <StunDuration>k__BackingField: 3
     <GrenadePrefabId>k__BackingField: Grenade
@@ -27,5 +27,5 @@ MonoBehaviour:
     <MaxAmmoCountInMagazine>k__BackingField: 6
     <Accuracy>k__BackingField: 0
     <ReloadTime>k__BackingField: 6
-    <ThrowForce>k__BackingField: 25
+    <ThrowForce>k__BackingField: 40
     <Rpm>k__BackingField: 60
