@@ -86,7 +86,11 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             if (!IsReady) return false;
             if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, HackData.HackStat.MaxWeaponRange, HittableLayer))
             {
-                if (hit.collider.TryGetComponent(out IHackable hackable)) { hackable.Hacking(1f); }
+                if (hit.collider.TryGetComponent(out IHackable hackable))
+                {
+                    var distance = Vector3.Distance(BulletSpawnPoint.position, hit.point);
+                    hackable.Hacking(CalculateChance(distance));
+                }
             }
             
             IsRecoiling = true;
@@ -143,6 +147,19 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             else { targetPoint = face.position + face.forward * HackData.HackStat.MaxWeaponRange; }
 
             return (targetPoint - BulletSpawnPoint.position).normalized;
+        }
+
+        private float CalculateChance(float distance)
+        {
+            if (distance >= HackData.HackStat.MaxDistance) return 0f;
+            if (distance >= HackData.HackStat.MinDistance)
+            {
+                var distanceRatio = 1 - (distance - HackData.HackStat.MinDistance) /
+                    (HackData.HackStat.MaxDistance - HackData.HackStat.MinDistance);
+                return HackData.HackStat.MinChance + 
+                       (HackData.HackStat.MaxChance - HackData.HackStat.MinChance) * distanceRatio;
+            }
+            return HackData.HackStat.MaxChance;
         }
     }
 }
