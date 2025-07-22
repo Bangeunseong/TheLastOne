@@ -20,8 +20,9 @@ namespace _1.Scripts.MiniGame.WireConnection
         [SerializeField] private RectTransform top;
         [SerializeField] private RectTransform bottom;
         [field: SerializeField] public RectTransform WireContainer { get; private set; }
-        
+
         [field: Header("Game Settings")]
+        [field: SerializeField] public string Description { get; private set; } = "CONNECT WIRES";
         [field: Range(2, 5)][field: SerializeField] public int SocketCount { get; private set; } = 3;
         [field: SerializeField] public float Duration { get; private set; } = 5f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
@@ -45,8 +46,8 @@ namespace _1.Scripts.MiniGame.WireConnection
             
             minigameUI = uiManager.ShowUI<MinigameUI>();
             minigameUI.ShowMiniGame();
-            minigameUI.SetDescriptionText("WIRECONNECT");
-            wireConnectionUI = uiManager.GetUI<MinigameUI>().GetWireConnectionUI(); 
+            minigameUI.SetDescriptionText(Description);
+            wireConnectionUI = minigameUI.GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
             enabled = true;
