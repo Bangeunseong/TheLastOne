@@ -54,6 +54,7 @@ namespace _1.Scripts.UI.InGame
         private IEnumerator HidePanelCoroutine()
         {
             animator.Play("Window Out");
+            ShowClearText(false);
             yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
             yield return null;
