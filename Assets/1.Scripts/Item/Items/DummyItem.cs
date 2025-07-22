@@ -30,12 +30,14 @@ namespace _1.Scripts.Item.Items
 
         private void OnEnable()
         {
+            ChangeLayerOfBody(CoreManager.Instance.spawnManager.IsVisible);
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked += RemoveSelfFromSpawnedList;
         }
         
         private void OnDisable()
         {
+            ChangeLayerOfBody(false);
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked -= RemoveSelfFromSpawnedList;
         }

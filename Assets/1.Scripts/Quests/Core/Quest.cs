@@ -95,6 +95,8 @@ namespace _1.Scripts.Quests.Core
             {
                 Service.Log("Quest Completed!");
                 isCompleted = true;
+                CoreManager.Instance.uiManager.HideUI<DistanceUI>();
+                CoreManager.Instance.uiManager.HideUI<QuestUI>();
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
                 CoreManager.Instance.SaveData_QueuedAsync();
             }

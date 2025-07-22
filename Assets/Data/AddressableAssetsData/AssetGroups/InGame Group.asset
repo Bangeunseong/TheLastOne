@@ -93,6 +93,13 @@ MonoBehaviour:
     - Stage1
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 824fc0ee614adcb40a26930412a8db8a
+    m_Address: HackGun_Dummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    - Stage2
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d84f2938b955b574789df5331b02a71a
     m_Address: EmpGrenadeExplosion
     m_ReadOnly: 0

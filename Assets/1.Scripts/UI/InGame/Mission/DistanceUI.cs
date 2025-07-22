@@ -26,10 +26,7 @@ namespace _1.Scripts.UI.InGame.Mission
             Hide();
         }
         
-        public override void ResetUI()
-        {
-            SetTarget(null);
-        }
+        public override void ResetUI() { SetTarget(null); }
 
         public override void Initialize(object param = null)
         {
@@ -46,14 +43,16 @@ namespace _1.Scripts.UI.InGame.Mission
             target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);
+
+            if (CoreManager.Instance.uiManager.IsCutscene) return;
             
-            if (newTarget != null) Show();
+            if (newTarget) Show();
             else Hide();
         }
         
         private void Update()
         {
-            if (player == null || target == null) return;
+            if (!player || !target) return;
 
             float distance = Vector3.Distance(player.position, target.position);
             distanceText.text = $"{distance:0.0}m";

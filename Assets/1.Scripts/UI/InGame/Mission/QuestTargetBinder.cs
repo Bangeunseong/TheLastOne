@@ -34,10 +34,11 @@ namespace _1.Scripts.UI.InGame.Mission
         
         public void SetCurrentTarget(int questId)
         {
-            var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
-            if (target == null) return;
-
             var distanceUI = CoreManager.Instance.uiManager.GetUI<DistanceUI>();
+            
+            var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
+            if (!target) return;
+
             distanceUI?.SetTarget(target);
         }
     }

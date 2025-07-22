@@ -10,17 +10,26 @@ namespace _1.Scripts.UI.InGame
 {
     public class MinigameUI : UIBase
     {
-        [Header("Minigame UI")]
+        [Header("Main UI Components")]
         [SerializeField] private GameObject panel;
         [SerializeField] private Animator animator;
         [SerializeField] private TextMeshProUGUI clearText;
         [SerializeField] private TextMeshProUGUI loopText;
         [SerializeField] private TextMeshProUGUI countdownText;
+        [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private GameObject enterText;
         [SerializeField] private Slider timeSlider;
         [SerializeField] private TextMeshProUGUI timeText;
         [SerializeField] private Transform contentRoot;
+        
+        [Header("Minigame UI Components")]
         [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
+        [SerializeField] private WireConnectionUI wireConnectionUI;
+        [SerializeField] private ChargeBarUI chargeBarUI;
+        
+        public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
+        public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
+        public ChargeBarUI GetChargeBarUI() => chargeBarUI;
 
         public override void ResetUI()
         {
@@ -49,6 +58,7 @@ namespace _1.Scripts.UI.InGame
         private IEnumerator HidePanelCoroutine()
         {
             animator.Play("Window Out");
+            ShowClearText(false);
             yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
             yield return null;
@@ -59,6 +69,7 @@ namespace _1.Scripts.UI.InGame
         public void ShowEnterText(bool show = true) => enterText.gameObject.SetActive(show);
         public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
         public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
+        public void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
 
         public void SetMinigameContent(GameObject contentPrefab)
         {
@@ -67,10 +78,9 @@ namespace _1.Scripts.UI.InGame
             content.SetActive(true);
         }
 
-        public void SetCountdownText(float t)
-        {
-            countdownText.text = t > 0 ? t.ToString("F0") : "0";
-        }
+        public void SetDescriptionText(string text) { descriptionText.text = text; }
+
+        public void SetCountdownText(float t) { countdownText.text = t > 0 ? t.ToString("F0") : "0"; }
 
         public void SetClearText(bool success, string text)
         {
@@ -91,18 +101,28 @@ namespace _1.Scripts.UI.InGame
             timeText.text = $"{current:0.00}s";
         }
 
-        public void UpdateLoopCount(int current, int max)
-        {
-            loopText.text = $"{current}/{max}";
-        }
+        public void UpdateLoopCount(int current, int max) { loopText.text = $"{current}/{max}"; }
 
         public void ShowAlphabetMatching(bool show = true)
         {
             alphabetMatchingUI.gameObject.SetActive(show);
             if (!show) alphabetMatchingUI.ResetUI();
         }
-
-        public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
         
+        public void ShowMiniGame()
+        {
+            ShowPanel();
+            ShowEnterText(true);
+            ShowClearText(false);
+            ShowTimeSlider(false);
+            ShowCountdownText(false);
+            ShowLoopText(true);
+            ShowDescriptionText(true);
+        }
+
+        public void HideMiniGame()
+        {
+            
+        }
     }
 }

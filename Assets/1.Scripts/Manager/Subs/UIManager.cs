@@ -16,7 +16,11 @@ namespace _1.Scripts.Manager.Subs
     public class UIManager
     {
         [field: Header("UI Mapping")]
+        [field: SerializeField] public Canvas RootCanvas { get; private set; }
         [SerializeField] private Transform uiRoot;
+        
+        public bool IsCutscene { get; private set; }
+        
         private Dictionary<Type, UIBase> uiMap = new();
         private Dictionary<UIBase, bool> UIStateCache = new();
         private CoreManager coreManager;
@@ -25,13 +29,17 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
             var canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-            if (canvas) uiRoot = canvas.transform;
+            if (canvas)
+            {
+                RootCanvas = canvas.GetComponent<Canvas>();
+                uiRoot = canvas.transform;
+            }
             
             RegisterStaticUI<LoadingUI>();
             RegisterStaticUI<LobbyUI>();
             RegisterStaticUI<FadeUI>();
             ShowUI<LobbyUI>();
-            HideUI<FadeUI>();
+            GetUI<FadeUI>().FadeIn();
         }
         
         public T GetUI<T>() where T : UIBase
@@ -130,12 +138,14 @@ namespace _1.Scripts.Manager.Subs
         
         public void OnCutsceneStarted(PlayableDirector _)
         {
+            IsCutscene = true;
             HideAndSaveAllUI();
         }
         public void OnCutsceneStopped(PlayableDirector director)
         {
             director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
+            IsCutscene = false;
             RestoreAllUI();
         }
 
