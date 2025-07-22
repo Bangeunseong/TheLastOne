@@ -97,7 +97,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         {
             try
             {
-                await UniTask.WaitForSeconds(2.5f, cancellationToken: token.Token);
+                await UniTask.WaitForSeconds(2.5f, cancellationToken: token.Token, cancelImmediately: true);
             }
             finally
             {

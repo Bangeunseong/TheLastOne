@@ -108,6 +108,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             ResetLayersToOriginal();
+            DisposeAllUniTasks();
         }
 
         protected virtual void OnEnable()

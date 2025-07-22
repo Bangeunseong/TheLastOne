@@ -171,6 +171,9 @@ namespace _1.Scripts.Manager.Subs
             }
 
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
+            coreManager.spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            coreManager.CreateNewCTS();
+            
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             
@@ -223,7 +226,6 @@ namespace _1.Scripts.Manager.Subs
                     break;
             }
             
-            coreManager.CreateNewCTS();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }

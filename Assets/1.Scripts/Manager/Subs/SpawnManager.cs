@@ -139,6 +139,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void DisposeAllUniTasksFromSpawnedEnemies()
         {
+            coreManager.NpcCTS?.Cancel();
             foreach (var obj in spawnedEnemies)
             {
                 if (!obj.TryGetComponent(out BaseNpcStatController statController)) continue;
