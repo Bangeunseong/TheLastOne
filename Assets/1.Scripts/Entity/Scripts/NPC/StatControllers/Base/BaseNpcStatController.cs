@@ -112,6 +112,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
         protected virtual void OnEnable()
         { 
+            if (CoreManager.Instance.spawnManager.IsVisible) 
+                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy);
             foreach (Collider coll in colliders) { coll.enabled = true; }
         }
 

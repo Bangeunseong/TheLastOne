@@ -22,6 +22,8 @@ namespace _1.Scripts.Manager.Subs
         private HashSet<GameObject> spawnedWeapons = new();
         private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
+        
+        public bool IsVisible { get; private set; }
 
         public void Start()
         {
@@ -95,11 +97,18 @@ namespace _1.Scripts.Manager.Subs
             spawnedItems.Remove(obj);
         }
 
+        public void ChangeStencilLayer(bool isOn)
+        {
+            IsVisible = isOn;
+            ChangeStencilLayerAllNpc(isOn);
+            ChangeLayerOfWeaponsAndItems(isOn);
+        }
+
         /// <summary>
         /// true일 시 스텐실레이어 활성화, false일 시 해제
         /// </summary>
         /// <param name="isOn"></param>
-        public void ChangeStencilLayerAllNpc(bool isOn)
+        private void ChangeStencilLayerAllNpc(bool isOn)
         {
             foreach (GameObject obj in spawnedEnemies)
             {
@@ -112,7 +121,7 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        public void ChangeLayerOfWeaponsAndItems(bool isTransparent)
+        private void ChangeLayerOfWeaponsAndItems(bool isTransparent)
         {
             foreach (var obj in spawnedWeapons)
             {
@@ -154,6 +163,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void Reset()
         {
+            ChangeStencilLayer(false);
             ClearAllSpawnedEnemies();
             ClearAllProps();
             CurrentSpawnData = null;
