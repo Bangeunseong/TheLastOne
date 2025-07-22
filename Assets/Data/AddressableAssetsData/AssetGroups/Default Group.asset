@@ -183,6 +183,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e3826e0c6f7a7146882326f4450134a
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/silenced-gunshot-81063.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff1f80a0c12886d4d80ba2d83496c792
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/4Grenade_Set/grenade-explosion-14-190266.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
