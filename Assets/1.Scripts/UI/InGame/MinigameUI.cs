@@ -24,7 +24,11 @@ namespace _1.Scripts.UI.InGame
         [Header("Minigame UI Components")]
         [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
         [SerializeField] private WireConnectionUI wireConnectionUI;
+        [SerializeField] private ChargeBarUI chargeBarUI;
         
+        public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
+        public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
+        public ChargeBarUI GetChargeBarUI() => chargeBarUI;
 
         public override void ResetUI()
         {
@@ -105,9 +109,6 @@ namespace _1.Scripts.UI.InGame
             alphabetMatchingUI.gameObject.SetActive(show);
             if (!show) alphabetMatchingUI.ResetUI();
         }
-
-        public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
-        public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
         
         public void ShowMiniGame()
         {

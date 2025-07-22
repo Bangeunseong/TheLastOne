@@ -45,7 +45,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             
             minigameUI = uiManager.GetUI<MinigameUI>();
             minigameUI.ShowMiniGame();
-            wireConnectionUI = uiManager.GetUI<MinigameUI>().GetWireConnectionUI(); 
+            wireConnectionUI = minigameUI.GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
             enabled = true;
@@ -149,7 +149,6 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.ShowEnterText(false);
             minigameUI.ShowClearText(false);
             minigameUI.ShowLoopText(false);
-            minigameUI.ShowAlphabetMatching(true);
             
             var t = 0f;
             while (t < Delay)
@@ -160,6 +159,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
+            minigameUI.ShowCountdownText(false);
             minigameUI.ShowTimeSlider(true);
             minigameUI.SetTimeSlider(Duration, Duration);
             
@@ -175,7 +175,6 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
             
             minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowLoopText(false);
             minigameUI.ShowEnterText(false);
             await UniTask.WaitForSeconds(duration, true);
             wireConnectionUI.Hide();
