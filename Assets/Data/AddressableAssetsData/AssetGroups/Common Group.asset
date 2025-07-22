@@ -167,7 +167,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b8f3429aa41ffb4692baa4300024c46
+  - m_GUID: 3afe51390d7cb854c8872a3210189642
     m_Address: MinigameUI
     m_ReadOnly: 0
     m_SerializedLabels:
