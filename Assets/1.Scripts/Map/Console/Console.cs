@@ -98,7 +98,7 @@ namespace _1.Scripts.Map.Console
             
             if (IsCleared) return;
             CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
-            CurrentMiniGame = 1;
+            CurrentMiniGame = 2;
             MiniGames[CurrentMiniGame].StartMiniGame(this, player);
         }
 

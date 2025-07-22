@@ -5,7 +5,7 @@ namespace _1.Scripts.UI.InGame.Minigame
 {
     public class WireConnectionUI : UIBase
     {
-        [field: Header("AlphabetMatchingUI")]
+        [field: Header("Wire Connection UI")]
         [field: SerializeField] public RectTransform Panel { get; private set; }
         [field: SerializeField] public RectTransform Top { get; private set; }
         [field: SerializeField] public RectTransform Bottom { get; private set; }
