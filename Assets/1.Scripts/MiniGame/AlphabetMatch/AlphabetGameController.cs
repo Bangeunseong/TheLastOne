@@ -91,7 +91,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             base.StartMiniGame(con, ply);
 
             uiManager.ShowUI<MinigameUI>()?.ShowMiniGame();
-            
+            uiManager.GetUI<MinigameUI>()?.SetDescriptionText("PASSWORD");
             alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
             enabled = true;
@@ -163,7 +163,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             alphabetUI.ShowAlphabet(false);
             uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
             uiManager.GetUI<MinigameUI>().ShowLoopText(false);
-            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
+            uiManager.GetUI<MinigameUI>().ShowDescriptionText(false);
             await UniTask.WaitForSeconds(duration, true);
             uiManager.HideUI<MinigameUI>();
             uiManager.UnloadUI<MinigameUI>();

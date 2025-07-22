@@ -43,8 +43,9 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI = uiManager.ShowUI<MinigameUI>();
             minigameUI.ShowMiniGame();
+            minigameUI.SetDescriptionText("WIRECONNECT");
             wireConnectionUI = uiManager.GetUI<MinigameUI>().GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
@@ -68,6 +69,9 @@ namespace _1.Scripts.MiniGame.WireConnection
             }
             
             if (IsCounting) return;
+            float elapsed = Time.unscaledTime - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            minigameUI.UpdateTimeSlider(remaining);
             if (!(Time.unscaledTime - startTime >= Duration)) return;
             FinishGame(false, 0f);
         }
@@ -149,7 +153,6 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.ShowEnterText(false);
             minigameUI.ShowClearText(false);
             minigameUI.ShowLoopText(false);
-            minigameUI.ShowAlphabetMatching(true);
             
             var t = 0f;
             while (t < Delay)
@@ -159,7 +162,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                 minigameUI.SetCountdownText(Delay - t);
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
-            
+            minigameUI.ShowCountdownText(false);
             minigameUI.ShowTimeSlider(true);
             minigameUI.SetTimeSlider(Duration, Duration);
             
@@ -174,11 +177,13 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.ShowClearText(true);
             minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
             
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowLoopText(false);
             minigameUI.ShowEnterText(false);
-            await UniTask.WaitForSeconds(duration, true);
+            minigameUI.ShowTimeSlider(false);
+            minigameUI.ShowDescriptionText(false);
             wireConnectionUI.Hide();
+
+            await UniTask.WaitForSeconds(duration, true);
+            
             minigameUI.Hide();
             
             console.OnCleared(success);

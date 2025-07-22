@@ -16,6 +16,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI clearText;
         [SerializeField] private TextMeshProUGUI loopText;
         [SerializeField] private TextMeshProUGUI countdownText;
+        [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private GameObject enterText;
         [SerializeField] private Slider timeSlider;
         [SerializeField] private TextMeshProUGUI timeText;
@@ -63,6 +64,7 @@ namespace _1.Scripts.UI.InGame
         public void ShowEnterText(bool show = true) => enterText.gameObject.SetActive(show);
         public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
         public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
+        public void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
 
         public void SetMinigameContent(GameObject contentPrefab)
         {
@@ -71,10 +73,9 @@ namespace _1.Scripts.UI.InGame
             content.SetActive(true);
         }
 
-        public void SetCountdownText(float t)
-        {
-            countdownText.text = t > 0 ? t.ToString("F0") : "0";
-        }
+        public void SetDescriptionText(string text) { descriptionText.text = text; }
+
+        public void SetCountdownText(float t) { countdownText.text = t > 0 ? t.ToString("F0") : "0"; }
 
         public void SetClearText(bool success, string text)
         {
@@ -95,10 +96,7 @@ namespace _1.Scripts.UI.InGame
             timeText.text = $"{current:0.00}s";
         }
 
-        public void UpdateLoopCount(int current, int max)
-        {
-            loopText.text = $"{current}/{max}";
-        }
+        public void UpdateLoopCount(int current, int max) { loopText.text = $"{current}/{max}"; }
 
         public void ShowAlphabetMatching(bool show = true)
         {
@@ -117,6 +115,7 @@ namespace _1.Scripts.UI.InGame
             ShowTimeSlider(false);
             ShowCountdownText(false);
             ShowLoopText(true);
+            ShowDescriptionText(true);
         }
 
         public void HideMiniGame()
