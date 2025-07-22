@@ -86,7 +86,7 @@ namespace _1.Scripts.Manager.Subs
 
                         });
                         break;
-                    case Crossbow hackingGun:
+                    case HackGun hackingGun:
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = hackingGun.CurrentAmmoCount,

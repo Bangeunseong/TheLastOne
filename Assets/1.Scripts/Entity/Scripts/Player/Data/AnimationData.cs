@@ -37,13 +37,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         [SerializeField] private float pistolReloadClipTime = 1.333f;
         [SerializeField] private float rifleReloadClipTime = 2.667f;
         [SerializeField] private float grenadeLauncherReloadClipTime = 10.333f;
-        [SerializeField] private float crossbowReloadClipTime = 2.333f;
+        [SerializeField] private float crossbowReloadClipTime = 4.167f;
         
         [SerializeField] private float handToOtherWeaponClipTime = 1f;
         [SerializeField] private float pistolToOtherWeaponClipTime = 0.667f;
         [SerializeField] private float rifleToOtherWeaponClipTime = 1f;
         [SerializeField] private float grenadeLauncherToOtherWeaponClipTime = 0.867f;
-        [SerializeField] private float crossbowToOtherWeaponClipTime = 0.833f;
+        [SerializeField] private float crossbowToOtherWeaponClipTime = 1f;
         
         [SerializeField] private float weaponWieldClipTime = 1f;
         

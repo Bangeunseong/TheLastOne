@@ -406,7 +406,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
-                case Crossbow hackingGun:
+                case HackGun hackingGun:
                     if (hackingGun.OnShoot())
                     {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
@@ -601,9 +601,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
-                case Crossbow {IsReadyToReload: false}:
+                case HackGun {IsReadyToReload: false}:
                     return false;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                 {
                     if (reloadCTS != null)
                     {
@@ -641,7 +641,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     grenadeLauncher.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                     crossbow.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
@@ -739,7 +739,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
-            } else if (Weapons[EquippedWeaponIndex] is Crossbow crossbow)
+            } else if (Weapons[EquippedWeaponIndex] is HackGun crossbow)
             {
                 if (crossbow.CurrentAmmoCount <= 0 ||
                     crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
@@ -848,7 +848,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 Gun gun => 1f - gun.GunData.GunStat.WeightPenalty,
                 GrenadeLauncher grenadeLauncher => 1f - grenadeLauncher.GrenadeData.GrenadeStat.WeightPenalty,
-                Crossbow crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
+                HackGun crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
                 _ => 1f
             };
             IsSwitching = false;

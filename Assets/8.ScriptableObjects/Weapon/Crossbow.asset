@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Crossbow
   m_EditorClassIdentifier: 
   <HackStat>k__BackingField:
-    <MaxAmmoCount>k__BackingField: 5
+    <MaxAmmoCount>k__BackingField: 10
     <MaxWeaponRange>k__BackingField: 200
     <Recoil>k__BackingField: 10
     <Damage>k__BackingField: 0
@@ -22,3 +22,7 @@ MonoBehaviour:
     <MaxAmmoCountInMagazine>k__BackingField: 1
     <ReloadTime>k__BackingField: 2.5
     <Rpm>k__BackingField: 60
+    <MaxChance>k__BackingField: 0.75
+    <MinChance>k__BackingField: 0.25
+    <MaxDistance>k__BackingField: 25
+    <MinDistance>k__BackingField: 5
