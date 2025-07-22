@@ -103,6 +103,21 @@ namespace _1.Scripts.UI.InGame
         }
 
         public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
-        
+
+        public void ShowMiniGame()
+        {
+            ShowPanel();
+            ShowEnterText(true);
+            ShowClearText(false);
+            ShowTimeSlider(false);
+            ShowCountdownText(false);
+            ShowLoopText(true);
+            ShowAlphabetMatching(true);
+        }
+
+        public void HideMiniGame()
+        {
+            
+        }
     }
 }

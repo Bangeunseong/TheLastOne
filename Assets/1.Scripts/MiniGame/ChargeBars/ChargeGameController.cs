@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
@@ -68,6 +69,10 @@ namespace _1.Scripts.MiniGame.ChargeBars
                 bars[CurrentBarIndex].DecreaseValue(LossRate * Time.unscaledDeltaTime);
             MoveControlObj();
             
+            float elapsed = Time.unscaledTime - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            coreManager.uiManager.GetUI<MinigameUI>().UpdateTimeSlider(remaining);
+            
             if (!(Time.time - startTime >= Duration)) return;
             FinishGame(false, 0f);
         }
@@ -75,6 +80,9 @@ namespace _1.Scripts.MiniGame.ChargeBars
         public override void StartMiniGame(Console con, Player ply)
         {
             base.StartMiniGame(con, ply);
+            
+            uiManager.ShowUI<MinigameUI>()?.ShowMiniGame();
+            uiManager.GetUI<MinigameUI>()?.SetMinigameContent(gameObject);
             
             // Initialize MiniGame
             enabled = true;
@@ -154,13 +162,24 @@ namespace _1.Scripts.MiniGame.ChargeBars
         
         protected override async UniTask StartCountdown_Async()
         {
+            uiManager.GetUI<MinigameUI>().ShowCountdownText(true);
+            uiManager.GetUI<MinigameUI>().SetCountdownText(Delay);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
+            uiManager.GetUI<MinigameUI>().ShowClearText(false);
+            
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused) 
                     t += Time.unscaledDeltaTime;
+                uiManager.GetUI<MinigameUI>().SetCountdownText(Delay - t);
+
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
+            uiManager.GetUI<MinigameUI>()?.ShowCountdownText(false);
+            uiManager.GetUI<MinigameUI>()?.ShowTimeSlider(true);
+            uiManager.GetUI<MinigameUI>()?.SetTimeSlider(Duration, Duration);
             
             CreateBars();
             RepositionTargetObj();
@@ -170,13 +189,24 @@ namespace _1.Scripts.MiniGame.ChargeBars
 
         protected override async UniTask EndGame_Async(bool success, float duration)
         {
+            uiManager.GetUI<MinigameUI>()?.ShowClearText(true);
+            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
+            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
             if (success)
             {
-                // TODO: Show Clear UI
+                uiManager.GetUI<MinigameUI>()?.SetClearText(success, "CLEAR!");
                 Service.Log("Cleared MiniGame!");
-            } else Service.Log("Better Luck NextTime");
+            }
+            else
+            {
+                uiManager.GetUI<MinigameUI>()?.SetClearText(success, "FAIL");
+                Service.Log("Better Luck NextTime");
+            }
             
             await UniTask.WaitForSeconds(duration, true);
+            
+            uiManager.HideUI<MinigameUI>();
+            uiManager.UnloadUI<MinigameUI>();
             
             console.OnCleared(success);
             Cursor.lockState = CursorLockMode.Locked; 
