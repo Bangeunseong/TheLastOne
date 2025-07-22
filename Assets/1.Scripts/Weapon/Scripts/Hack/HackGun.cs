@@ -112,7 +112,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             
             // Play Randomized Gun Shooting Sound
             CoreManager.Instance.soundManager
-                .PlaySFX(SfxType.CrossbowShoot, BulletSpawnPoint.position, -1);
+                .PlaySFX(SfxType.HackGunShoot, BulletSpawnPoint.position);
             
             CurrentAmmoCountInMagazine--;
             if (CurrentAmmoCountInMagazine <= 0)
