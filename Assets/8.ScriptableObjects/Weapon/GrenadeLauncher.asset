@@ -28,4 +28,4 @@ MonoBehaviour:
     <Accuracy>k__BackingField: 0
     <ReloadTime>k__BackingField: 6
     <ThrowForce>k__BackingField: 25
-    <Rpm>k__BackingField: 90
+    <Rpm>k__BackingField: 60
