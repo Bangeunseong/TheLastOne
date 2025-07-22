@@ -10,7 +10,7 @@ namespace _1.Scripts.UI.InGame
 {
     public class MinigameUI : UIBase
     {
-        [Header("Minigame UI")]
+        [Header("Main UI Components")]
         [SerializeField] private GameObject panel;
         [SerializeField] private Animator animator;
         [SerializeField] private TextMeshProUGUI clearText;
@@ -20,7 +20,11 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Slider timeSlider;
         [SerializeField] private TextMeshProUGUI timeText;
         [SerializeField] private Transform contentRoot;
+        
+        [Header("Minigame UI Components")]
         [SerializeField] private AlphabetMatchingUI alphabetMatchingUI;
+        [SerializeField] private WireConnectionUI wireConnectionUI;
+        
 
         public override void ResetUI()
         {
@@ -103,6 +107,21 @@ namespace _1.Scripts.UI.InGame
         }
 
         public AlphabetMatchingUI GetAlphabetMatchingUI() => alphabetMatchingUI;
+        public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
         
+        public void ShowMiniGame()
+        {
+            ShowPanel();
+            ShowEnterText(true);
+            ShowClearText(false);
+            ShowTimeSlider(false);
+            ShowCountdownText(false);
+            ShowLoopText(true);
+        }
+
+        public void HideMiniGame()
+        {
+            
+        }
     }
 }

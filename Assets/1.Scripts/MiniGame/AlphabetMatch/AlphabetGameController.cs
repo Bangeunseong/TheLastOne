@@ -90,13 +90,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
 
-            uiManager.ShowUI<MinigameUI>().ShowPanel();
-            uiManager.GetUI<MinigameUI>().ShowEnterText(true);
-            uiManager.GetUI<MinigameUI>().ShowClearText(false);
-            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
-            uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
-            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
-            uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
+            uiManager.ShowUI<MinigameUI>()?.ShowMiniGame();
             
             alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
             alphabetUI.ResetUI();

@@ -19,7 +19,7 @@ namespace _1.Scripts.UI.Common
         {
             Service.Log("FadeUI: Fade In");
             panel.SetActive(true);
-            animator.SetTrigger("Out");
+            animator.Play("Out");
         }
         /// <summary>
         /// Fade In
@@ -35,7 +35,7 @@ namespace _1.Scripts.UI.Common
         private IEnumerator FadeInCoroutine()
         {
             if (!gameObject.activeInHierarchy) yield break;
-            animator.SetTrigger("In");
+            animator.Play("In");
             yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
             yield return null;
