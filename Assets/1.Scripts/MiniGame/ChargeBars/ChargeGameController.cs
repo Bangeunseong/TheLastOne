@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -36,6 +37,15 @@ namespace _1.Scripts.MiniGame.ChargeBars
             if (!ControlLayout) ControlLayout = this.TryGetChildComponent<RectTransform>("ControlLayout");
             if (!TargetObj) TargetObj = this.TryGetChildComponent<RectTransform>("TargetObj");
             if (!ControlObj) ControlObj = this.TryGetChildComponent<RectTransform>("ControlObj");
+        }
+        
+        public void Initialize(RectTransform parent)
+        {
+            var transforms = parent.GetComponentsInChildren<RectTransform>();
+            if (!BarLayout) BarLayout = transforms.First(val => val.gameObject.name.Equals("BarLayout"));
+            if (!ControlLayout) ControlLayout = transforms.First(val => val.gameObject.name.Equals("ControlLayout"));
+            if (!TargetObj) TargetObj = transforms.First(val => val.gameObject.name.Equals("TargetObj"));
+            if (!ControlObj) ControlObj = transforms.First(val => val.gameObject.name.Equals("ControlObj"));
         }
         
         protected override void Update()
