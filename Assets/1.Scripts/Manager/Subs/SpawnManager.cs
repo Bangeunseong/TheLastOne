@@ -23,7 +23,8 @@ namespace _1.Scripts.Manager.Subs
         private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
         
-        public bool IsVisible { get; private set; }
+        [field: Header("Visibility")]
+        [field: SerializeField] public bool IsVisible { get; private set; }
 
         public void Start()
         {

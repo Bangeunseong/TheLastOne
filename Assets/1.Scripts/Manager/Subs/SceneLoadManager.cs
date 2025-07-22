@@ -223,6 +223,7 @@ namespace _1.Scripts.Manager.Subs
                     break;
             }
             
+            coreManager.CreateNewCTS();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }

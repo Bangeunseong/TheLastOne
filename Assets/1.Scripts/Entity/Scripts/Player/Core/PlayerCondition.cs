@@ -86,6 +86,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Player player;
         private SoundPlayer reloadPlayer;
 
+        private CancellationTokenSource playerCTS;
         private CancellationTokenSource aimCTS;
         private CancellationTokenSource switchCTS;
         private CancellationTokenSource reloadCTS;
@@ -435,6 +436,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void StopAllUniTasks()
         {
             coreManager.PlayerCTS?.Cancel();
+            
             crouchCTS?.Dispose(); crouchCTS = null;
             staminaCTS?.Dispose(); staminaCTS = null;
             reloadCTS?.Dispose(); reloadCTS = null;
@@ -904,7 +906,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     return;
                 }
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             SkillSpeedMultiplier = 1f;
             
