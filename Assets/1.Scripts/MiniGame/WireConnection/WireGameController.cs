@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Minigame;
@@ -31,6 +32,8 @@ namespace _1.Scripts.MiniGame.WireConnection
         private readonly List<GameObject> sockets = new();
         private WireConnectionUI wireConnectionUI;
         private MinigameUI minigameUI;
+        private CancellationTokenSource countdownCTS;
+        private CancellationTokenSource endgameCTS;
         
         private void Initialize(Canvas can, WireConnectionUI ui)
         {
@@ -52,7 +55,16 @@ namespace _1.Scripts.MiniGame.WireConnection
             wireConnectionUI.Show();
             enabled = true;
         }
-        
+
+        protected override void OnEnable()
+        {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); 
+            endgameCTS?.Cancel(); endgameCTS?.Dispose();
+            countdownCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.UiCTS.Token);
+            endgameCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.UiCTS.Token);
+            base.OnEnable();
+        }
+
         protected override void Update()
         {
             if (coreManager.gameManager.IsGamePaused || isFinished) return;
@@ -60,7 +72,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             if (!IsPlaying)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
-                {
+                { 
                     _ = StartCountdown_Async(); 
                     IsCounting = IsPlaying = true; 
                     return;
@@ -79,6 +91,8 @@ namespace _1.Scripts.MiniGame.WireConnection
         
         protected override void OnDisable()
         {
+            countdownCTS?.Dispose(); countdownCTS = null;
+            endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllConnections();
             ResetAllSockets();
         }
@@ -161,7 +175,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                 if (!coreManager.gameManager.IsGamePaused)
                     t += Time.unscaledDeltaTime;
                 minigameUI.SetCountdownText(Delay - t);
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: countdownCTS.Token, cancelImmediately: true);
             }
             
             minigameUI.ShowCountdownText(false);
