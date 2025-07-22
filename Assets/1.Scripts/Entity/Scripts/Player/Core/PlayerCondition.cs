@@ -439,9 +439,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             staminaCTS?.Dispose(); staminaCTS = null;
             reloadCTS?.Dispose(); reloadCTS = null;
             itemCTS?.Dispose(); itemCTS = null;
-            aimCTS?.Dispose(); aimCTS = null; 
+            aimCTS?.Dispose(); aimCTS = null;
             switchCTS?.Dispose(); switchCTS = null;
-            focusCTS?.Dispose(); focusCTS = null; 
+            focusCTS?.Dispose(); focusCTS = null;
             instinctCTS?.Dispose(); instinctCTS = null;
             instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
         }
@@ -619,7 +619,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     
                     // Player Reload AudioClip
                     float reloadTime = crossbow.HackData.HackStat.ReloadTime;
-                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, reloadTime);
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.HackGunReload, reloadTime);
                     
                     // Start Reload Coroutine
                     reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
@@ -751,7 +751,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
-                var animationSpeed = player.AnimationData.CrossbowReloadClipTime /
+                var animationSpeed = player.AnimationData.HackGunReloadClipTime /
                                      crossbow.HackData.HackStat.ReloadTime;
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                 
@@ -831,7 +831,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
                 case 4: WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash,
-                    player.AnimationData.CrossbowToOtherWeaponClipTime / duration); break;
+                    player.AnimationData.HackGunToOtherWeaponClipTime / duration); break;
             }
             
             Service.Log("Switch Weapon");

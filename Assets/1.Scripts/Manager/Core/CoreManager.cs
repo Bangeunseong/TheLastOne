@@ -162,7 +162,7 @@ namespace _1.Scripts.Manager.Core
         public void ReloadGame()
         {
             PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
             
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
@@ -176,8 +176,8 @@ namespace _1.Scripts.Manager.Core
         public void MoveToNextScene(SceneType sceneType)
         {
             PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
+
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
@@ -194,7 +194,7 @@ namespace _1.Scripts.Manager.Core
         {
             PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
-            
+
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
