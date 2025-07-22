@@ -43,9 +43,10 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI = uiManager.ShowUI<MinigameUI>();
             minigameUI.ShowMiniGame();
-            wireConnectionUI = minigameUI.GetWireConnectionUI(); 
+            minigameUI.SetDescriptionText("WIRECONNECT");
+            wireConnectionUI = uiManager.GetUI<MinigameUI>().GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
             enabled = true;
@@ -68,6 +69,9 @@ namespace _1.Scripts.MiniGame.WireConnection
             }
             
             if (IsCounting) return;
+            float elapsed = Time.unscaledTime - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            minigameUI.UpdateTimeSlider(remaining);
             if (!(Time.unscaledTime - startTime >= Duration)) return;
             FinishGame(false, 0f);
         }
@@ -174,10 +178,13 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.ShowClearText(true);
             minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
             
-            minigameUI.ShowTimeSlider(false);
             minigameUI.ShowEnterText(false);
-            await UniTask.WaitForSeconds(duration, true);
+            minigameUI.ShowTimeSlider(false);
+            minigameUI.ShowDescriptionText(false);
             wireConnectionUI.Hide();
+
+            await UniTask.WaitForSeconds(duration, true);
+            
             minigameUI.Hide();
             
             console.OnCleared(success);

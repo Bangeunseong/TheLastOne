@@ -15,23 +15,23 @@ namespace _1.Scripts.UI.Common
         /// <summary>
         /// Fade Out
         /// </summary>
-        public override void Show()
+        public void FadeOut()
         {
-            Service.Log("FadeUI: Fade In");
-            panel.SetActive(true);
+            Service.Log("FadeOut");
             animator.Play("Out");
         }
-        /// <summary>
-        /// Fade In
-        /// </summary>
-        public override void Hide()
+
+        public void FadeIn()
         {
-            if (!gameObject.activeInHierarchy) return;
-            Service.Log("FadeUI: Fade Out");
-            if (fadeInCoroutine != null) StopCoroutine(fadeInCoroutine);
+            Service.Log("FadeIn");
+            if (fadeInCoroutine != null)
+            {
+                StopCoroutine(fadeInCoroutine);
+                fadeInCoroutine = null;
+            }
+            panel.SetActive(true);
             fadeInCoroutine = StartCoroutine(FadeInCoroutine());
         }
-
         private IEnumerator FadeInCoroutine()
         {
             if (!gameObject.activeInHierarchy) yield break;
