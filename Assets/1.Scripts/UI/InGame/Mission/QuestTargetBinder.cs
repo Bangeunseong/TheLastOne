@@ -34,10 +34,15 @@ namespace _1.Scripts.UI.InGame.Mission
         
         public void SetCurrentTarget(int questId)
         {
-            var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
-            if (target == null) return;
-
+            var questManager = CoreManager.Instance.questManager;
+            if (!questManager.activeQuests.TryGetValue(questId, out var quest)) return;
+            
             var distanceUI = CoreManager.Instance.uiManager.GetUI<DistanceUI>();
+            
+            var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
+            if (!target) return;
+            if (quest.currentObjectiveIndex == -1) { distanceUI?.Hide(); return; }
+
             distanceUI?.SetTarget(target);
         }
     }
