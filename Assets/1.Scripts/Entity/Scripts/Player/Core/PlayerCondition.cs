@@ -86,6 +86,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Player player;
         private SoundPlayer reloadPlayer;
 
+        private CancellationTokenSource playerCTS;
         private CancellationTokenSource aimCTS;
         private CancellationTokenSource switchCTS;
         private CancellationTokenSource reloadCTS;
@@ -435,6 +436,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void StopAllUniTasks()
         {
             coreManager.PlayerCTS?.Cancel();
+            
             crouchCTS?.Dispose(); crouchCTS = null;
             staminaCTS?.Dispose(); staminaCTS = null;
             reloadCTS?.Dispose(); reloadCTS = null;
@@ -892,8 +894,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private async UniTaskVoid InstinctAsync(float duration, CancellationToken token)
         {
             IsUsingInstinct = true;
-            coreManager.spawnManager.ChangeStencilLayerAllNpc(true);
-            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(true);
+            coreManager.spawnManager.ChangeStencilLayer(true);
             
             SkillSpeedMultiplier = StatData.instinctSkillMultiplier;
             var t = 0f;
@@ -901,17 +902,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 if (token.IsCancellationRequested)
                 {
-                    coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
-                    coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
+                    coreManager.spawnManager.ChangeStencilLayer(false);
                     return;
                 }
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             SkillSpeedMultiplier = 1f;
             
-            coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
-            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
+            coreManager.spawnManager.ChangeStencilLayer(false);
             IsUsingInstinct = false;
             instinctCTS.Dispose(); instinctCTS = null;
         }
