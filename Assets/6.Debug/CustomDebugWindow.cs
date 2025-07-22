@@ -95,7 +95,7 @@ namespace _6.Debug
                 data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.GrenadeLauncher, glSpawnPoints.ToArray());
-                data.SetSpawnPoints(WeaponType.Crossbow, crossbowSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.HackGun, crossbowSpawnPoints.ToArray());
                 
                 foreach (var ((index, type), list) in enemyDict)
                 {

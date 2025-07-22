@@ -17,7 +17,7 @@ namespace _1.Scripts.Static
             "Pistol_Dummy",
             "Rifle_Dummy",
             "GrenadeLauncher_Dummy",
-            "Crossbow_Dummy",
+            "HackGun_Dummy",
             "Medkit_Prefab",
             "NanoAmple_Prefab",
             "Shield_Prefab",
