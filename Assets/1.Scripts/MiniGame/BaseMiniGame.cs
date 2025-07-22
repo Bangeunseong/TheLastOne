@@ -31,6 +31,7 @@ namespace _1.Scripts.MiniGame
             isFinished = IsPlaying = IsCounting = false;
             player?.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         
         protected virtual void OnDisable() { }

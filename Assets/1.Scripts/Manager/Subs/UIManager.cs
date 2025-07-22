@@ -16,7 +16,9 @@ namespace _1.Scripts.Manager.Subs
     public class UIManager
     {
         [field: Header("UI Mapping")]
+        [field: SerializeField] public Canvas RootCanvas { get; private set; }
         [SerializeField] private Transform uiRoot;
+        
         private Dictionary<Type, UIBase> uiMap = new();
         private Dictionary<UIBase, bool> UIStateCache = new();
         private CoreManager coreManager;
@@ -25,7 +27,11 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager = CoreManager.Instance;
             var canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-            if (canvas) uiRoot = canvas.transform;
+            if (canvas)
+            {
+                RootCanvas = canvas.GetComponent<Canvas>();
+                uiRoot = canvas.transform;
+            }
             
             RegisterStaticUI<LoadingUI>();
             RegisterStaticUI<LobbyUI>();

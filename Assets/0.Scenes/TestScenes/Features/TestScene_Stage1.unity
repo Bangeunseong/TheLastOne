@@ -1962,11 +1962,59 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 350746153127523237, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: wirePrefab
+      value: 
+      objectReference: {fileID: 2733255208687064477, guid: 94d6515bc378ea74fb0cf302f9a9a00a,
+        type: 3}
+    - target: {fileID: 350746153127523237, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: socketPrefab
+      value: 
+      objectReference: {fileID: 1784520976463337683, guid: 96509f83c15f6dc49b60ca7805598a82,
+        type: 3}
+    - target: {fileID: 776689317061614903, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: wirePrefab
+      value: 
+      objectReference: {fileID: 2733255208687064477, guid: 94d6515bc378ea74fb0cf302f9a9a00a,
+        type: 3}
+    - target: {fileID: 776689317061614903, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: socketPrefab
+      value: 
+      objectReference: {fileID: 1784520976463337683, guid: 96509f83c15f6dc49b60ca7805598a82,
+        type: 3}
+    - target: {fileID: 977634942808976616, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <BarPrefab>k__BackingField
+      value: 
+      objectReference: {fileID: 6079159017158207562, guid: fce3d701409e02543bf054e201f008d5,
+        type: 3}
+    - target: {fileID: 1969463180618210301, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <BarPrefab>k__BackingField
+      value: 
+      objectReference: {fileID: 6079159017158207562, guid: fce3d701409e02543bf054e201f008d5,
+        type: 3}
     - target: {fileID: 1993559397541543102, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 900053060764606496}
+    - target: {fileID: 2684573321196491228, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: wirePrefab
+      value: 
+      objectReference: {fileID: 2733255208687064477, guid: 94d6515bc378ea74fb0cf302f9a9a00a,
+        type: 3}
+    - target: {fileID: 2684573321196491228, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: socketPrefab
+      value: 
+      objectReference: {fileID: 1784520976463337683, guid: 96509f83c15f6dc49b60ca7805598a82,
+        type: 3}
     - target: {fileID: 3747547526541911620, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Convex
@@ -2067,6 +2115,12 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[0].second
       value: 
       objectReference: {fileID: 1917048629}
+    - target: {fileID: 7731057842917205141, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <BarPrefab>k__BackingField
+      value: 
+      objectReference: {fileID: 6079159017158207562, guid: fce3d701409e02543bf054e201f008d5,
+        type: 3}
     - target: {fileID: 7990286963828350312, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Convex

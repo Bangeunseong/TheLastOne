@@ -161,8 +161,10 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void ReloadGame()
         {
-            PlayerCTS?.Cancel();
-            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
@@ -173,8 +175,10 @@ namespace _1.Scripts.Manager.Core
 
         public void MoveToNextScene(SceneType sceneType)
         {
-            PlayerCTS?.Cancel();
-            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
@@ -188,8 +192,10 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void MoveToIntroScene()
         {
-            PlayerCTS?.Cancel();
-            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
+            
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();

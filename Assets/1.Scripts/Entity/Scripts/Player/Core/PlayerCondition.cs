@@ -435,11 +435,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void StopAllUniTasks()
         {
             coreManager.PlayerCTS?.Cancel();
-            crouchCTS?.Dispose(); staminaCTS?.Dispose();
-            reloadCTS?.Dispose(); itemCTS?.Dispose();
-            aimCTS?.Dispose(); switchCTS?.Dispose();
-            focusCTS?.Dispose(); instinctCTS?.Dispose();
-            instinctRecoveryCTS?.Dispose();
+            crouchCTS?.Dispose(); crouchCTS = null;
+            staminaCTS?.Dispose(); staminaCTS = null;
+            reloadCTS?.Dispose(); reloadCTS = null;
+            itemCTS?.Dispose(); itemCTS = null;
+            aimCTS?.Dispose(); aimCTS = null; 
+            switchCTS?.Dispose(); switchCTS = null;
+            focusCTS?.Dispose(); focusCTS = null; 
+            instinctCTS?.Dispose(); instinctCTS = null;
+            instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
         }
         
         /* - Crouch 관련 메소드 - */
