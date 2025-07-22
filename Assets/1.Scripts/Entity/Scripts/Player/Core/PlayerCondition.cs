@@ -439,9 +439,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             staminaCTS?.Dispose(); staminaCTS = null;
             reloadCTS?.Dispose(); reloadCTS = null;
             itemCTS?.Dispose(); itemCTS = null;
-            aimCTS?.Dispose(); aimCTS = null;
+            aimCTS?.Dispose(); aimCTS = null; 
             switchCTS?.Dispose(); switchCTS = null;
-            focusCTS?.Dispose(); focusCTS = null;
+            focusCTS?.Dispose(); focusCTS = null; 
             instinctCTS?.Dispose(); instinctCTS = null;
             instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
         }
