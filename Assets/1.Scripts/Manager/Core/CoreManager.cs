@@ -161,7 +161,7 @@ namespace _1.Scripts.Manager.Core
         public void ReloadGame()
         {
             PlayerCTS?.Cancel();
-            NpcCTS?.Cancel();
+            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
@@ -173,7 +173,7 @@ namespace _1.Scripts.Manager.Core
         public void MoveToNextScene(SceneType sceneType)
         {
             PlayerCTS?.Cancel();
-            NpcCTS?.Cancel();
+            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
@@ -188,7 +188,7 @@ namespace _1.Scripts.Manager.Core
         public void MoveToIntroScene()
         {
             PlayerCTS?.Cancel();
-            NpcCTS?.Cancel();
+            NpcCTS?.Cancel(); spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();

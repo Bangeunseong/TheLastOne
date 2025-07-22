@@ -55,7 +55,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
-        private CancellationTokenSource stunToken;
         [SerializeField] protected ParticleSystem onStunParticle;
         
         [Header("Hacking_Process")]
@@ -68,7 +67,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private HackingProgressUI hackingProgressUI;
         private Dictionary<Transform, int> originalLayers = new();
-
+        
         [Header("Hacking_Quest")] // 해킹 성공 시 올려야할 퀘스트 진행도들 
         [SerializeField] private bool shouldCountHackingQuest;
         [SerializeField] private int[] hackingQuestIndex;
@@ -76,6 +75,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
         [SerializeField] private bool shouldCountKillQuest;
         [SerializeField] private int[] killQuestIndex;
+        
+        // 이 스크립트에서 사용하는 토큰들
+        private CancellationTokenSource hackCts;
+        private CancellationTokenSource stunCts;
         
         protected virtual void Awake()
         {
@@ -99,6 +102,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             isStunned = false;
             agent.enabled = false;
             
+            if (onStunParticle != null && onStunParticle.IsAlive())
+            {
+                onStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+
             ResetLayersToOriginal();
         }
 
@@ -160,40 +168,53 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             float finalChance = useSelfDefinedChance ? successChance : chance;
-            _ = HackingProcessAsync(finalChance);
+            
+            hackCts?.Cancel();
+            hackCts?.Dispose();
+            hackCts = NpcUtil.CreateLinkedNpcToken();
+            _ = HackingProcessAsync(finalChance, hackCts.Token);
         }
 
-        private async UniTaskVoid HackingProcessAsync(float chance)
+        private async UniTaskVoid HackingProcessAsync(float chance, CancellationToken token)
         {
-            isHacking = true;
-            
-            // 1. 드론 멈추기
-            float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
-            OnStunned(stunDurationOnHacking);
-
-            // 2. 해킹 시도 시간 기다림
-            float time = 0f;
-            while (time < hackingDuration)
+            try
             {
-                time += Time.deltaTime;
-                hackingProgressUI.SetProgress(time / hackingDuration);
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                isHacking = true;
+
+                // 1. 드론 멈추기
+                float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
+                OnStunned(stunDurationOnHacking);
+
+                // 2. 해킹 시도 시간 기다림
+                float time = 0f;
+                while (time < hackingDuration)
+                {
+                    time += Time.deltaTime;
+                    hackingProgressUI.SetProgress(time / hackingDuration);
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                }
+
+                // 3. 확률 판정
+                bool success = UnityEngine.Random.value < chance;
+
+                if (success)
+                {
+                    HackingSuccess();
+                }
+                else
+                {
+                    hackingProgressUI.OnFail();
+                    HackingFailurePenalty();
+                }
             }
-
-            // 3. 확률 판정
-            bool success = UnityEngine.Random.value < chance;
-
-            if (success)
+            catch (Exception ex)
             {
-                HackingSuccess();
+                hackingProgressUI.OnCanceled();
             }
-            else
+            finally
             {
-                hackingProgressUI.OnFail();
-                HackingFailurePenalty();
+                isHacking = false;
             }
-
-            isHacking = false;
         }
         
         private void HackingSuccess()
@@ -223,10 +244,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             if (IsDead) return;
             
-            stunToken?.Cancel();
-            stunToken?.Dispose();
-            stunToken = new CancellationTokenSource();
-            _ = OnStunnedAsync(duration, stunToken.Token);
+            stunCts?.Cancel();
+            stunCts?.Dispose();
+            stunCts = NpcUtil.CreateLinkedNpcToken();
+            _ = OnStunnedAsync(duration, stunCts.Token);
         }
         
         private async UniTaskVoid OnStunnedAsync(float duration, CancellationToken token)
@@ -234,10 +255,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             isStunned = true;
             behaviorTree.SetVariableValue("CanRun", false);
             ResetAIState();
-            
-            onStunParticle.Play();
-            await UniTask.WaitForSeconds(duration, cancellationToken:token); // 원하는 시간만큼 유지
 
+            onStunParticle.Play();
+            await UniTask.WaitForSeconds(duration, cancellationToken: token); // 원하는 시간만큼 유지
+            
             if (onStunParticle != null && onStunParticle.IsAlive())
             {
                 onStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -336,6 +357,14 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                     kvp.Key.gameObject.layer = kvp.Value;
                 }
             }
+        }
+
+        public void DisposeAllUniTasks()
+        {
+            hackCts?.Dispose();
+            hackCts = null;
+            stunCts?.Dispose();
+            stunCts = null;
         }
     }
 }
