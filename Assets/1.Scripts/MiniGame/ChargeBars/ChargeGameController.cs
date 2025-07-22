@@ -22,6 +22,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
         [field: SerializeField] public RectTransform ControlObj { get; private set; }
         
         [field: Header("Game Settings")]
+        [field: SerializeField] public string Description { get; private set; } = "CHARGE BARS";
         [field: Range(2, 5)][field: SerializeField] public int BarCount { get; private set; } = 3;
         [field: SerializeField] public float Duration { get; private set; } = 15f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
@@ -48,11 +49,11 @@ namespace _1.Scripts.MiniGame.ChargeBars
             base.StartMiniGame(con, ply);
             
             // Initialize MiniGame
-            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI = uiManager.ShowUI<MinigameUI>();
             minigameUI.ShowMiniGame();
+            minigameUI.SetDescriptionText(Description);
             chargeBarUI = minigameUI.GetChargeBarUI();
             Initialize(chargeBarUI);
-            chargeBarUI.Show();
             enabled = true;
         }
         
@@ -88,7 +89,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
             
             float elapsed = Time.unscaledTime - startTime;
             float remaining = Mathf.Max(0, Duration - elapsed);
-            coreManager.uiManager.GetUI<MinigameUI>().UpdateTimeSlider(remaining);
+            minigameUI.UpdateTimeSlider(remaining);
             
             if (!(Time.time - startTime >= Duration)) return;
             FinishGame(false, 0f);
@@ -191,11 +192,11 @@ namespace _1.Scripts.MiniGame.ChargeBars
             {
                 if (!coreManager.gameManager.IsGamePaused) 
                     t += Time.unscaledDeltaTime;
-                uiManager.GetUI<MinigameUI>().SetCountdownText(Delay - t);
+                minigameUI.SetCountdownText(Delay - t);
 
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
-            
+            chargeBarUI.Show();
             minigameUI.ShowCountdownText(false);
             minigameUI.ShowTimeSlider(true);
             minigameUI.SetTimeSlider(Duration, Duration);
@@ -213,9 +214,9 @@ namespace _1.Scripts.MiniGame.ChargeBars
             minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
             
             minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowEnterText(false);
-            await UniTask.WaitForSeconds(duration, true);
+            minigameUI.ShowDescriptionText(false);
             chargeBarUI.Hide();
+            await UniTask.WaitForSeconds(duration, true);
             minigameUI.Hide();
             
             console.OnCleared(success);

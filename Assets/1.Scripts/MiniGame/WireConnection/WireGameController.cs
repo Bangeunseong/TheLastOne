@@ -193,7 +193,6 @@ namespace _1.Scripts.MiniGame.WireConnection
             minigameUI.ShowClearText(true);
             minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
             
-            minigameUI.ShowEnterText(false);
             minigameUI.ShowTimeSlider(false);
             minigameUI.ShowDescriptionText(false);
             wireConnectionUI.Hide();
