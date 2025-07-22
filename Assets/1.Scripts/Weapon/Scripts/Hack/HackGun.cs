@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Entity.Scripts.Player.Core;
+﻿using System.Collections;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
@@ -10,8 +11,12 @@ using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Hack
 {
-    public class Crossbow : BaseWeapon, IReloadable
+    public class HackGun : BaseWeapon, IReloadable
     {
+        [Header("Components")] 
+        [SerializeField] private ParticleSystem muzzleFlashParticle;
+        [SerializeField] private LightCurves lightCurves;
+        
         [field: Header("HackGun Data")]
         [field: SerializeField] public HackData HackData { get; private set; }
         
@@ -38,11 +43,15 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         private void Awake()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
         private void Reset()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
+            if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
         }
 
         private void Update()
@@ -97,7 +106,9 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             if (player) player.PlayerRecoil.ApplyRecoil(-HackData.HackStat.Recoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
-            // TODO: Need to make VFX Asset
+            if (lightCurves) StartCoroutine(Flicker());
+            if (muzzleFlashParticle.isPlaying) muzzleFlashParticle.Stop();
+            muzzleFlashParticle.Play();
             
             // Play Randomized Gun Shooting Sound
             CoreManager.Instance.soundManager
@@ -160,6 +171,13 @@ namespace _1.Scripts.Weapon.Scripts.Hack
                        (HackData.HackStat.MaxChance - HackData.HackStat.MinChance) * distanceRatio;
             }
             return HackData.HackStat.MaxChance;
+        }
+        
+        private IEnumerator Flicker()
+        {
+            lightCurves.gameObject.SetActive(true);
+            yield return new WaitForSecondsRealtime(lightCurves.GraphTimeMultiplier);
+            lightCurves.gameObject.SetActive(false);
         }
     }
 }

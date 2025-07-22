@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 7.999999976158142
+  m_Time: 7.5
   m_Retroactive: 0
   m_EmitOnce: 1
   m_Asset: {fileID: 11400000, guid: 7e78b575a5a85c44f97ff2ac1bf5f8d8, type: 2}
@@ -1159,7 +1159,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 7.35
-        value: 7
+        value: 8
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1228,7 +1228,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 7.35
-        value: 7
+        value: 8
         inSlope: 0
         outSlope: 0
         tangentMode: 136
