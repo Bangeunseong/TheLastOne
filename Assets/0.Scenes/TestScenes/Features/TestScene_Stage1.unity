@@ -1974,6 +1974,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1784520976463337683, guid: 96509f83c15f6dc49b60ca7805598a82,
         type: 3}
+    - target: {fileID: 350746153127523237, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <Duration>k__BackingField
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 776689317061614903, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: wirePrefab
