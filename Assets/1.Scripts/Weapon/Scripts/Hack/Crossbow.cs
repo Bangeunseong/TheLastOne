@@ -89,7 +89,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
                 if (hit.collider.TryGetComponent(out IHackable hackable))
                 {
                     var distance = Vector3.Distance(BulletSpawnPoint.position, hit.point);
-                    hackable.Hacking(1f);
+                    hackable.Hacking(CalculateChance(distance));
                 }
             }
             
@@ -147,6 +147,19 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             else { targetPoint = face.position + face.forward * HackData.HackStat.MaxWeaponRange; }
 
             return (targetPoint - BulletSpawnPoint.position).normalized;
+        }
+
+        private float CalculateChance(float distance)
+        {
+            if (distance >= HackData.HackStat.MaxDistance) return 0f;
+            if (distance >= HackData.HackStat.MinDistance)
+            {
+                var distanceRatio = 1 - (distance - HackData.HackStat.MinDistance) /
+                    (HackData.HackStat.MaxDistance - HackData.HackStat.MinDistance);
+                return HackData.HackStat.MinChance + 
+                       (HackData.HackStat.MaxChance - HackData.HackStat.MinChance) * distanceRatio;
+            }
+            return HackData.HackStat.MaxChance;
         }
     }
 }

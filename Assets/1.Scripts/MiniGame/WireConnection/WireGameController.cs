@@ -43,6 +43,15 @@ namespace _1.Scripts.MiniGame.WireConnection
             if (!canvas) canvas = GetComponentInParent<Canvas>();
         }
 
+        public void Initialize(Canvas can, RectTransform parent)
+        {
+            canvas = can;
+            var transforms = parent.GetComponentsInChildren<RectTransform>();
+            if (!top) top = transforms.First(val => val.gameObject.name.Equals("Top"));
+            if (!bottom) bottom = transforms.First(val => val.gameObject.name.Equals("Bottom"));
+            if (!WireContainer) WireContainer = transforms.First(val => val.gameObject.name.Equals("WireContainer"));
+        }
+
         protected override void Update()
         {
             if (coreManager.gameManager.IsGamePaused || isFinished) return;
