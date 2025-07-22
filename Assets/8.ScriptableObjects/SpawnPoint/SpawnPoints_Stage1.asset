@@ -52,9 +52,9 @@ MonoBehaviour:
         rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
     - Key: 3
       Value:
-      - position: {x: -25.548, y: 5.37, z: -45.89}
+      - position: {x: -25.548, y: 5.37, z: -45.481}
         rotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
-      - position: {x: -25.548, y: 5.37, z: -33.91}
+      - position: {x: -25.548, y: 5.37, z: -34.167}
         rotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   <EnemySpawnPoints>k__BackingField:
     _serializedList:
