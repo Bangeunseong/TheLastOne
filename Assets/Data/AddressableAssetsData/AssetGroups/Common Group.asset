@@ -209,6 +209,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 570163de825df9b438e1cb46f62f0f13
+    m_Address: DialogueUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 148e0a42c0232684b83e66fbe7be2911
     m_Address: PistolEmpty
     m_ReadOnly: 0
