@@ -49,10 +49,9 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void FixedUpdate()
         {
             if (isAlreadyReached) return;
-            if (!((transform.position - initializedPosition).sqrMagnitude > maxMoveDistance * maxMoveDistance)) return;
-            rigidBody.useGravity = true;
-            rigidBody.drag = drag;
+            if (!((transform.position - initializedPosition).magnitude > maxMoveDistance)) return;
             isAlreadyReached = true;
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
 
         private void OnDisable()
@@ -70,8 +69,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             appliedForce = force; 
             maxMoveDistance = maxDistance;
             direction = dir;
-            hittableLayer = 0;
-            hittableLayer |= hitLayer;
+            hittableLayer = hitLayer;
 
             rigidBody.AddForce(direction.normalized * appliedForce, ForceMode.Impulse);
         }

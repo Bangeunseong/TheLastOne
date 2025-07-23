@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Core
@@ -37,6 +39,7 @@ namespace _1.Scripts.Manager.Core
         public CancellationTokenSource PlayerCTS { get; private set; } 
         public CancellationTokenSource NpcCTS { get; private set; }
         public CancellationTokenSource UiCTS { get; private set; }
+        public CancellationTokenSource MapCTS { get; private set; }
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -81,6 +84,7 @@ namespace _1.Scripts.Manager.Core
             PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
             NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             
             uiManager.Start();
             gameManager.Start();
@@ -107,7 +111,7 @@ namespace _1.Scripts.Manager.Core
         {
             resourceManager.OnDestroy();
             mainCTS?.Cancel(); 
-            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); 
+            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); MapCTS?.Dispose();
             mainCTS?.Dispose();
         }
 
@@ -116,6 +120,7 @@ namespace _1.Scripts.Manager.Core
             PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             UiCTS?.Cancel(); UiCTS?.Dispose(); UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS?.Cancel(); MapCTS?.Dispose(); MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
         }
 
         /// <summary>
@@ -133,7 +138,7 @@ namespace _1.Scripts.Manager.Core
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             await sceneLoadManager.OpenScene(sceneType);
         }
-
+        
         /// <summary>
         /// Load User Data
         /// </summary>
@@ -177,7 +182,7 @@ namespace _1.Scripts.Manager.Core
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
-
+        
         public void MoveToNextScene(SceneType sceneType)
         {
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
@@ -186,7 +191,8 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Reset();
             uiManager.ResetUI();
             gameManager.ExitGame();
-            _ = LoadScene(sceneType);
+
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(sceneType));
         }
         
         /// <summary>
@@ -200,9 +206,17 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Reset();
             uiManager.ResetUI();
             gameManager.ExitGame();
-            _ = LoadScene(SceneType.IntroScene);
+            
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(SceneType.IntroScene));
         }
 
+        private IEnumerator FadeOutAndLoadSceneCoroutine(SceneType sceneType)
+        {
+            uiManager.ShowUI<FadeUI>().FadeOut();
+            yield return new WaitForSecondsRealtime(1.5f);
+            _ = LoadScene(sceneType);
+        }
+        
         /* - Extensions for Sub Managers - */
         public T GetComponentOfTarget<T>(GameObject target) where T : Component
         {

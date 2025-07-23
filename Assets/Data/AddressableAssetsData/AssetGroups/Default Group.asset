@@ -193,6 +193,36 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8ac2cf7c78b159a4480540d5d5310c1d
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/dry-fire-364846.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e476896751d3e174d96299fba25c6636
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-13-96416.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 228240e085a68c94e8c2cf1fc8bedd34
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-6-39793.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6373df3ffd9eb147ab66328341194ca
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-3-39820.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a09f8abe4f83d45409f2a17de3970ba3
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-1-96426.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d74507f933fb5df42ad94455fdee860f
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/22-rifle-dryfiring-87480.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:

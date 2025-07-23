@@ -10,9 +10,10 @@ namespace _1.Scripts.MiniGame
 {
     public abstract class BaseMiniGame : MonoBehaviour
     {
-        public bool IsPlaying { get; protected set; }
-        public bool IsCounting { get; protected set; }
-        public bool IsCleared { get; protected set; }
+        [field: Header("Game State")]
+        [field: SerializeField] public bool IsPlaying { get; protected set; }
+        [field: SerializeField] public bool IsCounting { get; protected set; }
+        [field: SerializeField] public bool IsCleared { get; protected set; }
         
         protected Console console;
         protected CoreManager coreManager;
@@ -50,14 +51,14 @@ namespace _1.Scripts.MiniGame
             isFinished = true;
         }
         
-        protected void FinishGame(bool isSuccess, float duration)
+        protected void FinishGame(bool isCanceled, bool isSuccess = false, float duration = 0f)
         {
             // Service.Log("Finished Game");
             isFinished = true;
-            _ = EndGame_Async(isSuccess, duration);
+            _ = EndGame_Async(isCanceled, isSuccess, duration);
         }
         
         protected virtual async UniTask StartCountdown_Async() { }
-        protected virtual async UniTask EndGame_Async(bool success, float duration) { }
+        protected virtual async UniTask EndGame_Async(bool cancel, bool success, float duration) { }
     }
 }

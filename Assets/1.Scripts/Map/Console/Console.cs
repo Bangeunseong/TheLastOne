@@ -6,12 +6,9 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Map.Doors;
 using _1.Scripts.MiniGame;
-using _1.Scripts.MiniGame.AlphabetMatch;
-using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
 using UnityEngine.Playables;
-using Random = System.Random;
 
 namespace _1.Scripts.Map.Console
 {
@@ -20,8 +17,12 @@ namespace _1.Scripts.Map.Console
         [field: Header("Console Settings")]
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public bool IsCleared { get; private set; }
+        [field: SerializeField] public float Cooldown { get; private set; }
+        [field: SerializeField] public bool IsOnCooldown { get; private set; }
+        [field: SerializeField] public GameObject AlertBody { get; private set; }
         [field: SerializeField] public List<ConsoleDoor> Doors { get; private set; }
-
+        
+        
         [field: Header("Minigames")]
         [field: SerializeField] public List<BaseMiniGame> MiniGames { get; private set; }
         [field: SerializeField] public int CurrentMiniGame { get; private set; }
@@ -29,10 +30,12 @@ namespace _1.Scripts.Map.Console
         [field: Header("CutScene")]
         [field: SerializeField] public PlayableDirector CutScene { get; private set; }
         
+        [Header("Include BGM Change")]
         [SerializeField] private bool shouldChangeBGM = false;
         [SerializeField] private int indexOfBGM;
         
         private CoreManager coreManager;
+        private float timeSinceLastFailed;
         
         private void Awake()
         {
@@ -52,23 +55,56 @@ namespace _1.Scripts.Map.Console
             foreach(var door in Doors) door.Initialize(IsCleared);
         }
 
+        private void Update()
+        {
+            if (!IsOnCooldown) return;
+            if (timeSinceLastFailed >= Cooldown){
+                IsOnCooldown = false; timeSinceLastFailed = 0f; AlertBody?.SetActive(false);
+                return;
+            }
+            timeSinceLastFailed += Time.unscaledDeltaTime;
+        }
+
+        public void OnInteract(GameObject ownerObj)
+        {
+            if (!ownerObj.TryGetComponent(out Player player)) return;
+            Service.Log("Interacted!");
+            
+            if (IsCleared || IsOnCooldown) return;
+            CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
+            MiniGames[CurrentMiniGame].StartMiniGame(this, player);
+        }
+
+        public void OnCancelInteract()
+        {
+            MiniGames[CurrentMiniGame].CancelMiniGame();
+        }
+
+        public void OnCleared(bool success)
+        {
+            if (success) OnClear();
+            else
+            {
+                IsOnCooldown = true;
+                AlertBody?.SetActive(true);
+                coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
+            }
+        }
+
+        public void OnFinished()
+        {
+            coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
+        }
+
         public void OpenDoors()
         {
             IsCleared = true;
             foreach(var door in Doors) door.Initialize(true);
         }
-
-        public void OnCleared(bool success)
-        {
-            if (success)
-            {
-                IsCleared = true; 
-                OnClear();
-            } else coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
-        }
-
+        
         private void OnClear()
         {
+            IsCleared = true;
             if (!CutScene)
             {
                 coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
@@ -89,21 +125,6 @@ namespace _1.Scripts.Map.Console
                     coreManager.soundManager.PlayBGM(bgmType, index:indexOfBGM);
                 }
             }
-        }
-
-        public void OnInteract(GameObject ownerObj)
-        {
-            if (!ownerObj.TryGetComponent(out Player player)) return;
-            Service.Log("Interacted!");
-            
-            if (IsCleared) return;
-            CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
-            MiniGames[CurrentMiniGame].StartMiniGame(this, player);
-        }
-
-        public void OnCancelInteract()
-        {
-            MiniGames[CurrentMiniGame].CancelMiniGame();
         }
     }
 }

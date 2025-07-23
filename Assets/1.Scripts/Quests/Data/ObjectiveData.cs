@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _1.Scripts.Quests.Data
 {
@@ -9,6 +10,8 @@ namespace _1.Scripts.Quests.Data
         KillDrones,
         CollectItem,
         HackingDrone,
+        ClearStage1,
+        ClearStage2,
     }
     
     [Serializable] public class ObjectiveData
@@ -17,5 +20,6 @@ namespace _1.Scripts.Quests.Data
         public string description;
         public ObjectiveType type;
         public int requiredAmount;
+        public UnityEvent onCompletedAction;
     }
 } 

@@ -25,7 +25,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         [field: Header("Game Settings")]
         [field: SerializeField] public string Description { get; private set; } = "CONNECT WIRES";
         [field: Range(2, 5)][field: SerializeField] public int SocketCount { get; private set; } = 3;
-        [field: SerializeField] public float Duration { get; private set; } = 5f;
+        [field: SerializeField] public float Duration { get; private set; } = 10f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
         
         private readonly List<(Socket, Socket, GameObject)> connections = new();
@@ -76,7 +76,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                     IsCounting = IsPlaying = true; 
                     return;
                 }
-                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(true);
                 return;
             }
             
@@ -84,14 +84,15 @@ namespace _1.Scripts.MiniGame.WireConnection
             float elapsed = Time.unscaledTime - startTime;
             float remaining = Mathf.Max(0, Duration - elapsed);
             minigameUI.UpdateTimeSlider(remaining);
+            
             if (!(Time.unscaledTime - startTime >= Duration)) return;
-            FinishGame(false, 0f);
+            FinishGame(false, IsCleared, 1.5f);
         }
         
         protected override void OnDisable()
         {
-            countdownCTS?.Dispose(); countdownCTS = null;
-            endgameCTS?.Dispose(); endgameCTS = null;
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+            endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllConnections();
             ResetAllSockets();
         }
@@ -101,10 +102,11 @@ namespace _1.Scripts.MiniGame.WireConnection
             base.CancelMiniGame();
             
             // Clear all remaining sockets and line renderers
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             ResetAllConnections();
             ResetAllSockets();
             
-            FinishGame(false, 0f);
+            FinishGame(true);
         }
         
         private void CreateSockets()
@@ -139,8 +141,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             connections.Add((start, end, line));
             if (connections.Count < SocketCount) return;
-            IsCleared = true;
-            FinishGame(IsCleared, 1.5f);
+            FinishGame(false, IsCleared = true, 1.5f);
         }
 
         private void ResetAllConnections()
@@ -178,20 +179,25 @@ namespace _1.Scripts.MiniGame.WireConnection
             CreateSockets();
             IsCounting = false;
             startTime = Time.unscaledTime;
+            
+            countdownCTS.Dispose(); countdownCTS = null;
         }
         
-        protected override async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
             Service.Log(success ? "Cleared MiniGame!" : "Better Luck NextTime");
             minigameUI.ShowEndResult(success);
             wireConnectionUI.Hide();
-
-            await UniTask.WaitForSeconds(duration, true);
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             minigameUI.Hide();
             
-            console.OnCleared(success);
+            if (cancel) console.OnFinished();
+            else console.OnCleared(success);
+            
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
+            endgameCTS.Dispose(); endgameCTS = null;
+            
             enabled = false;
         }
 

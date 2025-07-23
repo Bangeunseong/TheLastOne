@@ -40,7 +40,7 @@ namespace _1.Scripts.UI.Common
         {
             if (!gameObject.activeInHierarchy) yield break;
             animator.Play("In");
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
             panel.SetActive(false);
             yield return null;
         }
