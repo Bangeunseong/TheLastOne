@@ -379,9 +379,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
             player.PlayerInput.enabled = false;
+            
             FallCamera();
-
-            StartCoroutine(InvokeDeathEventWithDelay(1.5f));
+            OnDeath?.Invoke();
         }
 
         private void FallCamera()
@@ -393,7 +393,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (hardLock != null) Destroy(hardLock);
             
             cam.rotation = player.transform.rotation;
-            cam.localPosition += new Vector3(0f, 0f, -1f);
             
             seq.Append(cam.DOLocalRotate(new Vector3(10f, 5f, 0f), 0.1f)
                 .SetEase(Ease.OutSine));
@@ -403,13 +402,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             seq.Append(cam.DOShakeRotation(0.25f, 10f, 20, 90f, true));
         }
-        
-        private IEnumerator InvokeDeathEventWithDelay(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            OnDeath?.Invoke();
-        }
-        
+     
         public void OnReset()
         {
             IsDead = false;
