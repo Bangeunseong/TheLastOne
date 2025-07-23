@@ -118,6 +118,8 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         public override void CancelMiniGame()
         {
             base.CancelMiniGame();
+            
+            countdownCTS?.Cancel();
             FinishGame(true);
         }
         

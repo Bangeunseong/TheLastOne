@@ -170,13 +170,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 MaxStamina = data.characterInfo.maxStamina; CurrentStamina = data.characterInfo.stamina;
                 MaxShield = data.characterInfo.maxShield; CurrentShield = data.characterInfo.shield;
                 AttackRate = data.characterInfo.attackRate; Damage = data.characterInfo.damage;
-                LastSavedPosition = data.currentCharacterPosition.ToVector3();
-                LastSavedRotation = data.currentCharacterRotation.ToQuaternion();
                 CurrentFocusGauge = data.characterInfo.focusGauge;
                 CurrentInstinctGauge = data.characterInfo.instinctGauge;
-                
-                Service.Log(LastSavedPosition + "," +  LastSavedRotation);
-                transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+
+                if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
+                {
+                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
+                    LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
+                    LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
+                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                }
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
                     AvailableWeapons[i] = data.AvailableWeapons[i];
