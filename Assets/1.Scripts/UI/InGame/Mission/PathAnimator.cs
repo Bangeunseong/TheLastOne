@@ -20,9 +20,8 @@ namespace _1.Scripts.UI.InGame.Mission
         private Transform target;
         private NavigationPathFinder pathFinder;
         private CancellationTokenSource cts;
-        
 
-        void Awake()
+        private void Awake()
         {
             pathFinder = GetComponent<NavigationPathFinder>();
             if (player == null)
@@ -31,8 +30,8 @@ namespace _1.Scripts.UI.InGame.Mission
                 if (go != null) player = go.transform;
             }
         }
-        
-        void OnEnable()
+
+        private void OnEnable()
         {                       
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
@@ -41,7 +40,7 @@ namespace _1.Scripts.UI.InGame.Mission
             PathUpdateLoop(cts.Token).Forget();
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             DistanceUI.OnTargetChanged -= OnTargetChanged;
             cts?.Cancel();
@@ -70,8 +69,7 @@ namespace _1.Scripts.UI.InGame.Mission
                 AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();
         }
         
-
-        async UniTaskVoid PathUpdateLoop(CancellationToken token)
+        private async UniTaskVoid PathUpdateLoop(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -88,7 +86,7 @@ namespace _1.Scripts.UI.InGame.Mission
             }
         }
 
-        async UniTask AnimateMarkerAlongPath(Vector3[] corners, CancellationToken token)
+        private async UniTask AnimateMarkerAlongPath(Vector3[] corners, CancellationToken token)
         {
             if (corners.Length < 2 || player == null) return;
 

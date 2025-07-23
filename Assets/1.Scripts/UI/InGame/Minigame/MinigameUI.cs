@@ -43,6 +43,7 @@ namespace _1.Scripts.UI.InGame
             ShowCountdownText(false);
             ShowClearText(false);
             ShowEnterText(false);
+            SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
             ShowLoopText(false);
         }
@@ -51,6 +52,11 @@ namespace _1.Scripts.UI.InGame
         {
             if (isActiveAndEnabled) StartCoroutine(HidePanelCoroutine());
             else panel.SetActive(false);
+        }
+
+        public void HideImmediately()
+        {
+            panel.SetActive(false);
         }
 
         private IEnumerator HidePanelCoroutine()
@@ -74,7 +80,6 @@ namespace _1.Scripts.UI.InGame
         public void StartCountdownUI(float time)
         {
             ShowCountdownText(true);
-            SetCountdownText(time);
             ShowEnterText(false);
             ShowClearText(false);
             ShowLoopText(false);
@@ -83,13 +88,14 @@ namespace _1.Scripts.UI.InGame
         public void StartTimerUI(float duration)
         {
             ShowCountdownText(false);
-            ShowTimeSlider(true);
             SetTimeSlider(duration, duration);
+            ShowTimeSlider(true);
         }
         public void ShowEndResult(bool success, string resultText = null)
         {
             ShowClearText(true);
             SetClearText(success, string.IsNullOrEmpty(resultText) ? (success ? "CLEAR!" : "FAIL") : resultText);
+            SetTimeSlider(0, 0);
             ShowTimeSlider(false);
             ShowLoopText(false);
             ShowDescriptionText(false);
@@ -136,6 +142,7 @@ namespace _1.Scripts.UI.InGame
             ShowCountdownText(false);
             ShowClearText(false);
             ShowEnterText(true);
+            SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
         }
     }

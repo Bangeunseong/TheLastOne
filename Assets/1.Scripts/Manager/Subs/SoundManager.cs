@@ -71,9 +71,11 @@ namespace _1.Scripts.Manager.Subs
     }
     
     
-    [Serializable]
-    public class SoundManager
+    [Serializable] public class SoundManager
     {
+        [Header("Sound Groups")] 
+        [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
+             
         private AudioSource bgmSource;
         private ResourceManager resourceManager;
         private ObjectPoolManager poolManager;
@@ -81,13 +83,6 @@ namespace _1.Scripts.Manager.Subs
         private float masterVolume = 1.0f;
         private float bgmVolume = 1.0f;
         private float sfxVolume = 1.0f;
-        
-        public float MasterVolume => masterVolume;
-        public float BgmVolume => bgmVolume;
-        public float SfxVolume => sfxVolume;
-        
-        [Header("Sound Groups")]
-        [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
         
         public void Start(AudioSource audioSource)
         {
@@ -201,6 +196,7 @@ namespace _1.Scripts.Manager.Subs
             masterVolume = Mathf.Clamp01(volume);
             AudioListener.volume = masterVolume;
             SetBGMVolume(bgmVolume);
+            SetSFXVolume(sfxVolume);
             PlayerPrefs.SetFloat("MasterVolume", masterVolume);
         }
         
@@ -213,7 +209,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void SetSFXVolume(float volume)
         {
-            sfxVolume = Mathf.Clamp01(volume);
+            sfxVolume = Mathf.Clamp01(volume) * masterVolume;
             PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         }
 
@@ -225,6 +221,7 @@ namespace _1.Scripts.Manager.Subs
             
             AudioListener.volume = masterVolume;
             bgmSource.volume = masterVolume * bgmVolume;
+            sfxVolume = masterVolume * sfxVolume;
         }
 
         public async Task LoadClips()
@@ -233,15 +230,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 foreach (var clipRef in group.audioClips)
                 {
-                    if (clipRef == null) 
-                        continue;
+                    if (clipRef == null) continue;
                     // Service.Log(group.name);
                     AudioClip clip;
-
-                    if (clipRef.Asset is AudioClip existingClip)
-                    {
-                        clip = existingClip;
-                    }
+                    if (clipRef.Asset is AudioClip existingClip) clip = existingClip;
                     else
                     {
                         var handle = clipRef.LoadAssetAsync<AudioClip>();

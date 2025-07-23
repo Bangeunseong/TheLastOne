@@ -48,24 +48,20 @@ namespace _1.Scripts.Manager.Subs
                 coreManager.uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield();
             }
-            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
             
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 if (!handlesByLabel.ContainsKey(label))
-                {
                     handlesByLabel[label] = new List<AsyncOperationHandle>();
-                }
                 
                 handlesByLabel[label].Add(handle);
                 
                 foreach (var asset in handle.Result)
                 {
                     if (!resources.ContainsKey(asset.name))
-                    {
                         resources.Add(asset.name, asset);
-                    }
                 }
+                coreManager.sceneLoadManager.LoadingProgress += 0.2f;
             }
         }
 
