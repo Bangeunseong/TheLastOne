@@ -35,6 +35,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         // Fields
         private float timeSinceLastShotFired;
         private CoreManager coreManager;
+        public bool IsAlreadyPlayedEmpty;
 
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
@@ -92,7 +93,13 @@ namespace _1.Scripts.Weapon.Scripts.Hack
 
         public override bool OnShoot()
         {
-            if (!IsReady) return false;
+            if (!IsReady)
+            {
+                if (!IsEmpty || IsAlreadyPlayedEmpty) return false;
+                IsAlreadyPlayedEmpty = true;
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.HackGunEmpty, BulletSpawnPoint.position);
+                return false;
+            }
             if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, HackData.HackStat.MaxWeaponRange, HittableLayer))
             {
                 if (hit.collider.TryGetComponent(out IHackable hackable))
@@ -122,6 +129,8 @@ namespace _1.Scripts.Weapon.Scripts.Hack
                     player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
+            
+            if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
             if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }

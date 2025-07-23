@@ -99,6 +99,7 @@ namespace _1.Scripts.Map.Console
 
         public void OpenDoors()
         {
+            IsCleared = true;
             foreach(var door in Doors) door.Initialize(true);
         }
         
