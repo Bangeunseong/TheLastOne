@@ -102,6 +102,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             base.CancelMiniGame();
             
             // Clear all remaining sockets and line renderers
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             ResetAllConnections();
             ResetAllSockets();
             
