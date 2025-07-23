@@ -6,6 +6,9 @@ using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
+using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -221,6 +224,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
         {
             playerCondition.IsAttacking = false;
+            switch (playerCondition.Weapons[playerCondition.EquippedWeaponIndex])
+            {
+                case Gun gun: gun.IsAlreadyPlayedEmpty = false; break;
+                case GrenadeLauncher gL: gL.IsAlreadyPlayedEmpty = false; break;
+                case HackGun hackGun: hackGun.IsAlreadyPlayedEmpty = false; break;
+            }
         }
         protected virtual void OnReloadStarted(InputAction.CallbackContext context)
         {
