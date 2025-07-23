@@ -1,3 +1,4 @@
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
@@ -9,6 +10,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
     {
         private RuntimeReconDroneStatData runtimeReconDroneStatData;
         
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            runtimeReconDroneStatData.ResetStats();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.SetTrigger(DroneAnimationHashData.Idle1);
+        }
+
         protected override void Awake()
         {
             base.Awake();

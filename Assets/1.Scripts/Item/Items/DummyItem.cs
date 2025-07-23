@@ -4,6 +4,7 @@ using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
+using _1.Scripts.UI.InGame;
 using UnityEngine;
 
 namespace _1.Scripts.Item.Items
@@ -29,12 +30,14 @@ namespace _1.Scripts.Item.Items
 
         private void OnEnable()
         {
+            ChangeLayerOfBody(CoreManager.Instance.spawnManager.IsVisible);
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked += RemoveSelfFromSpawnedList;
         }
         
         private void OnDisable()
         {
+            ChangeLayerOfBody(false);
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked -= RemoveSelfFromSpawnedList;
         }
@@ -60,9 +63,11 @@ namespace _1.Scripts.Item.Items
             else
             {
                 // Service.Log($"Failed to refill {ItemType}");
-                CoreManager.Instance.uiManager.InGameUI.ShowMessage("Failed to refill {ItemType}");
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowMessage("Failed to refill {ItemType}");
             }
             GameEventSystem.Instance.RaiseEvent(Id);
         }
+
+        public void OnCancelInteract() { }
     }
 }

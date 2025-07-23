@@ -13,8 +13,7 @@ namespace _1.Scripts.UI.InGame.Mission
         {
             navPath = new NavMeshPath();
         }
-
-
+        
         public Vector3[] GetPathCorners(Vector3 startPos, Vector3 targetPos)
         {
             navPath.ClearCorners();

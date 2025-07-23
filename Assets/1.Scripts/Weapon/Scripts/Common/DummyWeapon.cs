@@ -33,12 +33,14 @@ namespace _1.Scripts.Weapon.Scripts.Common
         
         private void OnEnable()
         {
+            ChangeLayerOfBody(CoreManager.Instance.spawnManager.IsVisible);
             OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked += RemoveSelfFromSpawnedList;
         }
 
         private void OnDisable()
         {
+            ChangeLayerOfBody(false);
             OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
             OnPicked -= RemoveSelfFromSpawnedList;
         }
@@ -65,7 +67,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             {
                 if (player.PlayerCondition.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type || 
                     player.PlayerCondition.Weapons[i] is GrenadeLauncher grenadeThrower && grenadeThrower.GrenadeData.GrenadeStat.Type == Type || 
-                    player.PlayerCondition.Weapons[i] is Crossbow crossbow && crossbow.HackData.HackStat.Type == Type)
+                    player.PlayerCondition.Weapons[i] is HackGun crossbow && crossbow.HackData.HackStat.Type == Type)
                 {
                     index = i; break;
                 }
@@ -79,7 +81,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             else
             {
                 var result = player.PlayerCondition.Weapons[index].OnRefillAmmo(
-                    player.PlayerCondition.Weapons[index] is Crossbow ? 4 :
+                    player.PlayerCondition.Weapons[index] is HackGun ? 5 :
                     player.PlayerCondition.Weapons[index] is GrenadeLauncher ? 6 : 
                         player.PlayerCondition.Weapons[index] is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol ? 30 : 60);
                 if (!result) return;
@@ -90,8 +92,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
             
             OnPicked?.Invoke();
             GameEventSystem.Instance.RaiseEvent(Id);
-            CoreManager.Instance.uiManager.InGameUI.InventoryUI.RefreshInventoryUI();
+            CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
+        public void OnCancelInteract() { }
     }
 }

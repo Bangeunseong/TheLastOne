@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces.Common;
+﻿using System;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -38,7 +39,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         private void OnEnable()
         {
-            trailRenderer.Clear();
             isAlreadyReached = false;
             rigidBody.useGravity = false;
             rigidBody.drag = 0f;
@@ -49,10 +49,14 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void FixedUpdate()
         {
             if (isAlreadyReached) return;
-            if (!((transform.position - initializedPosition).sqrMagnitude > maxMoveDistance * maxMoveDistance)) return;
-            rigidBody.useGravity = true;
-            rigidBody.drag = drag;
+            if (!((transform.position - initializedPosition).magnitude > maxMoveDistance)) return;
             isAlreadyReached = true;
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            trailRenderer.Clear();
         }
 
         public void Initialize(Vector3 position, Vector3 dir, float maxDistance, float force, int dealtDamage, LayerMask hitLayer)
@@ -65,8 +69,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             appliedForce = force; 
             maxMoveDistance = maxDistance;
             direction = dir;
-            hittableLayer = 0;
-            hittableLayer |= hitLayer;
+            hittableLayer = hitLayer;
 
             rigidBody.AddForce(direction.normalized * appliedForce, ForceMode.Impulse);
         }

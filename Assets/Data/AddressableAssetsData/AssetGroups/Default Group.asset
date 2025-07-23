@@ -20,8 +20,7 @@ MonoBehaviour:
   - m_GUID: e7350b1515d0e2d418e77380a02475c8
     m_Address: LobbyBGM
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - IntroScene
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfc5803fa8fa8924bbeaa34f4f689bb1
     m_Address: Click
@@ -181,6 +180,46 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 92eb825a158d55a46bb2fe8d07054c22
     m_Address: Assets/3.Artworks/Sounds/Sci-Fi Mechanical Doors SFX/Doors/DoorClose.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e3826e0c6f7a7146882326f4450134a
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/silenced-gunshot-81063.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff1f80a0c12886d4d80ba2d83496c792
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/4Grenade_Set/grenade-explosion-14-190266.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8ac2cf7c78b159a4480540d5d5310c1d
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/dry-fire-364846.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e476896751d3e174d96299fba25c6636
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-13-96416.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 228240e085a68c94e8c2cf1fc8bedd34
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-6-39793.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6373df3ffd9eb147ab66328341194ca
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-3-39820.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a09f8abe4f83d45409f2a17de3970ba3
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/gun-dry-firing-1-96426.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d74507f933fb5df42ad94455fdee860f
+    m_Address: Assets/3.Artworks/Sounds/Weapons/DryFire/22-rifle-dryfiring-87480.mp3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

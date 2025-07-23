@@ -6,7 +6,7 @@ namespace _1.Scripts.Static
 {
     public static class PoolableGameObjects_Common
     {
-        public static readonly HashSet<string> prefabs = new()
+        public static HashSet<string> prefabs = new()
         {
             "Bullet",
             "BulletHole_Wall",
@@ -17,7 +17,7 @@ namespace _1.Scripts.Static
             "Pistol_Dummy",
             "Rifle_Dummy",
             "GrenadeLauncher_Dummy",
-            "Crossbow_Dummy",
+            "HackGun_Dummy",
             "Medkit_Prefab",
             "NanoAmple_Prefab",
             "Shield_Prefab",
@@ -27,18 +27,18 @@ namespace _1.Scripts.Static
 
     public static class PoolableGameObjects_Stage1
     {
-        public static readonly HashSet<string> prefabs = new()
+        public static HashSet<string> prefabs = new()
         {
-            "ReconDrone",
+            "ReconDroneNotHackable",
             "BattleRoomReconDrone",
-            "SuicideDrone",
+            "SuicideDroneNotHackable",
             "HackingProgressUI",
         };
     }
 
     public static class PoolableGameObjects_Stage2
     {
-        public static readonly HashSet<string> prefabs = new()
+        public static HashSet<string> prefabs = new()
         {
             "robot2"
         };

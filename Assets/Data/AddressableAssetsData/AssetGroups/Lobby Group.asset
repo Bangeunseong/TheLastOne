@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Lobby Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Lobby Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c1e41b99994cb444b9d394dd670038d7
+  m_SerializeEntries:
+  - m_GUID: 021fa873ab7a4db4eab29c778d0a632a
+    m_Address: Lobby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c10110fc75c3a14ba9b302060db8ed3
+    m_Address: PopupOpen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68d10258679e58d4191e0bfbb27e58ee
+    m_Address: ButtonClick
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a447ca87ac65d74089aa47e2c046080
+    m_Address: SoundPlayer
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    - IntroScene
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 28b2f3ad85253494884745a8174768c8, type: 2}
+    - {fileID: 11400000, guid: 038a8088684a8314b92e86f201730656, type: 2}

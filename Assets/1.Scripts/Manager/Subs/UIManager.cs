@@ -2,189 +2,263 @@ using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
+using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Dialogue;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
-using _1.Scripts.UI.Setting;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Playables;
 using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
-    public enum CurrentState
+    public enum UIType
     {
-        Lobby,
-        Loading,
+        Persistent,
         InGame,
-        None
+        System,
     }
-    
-    [Serializable] public class UIManager
+    [Serializable]
+    public class UIManager
     {
-        [field: Header("UI Components")]
-        [field: SerializeField] public SerializedDictionary<CurrentState, List<UIBase>> LoadedUI { get; private set; } = new();
+        [field: Header("UI Mapping")]
+        [field: SerializeField] public Canvas RootCanvas { get; private set; }
+        [SerializeField] private Transform uiRoot;
         
-        [field: Header("InGameUI")]
-        [field: SerializeField] public InGameUI InGameUI { get; private set; }
-
-        [field: Header("MinigameUI")]
-        [field: SerializeField] public MinigameUI MinigameUI { get; private set; }
-
-        private Transform uiRoot;
-        private CurrentState currentState = CurrentState.None;
-
-        private LobbyUI lobbyUI;
-        private LoadingUI loadingUI;
-        private SettingUI settingUI;
-        private MissionUI missionUI;
+        public bool IsCutscene { get; private set; }
         
-
-        public LoadingUI LoadingUI => loadingUI;
-        
-        private const string INGAME_UI_ADDRESS = "InGameUI";
-        private const string MINIGAME_UI_ADDRESS = "MiniGameUI";
-        private const string PAUSEMENU_UI_ADDRESS = "PauseMenuUI";
-        private const string INVENTORY_UI_ADDRESS = "InventoryUI";
-        
-        private DistanceUI distanceUI;
+        private Dictionary<Type, UIBase> uiMap = new();
+        private Dictionary<UIBase, bool> UIStateCache = new();
         private CoreManager coreManager;
+
+        private Dictionary<UIType, List<Type>> uiGroupMap = new();
         
         public void Start()
         {
             coreManager = CoreManager.Instance;
+            var canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+            if (canvas)
+            {
+                RootCanvas = canvas.GetComponent<Canvas>();
+                uiRoot = canvas.transform;
+            }
             
-            var mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas");
-            if (mainCanvas) { uiRoot = mainCanvas.transform; }
-            
-            lobbyUI = GameObject.Find("LobbyUI")?.GetComponent<LobbyUI>();
-            loadingUI = GameObject.Find("LoadingUI")?.GetComponent<LoadingUI>();
-            
-            lobbyUI?.Init(this);
-            loadingUI?.Init(this);
-            
-            lobbyUI?.SetActive(false);
-            loadingUI?.SetActive(false);
-            
-            settingUI?.Initialize();
-            
-            ChangeState(CurrentState.Lobby);
+            RegisterUIGroup();
+            RegisterStaticUI<LoadingUI>();
+            RegisterStaticUI<LobbyUI>();
+            RegisterStaticUI<FadeUI>();
+            ShowUI<LobbyUI>();
+            GetUI<FadeUI>().FadeIn();
         }
         
-        public void ChangeState(CurrentState newState)
+        private void RegisterUIGroup()
         {
-            if (currentState == newState) return;
-            
-            DeactivateState(currentState);
-            currentState = newState;
-            ActivateState(currentState);
-        }
-
-        private void ActivateState(CurrentState state)
-        {
-            switch (state)
+            uiGroupMap[UIType.Persistent] = new()
             {
-                case CurrentState.Lobby:
-                    lobbyUI?.SetActive(true);
-                    break;
-                case CurrentState.Loading:
-                    loadingUI?.SetActive(true);
-                    break;
-                case CurrentState.InGame:
-                    InGameUI = LoadUI<InGameUI>(state, INGAME_UI_ADDRESS);
-                    MinigameUI = LoadUI<MinigameUI>(state, MINIGAME_UI_ADDRESS);
-                    break;
-            }
-        }
+                typeof(LoadingUI),
+                typeof(FadeUI),
+                typeof(LobbyUI),
+            };
 
-        private void DeactivateState(CurrentState state)
-        {
-            switch (state)
+            uiGroupMap[UIType.InGame] = new()
             {
-                case CurrentState.Lobby: lobbyUI?.SetActive(false); break;
-                case CurrentState.Loading: loadingUI?.SetActive(false); break;
-                case CurrentState.InGame:
-                    if (LoadedUI.TryGetValue(state, out var list)) { foreach (var ui in list) ui.SetActive(false); }
-                    break;
-                case CurrentState.None:
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(state), state, null);
-            }
+                typeof(InGameUI),
+                typeof(DistanceUI),
+                typeof(WeaponUI),
+                typeof(QuickSlotUI),
+                typeof(QuestUI),
+                typeof(MinigameUI),
+                typeof(InventoryUI),
+                typeof(PauseMenuUI),
+                typeof(DialogueUI)
+            };
+
+            uiGroupMap[UIType.System] = new()
+            {
+                typeof(GameOverUI),
+            };
         }
         
-        private T LoadUI<T>(CurrentState state, string address) where T : UIBase
+        public T GetUI<T>() where T : UIBase
         {
-            if (LoadedUI.TryGetValue(state, out var list))
-            {
-                foreach (var existing in list)
-                    if (existing is T found)
-                    {
-                        Service.Log($"{found.name}"); 
-                        found.Init(this); found.SetActive(true); 
-                        return found;
-                    }
-            }
-            
-            var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
-            if (prefab == null || uiRoot == null) return null;
-            
-            var instance  = Object.Instantiate(prefab, uiRoot, false);
-            
-            if (!instance.TryGetComponent(out T component)) return null;
-            if (component is InGameUI inGameUI) inGameUI.Init(this);
-            else if(component is MinigameUI minigameUI) minigameUI.Init(this);
-            
-            if (LoadedUI.ContainsKey(state)) { LoadedUI[state].Add(component); return component; }
-            LoadedUI[state] = new List<UIBase> { component };
-            return component;
+            return uiMap.TryGetValue(typeof(T), out var ui) ? ui as T : null;
         }
-        public MinigameUI ShowMinigameUI()
+
+        public T ShowUI<T>() where T : UIBase
         {
-            var ui = LoadUI<MinigameUI>(CurrentState.InGame, MINIGAME_UI_ADDRESS);
-            ui.SetActive(true);
+            var ui = GetUI<T>() ?? LoadUI<T>();
+            ui.Show();
             return ui;
         }
-
-        public void HideMinigameUI()
+        public void ShowUIGroup(UIType group)
         {
-            if (!LoadedUI.TryGetValue(CurrentState.InGame, out var list)) return;
-            
-            foreach (var baseUi in list)
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
             {
-                if (baseUi is MinigameUI minigameUI)
-                    minigameUI.HidePanel();
+                var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+        }
+        
+        public void HideUI<T>() where T : UIBase
+        {
+            var ui = GetUI<T>();
+            if (ui) ui.Hide();
+            else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
+        }
+
+        public T LoadUI<T>() where T : UIBase
+        {
+            if (uiMap.TryGetValue(typeof(T), out var existingUI))
+            {
+                InjectHandler(existingUI);
+                return existingUI as T;
+            }
+            
+            string address = typeof(T).Name;
+            var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
+            if (!prefab) return null;
+            var instance = Object.Instantiate(prefab, uiRoot, false);
+            if (!instance.TryGetComponent(out T component)) return null;
+            component.Init(this);
+            InjectHandler(component);
+            uiMap[typeof(T)] = component;
+            Service.Log($"UI {typeof(T).Name} Registered");
+            return component;
+        }
+        public void LoadUIGroup(UIType group)
+        {
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(LoadUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+        }
+        
+        private void RegisterStaticUI<T>() where T : UIBase
+        {
+            var ui = Object.FindObjectOfType<T>(true);
+            if (ui && !uiMap.ContainsKey(typeof(T)))
+            {
+                ui.Init(this);
+                uiMap.Add(typeof(T), ui);
+                Service.Log($"UI {typeof(T).Name} Registered");
             }
         }
 
-        public void HideInGameUI()
+        public void ResetUI()
         {
-            if (!LoadedUI.TryGetValue(CurrentState.InGame, out var list)) return;
-            
-            foreach (var ui in list)
-                ui.SetActive(false);
+            foreach (var ui in uiMap.Values)
+            {
+                ui.Hide();
+                ui.ResetUI();
+            }
         }
 
-        public void ShowInGameUI()
+        public void InitializeUI<T>(object param) where T : UIBase
         {
-            if (!LoadedUI.TryGetValue(CurrentState.InGame, out var list)) return;
-            
-            foreach (var ui in list)
-                ui.SetActive(true);
-        }
-
-        public void OnCutsceneStarted(PlayableDirector director)
-        {
-            HideInGameUI();
+            var ui = GetUI<T>();
+            ui?.Initialize(param);
         }
         
+        public void InitializeAllUI(object param)
+        {
+            foreach (var ui in uiMap.Values)
+            {
+                ui.Initialize(param);
+            }
+        }
+        
+        public void UnloadUI<T>() where T : UIBase
+        {
+            Debug.Log($"UnloadUI {typeof(T).Name}");
+            if (!uiMap.TryGetValue(typeof(T), out var ui)) return;
+            Object.Destroy(ui.gameObject);
+            uiMap.Remove(typeof(T));
+        }
+
+        public void UnloadUIGroup(UIType group)
+        {
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(UnloadUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+        }
+        
+        public void HideAndSaveAllUI()
+        {
+            UIStateCache.Clear();
+            foreach (var ui in uiMap.Values)
+            {
+                UIStateCache[ui] = ui.gameObject.activeInHierarchy;
+                ui.Hide();
+            }
+        }
+        
+        public void RestoreAllUI()
+        {
+            foreach (var kvp in UIStateCache)
+            {
+                if (kvp.Value) kvp.Key.Show();
+            }
+            UIStateCache.Clear();
+        }
+        
+        public void OnCutsceneStarted(PlayableDirector _)
+        {
+            IsCutscene = true;
+            HideAndSaveAllUI();
+        }
         public void OnCutsceneStopped(PlayableDirector director)
         {
-            ShowInGameUI();
-            
             director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
+            IsCutscene = false;
+            RestoreAllUI();
+        }
+
+        private void InjectHandler(UIBase ui)
+        {
+            var menuHandler = GameObject.FindObjectOfType<MenuHandler>();
+
+            if (ui is InventoryUI inventoryUI)
+            {
+                var inventoryHandler = inventoryUI.GetComponent<InventoryHandler>();
+                if (menuHandler && inventoryHandler)
+                    menuHandler.SetInventoryHandler(inventoryHandler);
+
+                var pauseHandler = CoreManager.Instance.uiManager.GetUI<PauseMenuUI>()?.GetComponent<PauseHandler>();
+                if (pauseHandler)
+                {
+                    pauseHandler.SetInventoryHandler(inventoryHandler);
+                    inventoryHandler.SetPauseHandler(pauseHandler);
+                }
+            }
+
+            if (ui is PauseMenuUI pauseMenuUI)
+            {
+                var pauseHandler = pauseMenuUI.GetComponent<PauseHandler>();
+                if (menuHandler && pauseHandler)
+                    menuHandler.SetPauseHandler(pauseHandler);
+                pauseHandler.SetPauseMenuUI(pauseMenuUI);
+
+                var inventoryHandler = CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.GetComponent<InventoryHandler>();
+                if (inventoryHandler)
+                {        
+                    pauseHandler.SetInventoryHandler(inventoryHandler);
+                    inventoryHandler.SetPauseHandler(pauseHandler);
+                }
+            }
         }
     }
 }

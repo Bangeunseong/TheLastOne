@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
+using _1.Scripts.Util;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -57,15 +58,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         
         public void DestroyObjectForAnimationEvent()
         {
-            CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(this.gameObject);
-            CoreManager.Instance.objectPoolManager.Release(this.gameObject);
-        }
-        
-        public void DestroyObjectAndQuestCountForAnimationEvent()
-        {
-            CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(this.gameObject);
-            CoreManager.Instance.objectPoolManager.Release(this.gameObject);
-            GameEventSystem.Instance.RaiseEvent(3);
+            NpcUtil.DisableNpc(this.gameObject);
         }
     }
 }
