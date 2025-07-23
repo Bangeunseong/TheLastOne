@@ -394,11 +394,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             cam.rotation = player.transform.rotation;
             
-            seq.Append(cam.DOLocalRotate(new Vector3(10f, 5f, 0f), 0.1f)
-                .SetEase(Ease.OutSine));
-
+            
             seq.Append(cam.DOLocalRotate(new Vector3(0f, 0f, 90f), 0.5f)
                 .SetEase(Ease.InCubic));
+            seq.Append(cam.DOLocalMove(cam.localPosition + new Vector3(0f, 0f, 2f), 0.5f)
+                .SetEase(Ease.OutSine));
 
             seq.Append(cam.DOShakeRotation(0.25f, 10f, 20, 90f, true));
         }
