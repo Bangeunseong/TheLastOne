@@ -65,6 +65,8 @@ namespace _1.Scripts.Manager.Subs
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            
+            uiManager.HideAndSaveAllUI();
             uiManager.ShowUI<LoadingUI>();
             
             // Remove all remain resources that belongs to previous scene
@@ -77,14 +79,8 @@ namespace _1.Scripts.Manager.Subs
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    uiManager.UnloadUI<InGameUI>();
-                    uiManager.UnloadUI<QuestUI>();
-                    uiManager.UnloadUI<DistanceUI>();
-                    uiManager.UnloadUI<InventoryUI>();
-                    uiManager.UnloadUI<QuickSlotUI>();
-                    uiManager.UnloadUI<PauseMenuUI>();
-                    uiManager.UnloadUI<WeaponUI>();
-                    uiManager.UnloadUI<MinigameUI>();
+                    uiManager.UnloadUIGroup(UIType.InGame);
+                    uiManager.UnloadUIGroup(UIType.System);
                 }
             }
             
@@ -179,15 +175,10 @@ namespace _1.Scripts.Manager.Subs
             
             coreManager.gameManager.Initialize_Player(player);
             uiManager.HideUI<LoadingUI>();
-            uiManager.LoadUI<InGameUI>();
-            uiManager.LoadUI<DistanceUI>();
-            uiManager.LoadUI<WeaponUI>();
-            uiManager.LoadUI<PauseMenuUI>();
-            uiManager.LoadUI<InventoryUI>();
-            uiManager.LoadUI<QuickSlotUI>();
-            uiManager.LoadUI<QuestUI>();
-            uiManager.LoadUI<MinigameUI>();
-            uiManager.LoadUI<GameOverUI>();
+            
+            uiManager.LoadUIGroup(UIType.InGame);
+            uiManager.LoadUIGroup(UIType.System);
+            
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
 
@@ -209,13 +200,7 @@ namespace _1.Scripts.Manager.Subs
                     {
                         player.PlayerCondition.IsPlayerHasControl = true;
                         coreManager.spawnManager.SpawnEnemyBySpawnData(1);
-                        uiManager.ShowUI<InGameUI>();
-                        uiManager.ShowUI<DistanceUI>();
-                        uiManager.ShowUI<WeaponUI>();
-                        uiManager.ShowUI<PauseMenuUI>();
-                        uiManager.ShowUI<InventoryUI>();
-                        uiManager.ShowUI<QuickSlotUI>();
-                        uiManager.ShowUI<QuestUI>();
+                        uiManager.ShowUIGroup(UIType.InGame);
                     }
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType type)) 
                         coreManager.soundManager.PlayBGM(type, index: 0);
@@ -254,13 +239,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
             
-            uiManager.ShowUI<InGameUI>();
-            uiManager.ShowUI<DistanceUI>();
-            uiManager.ShowUI<WeaponUI>();
-            uiManager.ShowUI<PauseMenuUI>();
-            uiManager.ShowUI<InventoryUI>();
-            uiManager.ShowUI<QuickSlotUI>();
-            uiManager.ShowUI<QuestUI>();
+            uiManager.ShowUIGroup(UIType.InGame);
             
             director.played -= OnCutsceneStarted_IntroOfStage1;
             director.stopped -= OnCutsceneStopped_IntroOfStage1;

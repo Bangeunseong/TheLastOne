@@ -125,7 +125,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             IsPlaying = IsCounting = false;
             CurrentAlphabets = GetAlphabets();
-            uiManager.ShowUI<MinigameUI>().ShowPanel();
+            minigameUI.ShowPanel();
             minigameUI.ShowLoopText(IsLoop);
             if (IsLoop && LoopCount > 0) 
                 minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
@@ -143,12 +143,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask StartCountdown_Async()
         {
-            minigameUI.ShowCountdownText(true);
-            minigameUI.SetCountdownText(Delay);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowEnterText(false);
-            minigameUI.ShowClearText(false);
-            minigameUI.ShowLoopText(IsLoop);
+            minigameUI.StartCountdownUI(Delay);
             minigameUI.ShowAlphabetMatching(true);
             
             var t = 0f;
@@ -163,8 +158,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
-            minigameUI.ShowTimeSlider(true);
-            minigameUI.SetTimeSlider(Duration, Duration);
+            minigameUI.StartTimerUI(Duration);
             if (IsLoop && LoopCount > 0)
                 minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             
@@ -177,16 +171,10 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
-            minigameUI.ShowClearText(true);
-            minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
-            
+            minigameUI.ShowEndResult(success);
             alphabetUI.ShowAlphabet(false);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowLoopText(false);
-            minigameUI.ShowDescriptionText(false);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             uiManager.HideUI<MinigameUI>();
-            uiManager.UnloadUI<MinigameUI>();
             alphabetUI = null;
             
             if (cancel) console.OnFinished();
