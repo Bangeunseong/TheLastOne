@@ -94,7 +94,7 @@ MonoBehaviour:
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 824fc0ee614adcb40a26930412a8db8a
-    m_Address: Crossbow_Dummy
+    m_Address: HackGun_Dummy
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage1

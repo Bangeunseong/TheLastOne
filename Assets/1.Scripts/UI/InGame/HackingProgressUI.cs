@@ -20,6 +20,12 @@ namespace _1.Scripts.UI.InGame
             gameObject.SetActive(false);
         }
 
+        private void OnEnable()
+        {
+            animator.Rebind();
+            animator.Update(0);
+        }
+
         private void Start()
         {
             var cam = Camera.main;
@@ -67,12 +73,6 @@ namespace _1.Scripts.UI.InGame
         {
             yield return new WaitForSeconds(delay);
             CoreManager.Instance.objectPoolManager.Release(gameObject);
-        }
-
-        private void OnDisable()
-        {
-            animator.Rebind();
-            animator.Update(0);
         }
         
         private void ResetUI()

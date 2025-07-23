@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Minigame;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
@@ -18,38 +21,47 @@ namespace _1.Scripts.MiniGame.WireConnection
         [SerializeField] private RectTransform top;
         [SerializeField] private RectTransform bottom;
         [field: SerializeField] public RectTransform WireContainer { get; private set; }
-        
+
         [field: Header("Game Settings")]
+        [field: SerializeField] public string Description { get; private set; } = "CONNECT WIRES";
         [field: Range(2, 5)][field: SerializeField] public int SocketCount { get; private set; } = 3;
-        [field: SerializeField] public float Duration { get; private set; } = 5f;
+        [field: SerializeField] public float Duration { get; private set; } = 10f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
         
         private readonly List<(Socket, Socket, GameObject)> connections = new();
         private readonly List<GameObject> sockets = new();
-
-        protected override void Awake()
-        {
-            if (!top) top = this.TryGetChildComponent<RectTransform>("Top");
-            if (!bottom) bottom = this.TryGetChildComponent<RectTransform>("Bottom");
-            if (!WireContainer) WireContainer = this.TryGetChildComponent<RectTransform>("WireContainer");
-            if (!canvas) canvas = GetComponentInParent<Canvas>();
-        }
-
-        protected override void Reset()
-        {
-            if (!top) top = this.TryGetChildComponent<RectTransform>("Top");
-            if (!bottom) bottom = this.TryGetChildComponent<RectTransform>("Bottom");
-            if (!WireContainer) WireContainer = this.TryGetChildComponent<RectTransform>("WireContainer");
-            if (!canvas) canvas = GetComponentInParent<Canvas>();
-        }
-
-        public void Initialize(Canvas can, RectTransform parent)
+        private WireConnectionUI wireConnectionUI;
+        private MinigameUI minigameUI;
+        private CancellationTokenSource countdownCTS;
+        private CancellationTokenSource endgameCTS;
+        
+        private void Initialize(Canvas can, WireConnectionUI ui)
         {
             canvas = can;
-            var transforms = parent.GetComponentsInChildren<RectTransform>();
-            if (!top) top = transforms.First(val => val.gameObject.name.Equals("Top"));
-            if (!bottom) bottom = transforms.First(val => val.gameObject.name.Equals("Bottom"));
-            if (!WireContainer) WireContainer = transforms.First(val => val.gameObject.name.Equals("WireContainer"));
+            top = ui.Top;
+            bottom = ui.Bottom;
+            WireContainer = ui.WireContainer;
+        }
+        
+        public override void StartMiniGame(Console con, Player ply)
+        {
+            base.StartMiniGame(con, ply);
+            
+            minigameUI = uiManager.ShowUI<MinigameUI>();
+            minigameUI.ShowMiniGame(Description);
+            wireConnectionUI = minigameUI.GetWireConnectionUI(); 
+            Initialize(uiManager.RootCanvas, wireConnectionUI); 
+            wireConnectionUI.Show();
+            enabled = true;
+        }
+
+        protected override void OnEnable()
+        {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); 
+            endgameCTS?.Cancel(); endgameCTS?.Dispose();
+            countdownCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.UiCTS.Token);
+            endgameCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.UiCTS.Token);
+            base.OnEnable();
         }
 
         protected override void Update()
@@ -59,32 +71,30 @@ namespace _1.Scripts.MiniGame.WireConnection
             if (!IsPlaying)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
-                {
+                { 
                     _ = StartCountdown_Async(); 
                     IsCounting = IsPlaying = true; 
                     return;
                 }
-                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(true);
                 return;
             }
             
             if (IsCounting) return;
+            float elapsed = Time.unscaledTime - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            minigameUI.UpdateTimeSlider(remaining);
+            
             if (!(Time.unscaledTime - startTime >= Duration)) return;
-            FinishGame(false, 0f);
+            FinishGame(false, IsCleared, 1.5f);
         }
         
         protected override void OnDisable()
         {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+            endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllConnections();
             ResetAllSockets();
-        }
-        
-        public override void StartMiniGame(Console con, Player ply)
-        {
-            base.StartMiniGame(con, ply);
-            
-            // Initialize MiniGame
-            enabled = true;
         }
 
         public override void CancelMiniGame()
@@ -92,19 +102,10 @@ namespace _1.Scripts.MiniGame.WireConnection
             base.CancelMiniGame();
             
             // Clear all remaining sockets and line renderers
-            foreach (var connection in connections)
-            {
-                sockets.Remove(connection.Item1.gameObject);
-                sockets.Remove(connection.Item2.gameObject);
-                Destroy(connection.Item1.gameObject); 
-                Destroy(connection.Item2.gameObject); 
-                Destroy(connection.Item3.gameObject);
-            }
-            connections.Clear();
-            foreach (var socket in sockets) Destroy(socket);
-            sockets.Clear();
+            ResetAllConnections();
+            ResetAllSockets();
             
-            FinishGame(false, 0f);
+            FinishGame(true);
         }
         
         private void CreateSockets()
@@ -139,8 +140,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             connections.Add((start, end, line));
             if (connections.Count < SocketCount) return;
-            IsCleared = true;
-            FinishGame(IsCleared, 1.5f);
+            FinishGame(false, IsCleared = true, 1.5f);
         }
 
         private void ResetAllConnections()
@@ -161,32 +161,42 @@ namespace _1.Scripts.MiniGame.WireConnection
         
         protected override async UniTask StartCountdown_Async()
         {
+            minigameUI.StartCountdownUI(Delay);
+            
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused)
                     t += Time.unscaledDeltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                minigameUI.SetCountdownText(Delay - t);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: countdownCTS.Token, cancelImmediately: true);
             }
+            
+            minigameUI.ShowCountdownText(false);
+            minigameUI.StartTimerUI(Duration);
             
             CreateSockets();
             IsCounting = false;
             startTime = Time.unscaledTime;
+            
+            countdownCTS.Dispose(); countdownCTS = null;
         }
         
-        protected override async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
-            if (success)
-            {
-                // TODO: Show Clear UI
-                Service.Log("Cleared MiniGame!");
-            } else Service.Log("Better Luck NextTime");
+            Service.Log(success ? "Cleared MiniGame!" : "Better Luck NextTime");
+            minigameUI.ShowEndResult(success);
+            wireConnectionUI.Hide();
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
+            minigameUI.Hide();
             
-            await UniTask.WaitForSeconds(duration, true);
+            if (cancel) console.OnFinished();
+            else console.OnCleared(success);
             
-            console.OnCleared(success);
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
+            endgameCTS.Dispose(); endgameCTS = null;
+            
             enabled = false;
         }
 

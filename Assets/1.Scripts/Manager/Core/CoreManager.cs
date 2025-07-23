@@ -37,6 +37,7 @@ namespace _1.Scripts.Manager.Core
         public CancellationTokenSource PlayerCTS { get; private set; } 
         public CancellationTokenSource NpcCTS { get; private set; }
         public CancellationTokenSource UiCTS { get; private set; }
+        public CancellationTokenSource MapCTS { get; private set; }
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -81,6 +82,7 @@ namespace _1.Scripts.Manager.Core
             PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
             NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
             
             uiManager.Start();
             gameManager.Start();
@@ -107,7 +109,16 @@ namespace _1.Scripts.Manager.Core
         {
             resourceManager.OnDestroy();
             mainCTS?.Cancel(); 
-            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); mainCTS?.Dispose();
+            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); MapCTS?.Dispose();
+            mainCTS?.Dispose();
+        }
+
+        public void CreateNewCTS()
+        {
+            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            UiCTS?.Cancel(); UiCTS?.Dispose(); UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS?.Cancel(); MapCTS?.Dispose(); MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
         }
 
         /// <summary>
@@ -161,9 +172,6 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void ReloadGame()
         {
-            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
-            
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
@@ -175,9 +183,6 @@ namespace _1.Scripts.Manager.Core
 
         public void MoveToNextScene(SceneType sceneType)
         {
-            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
-
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();
@@ -192,9 +197,6 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void MoveToIntroScene()
         {
-            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
-            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
-
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             questManager.Reset();
             spawnManager.Reset();

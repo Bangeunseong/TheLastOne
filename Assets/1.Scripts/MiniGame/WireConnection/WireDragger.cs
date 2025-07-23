@@ -32,6 +32,7 @@ namespace _1.Scripts.MiniGame.WireConnection
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            Service.Log($"{eventData.position}");
             if (!AttachedSocket || AttachedSocket.IsConnected)
                 return;
 
@@ -41,7 +42,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             wireImage.color = AttachedSocket.GetColor();
             
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                wireGameController.WireContainer, 
+                canvas.transform as RectTransform, 
                 RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, socketRectTransform.position),
                 eventData.pressEventCamera, out var pos);
 
@@ -53,7 +54,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             if (!wire) return;
             
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                wireGameController.WireContainer,
+                canvas.transform as RectTransform,
                 eventData.position, eventData.pressEventCamera,
                 out var pos);
             
@@ -96,7 +97,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                 Debug.Log("Connection Success!: " + AttachedSocket.Color);
 
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    wireGameController.WireContainer,
+                    canvas.transform as RectTransform,
                     RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, endSocket.transform.position),
                     eventData.pressEventCamera,
                     out var pos);

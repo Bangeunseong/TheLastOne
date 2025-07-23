@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Minigame;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Console = _1.Scripts.Map.Console.Console;
@@ -20,6 +23,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
         [field: SerializeField] public RectTransform ControlObj { get; private set; }
         
         [field: Header("Game Settings")]
+        [field: SerializeField] public string Description { get; private set; } = "CHARGE BARS";
         [field: Range(2, 5)][field: SerializeField] public int BarCount { get; private set; } = 3;
         [field: SerializeField] public float Duration { get; private set; } = 15f;
         [field: SerializeField] public float Delay { get; private set; } = 3f;
@@ -30,22 +34,38 @@ namespace _1.Scripts.MiniGame.ChargeBars
         
         private List<Bar> bars;
         private Vector2 direction = Vector2.right;
-
-        protected override void Reset()
-        {
-            if (!BarLayout) BarLayout = this.TryGetChildComponent<RectTransform>("BarLayout");
-            if (!ControlLayout) ControlLayout = this.TryGetChildComponent<RectTransform>("ControlLayout");
-            if (!TargetObj) TargetObj = this.TryGetChildComponent<RectTransform>("TargetObj");
-            if (!ControlObj) ControlObj = this.TryGetChildComponent<RectTransform>("ControlObj");
-        }
+        private ChargeBarUI chargeBarUI;
+        private MinigameUI minigameUI;
+        private CancellationTokenSource countdownCTS;
+        private CancellationTokenSource endgameCTS;
         
-        public void Initialize(RectTransform parent)
+        private void Initialize(ChargeBarUI ui)
         {
-            var transforms = parent.GetComponentsInChildren<RectTransform>();
-            if (!BarLayout) BarLayout = transforms.First(val => val.gameObject.name.Equals("BarLayout"));
-            if (!ControlLayout) ControlLayout = transforms.First(val => val.gameObject.name.Equals("ControlLayout"));
-            if (!TargetObj) TargetObj = transforms.First(val => val.gameObject.name.Equals("TargetObj"));
-            if (!ControlObj) ControlObj = transforms.First(val => val.gameObject.name.Equals("ControlObj"));
+            BarLayout = ui.BarLayout;
+            ControlLayout = ui.ControlLayout;
+            TargetObj = ui.TargetObj;
+            ControlObj = ui.ControlObj;
+        }
+
+        protected override void OnEnable()
+        {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose();
+            endgameCTS?.Cancel(); endgameCTS?.Dispose();
+            countdownCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.MapCTS.Token);
+            endgameCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.MapCTS.Token);
+            base.OnEnable();
+        }
+
+        public override void StartMiniGame(Console con, Player ply)
+        {
+            base.StartMiniGame(con, ply);
+            
+            // Initialize MiniGame
+            minigameUI = uiManager.ShowUI<MinigameUI>();
+            minigameUI.ShowMiniGame(Description);
+            chargeBarUI = minigameUI.GetChargeBarUI();
+            Initialize(chargeBarUI);
+            enabled = true;
         }
         
         protected override void Update()
@@ -60,7 +80,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
                     IsCounting = IsPlaying = true; 
                     return;
                 }
-                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(true);
                 return;
             }
             
@@ -78,32 +98,35 @@ namespace _1.Scripts.MiniGame.ChargeBars
                 bars[CurrentBarIndex].DecreaseValue(LossRate * Time.unscaledDeltaTime);
             MoveControlObj();
             
-            if (!(Time.time - startTime >= Duration)) return;
-            FinishGame(false, 0f);
-        }
-        
-        public override void StartMiniGame(Console con, Player ply)
-        {
-            base.StartMiniGame(con, ply);
+            float elapsed = Time.unscaledTime - startTime;
+            float remaining = Mathf.Max(0, Duration - elapsed);
+            minigameUI.UpdateTimeSlider(remaining);
             
-            // Initialize MiniGame
-            enabled = true;
+            if (!(Time.unscaledTime - startTime >= Duration)) return;
+            FinishGame(false, IsCleared, 1.5f);
         }
-        
+
+        protected override void OnDisable()
+        {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+            endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
+            ResetAllBars();
+        }
+
         public override void CancelMiniGame()
         {
             base.CancelMiniGame();
             
             // Clear all remaining bars
-            
-            FinishGame(false, 0f);
+            ResetAllBars();
+            FinishGame(true);
         }
 
         public void OnBarFilled()
         {
             CurrentBarIndex++;
             if (CurrentBarIndex < bars.Count) return;
-            FinishGame(true, 1.5f);
+            FinishGame(false, IsCleared = true, 1.5f);
         }
 
         private void CreateBars()
@@ -117,6 +140,13 @@ namespace _1.Scripts.MiniGame.ChargeBars
                 bar.Initialize(this);
                 bars.Add(bar);
             }
+        }
+
+        private void ResetAllBars()
+        {
+            foreach (var bar in bars) Destroy(bar.gameObject);
+            bars.Clear();
+            CurrentBarIndex = 0;
         }
 
         private void MoveControlObj()
@@ -164,33 +194,44 @@ namespace _1.Scripts.MiniGame.ChargeBars
         
         protected override async UniTask StartCountdown_Async()
         {
+            minigameUI.StartCountdownUI(Delay);
+            
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused) 
                     t += Time.unscaledDeltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                minigameUI.SetCountdownText(Delay - t);
+
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: countdownCTS.Token, cancelImmediately: true);
             }
+            chargeBarUI.Show();
+            minigameUI.ShowCountdownText(false);
+            minigameUI.StartTimerUI(Duration);
             
             CreateBars();
             RepositionTargetObj();
             IsCounting = false; 
             startTime = Time.unscaledTime;
+            
+            countdownCTS.Dispose(); countdownCTS = null;
         }
 
-        protected override async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
-            if (success)
-            {
-                // TODO: Show Clear UI
-                Service.Log("Cleared MiniGame!");
-            } else Service.Log("Better Luck NextTime");
+            Service.Log(success ? "Cleared MiniGame!" : "Better Luck NextTime");
+            minigameUI.ShowEndResult(success);
+            chargeBarUI.Hide();
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
+            minigameUI.Hide();
             
-            await UniTask.WaitForSeconds(duration, true);
+            if (cancel) console.OnFinished();
+            else console.OnCleared(success);
             
-            console.OnCleared(success);
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
+            endgameCTS.Dispose(); endgameCTS = null;
+            
             enabled = false;
         }
     }

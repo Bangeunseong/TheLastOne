@@ -37,6 +37,11 @@ namespace _1.Scripts.UI.Common
             if (playerCondition) playerCondition.OnDeath -= OnPlayerDeath;
         }
 
-        private void OnPlayerDeath() { Show(); }
+        private void OnPlayerDeath()
+        {
+            Show();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 }
