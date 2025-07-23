@@ -90,9 +90,9 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
 
-            uiManager.ShowUI<MinigameUI>()?.ShowMiniGame();
-            uiManager.GetUI<MinigameUI>()?.SetDescriptionText("PASSWORD");
-            alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
+            var ui = uiManager.ShowUI<MinigameUI>();
+            ui.ShowMiniGame("PASSWORD", IsLoop);
+            alphabetUI = ui.GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
             enabled = true;
         }
@@ -106,11 +106,11 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         private void ResetGame()
         {
             IsPlaying = IsCounting = false;
-            CurrentAlphabets = GetAlphabets();
-            uiManager.ShowUI<MinigameUI>().ShowPanel();
-            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
+            var ui = uiManager.GetUI<MinigameUI>();
+            ui.ShowPanel();
+            ui.ShowLoopText(IsLoop);
             if (IsLoop && LoopCount > 0) 
-                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                ui.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
             CurrentIndex = 0;
@@ -125,30 +125,26 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask StartCountdown_Async()
         {
-            uiManager.GetUI<MinigameUI>().ShowCountdownText(true);
-            uiManager.GetUI<MinigameUI>().SetCountdownText(Delay);
-            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
-            uiManager.GetUI<MinigameUI>().ShowEnterText(false);
-            uiManager.GetUI<MinigameUI>().ShowClearText(false);
-            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
-            uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
+            var ui = uiManager.GetUI<MinigameUI>();
+            ui.StartCountdownUI(Delay);
+            ui.ShowAlphabetMatching(true);
             
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                uiManager.GetUI<MinigameUI>().SetCountdownText(Delay - t);
+                ui.SetCountdownText(Delay - t);
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
             
-            uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
+            ui.ShowCountdownText(false);
             
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
-            uiManager.GetUI<MinigameUI>().ShowTimeSlider(true);
-            uiManager.GetUI<MinigameUI>().SetTimeSlider(Duration, Duration);
+            ui.StartTimerUI(Duration);
+
             if (IsLoop && LoopCount > 0)
-                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                ui.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             
             CurrentIndex = 0;
             IsCounting = false; 
@@ -157,16 +153,12 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask EndGame_Async(bool success, float duration)
         {
-            uiManager.GetUI<MinigameUI>().ShowClearText(true);
-            uiManager.GetUI<MinigameUI>().SetClearText(success, success ? "CLEAR!" : "FAIL");
+            var ui = uiManager.GetUI<MinigameUI>();
+            ui.ShowEndResult(success);
             
             alphabetUI.ShowAlphabet(false);
-            uiManager.GetUI<MinigameUI>().ShowTimeSlider(false);
-            uiManager.GetUI<MinigameUI>().ShowLoopText(false);
-            uiManager.GetUI<MinigameUI>().ShowDescriptionText(false);
             await UniTask.WaitForSeconds(duration, true);
             uiManager.HideUI<MinigameUI>();
-            uiManager.UnloadUI<MinigameUI>();
             alphabetUI = null;
             
             Cursor.lockState = CursorLockMode.Locked;

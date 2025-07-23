@@ -48,8 +48,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             base.StartMiniGame(con, ply);
             
             minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowMiniGame();
-            minigameUI.SetDescriptionText(Description);
+            minigameUI.ShowMiniGame(Description);
             wireConnectionUI = minigameUI.GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
@@ -162,12 +161,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         
         protected override async UniTask StartCountdown_Async()
         {
-            minigameUI.ShowCountdownText(true);
-            minigameUI.SetCountdownText(Delay);
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowEnterText(false);
-            minigameUI.ShowClearText(false);
-            minigameUI.ShowLoopText(false);
+            minigameUI.StartCountdownUI(Delay);
             
             var t = 0f;
             while (t < Delay)
@@ -179,8 +173,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             }
             
             minigameUI.ShowCountdownText(false);
-            minigameUI.ShowTimeSlider(true);
-            minigameUI.SetTimeSlider(Duration, Duration);
+            minigameUI.StartTimerUI(Duration);
             
             CreateSockets();
             IsCounting = false;
@@ -190,15 +183,10 @@ namespace _1.Scripts.MiniGame.WireConnection
         protected override async UniTask EndGame_Async(bool success, float duration)
         {
             Service.Log(success ? "Cleared MiniGame!" : "Better Luck NextTime");
-            minigameUI.ShowClearText(true);
-            minigameUI.SetClearText(success, success ? "CLEAR!" : "FAIL");
-            
-            minigameUI.ShowTimeSlider(false);
-            minigameUI.ShowDescriptionText(false);
+            minigameUI.ShowEndResult(success);
             wireConnectionUI.Hide();
 
             await UniTask.WaitForSeconds(duration, true);
-            
             minigameUI.Hide();
             
             console.OnCleared(success);
