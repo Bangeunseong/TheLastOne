@@ -90,7 +90,6 @@ namespace _1.Scripts.Manager.Subs
         {
             var ui = GetUI<T>() ?? LoadUI<T>();
             ui.Show();
-            InjectHandler(ui);
             return ui;
         }
         public void ShowUIGroup(UIType group)
@@ -114,7 +113,10 @@ namespace _1.Scripts.Manager.Subs
         public T LoadUI<T>() where T : UIBase
         {
             if (uiMap.TryGetValue(typeof(T), out var existingUI))
+            {
+                InjectHandler(existingUI);
                 return existingUI as T;
+            }
             
             string address = typeof(T).Name;
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
@@ -122,6 +124,7 @@ namespace _1.Scripts.Manager.Subs
             var instance = Object.Instantiate(prefab, uiRoot, false);
             if (!instance.TryGetComponent(out T component)) return null;
             component.Init(this);
+            InjectHandler(component);
             uiMap[typeof(T)] = component;
             Service.Log($"UI {typeof(T).Name} Registered");
             return component;

@@ -32,9 +32,21 @@ namespace _1.Scripts.UI.Common
         private void Awake()
         {
             pauseHandler = FindObjectOfType<PauseHandler>();
-            resumeButton.onClick.AddListener(() => pauseHandler.ClosePausePanel());
-            reloadButton.onClick.AddListener(() => CoreManager.Instance.ReloadGame());
-            quitButton.onClick.AddListener(() => { CoreManager.Instance.MoveToIntroScene(); });
+            resumeButton.onClick.AddListener(() =>
+            {
+                pauseHandler.TogglePause();
+                pauseHandler.ClosePausePanel();
+            });
+            reloadButton.onClick.AddListener(() =>
+            {
+                pauseHandler.TogglePause();
+                CoreManager.Instance.ReloadGame();
+            });
+            quitButton.onClick.AddListener(() => 
+            { 
+                pauseHandler.TogglePause();
+                CoreManager.Instance.MoveToIntroScene(); 
+            });
             Hide();
         }
     }
