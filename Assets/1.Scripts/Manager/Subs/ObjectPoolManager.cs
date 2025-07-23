@@ -203,10 +203,17 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="sceneName"></param>
         public async Task CreatePoolsFromResourceBySceneLabelAsync(string sceneName)
         {
-            var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs); 
-            if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
+            if (Enum.TryParse(sceneName, out SceneType sceneType))
             {
-                await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
+                if (sceneType != SceneType.IntroScene)
+                {
+                    var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs);
+                    if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
+                    {
+                        await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
+                        coreManager.sceneLoadManager.LoadingProgress += 0.2f;
+                    }
+                }
             }
 
             if (!scenePrefabMap.TryGetValue(sceneName, out HashSet<string> prefabsToLoad))
@@ -234,7 +241,7 @@ namespace _1.Scripts.Manager.Subs
                 GameObject prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
                 if (!prefab)
                 {
-                    Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
+                    // Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
                     continue;
                 }
 

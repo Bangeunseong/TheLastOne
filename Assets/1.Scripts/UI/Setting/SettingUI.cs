@@ -47,8 +47,7 @@ namespace _1.Scripts.UI.Setting
             LoadSettings();
             AddListeners();
         }
-
-
+        
         /*private void InitLanguageOptions()
         {
             if (languageSelector == null) return;

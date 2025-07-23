@@ -51,7 +51,6 @@ namespace _1.Scripts.UI.InGame.Quest
                 var go = Instantiate(objectiveSlotPrefab, objectiveSlotContainer);
                 var slot = go.GetComponent<ObjectiveSlot>();
                 slot.Initialize(obj);
-                go.transform.localScale = new Vector3(1, 0, 1);
                 objectiveSlots.Add(slot);
             }
         }
@@ -110,7 +109,7 @@ namespace _1.Scripts.UI.InGame.Quest
             float time = 0f;
             while (time < duration)
             {
-                time += Time.deltaTime;
+                time += Time.unscaledDeltaTime;
                 float t = time / duration;
                 float newHeight = Mathf.Lerp(start, target, t);
                 panelRect.sizeDelta = new Vector2(panelRect.sizeDelta.x, newHeight);

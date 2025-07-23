@@ -26,19 +26,16 @@ namespace _1.Scripts.UI.Lobby
 
         public override void Show()
         {
-            Service.Log("Lobby UI Show");
             panel.SetActive(true);
         }
         
         public override void Hide()
         {
-            Service.Log("Lobby UI Hide");
             panel.SetActive(false);
         }
 
         private void OnStartButtonClicked()
         {
-            Debug.Log("Start Button Clicked");
             CoreManager.Instance.StartGame();
             Hide();
         }
@@ -50,6 +47,9 @@ namespace _1.Scripts.UI.Lobby
 
         private void OnQuitButtonClicked()
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
             Application.Quit();
         }
     }
