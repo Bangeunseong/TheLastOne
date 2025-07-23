@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
@@ -12,8 +13,11 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using JetBrains.Annotations;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -166,13 +170,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 MaxStamina = data.characterInfo.maxStamina; CurrentStamina = data.characterInfo.stamina;
                 MaxShield = data.characterInfo.maxShield; CurrentShield = data.characterInfo.shield;
                 AttackRate = data.characterInfo.attackRate; Damage = data.characterInfo.damage;
-                LastSavedPosition = data.currentCharacterPosition.ToVector3();
-                LastSavedRotation = data.currentCharacterRotation.ToQuaternion();
                 CurrentFocusGauge = data.characterInfo.focusGauge;
                 CurrentInstinctGauge = data.characterInfo.instinctGauge;
-                
-                Service.Log(LastSavedPosition + "," +  LastSavedRotation);
-                transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+
+                if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
+                {
+                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
+                    LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
+                    LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
+                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                }
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
                     AvailableWeapons[i] = data.AvailableWeapons[i];
@@ -370,14 +377,38 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             IsDead = true;
             IsPlayerHasControl = false;
+            ArmPivot.SetActive(false);
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
             player.PlayerInput.enabled = false;
             
+            FallCamera();
             OnDeath?.Invoke();
         }
 
+        private void FallCamera()
+        {
+            Sequence seq = DOTween.Sequence();
+            Transform cam = player.FirstPersonCamera.transform;
+            
+            var hardLock = player.FirstPersonCamera.GetCinemachineComponent<CinemachineHardLockToTarget>();
+            if (hardLock != null) Destroy(hardLock);
+            
+            cam.rotation = player.transform.rotation;
+            
+            seq.Append(
+                cam.DOLocalRotate(new Vector3(0f, 0f, 90f), 0.5f)
+                    .SetEase(Ease.InCubic)
+            );
+            seq.Join(
+                cam.DOLocalMove(cam.localPosition + new Vector3(0f, 0f, 2f), 0.5f)
+                    .SetEase(Ease.OutSine)
+            );
+
+            seq.Append(cam.DOShakeRotation(0.25f, 10f, 20, 90f, true));
+        }
+     
         public void OnReset()
         {
             IsDead = false;

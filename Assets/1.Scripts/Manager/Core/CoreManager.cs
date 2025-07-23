@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Core
@@ -136,7 +138,7 @@ namespace _1.Scripts.Manager.Core
             while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
             await sceneLoadManager.OpenScene(sceneType);
         }
-
+        
         /// <summary>
         /// Load User Data
         /// </summary>
@@ -180,7 +182,7 @@ namespace _1.Scripts.Manager.Core
             gameManager.ExitGame();
             _ = LoadDataAndScene();
         }
-
+        
         public void MoveToNextScene(SceneType sceneType)
         {
             spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
@@ -189,7 +191,8 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Reset();
             uiManager.ResetUI();
             gameManager.ExitGame();
-            _ = LoadScene(sceneType);
+
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(sceneType));
         }
         
         /// <summary>
@@ -203,9 +206,17 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Reset();
             uiManager.ResetUI();
             gameManager.ExitGame();
-            _ = LoadScene(SceneType.IntroScene);
+            
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(SceneType.IntroScene));
         }
 
+        private IEnumerator FadeOutAndLoadSceneCoroutine(SceneType sceneType)
+        {
+            uiManager.ShowUI<FadeUI>().FadeOut();
+            yield return new WaitForSecondsRealtime(1.5f);
+            _ = LoadScene(sceneType);
+        }
+        
         /* - Extensions for Sub Managers - */
         public T GetComponentOfTarget<T>(GameObject target) where T : Component
         {
