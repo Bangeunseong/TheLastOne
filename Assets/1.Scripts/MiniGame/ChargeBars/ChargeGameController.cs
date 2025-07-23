@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -35,6 +36,8 @@ namespace _1.Scripts.MiniGame.ChargeBars
         private Vector2 direction = Vector2.right;
         private ChargeBarUI chargeBarUI;
         private MinigameUI minigameUI;
+        private CancellationTokenSource countdownCTS;
+        private CancellationTokenSource endgameCTS;
         
         private void Initialize(ChargeBarUI ui)
         {
@@ -43,7 +46,16 @@ namespace _1.Scripts.MiniGame.ChargeBars
             TargetObj = ui.TargetObj;
             ControlObj = ui.ControlObj;
         }
-        
+
+        protected override void OnEnable()
+        {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose();
+            endgameCTS?.Cancel(); endgameCTS?.Dispose();
+            countdownCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.MapCTS.Token);
+            endgameCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.MapCTS.Token);
+            base.OnEnable();
+        }
+
         public override void StartMiniGame(Console con, Player ply)
         {
             base.StartMiniGame(con, ply);
@@ -69,7 +81,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
                     IsCounting = IsPlaying = true; 
                     return;
                 }
-                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(false, 0f);
+                if (Input.GetKeyDown(KeyCode.Z)) FinishGame(true);
                 return;
             }
             
@@ -91,12 +103,14 @@ namespace _1.Scripts.MiniGame.ChargeBars
             float remaining = Mathf.Max(0, Duration - elapsed);
             minigameUI.UpdateTimeSlider(remaining);
             
-            if (!(Time.time - startTime >= Duration)) return;
-            FinishGame(false, 0f);
+            if (!(Time.unscaledTime - startTime >= Duration)) return;
+            FinishGame(false, IsCleared, 1.5f);
         }
 
         protected override void OnDisable()
         {
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+            endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllBars();
         }
 
@@ -106,14 +120,14 @@ namespace _1.Scripts.MiniGame.ChargeBars
             
             // Clear all remaining bars
             ResetAllBars();
-            FinishGame(false, 0f);
+            FinishGame(true);
         }
 
         public void OnBarFilled()
         {
             CurrentBarIndex++;
             if (CurrentBarIndex < bars.Count) return;
-            FinishGame(true, 1.5f);
+            FinishGame(false, IsCleared = true, 1.5f);
         }
 
         private void CreateBars()
@@ -133,6 +147,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
         {
             foreach (var bar in bars) Destroy(bar.gameObject);
             bars.Clear();
+            CurrentBarIndex = 0;
         }
 
         private void MoveControlObj()
@@ -194,7 +209,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
                     t += Time.unscaledDeltaTime;
                 minigameUI.SetCountdownText(Delay - t);
 
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: countdownCTS.Token, cancelImmediately: true);
             }
             chargeBarUI.Show();
             minigameUI.ShowCountdownText(false);
@@ -205,9 +220,11 @@ namespace _1.Scripts.MiniGame.ChargeBars
             RepositionTargetObj();
             IsCounting = false; 
             startTime = Time.unscaledTime;
+            
+            countdownCTS.Dispose(); countdownCTS = null;
         }
 
-        protected override async UniTask EndGame_Async(bool success, float duration)
+        protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
             Service.Log(success ? "Cleared MiniGame!" : "Better Luck NextTime");
             minigameUI.ShowClearText(true);
@@ -216,12 +233,16 @@ namespace _1.Scripts.MiniGame.ChargeBars
             minigameUI.ShowTimeSlider(false);
             minigameUI.ShowDescriptionText(false);
             chargeBarUI.Hide();
-            await UniTask.WaitForSeconds(duration, true);
+            await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             minigameUI.Hide();
             
-            console.OnCleared(success);
+            if (cancel) console.OnFinished();
+            else console.OnCleared(success);
+            
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
+            endgameCTS.Dispose(); endgameCTS = null;
+            
             enabled = false;
         }
     }
