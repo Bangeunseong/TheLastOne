@@ -92,7 +92,7 @@ namespace _1.Scripts.Manager.Subs
             {
                 await Task.Yield();
             }
-
+            
             LoadingProgress = 0f;
             uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             
@@ -140,6 +140,7 @@ namespace _1.Scripts.Manager.Subs
             isKeyPressed = false;
             
             sceneLoad!.allowSceneActivation = true;
+            
             while (sceneLoad is { isDone: false }) 
             {
                 await Task.Yield();
@@ -164,13 +165,14 @@ namespace _1.Scripts.Manager.Subs
                     uiManager.ShowUI<LobbyUI>();
                     break;
                 case SceneType.Loading:
-                case SceneType.EndingScene: break;
+                case SceneType.EndingScene: 
+                    break;
             }
 
-            // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             coreManager.spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
             coreManager.CreateNewCTS();
             
+            // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             

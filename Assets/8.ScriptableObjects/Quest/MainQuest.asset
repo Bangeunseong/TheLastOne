@@ -20,27 +20,67 @@ MonoBehaviour:
     description: Collect Pistol and Rifle
     type: 2
     requiredAmount: 2
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 5
     description: Collect Items on the Table
     type: 2
     requiredAmount: 4
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 6
     description: Hack Single Drone
     type: 3
     requiredAmount: 1
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 0
     description: Hack the Sub Console to open the Lab
     type: 0
     requiredAmount: 1
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 1
     description: Hack the Sub Console to open the Maintenence
     type: 0
     requiredAmount: 1
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 2
     description: Hack the Main Console
     type: 0
     requiredAmount: 1
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
   - targetID: 3
     description: Kill all remaining drones
     type: 1
     requiredAmount: 6
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls: []
+  - targetID: 100
+    description: Exit To Main Door
+    type: 4
+    requiredAmount: 1
+    onCompletedAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11500000, guid: d931a4bb8a5c8514bb44131ce6ba6cca, type: 3}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: 
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
