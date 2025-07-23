@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
@@ -16,15 +17,19 @@ using _1.Scripts.Util;
 using _1.Scripts.UI.InGame;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
     public enum EnemyType
     {
         ReconDrone,
+        SuicideDrone,
+        ReconDroneNotHackable,
+        SuicideDroneNotHackable,
         BattleRoomReconDrone,
-        SuicideDrone
     }
     
     /// <summary>
@@ -43,48 +48,100 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Components")]
         protected Animator animator;
         protected BehaviorTree behaviorTree;
-
+        protected NavMeshAgent agent;
+        private Collider[] colliders;
+        private Light[] lights;
+        
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
-        private CancellationTokenSource stunToken;
         [SerializeField] protected ParticleSystem onStunParticle;
         
-        [Header("Hacking")]
+        [Header("Hacking_Process")]
         public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
+        [SerializeField] private bool useSelfDefinedChance = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
         [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private HackingProgressUI hackingProgressUI;
+        private Dictionary<Transform, int> originalLayers = new();
         
-        protected abstract void PlayHitAnimation();
-        protected abstract void PlayDeathAnimation();
-
-        protected abstract void HackingFailurePenalty();
-
+        [Header("Hacking_Quest")] // 해킹 성공 시 올려야할 퀘스트 진행도들 
+        [SerializeField] private bool shouldCountHackingQuest;
+        [SerializeField] private int[] hackingQuestIndex;
+        
+        [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
+        [SerializeField] private bool shouldCountKillQuest;
+        [SerializeField] private int[] killQuestIndex;
+        
+        // 이 스크립트에서 사용하는 토큰들
+        private CancellationTokenSource hackCts;
+        private CancellationTokenSource stunCts;
         
         protected virtual void Awake()
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
-            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
+            agent = GetComponent<NavMeshAgent>();
+            lights = GetComponentsInChildren<Light>();
+            colliders = GetComponentsInChildren<Collider>();
             IsDead = false;
+            
+            CacheOriginalLayers(this.transform);
         }
+        
+        /// <summary>
+        /// 풀링 사용하므로 반드시 반환될때마다 초기화 해야함
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            IsDead = false;
+            isHacking = false;
+            isStunned = false;
+            agent.enabled = false;
+            
+            if (onStunParticle != null && onStunParticle.IsAlive())
+            {
+                onStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+
+            ResetLayersToOriginal();
+            DisposeAllUniTasks();
+        }
+
+        protected virtual void OnEnable()
+        { 
+            if (CoreManager.Instance.spawnManager.IsVisible) 
+                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy);
+            foreach (Collider coll in colliders) { coll.enabled = true; }
+        }
+
+        protected abstract void PlayHitAnimation();
+        protected abstract void PlayDeathAnimation();
+        protected abstract void HackingFailurePenalty();
 
         public virtual void OnTakeDamage(int damage)
         {
             if (IsDead) return;
-
+            
             float armorRatio = RuntimeStatData.Armor / RuntimeStatData.MaxArmor;
             float reducePercent = Mathf.Clamp01(armorRatio);
             damage = (int)(damage * (1f - reducePercent));
 
             RuntimeStatData.MaxHealth -= damage;
 
-            if (RuntimeStatData.MaxHealth <= 0)
+            if (RuntimeStatData.MaxHealth <= 0) // 사망
             {
+                if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
+                {
+                    foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
+                }
+
+                foreach (Light objlight in lights) { objlight.enabled = false; }
+                foreach (Collider coll in colliders) { coll.enabled = false; }
+                
                 behaviorTree.SetVariableValue("IsDead", true);
                 PlayDeathAnimation();
                 IsDead = true;
@@ -96,7 +153,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         }
         
         #region 상호작용
-        public void Hacking()
+        public void Hacking(float chance)
         {
             if (IsDead || !CanBeHacked || isHacking || RuntimeStatData.IsAlly) return;
 
@@ -113,40 +170,54 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 return;
             }
 
-            _ = HackingProcessAsync();
+            float finalChance = useSelfDefinedChance ? successChance : chance;
+            
+            hackCts?.Cancel();
+            hackCts?.Dispose();
+            hackCts = NpcUtil.CreateLinkedNpcToken();
+            _ = HackingProcessAsync(finalChance, hackCts.Token);
         }
 
-        private async UniTaskVoid HackingProcessAsync()
+        private async UniTaskVoid HackingProcessAsync(float chance, CancellationToken token)
         {
-            isHacking = true;
-            
-            // 1. 드론 멈추기
-            float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
-            OnStunned(stunDurationOnHacking);
-
-            // 2. 해킹 시도 시간 기다림
-            float time = 0f;
-            while (time < hackingDuration)
+            try
             {
-                time += Time.deltaTime;
-                hackingProgressUI.SetProgress(time / hackingDuration);
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                isHacking = true;
+
+                // 1. 드론 멈추기
+                float stunDurationOnHacking = hackingDuration + 1f; // 스턴 중 해킹결과가 영향 끼치지 않게 더 길게 설정
+                OnStunned(stunDurationOnHacking);
+
+                // 2. 해킹 시도 시간 기다림
+                float time = 0f;
+                while (time < hackingDuration)
+                {
+                    time += Time.deltaTime;
+                    hackingProgressUI.SetProgress(time / hackingDuration);
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                }
+
+                // 3. 확률 판정
+                bool success = UnityEngine.Random.value < chance;
+
+                if (success)
+                {
+                    HackingSuccess();
+                }
+                else
+                {
+                    hackingProgressUI.OnFail();
+                    HackingFailurePenalty();
+                }
             }
-
-            // 3. 확률 판정
-            bool success = UnityEngine.Random.value < successChance;
-
-            if (success)
+            catch (Exception ex)
             {
-                HackingSuccess();
+                hackingProgressUI.OnCanceled();
             }
-            else
+            finally
             {
-                hackingProgressUI.OnFail();
-                HackingFailurePenalty();
+                isHacking = false;
             }
-
-            isHacking = false;
         }
         
         private void HackingSuccess()
@@ -163,9 +234,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
             }
 
-            if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage1)
-            { 
-                GameEventSystem.Instance.RaiseEvent(6); // 해킹 퀘스트 성공
+            if (shouldCountHackingQuest)
+            {
+                foreach (int index in hackingQuestIndex) {GameEventSystem.Instance.RaiseEvent(index);}
             }
             
             CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);
@@ -176,10 +247,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             if (IsDead) return;
             
-            stunToken?.Cancel();
-            stunToken?.Dispose();
-            stunToken = new CancellationTokenSource();
-            _ = OnStunnedAsync(duration, stunToken.Token);
+            stunCts?.Cancel();
+            stunCts?.Dispose();
+            stunCts = NpcUtil.CreateLinkedNpcToken();
+            _ = OnStunnedAsync(duration, stunCts.Token);
         }
         
         private async UniTaskVoid OnStunnedAsync(float duration, CancellationToken token)
@@ -187,10 +258,10 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             isStunned = true;
             behaviorTree.SetVariableValue("CanRun", false);
             ResetAIState();
-            
-            onStunParticle.Play();
-            await UniTask.WaitForSeconds(duration, cancellationToken:token); // 원하는 시간만큼 유지
 
+            onStunParticle.Play();
+            await UniTask.WaitForSeconds(duration, cancellationToken: token); // 원하는 시간만큼 유지
+            
             if (onStunParticle != null && onStunParticle.IsAlive())
             {
                 onStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -256,6 +327,47 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         public void Dead()
         {
             IsDead = true;
+        }
+        
+        /// <summary>
+        /// 첫 레이어 상태들을 재귀적으로 저장
+        /// </summary>
+        /// <param name="parent"></param>
+        private void CacheOriginalLayers(Transform parent = null)
+        {
+            if (parent == null) parent = transform;
+            
+            if (!originalLayers.ContainsKey(parent))
+            {
+                originalLayers.Add(parent, parent.gameObject.layer);
+            }
+
+            foreach (Transform child in parent)
+            {
+                CacheOriginalLayers(child);
+            }
+        }
+        
+        /// <summary>
+        /// OnEnable 시 레이어 기본으로 되돌림
+        /// </summary>
+        private void ResetLayersToOriginal()
+        {
+            foreach (var kvp in originalLayers)
+            {
+                if (kvp.Key != null) // 혹시 파괴된 오브젝트가 있을 수 있으니 체크
+                {
+                    kvp.Key.gameObject.layer = kvp.Value;
+                }
+            }
+        }
+
+        public void DisposeAllUniTasks()
+        {
+            hackCts?.Dispose();
+            hackCts = null;
+            stunCts?.Dispose();
+            stunCts = null;
         }
     }
 }

@@ -5,6 +5,7 @@ using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         // Fields
         private float timeSinceLastShotFired;
         private CoreManager coreManager;
+        public bool IsAlreadyPlayedEmpty;
         
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
@@ -96,7 +98,15 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
         public override bool OnShoot()
         {
-            if (!IsReady) return false;
+            if (!IsReady)
+            {
+                if (!IsEmpty || IsAlreadyPlayedEmpty) return false;
+                IsAlreadyPlayedEmpty = true;
+                CoreManager.Instance.soundManager.PlaySFX(
+                    GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolEmpty : SfxType.RifleEmpty, BulletSpawnPoint.position);
+                return false;
+            }
+            
             if (!IsRayCastGun)
             {
                 var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
@@ -148,6 +158,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
+            
+            if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
             if (GunData.GunStat.Type != WeaponType.Pistol) return true;
             if (player) player.PlayerCondition.IsAttacking = false;
             return true;
@@ -172,6 +184,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         {
             if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
             return true;
         }
 

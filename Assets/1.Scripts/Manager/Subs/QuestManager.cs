@@ -45,7 +45,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     var val = new Quest { data = coreManager.resourceManager.GetAsset<QuestData>(quest.Key == 0 ? "MainQuest" : $"SubQuest_{quest.Key}") };
                     val.Initialize();
-                    val.ResumeQuest(dto.Quests[quest.Key].currentObjectiveIndex, dto.Quests[quest.Key], consoles);
+                    val.ResumeQuest(dto.Quests[quest.Key], consoles);
                     activeQuests.TryAdd(val.data.questID, val);
                 }
             }
@@ -58,11 +58,13 @@ namespace _1.Scripts.Manager.Subs
         {
             activeQuests.Clear();
         }
-        
-        public void Update()
+
+        public void UpdateProgress(int questId, int objectiveId)
         {
-            foreach (var quest in activeQuests)
-                quest.Value.UpdateProgress();
+            if (!activeQuests.TryGetValue(questId, out var quest)) return;
+            if (quest.isCompleted) return;
+            
+            quest.UpdateObjectiveProgress(objectiveId);
         }
     }
 }

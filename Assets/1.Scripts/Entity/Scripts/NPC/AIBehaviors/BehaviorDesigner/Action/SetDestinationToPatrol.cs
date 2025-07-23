@@ -22,7 +22,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 		public override void OnStart()
 		{
-			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed;
+			agent.Value.speed = statController.Value.RuntimeStatData.IsAlly
+				? statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier
+				: statController.Value.RuntimeStatData.MoveSpeed;
 			agent.Value.isStopped = false;
 			enemyLight.Value.enabled = false;
 			allyLight.Value.enabled = false;

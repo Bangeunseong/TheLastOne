@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,21 +10,47 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
+using RaycastPro;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 {
     public abstract class BaseDroneStatController : BaseNpcStatController
     {
+        [Header("hackingFailPenalty")]
         [SerializeField] protected int hackingFailAttackIncrease = 3;
         [SerializeField] protected float hackingFailArmorIncrease = 3f;
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
         private CancellationTokenSource penaltyToken;
         
+        private Dictionary<Transform, (Vector3 localPos, Quaternion localRot)> originalTransforms = new();
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
+            
+            if (originalTransforms.Count == 0) CacheOriginalTransforms();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            ResetTransformsToOriginal();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.Rebind();
+            animator.Update(0f);
+        }
+
         protected override void PlayDeathAnimation()
         {
             int[] deathHashes =
@@ -83,6 +110,33 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
                 !stateInfo.IsName("DroneBot_Idle1"))
             {
                 animator.SetTrigger(DroneAnimationHashData.Idle1);
+            }
+        }
+        
+        private void CacheOriginalTransforms(Transform parent = null)
+        {
+            if (parent == null) parent = this.transform;
+            
+            if (!originalTransforms.ContainsKey(parent))
+            {
+                originalTransforms.Add(parent, (parent.localPosition, parent.localRotation));
+            }
+
+            foreach (Transform child in parent)
+            {
+                CacheOriginalTransforms(child);
+            }
+        }
+
+        private void ResetTransformsToOriginal()
+        {
+            foreach (var kvp in originalTransforms)
+            {
+                if (kvp.Key != null)
+                {
+                    kvp.Key.localPosition = kvp.Value.localPos;
+                    kvp.Key.localRotation = kvp.Value.localRot;
+                }
             }
         }
     }

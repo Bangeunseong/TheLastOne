@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
 using UnityEngine;
 
@@ -66,6 +68,25 @@ namespace _1.Scripts.Util
             {
                 SetLayerRecursively(child.gameObject, layer);
             }
+        }
+
+        /// <summary>
+        /// Npc를 씬에서 사라지게 할 때 사용
+        /// </summary>
+        /// <param name="targetObj"></param>
+        public static void DisableNpc(GameObject targetObj)
+        {
+            CoreManager.Instance.spawnManager.RemoveMeFromSpawnedEnemies(targetObj);
+            CoreManager.Instance.objectPoolManager.Release(targetObj);
+        }
+        
+        /// <summary>
+        /// NpcCTS 토큰과 연결되는 토큰 생성
+        /// </summary>
+        /// <returns></returns>
+        public static CancellationTokenSource CreateLinkedNpcToken()
+        {
+            return CancellationTokenSource.CreateLinkedTokenSource(CoreManager.Instance.NpcCTS.Token);
         }
     }
 }

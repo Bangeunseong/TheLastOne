@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
+using _1.Scripts.MiniGame.WireConnection;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEditor;
@@ -94,7 +95,7 @@ namespace _6.Debug
                 data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.GrenadeLauncher, glSpawnPoints.ToArray());
-                data.SetSpawnPoints(WeaponType.Crossbow, crossbowSpawnPoints.ToArray());
+                data.SetSpawnPoints(WeaponType.HackGun, crossbowSpawnPoints.ToArray());
                 
                 foreach (var ((index, type), list) in enemyDict)
                 {

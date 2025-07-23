@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -16,8 +17,19 @@ namespace _1.Scripts.UI.InGame
 
         private void Awake()
         {
-            camera = Camera.main.transform;
             gameObject.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            animator.Rebind();
+            animator.Update(0);
+        }
+
+        private void Start()
+        {
+            var cam = Camera.main;
+            if (cam) camera = cam.transform;
         }
 
         private void LateUpdate()
@@ -62,12 +74,6 @@ namespace _1.Scripts.UI.InGame
             yield return new WaitForSeconds(delay);
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
-
-        private void OnDisable()
-        {
-            animator.Rebind();
-            animator.Update(0);
-        }
         
         private void ResetUI()
         {
@@ -76,6 +82,12 @@ namespace _1.Scripts.UI.InGame
             animator.ResetTrigger("Fail");
             animator.ResetTrigger("Show");
             animator.Update(0);
+        }
+
+        public void OnCanceled()
+        {
+            ResetUI();
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
     }
 }

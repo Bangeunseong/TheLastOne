@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
@@ -21,6 +22,9 @@ namespace _1.Scripts.Manager.Subs
         private HashSet<GameObject> spawnedWeapons = new();
         private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
+        
+        [field: Header("Visibility")]
+        [field: SerializeField] public bool IsVisible { get; private set; }
 
         public void Start()
         {
@@ -51,7 +55,7 @@ namespace _1.Scripts.Manager.Subs
                         enemy.transform.position = val.position;
                         enemy.transform.rotation = val.rotation;
                         
-                        if (enemy.TryGetComponent(out NavMeshAgent agent))
+                        if (enemy.TryGetComponent(out NavMeshAgent agent)) // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
                         {
                             agent.enabled = true;
                         }
@@ -94,11 +98,18 @@ namespace _1.Scripts.Manager.Subs
             spawnedItems.Remove(obj);
         }
 
+        public void ChangeStencilLayer(bool isOn)
+        {
+            IsVisible = isOn;
+            ChangeStencilLayerAllNpc(isOn);
+            ChangeLayerOfWeaponsAndItems(isOn);
+        }
+
         /// <summary>
         /// true일 시 스텐실레이어 활성화, false일 시 해제
         /// </summary>
         /// <param name="isOn"></param>
-        public void ChangeStencilLayerAllNpc(bool isOn)
+        private void ChangeStencilLayerAllNpc(bool isOn)
         {
             foreach (GameObject obj in spawnedEnemies)
             {
@@ -111,7 +122,7 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        public void ChangeLayerOfWeaponsAndItems(bool isTransparent)
+        private void ChangeLayerOfWeaponsAndItems(bool isTransparent)
         {
             foreach (var obj in spawnedWeapons)
             {
@@ -123,6 +134,16 @@ namespace _1.Scripts.Manager.Subs
             {
                 if (!obj.TryGetComponent(out DummyItem item)) continue;
                 item.ChangeLayerOfBody(isTransparent);
+            }
+        }
+
+        public void DisposeAllUniTasksFromSpawnedEnemies()
+        {
+            coreManager.NpcCTS?.Cancel();
+            foreach (var obj in spawnedEnemies)
+            {
+                if (!obj.TryGetComponent(out BaseNpcStatController statController)) continue;
+                statController.DisposeAllUniTasks();
             }
         }
         
@@ -144,6 +165,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void Reset()
         {
+            ChangeStencilLayer(false);
             ClearAllSpawnedEnemies();
             ClearAllProps();
             CurrentSpawnData = null;

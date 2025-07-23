@@ -20,8 +20,7 @@ MonoBehaviour:
   - m_GUID: e7350b1515d0e2d418e77380a02475c8
     m_Address: LobbyBGM
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - IntroScene
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfc5803fa8fa8924bbeaa34f4f689bb1
     m_Address: Click
@@ -181,6 +180,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 92eb825a158d55a46bb2fe8d07054c22
     m_Address: Assets/3.Artworks/Sounds/Sci-Fi Mechanical Doors SFX/Doors/DoorClose.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e3826e0c6f7a7146882326f4450134a
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/silenced-gunshot-81063.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff1f80a0c12886d4d80ba2d83496c792
+    m_Address: Assets/3.Artworks/Models/Hands_Weapons_Animations_Pack_Update/Sounds/4Grenade_Set/grenade-explosion-14-190266.mp3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

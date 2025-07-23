@@ -32,13 +32,14 @@ namespace _1.Scripts.UI.InGame.Mission
             else { if(Instance != this) Destroy(gameObject); }
         }
         
-        public void SetCurrentTarget(int targetId)
+        public void SetCurrentTarget(int questId)
         {
-            var binding = bindings.Find(x => x.questID == targetId);
-            if (binding == null) 
-                return;
+            var distanceUI = CoreManager.Instance.uiManager.GetUI<DistanceUI>();
             
-            CoreManager.Instance.uiManager.InGameUI.DistanceUI.SetTarget(binding.target);
+            var target = bindings.FirstOrDefault(x => x.questID == questId)?.target;
+            if (!target) return;
+
+            distanceUI?.SetTarget(target);
         }
     }
 }

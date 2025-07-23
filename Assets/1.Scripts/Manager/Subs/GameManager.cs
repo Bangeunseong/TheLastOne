@@ -86,7 +86,7 @@ namespace _1.Scripts.Manager.Subs
 
                         });
                         break;
-                    case Crossbow hackingGun:
+                    case HackGun hackingGun:
                         newWeaponInfo.Add(new WeaponInfo
                         {
                             currentAmmoCount = hackingGun.CurrentAmmoCount,
@@ -109,8 +109,8 @@ namespace _1.Scripts.Manager.Subs
                 save.Quests[quest.Key] = new QuestInfo
                 {
                     currentObjectiveIndex = quest.Value.currentObjectiveIndex,
-                    progresses = quest.Value.Objectives.Select(val => val.currentAmount).ToList(),
-                    completionList = quest.Value.Objectives.Select(val => val.IsCompleted).ToList()
+                    progresses = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.currentAmount),
+                    completionList = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted),
                 };
             }
             
@@ -132,6 +132,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Directory.Exists(SaveDirectoryPath)) return;
             File.Delete(SaveDirectoryPath + SaveFileName);
+            SaveData = null;
         }
         
         public void PauseGame()
@@ -158,14 +159,14 @@ namespace _1.Scripts.Manager.Subs
             
             if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
             else coreManager.timeScaleManager.ChangeTimeScale(1);
-            
+
             if (Player.PlayerCondition.IsPlayerHasControl)
             {
+                Player.PlayerInput.enabled = true;
                 Player.InputProvider.enabled = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            Player.PlayerInput.enabled = true;
         }
 
         public void ExitGame()

@@ -8,12 +8,12 @@ namespace _1.Scripts.Quests.Core
         private static GameEventSystem instance;
         public static GameEventSystem Instance => instance ??= FindObjectOfType<GameEventSystem>();
 
-        private List<IGameEventListener> listeners = new();
+        private LinkedList<IGameEventListener> listeners = new();
 
         public void RegisterListener(IGameEventListener listener)
         {
             if (!listeners.Contains(listener))
-                listeners.Add(listener);
+                listeners.AddLast(listener);
         }
 
         public void UnregisterListener(IGameEventListener listener)
@@ -22,10 +22,15 @@ namespace _1.Scripts.Quests.Core
                 listeners.Remove(listener);
         }
 
-        public void RaiseEvent(int eventID)
+        public void RaiseEvent(int eventID) 
         {
-            foreach (var listener in listeners)
-                listener.OnEventRaised(eventID);
+            var node = listeners.First;
+            while (node != null)
+            {
+                var current = node;
+                node = node.Next;
+                current.Value.OnEventRaised(eventID);
+            }
         }
     }
 }

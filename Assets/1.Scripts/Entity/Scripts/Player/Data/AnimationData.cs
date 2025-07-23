@@ -37,13 +37,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         [SerializeField] private float pistolReloadClipTime = 1.333f;
         [SerializeField] private float rifleReloadClipTime = 2.667f;
         [SerializeField] private float grenadeLauncherReloadClipTime = 10.333f;
-        [SerializeField] private float crossbowReloadClipTime = 2.333f;
+        [SerializeField] private float hackGunReloadClipTime = 4.167f;
         
         [SerializeField] private float handToOtherWeaponClipTime = 1f;
         [SerializeField] private float pistolToOtherWeaponClipTime = 0.667f;
         [SerializeField] private float rifleToOtherWeaponClipTime = 1f;
         [SerializeField] private float grenadeLauncherToOtherWeaponClipTime = 0.867f;
-        [SerializeField] private float crossbowToOtherWeaponClipTime = 0.833f;
+        [SerializeField] private float hackGunToOtherWeaponClipTime = 1f;
         
         [SerializeField] private float weaponWieldClipTime = 1f;
         
@@ -70,12 +70,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
         public float PistolReloadClipTime { get; private set; }
         public float RifleReloadClipTime { get; private set; }
         public float GrenadeLauncherReloadClipTime { get; private set; }
-        public float CrossbowReloadClipTime { get; private set; }
+        public float HackGunReloadClipTime { get; private set; }
         public float HandToOtherWeaponClipTime { get; private set; }
         public float PistolToOtherWeaponClipTime { get; private set; }
         public float RifleToOtherWeaponClipTime { get; private set; }
         public float GrenadeLauncherToOtherWeaponClipTime { get; private set; }
-        public float CrossbowToOtherWeaponClipTime { get; private set; }
+        public float HackGunToOtherWeaponClipTime { get; private set; }
         public float WeaponWieldClipTime { get; private set; }
         
         public void Initialize()
@@ -106,13 +106,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
             PistolReloadClipTime = pistolReloadClipTime;
             RifleReloadClipTime = rifleReloadClipTime;
             GrenadeLauncherReloadClipTime = grenadeLauncherReloadClipTime;
-            CrossbowReloadClipTime = crossbowReloadClipTime;
+            HackGunReloadClipTime = hackGunReloadClipTime;
             
             HandToOtherWeaponClipTime = handToOtherWeaponClipTime;
             PistolToOtherWeaponClipTime = pistolToOtherWeaponClipTime;
             RifleToOtherWeaponClipTime = rifleToOtherWeaponClipTime;
             GrenadeLauncherToOtherWeaponClipTime = grenadeLauncherToOtherWeaponClipTime;
-            CrossbowToOtherWeaponClipTime = crossbowToOtherWeaponClipTime;
+            HackGunToOtherWeaponClipTime = hackGunToOtherWeaponClipTime;
             WeaponWieldClipTime = weaponWieldClipTime;
         }
     }

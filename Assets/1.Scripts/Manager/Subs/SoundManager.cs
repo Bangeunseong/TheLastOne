@@ -36,11 +36,18 @@ namespace _1.Scripts.Manager.Subs
         PistolShoot,
         RifleShoot,
         GrenadeLauncherShoot,
-        CrossbowShoot,
+        HackGunShoot,
         PistolReload,
         RifleReload,
         GrenadeLauncherReload,
-        CrossbowReload,
+        HackGunReload,
+        PistolEmpty,
+        RifleEmpty,
+        GrenadeLauncherEmpty,
+        HackGunEmpty,
+        
+        // Grenade SFX
+        GrenadeExplode,
         
         // Enemy SFX
         EnemyAttack,
@@ -151,6 +158,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var obj = poolManager.Get("SoundPlayer");
+            if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
             soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);

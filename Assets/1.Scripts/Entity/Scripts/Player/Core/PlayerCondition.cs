@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
+using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -19,6 +20,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class PlayerCondition : MonoBehaviour
     {
+        [field: Header("Low Pass Filter Settings")]
+        [field: SerializeField] public AudioLowPassFilter LowPassFilter { get; private set; }
+        [field: SerializeField] public float LowestPoint { get; private set; }
+        [field: SerializeField] public float HighestPoint { get; private set; }
+        
         [field: Header("Base Condition Data")]
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
         
@@ -33,6 +39,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CurrentInstinctGauge { get; private set; }
         [field: SerializeField] public float SkillSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float ItemSpeedMultiplier { get; private set; } = 1f;
+        [field: SerializeField] public float WeightSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
@@ -79,6 +86,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private Player player;
         private SoundPlayer reloadPlayer;
 
+        private CancellationTokenSource playerCTS;
         private CancellationTokenSource aimCTS;
         private CancellationTokenSource switchCTS;
         private CancellationTokenSource reloadCTS;
@@ -95,6 +103,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Awake()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
             
             if (DamageConverters.Count <= 0) 
                 DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
@@ -105,6 +114,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Reset()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
             
             if (DamageConverters.Count <= 0) 
                 DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
@@ -166,6 +176,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
                     AvailableWeapons[i] = data.AvailableWeapons[i];
+                
+                UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             }
 
             Speed = StatData.moveSpeed;
@@ -176,6 +188,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+        }
+
+        public void UpdateLowPassFilterValue(float value)
+        {
+            LowPassFilter.cutoffFrequency = value;
         }
 
         public void UpdateLastSavedTransform()
@@ -201,6 +218,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
                 if (itemCTS != null) CancelItemUsage();
                 OnRecoverInstinctGauge(InstinctGainType.Hit);
+                player.PlayerInteraction.OnCancelInteract();
             }
             else
             {
@@ -209,9 +227,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     CurrentHealth = Mathf.Max(CurrentHealth + CurrentShield - damage, 0);
                     if (itemCTS != null) CancelItemUsage();
                     OnRecoverInstinctGauge(InstinctGainType.Hit);
+                    player.PlayerInteraction.OnCancelInteract();
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
+                coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
             }
+            
+            UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
             OnDamage?.Invoke();
             
             if (CurrentHealth <= 0) { OnDead(); }
@@ -221,40 +244,45 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// Recover Health Point
         /// </summary>
         /// <param name="value">Value of hp to recover</param>
-        public void OnRecoverHealth(int value)
+        private void OnRecoverHealth(int value)
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+            UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
         }
 
         /// <summary>
         /// Recover Shield Point
         /// </summary>
         /// <param name="value">Value of shield to recover</param>
-        public void OnRecoverShield(int value)
+        private void OnRecoverShield(int value)
         {
             if (IsDead) return;
             CurrentShield = Mathf.Min(CurrentShield + value, MaxShield);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
         }
 
         /// <summary>
         /// Consume Stamina Point
         /// </summary>
         /// <param name="stamina">Value to consume from player stamina point</param>
-        public void OnConsumeStamina(float stamina) 
+        private void OnConsumeStamina(float stamina) 
         { 
             if (IsDead) return; 
             CurrentStamina = Mathf.Max(CurrentStamina - stamina, 0);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
 
         /// <summary>
         /// Recover Stamina Point
         /// </summary>
         /// <param name="stamina">Value of stamina to recover</param>
-        public void OnRecoverStamina(float stamina)
+        private void OnRecoverStamina(float stamina)
         {
             if (IsDead) return;
             CurrentStamina = Mathf.Min(CurrentStamina + stamina, MaxStamina);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateStaminaSlider(CurrentStamina, MaxStamina);
         }
         
         /// <summary>
@@ -266,6 +294,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
+            coreManager.uiManager.GetUI<InGameUI>().UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
             return true;
         }
@@ -286,6 +315,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 FocusGainType.Debug => Mathf.Min(CurrentFocusGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateFocus(CurrentFocusGauge);
         }
 
         /// <summary>
@@ -297,6 +327,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || CurrentHealth >= MaxHealth * 0.5f) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
             OnInstinctEngaged();
             return true;
         }
@@ -316,6 +347,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 InstinctGainType.Debug => Mathf.Min(CurrentInstinctGauge + 1f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
         }
         
         public void OnTakeExp(int exp)
@@ -330,12 +362,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience -= Level * 120;
             Level++;
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateLevelUI(Level);
             CoreManager.Instance.SaveData_QueuedAsync();
         }
 
         private void OnDead()
         {
             IsDead = true;
+            IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -361,15 +395,24 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 case Gun gun:
                     if (gun.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
+                    }
                     break;
                 case GrenadeLauncher grenadeThrower:
                     if (grenadeThrower.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+                    }
                     break;
-                case Crossbow hackingGun:
-                    if(hackingGun.OnShoot())
+                case HackGun hackingGun:
+                    if (hackingGun.OnShoot())
+                    {
                         WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+                    }
                     break;
             }
         }
@@ -377,6 +420,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
+            player.PlayerInput.enabled = true;
             player.InputProvider.enabled = true;
         }
 
@@ -385,19 +429,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
+            player.PlayerInput.enabled = false;
             player.InputProvider.enabled = false;
         }
 
         private void StopAllUniTasks()
         {
-            aimCTS?.Cancel(); aimCTS?.Dispose(); aimCTS = null;
-            switchCTS?.Cancel(); switchCTS?.Dispose();  switchCTS = null;
-            reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
-            focusCTS?.Cancel(); focusCTS?.Dispose(); focusCTS = null;
-            instinctCTS?.Cancel(); instinctCTS?.Dispose(); instinctCTS = null;
-            instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
-            itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
-            staminaCTS?.Cancel(); staminaCTS?.Dispose(); staminaCTS = null;
+            coreManager.PlayerCTS?.Cancel();
+            
+            crouchCTS?.Dispose(); crouchCTS = null;
+            staminaCTS?.Dispose(); staminaCTS = null;
+            reloadCTS?.Dispose(); reloadCTS = null;
+            itemCTS?.Dispose(); itemCTS = null;
+            aimCTS?.Dispose(); aimCTS = null; 
+            switchCTS?.Dispose(); switchCTS = null;
+            focusCTS?.Dispose(); focusCTS = null; 
+            instinctCTS?.Dispose(); instinctCTS = null;
+            instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
         }
         
         /* - Crouch 관련 메소드 - */
@@ -405,11 +453,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             IsCrouching = isCrouch;
             if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
-            crouchCTS = new CancellationTokenSource();
+            crouchCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = Crouch_Async(IsCrouching, duration, crouchCTS.Token); 
         }
-        
-        protected async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
+        private async UniTaskVoid Crouch_Async(bool isCrouch, float duration, CancellationToken token)
         {
             var currentPosition = player.CameraPivot.localPosition;
             var currentOffset = player.Controller.center;
@@ -447,13 +494,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnConsumeStamina(float consumeRate, float interval)
         {
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
-            staminaCTS = new CancellationTokenSource();
+            staminaCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = ConsumeStamina_Async(consumeRate, interval, staminaCTS.Token);
         }
         public void OnRecoverStamina(float recoverRate, float interval)
         {
             if (staminaCTS != null) { staminaCTS?.Cancel(); staminaCTS?.Dispose(); }
-            staminaCTS = new CancellationTokenSource();
+            staminaCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = RecoverStamina_Async(recoverRate, interval, staminaCTS.Token);
         }
         public void CancelStaminaTask()
@@ -486,7 +533,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
             aimCTS?.Cancel(); aimCTS?.Dispose();
-            aimCTS = new CancellationTokenSource();
+            aimCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = AimAsync(isAim, targetFoV, transitionTime, aimCTS.Token);
         }
         private async UniTaskVoid AimAsync(bool isAim, float targetFoV, float transitionTime, CancellationToken token)
@@ -535,7 +582,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime, reloadCTS.Token);
                     break;
                 }
@@ -556,13 +603,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.GrenadeLauncherReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
-                case Crossbow {IsReadyToReload: false}:
+                case HackGun {IsReadyToReload: false}:
                     return false;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                 {
                     if (reloadCTS != null)
                     {
@@ -574,10 +621,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     
                     // Player Reload AudioClip
                     float reloadTime = crossbow.HackData.HackStat.ReloadTime;
-                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.CrossbowReload, reloadTime);
+                    reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.HackGunReload, reloadTime);
                     
                     // Start Reload Coroutine
-                    reloadCTS = new CancellationTokenSource();
+                    reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
                     _ = ReloadAsync(reloadTime,  reloadCTS.Token);
                     break;
                 }
@@ -600,7 +647,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     grenadeLauncher.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
-                case Crossbow crossbow:
+                case HackGun crossbow:
                     crossbow.IsReloading = false;
                     WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
@@ -698,7 +745,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
-            } else if (Weapons[EquippedWeaponIndex] is Crossbow crossbow)
+            } else if (Weapons[EquippedWeaponIndex] is HackGun crossbow)
             {
                 if (crossbow.CurrentAmmoCount <= 0 ||
                     crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
@@ -706,7 +753,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
-                var animationSpeed = player.AnimationData.CrossbowReloadClipTime /
+                var animationSpeed = player.AnimationData.HackGunReloadClipTime /
                                      crossbow.HackData.HackStat.ReloadTime;
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                 
@@ -741,6 +788,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             }
             reloadPlayer = null;
             reloadCTS.Dispose(); reloadCTS = null;
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
         }
         /* --------------------- */
         
@@ -758,7 +806,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 IsSwitching = false;
             }
 
-            switchCTS = new CancellationTokenSource();
+            switchCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = SwitchAsync(previousWeaponIndex, currentWeaponIndex, duration, switchCTS.Token);
         }
         private async UniTaskVoid SwitchAsync(int previousWeaponIndex, int currentWeaponIndex, float duration, CancellationToken token)
@@ -785,22 +833,32 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
                 case 4: WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash,
-                    player.AnimationData.CrossbowToOtherWeaponClipTime / duration); break;
+                    player.AnimationData.HackGunToOtherWeaponClipTime / duration); break;
             }
             
             Service.Log("Switch Weapon");
+            WeightSpeedMultiplier = 1f;
             WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             Weapons[previousWeaponIndex].gameObject.SetActive(false);
+            
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(true);
             
             Service.Log("Wield Weapon");
             Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
             WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
+            WeightSpeedMultiplier = Weapons[EquippedWeaponIndex] switch
+            {
+                Gun gun => 1f - gun.GunData.GunStat.WeightPenalty,
+                GrenadeLauncher grenadeLauncher => 1f - grenadeLauncher.GrenadeData.GrenadeStat.WeightPenalty,
+                HackGun crossbow => 1f - crossbow.HackData.HackStat.WeightPenalty,
+                _ => 1f
+            };
             IsSwitching = false;
-            switchCTS = null;
+            switchCTS.Dispose(); switchCTS = null;
         }
         /* --------------------- */
         
@@ -808,7 +866,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnFocusEngaged()
         {
             focusCTS?.Cancel(); focusCTS?.Dispose();
-            focusCTS = new CancellationTokenSource();
+            focusCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = FocusAsync(StatData.focusSkillTime, focusCTS.Token);
         }
         private async UniTaskVoid FocusAsync(float duration, CancellationToken token)
@@ -830,14 +888,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void OnInstinctEngaged()
         {
             instinctCTS?.Cancel(); instinctCTS?.Dispose();
-            instinctCTS = new CancellationTokenSource();
+            instinctCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = InstinctAsync(StatData.instinctSkillTime, instinctCTS.Token);
         }
         private async UniTaskVoid InstinctAsync(float duration, CancellationToken token)
         {
             IsUsingInstinct = true;
-            coreManager.spawnManager.ChangeStencilLayerAllNpc(true);
-            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(true);
+            coreManager.spawnManager.ChangeStencilLayer(true);
             
             SkillSpeedMultiplier = StatData.instinctSkillMultiplier;
             var t = 0f;
@@ -845,24 +902,22 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             {
                 if (token.IsCancellationRequested)
                 {
-                    coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
-                    coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
+                    coreManager.spawnManager.ChangeStencilLayer(false);
                     return;
                 }
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
             }
             SkillSpeedMultiplier = 1f;
             
-            coreManager.spawnManager.ChangeStencilLayerAllNpc(false);
-            coreManager.spawnManager.ChangeLayerOfWeaponsAndItems(false);
+            coreManager.spawnManager.ChangeStencilLayer(false);
             IsUsingInstinct = false;
             instinctCTS.Dispose(); instinctCTS = null;
         }
         private void OnInstinctRecover_Idle()
         {
             instinctRecoveryCTS?.Cancel(); instinctRecoveryCTS?.Dispose();
-            instinctRecoveryCTS = new CancellationTokenSource();
+            instinctRecoveryCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = InstinctRecover_Async(1, instinctRecoveryCTS.Token);
         }
         private async UniTaskVoid InstinctRecover_Async(float delay, CancellationToken token)
@@ -883,12 +938,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnItemUsed(BaseItem usedItem)
         {
             if (itemCTS != null) { CancelItemUsage(); return; }
-            itemCTS = new CancellationTokenSource();
+            itemCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = Item_Async(usedItem, itemCTS.Token);
         }
         private void CancelItemUsage()
         {
-            var inGameUI = coreManager.uiManager.InGameUI;
+            var inGameUI = coreManager.uiManager.GetUI<InGameUI>();
             inGameUI.HideItemProgress(); ItemSpeedMultiplier = 1f;
             itemCTS?.Cancel(); itemCTS?.Dispose(); itemCTS = null;
         }
@@ -896,7 +951,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (!item.ItemData.IsPlayerMovable) ItemSpeedMultiplier = 0f;
             var t = 0f;
-            var inGameUI = coreManager.uiManager.InGameUI;
+            var inGameUI = coreManager.uiManager.GetUI<InGameUI>();
             inGameUI.ShowItemProgress();
             inGameUI.UpdateItemProgress(0f);
             while (t < item.ItemData.Delay)

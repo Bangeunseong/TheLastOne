@@ -1,4 +1,5 @@
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Inventory;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -7,26 +8,28 @@ namespace _1.Scripts.UI
     public class InventoryHandler : MonoBehaviour
     {
         [Header("Inventory")]
-        [SerializeField] private GameObject inventoryCanvas;
-        [SerializeField] private Animator pauseAnimator;
+        [SerializeField] private Animator inventoryAnimator;
         [SerializeField] private BlurManager blurMgr;
-        [SerializeField] private GameObject inventoryPanel;
-        
-        bool isPaused;
+        [SerializeField] private PauseHandler pauseHandler;
+        private InventoryUI inventoryUI;
         private CoreManager coreManager;
-        private PauseHandler pauseHandler;
+
+        bool isPaused;
         public bool IsInventoryOpen => isPaused;
+        public void SetPauseHandler(PauseHandler handler) => pauseHandler = handler;
         
         private void Start()
         {
             coreManager = CoreManager.Instance;
-            pauseHandler = FindObjectOfType<PauseHandler>();
+            inventoryUI = coreManager.uiManager.GetUI<InventoryUI>();
         }
 
         public void ToggleInventory()
         {
-            if (!isPaused && pauseHandler != null && pauseHandler.IsPaused)
+            if (!isPaused && pauseHandler && pauseHandler.IsPaused)
                 return;
+            if (inventoryUI && coreManager.gameManager.Player.PlayerCondition)
+                inventoryUI.Initialize(coreManager.gameManager.Player.PlayerCondition);
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();
@@ -35,27 +38,23 @@ namespace _1.Scripts.UI
         private void Pause()
         {
             coreManager.gameManager.PauseGame();
-            Time.timeScale = 0f;
             blurMgr.BlurInAnim();
-            inventoryCanvas.SetActive(true);
-            inventoryPanel.SetActive(true);
-            pauseAnimator.Play("Panel In");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            inventoryUI.Show();
+            inventoryAnimator?.Play("Panel In");
         }
 
         private void Resume()
         {
             coreManager.gameManager.ResumeGame();
-            Time.timeScale = 1f;
-            blurMgr.BlurOutAnim();
+            blurMgr?.BlurOutAnim();
+            inventoryAnimator?.Play("Panel Out");
+            inventoryUI.Hide();
+        }
 
-            pauseAnimator.Play("Panel Out");
-            
-            inventoryCanvas.SetActive(false);
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+        public void CloseInventoryPanel()
+        {
+            isPaused = false;
+            inventoryUI?.Hide();
         }
     }
 }
