@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: GrenadeLauncherEmpty
   m_EditorClassIdentifier: 
-  groupName: 
-  audioClips: []
+  groupName: GrenadeLauncherEmpty
+  audioClips:
+  - m_AssetGUID: 8ac2cf7c78b159a4480540d5d5310c1d
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: f6373df3ffd9eb147ab66328341194ca
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

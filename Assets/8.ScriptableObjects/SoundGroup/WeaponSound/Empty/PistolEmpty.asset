@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: PistolEmpty
   m_EditorClassIdentifier: 
-  groupName: 
-  audioClips: []
+  groupName: PistolEmpty
+  audioClips:
+  - m_AssetGUID: e476896751d3e174d96299fba25c6636
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: d74507f933fb5df42ad94455fdee860f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
