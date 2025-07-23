@@ -63,6 +63,7 @@ namespace _1.Scripts.Quests.Core
                         }
                     }
                     Objectives[objective.Key].Deactivate();
+                    Objectives[objective.Key].RemoveIncludedEvents();
                 }
                 else Objectives[objective.Key].Activate();
             }
@@ -113,6 +114,7 @@ namespace _1.Scripts.Quests.Core
             }
             
             objective.data.onCompletedAction?.Invoke(); // 오브젝트 끝났을 시 이벤트 실행
+            objective.RemoveIncludedEvents();
         }
     }
 }
