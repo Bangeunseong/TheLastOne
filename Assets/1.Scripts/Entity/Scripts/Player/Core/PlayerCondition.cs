@@ -17,6 +17,7 @@ using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using JetBrains.Annotations;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -373,6 +374,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             IsDead = true;
             IsPlayerHasControl = false;
+            ArmPivot.SetActive(false);
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -391,14 +393,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (hardLock != null) Destroy(hardLock);
             
             cam.rotation = player.transform.rotation;
+            cam.localPosition += new Vector3(0f, 0f, -1f);
             
-            // Step 1: 왼쪽으로 휘청이며 기울어짐 
-            seq.Append(cam.DOLocalRotate(new Vector3(90f, 0f, 30f), 0.2f)
+            seq.Append(cam.DOLocalRotate(new Vector3(10f, 5f, 0f), 0.1f)
                 .SetEase(Ease.OutSine));
-            seq.Join(cam.DOLocalMove(cam.position + new Vector3(0f, -1f, 0f), 0.2f));
-            
-            // Step 3: 쓰러진 상태에서 떨림 + 카메라 떨어짐
-            seq.Append(cam.DOShakeRotation(0.2f, 7f, 15, 90f)); 
+
+            seq.Append(cam.DOLocalRotate(new Vector3(0f, 0f, 90f), 0.5f)
+                .SetEase(Ease.InCubic));
+
+            seq.Append(cam.DOShakeRotation(0.25f, 10f, 20, 90f, true));
         }
         
         private IEnumerator InvokeDeathEventWithDelay(float delay)
