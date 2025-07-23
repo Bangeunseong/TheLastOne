@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
 using _1.Scripts.UI.Common;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
@@ -12,6 +15,12 @@ using Object = UnityEngine.Object;
 
 namespace _1.Scripts.Manager.Subs
 {
+    public enum UIType
+    {
+        Persistent,
+        InGame,
+        System,
+    }
     [Serializable]
     public class UIManager
     {
@@ -24,6 +33,8 @@ namespace _1.Scripts.Manager.Subs
         private Dictionary<Type, UIBase> uiMap = new();
         private Dictionary<UIBase, bool> UIStateCache = new();
         private CoreManager coreManager;
+
+        private Dictionary<UIType, List<Type>> uiGroupMap = new();
         
         public void Start()
         {
@@ -35,11 +46,39 @@ namespace _1.Scripts.Manager.Subs
                 uiRoot = canvas.transform;
             }
             
+            RegisterUIGroup();
             RegisterStaticUI<LoadingUI>();
             RegisterStaticUI<LobbyUI>();
             RegisterStaticUI<FadeUI>();
             ShowUI<LobbyUI>();
             GetUI<FadeUI>().FadeIn();
+        }
+        
+        private void RegisterUIGroup()
+        {
+            uiGroupMap[UIType.Persistent] = new()
+            {
+                typeof(LoadingUI),
+                typeof(FadeUI),
+                typeof(LobbyUI),
+            };
+
+            uiGroupMap[UIType.InGame] = new()
+            {
+                typeof(InGameUI),
+                typeof(DistanceUI),
+                typeof(WeaponUI),
+                typeof(QuickSlotUI),
+                typeof(QuestUI),
+                typeof(InventoryUI),
+                typeof(PauseMenuUI),
+                typeof(MinigameUI),
+            };
+
+            uiGroupMap[UIType.System] = new()
+            {
+                typeof(GameOverUI),
+            };
         }
         
         public T GetUI<T>() where T : UIBase
@@ -54,6 +93,16 @@ namespace _1.Scripts.Manager.Subs
             InjectHandler(ui);
             return ui;
         }
+        public void ShowUIGroup(UIType group)
+        {
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+        }
         
         public void HideUI<T>() where T : UIBase
         {
@@ -64,6 +113,9 @@ namespace _1.Scripts.Manager.Subs
 
         public T LoadUI<T>() where T : UIBase
         {
+            if (uiMap.TryGetValue(typeof(T), out var existingUI))
+                return existingUI as T;
+            
             string address = typeof(T).Name;
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
             if (!prefab) return null;
@@ -74,11 +126,21 @@ namespace _1.Scripts.Manager.Subs
             Service.Log($"UI {typeof(T).Name} Registered");
             return component;
         }
+        public void LoadUIGroup(UIType group)
+        {
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(LoadUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+        }
         
         private void RegisterStaticUI<T>() where T : UIBase
         {
-            var ui = GameObject.FindObjectOfType<T>(true);
-            if (ui != null && !uiMap.ContainsKey(typeof(T)))
+            var ui = Object.FindObjectOfType<T>(true);
+            if (ui && !uiMap.ContainsKey(typeof(T)))
             {
                 ui.Init(this);
                 uiMap.Add(typeof(T), ui);
@@ -115,6 +177,17 @@ namespace _1.Scripts.Manager.Subs
             if (!uiMap.TryGetValue(typeof(T), out var ui)) return;
             Object.Destroy(ui.gameObject);
             uiMap.Remove(typeof(T));
+        }
+
+        public void UnloadUIGroup(UIType group)
+        {
+            if (!uiGroupMap.TryGetValue(group, out var value)) return;
+
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(UnloadUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
         }
         
         public void HideAndSaveAllUI()

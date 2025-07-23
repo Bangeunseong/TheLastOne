@@ -500,7 +500,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2886223185812973356, guid: 20535ae089634c640921fef284ad943f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20535ae089634c640921fef284ad943f, type: 3}
@@ -545,6 +546,7 @@ MonoBehaviour:
     <CurrentScene>k__BackingField: 0
   spawnManager:
     <CurrentSpawnData>k__BackingField: {fileID: 0}
+    <IsVisible>k__BackingField: 0
   uiManager:
     <RootCanvas>k__BackingField: {fileID: 0}
     uiRoot: {fileID: 0}
