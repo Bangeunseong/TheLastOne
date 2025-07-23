@@ -174,7 +174,7 @@ MonoBehaviour:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3af02a90ab8effb4389161e38b353092
-    m_Address: FadeInOut
+    m_Address: FadeUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - Common
