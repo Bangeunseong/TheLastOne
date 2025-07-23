@@ -32,6 +32,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         
         private float timeSinceLastShotFired;
         private CoreManager coreManager;
+        public bool IsAlreadyPlayedEmpty;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
         public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
@@ -90,7 +91,15 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
 
         public override bool OnShoot()
         {
-            if (!IsReady) return false;
+            if (!IsReady)
+            {
+                if (isEmpty && !IsAlreadyPlayedEmpty)
+                {
+                    IsAlreadyPlayedEmpty = true;
+                    CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncherEmpty, ThrowPoint.position);
+                }
+                return false;
+            }
             
             var obj = CoreManager.Instance.objectPoolManager.Get(GrenadeData.GrenadeStat.GrenadePrefabId); 
             if (!obj.TryGetComponent(out Grenade grenade)) return false;
@@ -116,7 +125,9 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                     player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
-            if (player != null) player.PlayerCondition.IsAttacking = false;
+
+            if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
+            if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }
 

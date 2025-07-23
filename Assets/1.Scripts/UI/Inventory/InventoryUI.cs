@@ -67,7 +67,13 @@ namespace _1.Scripts.UI.Inventory
             }
             Hide();
         }
-        public override void Show() { panel.SetActive(true); }
+
+        public override void Show()
+        {
+            panel.SetActive(true);
+            InitializeSlots();
+            RefreshInventoryUI();
+        }
         public override void Hide() { panel.SetActive(false); }
 
         public override void ResetUI()
@@ -129,23 +135,29 @@ namespace _1.Scripts.UI.Inventory
 
         private void InitializeSlots()
         {
-            if (playerCondition == null) return;
+            if (!playerCondition) return;
 
             for (int i = 0; i < slotType.Length && i < slotButtons.Count; i++)
             {
                 var button = slotButtons[i];
+                button.onClick.RemoveAllListeners();
+                
                 var slotWeapon = playerCondition.Weapons
                     .Where((w, idx) => playerCondition.AvailableWeapons[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
                 button.gameObject.SetActive(slotWeapon != null);
-                if (slotWeapon != null)
+                if (slotWeapon)
                 {
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
                     label.text = SlotUtility.GetWeaponName(slotWeapon);
-                    int idx = playerCondition.Weapons.IndexOf(slotWeapon);
-                    button.onClick.RemoveAllListeners();
-                    button.onClick.AddListener(() => ShowWeapon(idx));
+                    
+                    var weapon = slotWeapon;
+                    button.onClick.AddListener(() =>
+                    {
+                        int idx = playerCondition.Weapons.IndexOf(weapon);
+                        if (idx != -1) ShowWeapon(idx);
+                    });
                 }
             }
         }

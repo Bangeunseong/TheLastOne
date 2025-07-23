@@ -28,6 +28,8 @@ namespace _1.Scripts.UI
         {
             if (!isPaused && pauseHandler && pauseHandler.IsPaused)
                 return;
+            if (inventoryUI && coreManager.gameManager.Player.PlayerCondition)
+                inventoryUI.Initialize(coreManager.gameManager.Player.PlayerCondition);
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();

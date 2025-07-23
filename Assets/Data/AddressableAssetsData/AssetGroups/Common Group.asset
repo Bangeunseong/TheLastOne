@@ -209,6 +209,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 570163de825df9b438e1cb46f62f0f13
+    m_Address: DialogueUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 148e0a42c0232684b83e66fbe7be2911
+    m_Address: PistolEmpty
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ef1f8e7389f53441974929241c18822
+    m_Address: RifleEmpty
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e16380b5f6fe8444bf1f056e6aa81e5
+    m_Address: GrenadeLauncherEmpty
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42286416ca08cdf47971536425c2c4d0
+    m_Address: HackGunEmpty
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:
