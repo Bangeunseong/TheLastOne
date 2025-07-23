@@ -4,6 +4,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.Dialogue;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
@@ -70,9 +71,10 @@ namespace _1.Scripts.Manager.Subs
                 typeof(WeaponUI),
                 typeof(QuickSlotUI),
                 typeof(QuestUI),
+                typeof(MinigameUI),
                 typeof(InventoryUI),
                 typeof(PauseMenuUI),
-                typeof(MinigameUI),
+                typeof(DialogueUI)
             };
 
             uiGroupMap[UIType.System] = new()
