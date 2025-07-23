@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
@@ -12,7 +13,9 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -374,10 +377,36 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
             player.PlayerInput.enabled = false;
-            
-            OnDeath?.Invoke();
+            FallCamera();
+
+            StartCoroutine(InvokeDeathEventWithDelay(1.5f));
         }
 
+        private void FallCamera()
+        {
+            Sequence seq = DOTween.Sequence();
+            Transform cam = player.FirstPersonCamera.transform;
+            
+            var hardLock = player.FirstPersonCamera.GetCinemachineComponent<CinemachineHardLockToTarget>();
+            if (hardLock != null) Destroy(hardLock);
+            
+            cam.rotation = player.transform.rotation;
+            
+            // Step 1: 왼쪽으로 휘청이며 기울어짐 
+            seq.Append(cam.DOLocalRotate(new Vector3(90f, 0f, 30f), 0.2f)
+                .SetEase(Ease.OutSine));
+            seq.Join(cam.DOLocalMove(cam.position + new Vector3(0f, -1f, 0f), 0.2f));
+            
+            // Step 3: 쓰러진 상태에서 떨림 + 카메라 떨어짐
+            seq.Append(cam.DOShakeRotation(0.2f, 7f, 15, 90f)); 
+        }
+        
+        private IEnumerator InvokeDeathEventWithDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            OnDeath?.Invoke();
+        }
+        
         public void OnReset()
         {
             IsDead = false;
