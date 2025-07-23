@@ -72,7 +72,6 @@ namespace _1.Scripts.Map.Console
             
             if (IsCleared || IsOnCooldown) return;
             CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
-            CurrentMiniGame = 2;
             MiniGames[CurrentMiniGame].StartMiniGame(this, player);
         }
 
