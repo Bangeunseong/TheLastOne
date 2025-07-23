@@ -88,20 +88,14 @@ namespace _1.Scripts.Manager.Subs
             var loadingScene = 
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
                     coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
-            while (!loadingScene!.isDone)
-            {
-                await Task.Yield();
-            }
+            while (!loadingScene!.isDone) { await Task.Yield(); }
             
             LoadingProgress = 0f;
             uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
-            {
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
-                await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
-            }
             else
             {
                 LoadingProgress = 0.4f;
@@ -112,6 +106,7 @@ namespace _1.Scripts.Manager.Subs
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             coreManager.soundManager.CacheSoundGroup();
             await coreManager.soundManager.LoadClips();
+            
             await LoadSceneWithProgress(CurrentScene);
         }
         

@@ -164,7 +164,6 @@ namespace _1.Scripts.Manager.Core
         /// </summary>
         public void StartGame()
         {
-            Service.Log("Start Game");
             gameManager.TryRemoveSavedData();
             _ = LoadScene(SceneType.Stage1);
         }

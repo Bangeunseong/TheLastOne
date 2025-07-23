@@ -9,15 +9,17 @@ namespace _1.Scripts.UI.InGame.Quest
 {
     public class ObjectiveSlot : MonoBehaviour
     {
+        [Header("Objective Slot Settings")]
         [SerializeField] private TextMeshProUGUI objectiveDescription;
         [SerializeField] private TextMeshProUGUI objectiveProgress;
         [SerializeField] private float expandDuration = 0.2f;
+        
         private Coroutine expandCoroutine;
         private ObjectiveProgress objective;
 
-        public void Initialize(ObjectiveProgress objectiveProgress)
+        public void Initialize(ObjectiveProgress progress)
         {
-            objective = objectiveProgress;
+            objective = progress;
             objectiveDescription.text = objective.data.description;
             UpdateProgress();
             transform.localScale = new Vector3(1, 0, 1);
@@ -73,7 +75,11 @@ namespace _1.Scripts.UI.InGame.Quest
             Vector3 scale = transform.localScale;
             while (t < duration)
             {
-                if (!gameObject.activeInHierarchy) yield break;
+                if (!gameObject.activeInHierarchy)
+                {
+                    Destroy(gameObject); expandCoroutine = null;
+                    yield break;
+                }
                 t += Time.deltaTime;
                 float y = Mathf.Lerp(1f, 0f, t / duration);
                 transform.localScale = new Vector3(scale.x, y, scale.z);
