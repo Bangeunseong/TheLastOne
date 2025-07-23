@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI;
 using UnityEngine;
 
@@ -12,9 +13,12 @@ namespace _1.Scripts.UI.Common
         
         private Coroutine fadeInCoroutine;
 
-        /// <summary>
-        /// Fade Out
-        /// </summary>
+        public override void Init(UIManager manager)
+        {
+            base.Init(manager);
+            Hide();
+        }
+
         public void FadeOut()
         {
             Service.Log("FadeOut");
