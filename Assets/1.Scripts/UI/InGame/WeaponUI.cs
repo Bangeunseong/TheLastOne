@@ -18,7 +18,7 @@ namespace _1.Scripts.UI.InGame
     {
         Main,
         Pistol,
-        Crossbow,
+        HackGun,
         GrenadeLauncher,
     }
     public class WeaponUI : UIBase
