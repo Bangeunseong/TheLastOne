@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Data;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
@@ -21,8 +22,18 @@ namespace _1.Scripts.Quests.Core
         public void Initialize()
         {
             Objectives = new SerializedDictionary<int, ObjectiveProgress>();
-            foreach(var objective in data.objectives) 
+            foreach (var objective in data.objectives)
+            {
                 Objectives.Add(objective.targetID, new ObjectiveProgress{questId = data.questID, data = objective});
+
+                switch (objective.type)
+                {
+                    case ObjectiveType.ClearStage1:
+                    case ObjectiveType.ClearStage2:
+                        objective.onCompletedAction.AddListener(() => CoreManager.Instance.MoveToNextScene(SceneType.IntroScene));
+                        break;
+                }
+            }
         }
         
         public void StartQuest()
@@ -100,6 +111,8 @@ namespace _1.Scripts.Quests.Core
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
                 CoreManager.Instance.SaveData_QueuedAsync();
             }
+            
+            objective.data.onCompletedAction?.Invoke(); // 오브젝트 끝났을 시 이벤트 실행
         }
     }
 }
