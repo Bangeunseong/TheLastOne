@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -24,10 +22,10 @@ namespace _1.Scripts.UI.InGame.Mission
         private void Awake()
         {
             pathFinder = GetComponent<NavigationPathFinder>();
-            if (player == null)
+            if (!player)
             {
                 var go = GameObject.FindWithTag("Player");
-                if (go != null) player = go.transform;
+                if (go) player = go.transform;
             }
         }
 
@@ -35,7 +33,7 @@ namespace _1.Scripts.UI.InGame.Mission
         {                       
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
-            if (DistanceUI.CurrentTarget != null)
+            if (DistanceUI.CurrentTarget)
                 OnTargetChanged(DistanceUI.CurrentTarget);
             PathUpdateLoop(cts.Token).Forget();
         }
@@ -61,9 +59,9 @@ namespace _1.Scripts.UI.InGame.Mission
             if (!player || !player.gameObject.activeInHierarchy)
             {
                 var go = GameObject.FindWithTag("Player");
-                if (go != null) player = go.transform;
+                if (go) player = go.transform;
             }
-            if (player == null || target == null || pathFinder == null) return;
+            if (!player || !target || !pathFinder) return;
             var corners = pathFinder.GetPathCorners(player.position, target.position);
             if (corners.Length > 1)
                 AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();
@@ -73,7 +71,7 @@ namespace _1.Scripts.UI.InGame.Mission
         {
             while (!token.IsCancellationRequested)
             {
-                if (player == null || target == null)
+                if (!player || !target)
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
                     continue;
@@ -88,7 +86,7 @@ namespace _1.Scripts.UI.InGame.Mission
 
         private async UniTask AnimateMarkerAlongPath(Vector3[] corners, CancellationToken token)
         {
-            if (corners.Length < 2 || player == null) return;
+            if (corners.Length < 2 || !player) return;
 
             corners[0] = player.position;
             var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity);

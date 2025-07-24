@@ -12,9 +12,9 @@ namespace _1.Scripts.UI.Loading
         public Slider progressSlider;
         public TextMeshProUGUI progressText;
         
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             Hide();
         }
         

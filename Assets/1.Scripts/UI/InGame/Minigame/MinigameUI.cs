@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.Minigame;
 using TMPro;
@@ -31,9 +30,9 @@ namespace _1.Scripts.UI.InGame
         public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
         public ChargeBarUI GetChargeBarUI() => chargeBarUI;
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             panel.SetActive(false);
         }
         
@@ -102,19 +101,22 @@ namespace _1.Scripts.UI.InGame
         }
 
         public void SetDescriptionText(string text) { descriptionText.text = text; }
-        public void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
+        private void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
         public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
-        public void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
-        public void SetClearText(bool success, string text)
+        private void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
+
+        private void SetClearText(bool success, string text)
         {
             clearText.text = text;
             clearText.color = success ? Color.cyan : Color.red;
         }
-        public void ShowEnterText(bool show = true) => enterText.SetActive(show);
+
+        private void ShowEnterText(bool show = true) => enterText.SetActive(show);
         public void ShowCountdownText(bool show = true) => countdownText.gameObject.SetActive(show);
         public void SetCountdownText(float t) => countdownText.text = t > 0 ? t.ToString("F0") : "0";
-        public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
-        public void SetTimeSlider(float current, float max)
+        private void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
+
+        private void SetTimeSlider(float current, float max)
         {
             timeSlider.maxValue = max;
             timeSlider.value = current;

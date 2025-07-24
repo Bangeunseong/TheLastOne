@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +31,7 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
         void Awake()
         {
             // 1) overlayImage 세팅
-            if (overlayImage == null)
+            if (!overlayImage)
                 overlayImage = GetComponent<RawImage>();
 
             // 2) 인스펙터용 Material 인스턴스화 (공유 머티리얼 건드리지 않도록)

@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.Util;
-using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +39,6 @@ namespace _1.Scripts.UI.Inventory
         [SerializeField] private TextMeshProUGUI recoilText;
         [SerializeField] private TextMeshProUGUI weightText;
         [SerializeField] private TextMeshProUGUI ammoText;
-
         
         [Header("Description")]
         [SerializeField] private TextMeshProUGUI titleText;
@@ -55,23 +52,22 @@ namespace _1.Scripts.UI.Inventory
         private float maxWeight = 1f;
         private int maxAmmo;
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             previewPrefabs = new Dictionary<SlotType, GameObject>();
-
             foreach (var prefab in weaponPrefabs)
             {
                 var info = prefab.GetComponent<PreviewWeaponHandler>();
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
+            playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
             Hide();
         }
 
         public override void Show()
         {
             panel.SetActive(true);
-            InitializeSlots();
             RefreshInventoryUI();
         }
         public override void Hide() { panel.SetActive(false); }
@@ -82,17 +78,6 @@ namespace _1.Scripts.UI.Inventory
             ClearSlotButtons();
             ClearPreviewWeapon();
             ClearText();
-        }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                CalculateMaxStats();
-                InitializeSlots();
-                RefreshInventoryUI();
-            }
         }
         
         private void ClearSlotButtons()
@@ -106,7 +91,7 @@ namespace _1.Scripts.UI.Inventory
 
         private void ClearPreviewWeapon()
         {
-            if (currentPreviewWeapon != null)
+            if (currentPreviewWeapon)
             {
                 Destroy(currentPreviewWeapon);
                 currentPreviewWeapon = null;
@@ -121,7 +106,7 @@ namespace _1.Scripts.UI.Inventory
 
         private void CalculateMaxStats()
         {
-            if (playerCondition == null) return;
+            if (!playerCondition) return;
             foreach (var w in playerCondition.Weapons)
             {
                 var stat = SlotUtility.GetWeaponStat(w);
@@ -146,7 +131,7 @@ namespace _1.Scripts.UI.Inventory
                     .Where((w, idx) => playerCondition.AvailableWeapons[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
-                button.gameObject.SetActive(slotWeapon != null);
+                button.gameObject.SetActive(slotWeapon);
                 if (slotWeapon)
                 {
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
@@ -161,9 +146,10 @@ namespace _1.Scripts.UI.Inventory
                 }
             }
         }
-        public void ShowWeapon(int index)
+
+        private void ShowWeapon(int index)
         {
-            if (playerCondition == null || index < 0 || index >= playerCondition.Weapons.Count) return;
+            if (!playerCondition || index < 0 || index >= playerCondition.Weapons.Count) return;
             
             var weapon = playerCondition.Weapons[index];
             var stat = SlotUtility.GetWeaponStat(weapon);

@@ -26,15 +26,12 @@ namespace _1.Scripts.UI.InGame.Dialogue
         [SerializeField] private CanvasGroup canvasGroup;
         
         private Coroutine typingCoroutine;
-        public override void Init(UIManager manager)
-        {
-            base.Init(manager);
-            gameObject.SetActive(false);
-        }
 
-        public override void Initialize(object param = null)
+        public override void Initialize(UIManager manager, object param = null)
         {
+            base.Initialize(manager);
             ClearText();
+            Hide();
         }
 
         public override void Show()

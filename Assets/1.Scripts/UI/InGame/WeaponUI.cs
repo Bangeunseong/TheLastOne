@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
@@ -59,40 +57,27 @@ namespace _1.Scripts.UI.InGame
 
         private PlayerCondition  playerCondition;
         private int lastSelectedIndex = -1;
+        
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
-            targetScales = new Vector3[slotType.Length];
-            for (int i = 0; i < slotType.Length; i++)
+            base.Initialize(manager, param);
+            if (param is PlayerCondition newPlayerCondition)
             {
-                slotTransform[i].localScale = normalScale;
-                targetScales[i] = normalScale;
-                SetSlotAlpha(i, idleAlpha);
-                if (slotAnimator[i]) slotAnimator[i].enabled = false;
+                playerCondition = newPlayerCondition;
+                targetScales = new Vector3[slotTransform.Length];
+                Refresh(false);
             }
-            
-            if (panelAnimator) panelAnimator.Play("Hidden", 0, 1f);
-            Hide();
         }
         
         public override void ResetUI()
         {
-            playerCondition = null;
             lastSelectedIndex = -1;
-        }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                Refresh(false);
-            }
         }
 
         private void Update()
         {
+            if (targetScales == null) return;
             for (int i = 0; i < slotTransform.Length; i++)
             {
                 slotTransform[i].localScale = Vector3.Lerp(slotTransform[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
@@ -132,7 +117,7 @@ namespace _1.Scripts.UI.InGame
                 slotAmmoText[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : string.Empty;
                 slotAmmoText[i].color = slotWeapon is Gun ? selectedColor : selectedAmmoColor;
 
-                bool isSelected = slotWeapon != null && weapons[selectedIndex] == slotWeapon;
+                bool isSelected = slotWeapon && weapons[selectedIndex] == slotWeapon;
                 slotText[i].enabled = isSelected;
                 slotAmmoText[i].enabled = isSelected && (mag > 0 || total > 0);
 

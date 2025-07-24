@@ -14,26 +14,15 @@ namespace _1.Scripts.UI.Lobby
         [SerializeField] private Button loadButton;
         [SerializeField] private Button settingButton;
         [SerializeField] private Button exitButton;
-        
-        public override void Init(UIManager manager)
+
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
-            
+            base.Initialize(manager, param);
             startButton.onClick.AddListener(OnStartButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             exitButton.onClick.AddListener(OnQuitButtonClicked);
         }
-
-        public override void Show()
-        {
-            panel.SetActive(true);
-        }
         
-        public override void Hide()
-        {
-            panel.SetActive(false);
-        }
-
         private void OnStartButtonClicked()
         {
             CoreManager.Instance.StartGame();

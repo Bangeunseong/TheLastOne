@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -34,8 +33,8 @@ namespace _1.Scripts.UI.InGame
 
         private void LateUpdate()
         {
-            if (camera == null) camera = Camera.main?.transform;
-            if (target == null || camera == null) return;
+            if (!camera) camera = Camera.main?.transform;
+            if (!target || !camera) return;
             transform.position = target.position + Vector3.up * offsetY;
             transform.LookAt(camera);
         }
@@ -55,7 +54,6 @@ namespace _1.Scripts.UI.InGame
         
         public void OnSuccess()
         {
-            Service.Log("Hacking Success");
             ResetUI();
             animator.SetTrigger("Success");
             StartCoroutine(DisappearCoroutine(1f));
@@ -63,7 +61,6 @@ namespace _1.Scripts.UI.InGame
         
         public void OnFail()
         {
-            Service.Log("Hacking Fail");
             ResetUI();
             animator.SetTrigger("Fail");
             StartCoroutine(DisappearCoroutine(1f));

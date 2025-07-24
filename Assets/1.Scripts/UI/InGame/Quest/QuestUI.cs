@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Manager.Core;
@@ -18,21 +17,33 @@ namespace _1.Scripts.UI.InGame.Quest
         private readonly List<QuestSlot> questSlots = new();
         private List<QuestData> questListCache = new();
         private Dictionary<int, List<ObjectiveProgress>> objectiveDictCache = new();
-
-        public override void Show() => gameObject.SetActive(true);
-        public override void Hide() => gameObject.SetActive(false);
-        public override void ResetUI() => ClearAll();
-
-        public override void Initialize(object param = null)
+        
+        public override void Initialize(UIManager manager, object param = null)
         {
-            var questManager = CoreManager.Instance.questManager;
-            questListCache = questManager.activeQuests.Values.Select(q => q.data).ToList();
-            objectiveDictCache = questManager.activeQuests.ToDictionary(kv => kv.Key, kv => kv.Value.Objectives.Values.ToList());
+            base.Initialize(manager, param);
+            LoadQuestData();
             SetQuestSlots();
             Refresh();
             SetMainQuestNavigation();
+            Hide();
         }
 
+        public override void ResetUI()
+        {
+            ClearAll();
+            questListCache.Clear();
+            objectiveDictCache.Clear();
+            Hide();
+        }
+        private void LoadQuestData()
+        {
+            var questManager = CoreManager.Instance.questManager;
+            questListCache = questManager.activeQuests.Values.Select(q => q.data).ToList();
+            objectiveDictCache = questManager.activeQuests.ToDictionary(
+                kv => kv.Key,
+                kv => kv.Value.Objectives.Values.ToList()
+            );
+        }
         private void SetQuestSlots()
         {
             ClearAll();

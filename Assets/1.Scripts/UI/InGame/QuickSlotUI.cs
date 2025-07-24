@@ -26,20 +26,22 @@ namespace _1.Scripts.UI.InGame
         private PlayerInventory inventory;
         private int currentSlot = -1;
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             Hide();
             quickSlotGroup.alpha = 0;
             quickSlotPanel.SetActive(false);
+
             for (int i = 0; i < slotEvents.Length; i++)
             {
                 int idx = i;
-                slotEvents[i].enterEvent.AddListener(() => currentSlot = idx);
-                slotEvents[i].exitEvent.AddListener(() => currentSlot = -1);
+                slotEvents[i].enterEvent.AddListener(() => { currentSlot = idx; });
+                slotEvents[i].exitEvent.AddListener(() => { currentSlot = -1; });
             }
             ResetUI();
         }
+
         
         public override void ResetUI()
         {
@@ -58,16 +60,7 @@ namespace _1.Scripts.UI.InGame
             quickSlotPanel.SetActive(false);
             quickSlotGroup.alpha = 0;
         }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerInventory newInventory)
-            {
-                inventory = newInventory;
-                RefreshQuickSlot();
-            }
-        }
-
+        
         public void OpenQuickSlot()
         {
             currentSlot = -1;
@@ -101,10 +94,6 @@ namespace _1.Scripts.UI.InGame
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        public void PlayOpenAnimation()
-        {
-            quickSlotPanelAnimator.Play("Panel In");
-        }
 
         private IEnumerator CloseQuickSlot()
         {
@@ -120,11 +109,7 @@ namespace _1.Scripts.UI.InGame
 
         private void RefreshQuickSlot()
         {
-            if (inventory == null)
-            {
-                Service.Log("QuickSlot UI : Inventory is null");
-                return;
-            }
+            if (!inventory) return;
             var items = inventory.Items;
             for (int i = 0; i < slotIcons.Length; i++)
             {
@@ -140,7 +125,7 @@ namespace _1.Scripts.UI.InGame
                     }
                 }
 
-                if (item != null && item.CurrentItemCount > 0)
+                if (item is { CurrentItemCount: > 0 })
                 {
                     slotIcons[i].enabled = true;
                     slotIcons[i].sprite = item.ItemData.Icon;

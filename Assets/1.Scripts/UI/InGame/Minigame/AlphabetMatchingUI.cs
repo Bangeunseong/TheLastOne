@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _1.Scripts.UI.InGame.Minigame
 {
@@ -25,11 +22,11 @@ namespace _1.Scripts.UI.InGame.Minigame
                 Destroy(cell.gameObject);
             cells.Clear();
 
-            for (var i = 0; i < s.Length; i++)
+            foreach (var t in s)
             {
                 var go = Instantiate(cellPrefab, cellRoot);
                 if (!go.TryGetComponent(out AlphabetCell cell)) continue;
-                cell.SetChar(s[i]);
+                cell.SetChar(t);
                 cells.Add(cell);
             }
         }

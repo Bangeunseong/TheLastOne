@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,34 +18,39 @@ namespace _1.Scripts.UI.Common
 
         public CanvasGroup SettingPanel => settingPanel;
         public Animator SettingAnimator => settingAnimator;
-        
-        public override void Show() {  panel.SetActive(true); }
 
-        public override void Hide()
+        public override void Initialize(UIManager manager, object param = null)
         {
-            panel.SetActive(false);
-        }
-        public override void ResetUI() { Hide(); }
-
-        private void Awake()
-        {
+            base.Initialize(manager, param);
+            
             pauseHandler = FindObjectOfType<PauseHandler>();
+            
+            resumeButton.onClick.RemoveAllListeners();
+            reloadButton.onClick.RemoveAllListeners();
+            quitButton.onClick.RemoveAllListeners();
             resumeButton.onClick.AddListener(() =>
             {
                 pauseHandler.TogglePause();
                 pauseHandler.ClosePausePanel();
             });
+
             reloadButton.onClick.AddListener(() =>
             {
                 pauseHandler.TogglePause();
                 CoreManager.Instance.ReloadGame();
             });
-            quitButton.onClick.AddListener(() => 
-            { 
+
+            quitButton.onClick.AddListener(() =>
+            {
                 pauseHandler.TogglePause();
-                CoreManager.Instance.MoveToIntroScene(); 
+                CoreManager.Instance.MoveToIntroScene();
             });
             Hide();
         }
+        
+        public override void Show() {  panel.SetActive(true); }
+
+        public override void Hide() { panel.SetActive(false); }
+        public override void ResetUI() { Hide(); }
     }
 }
