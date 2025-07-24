@@ -47,7 +47,7 @@ namespace _1.Scripts.UI
         private void Pause()
         {
             if (!pauseMenuUI) return;
-            
+            CoreManager.Instance.uiManager.HideHUD();
             CoreManager.Instance.gameManager.PauseGame();
             blurMgr.BlurInAnim();
             pauseMenuUI.Show();
@@ -65,7 +65,7 @@ namespace _1.Scripts.UI
         private void Resume()
         {
             if (!pauseMenuUI) return;
-            
+            CoreManager.Instance.uiManager.ShowHUD();
             CoreManager.Instance.gameManager.ResumeGame();
             blurMgr.BlurOutAnim();
             pauseAnimator.Play("Window Out");

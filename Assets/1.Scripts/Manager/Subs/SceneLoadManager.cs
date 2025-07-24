@@ -60,6 +60,9 @@ namespace _1.Scripts.Manager.Subs
             coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            coreManager.uiManager.HideHUD();
+            coreManager.uiManager.ResetUIByGroup(UIType.InGame);
+            
             
             // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)

@@ -15,6 +15,7 @@ namespace _1.Scripts.UI.Inventory
     {
         [Header("UI")]
         [SerializeField] private GameObject panel;
+        [SerializeField] private Animator panelAnimator;
         [Header("SlotType")]
         [SerializeField] private SlotType[] slotType;
         
@@ -68,11 +69,16 @@ namespace _1.Scripts.UI.Inventory
         public override void Show()
         {
             base.Show();
+            panelAnimator?.Rebind();
+            panelAnimator?.Play("Panel In");
+            
             RefreshInventoryUI();
             CoreManager.Instance.gameManager.PauseGame();
         }
         public override void Hide() 
         { 
+            panelAnimator?.Rebind();
+            panelAnimator?.Play("Panel Out");
             base.Hide();
             CoreManager.Instance.gameManager.ResumeGame(); 
         }
