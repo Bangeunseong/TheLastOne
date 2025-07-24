@@ -43,7 +43,7 @@ namespace _1.Scripts.Util
                     return w is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
                 case SlotType.GrenadeLauncher:
                     return w is GrenadeLauncher;
-                case SlotType.Crossbow:
+                case SlotType.HackGun:
                     return w is HackGun;
                 default:
                     return false;
@@ -54,7 +54,7 @@ namespace _1.Scripts.Util
         {
             if (w is Gun g) return g.GunData.GunStat.Type.ToString();
             if (w is GrenadeLauncher gl) return gl.GrenadeData.GrenadeStat.Type.ToString();
-            if (w is HackGun) return "Crossbow";
+            if (w is HackGun hg) return hg.HackData.HackStat.Type.ToString();
             return w?.GetType().Name ?? "Unknown";
         }
         
@@ -62,7 +62,7 @@ namespace _1.Scripts.Util
         {
             if (w is Gun g) return (g.CurrentAmmoCountInMagazine, g.CurrentAmmoCount);
             if (w is GrenadeLauncher gl) return (gl.CurrentAmmoCountInMagazine, gl.CurrentAmmoCount);
-            if (w is HackGun cb) return (cb.CurrentAmmoCountInMagazine, cb.CurrentAmmoCount);
+            if (w is HackGun hg) return (hg.CurrentAmmoCountInMagazine, hg.CurrentAmmoCount);
             return (0, 0);
         }
         public static WeaponStatView GetWeaponStat(BaseWeapon w)
@@ -70,17 +70,17 @@ namespace _1.Scripts.Util
             if (w is Gun g)
             {
                 var s = g.GunData.GunStat;
-                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, g.MaxAmmoCountInMagazine);
+                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, g.MaxAmmoCountInMagazine);
             }
             if (w is GrenadeLauncher gl)
             {
                 var s = gl.GrenadeData.GrenadeStat;
-                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, gl.MaxAmmoCountInMagazine);
+                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, gl.MaxAmmoCountInMagazine);
             }
-            if (w is HackGun cb)
+            if (w is HackGun hg)
             {
-                var s = cb.HackData.HackStat;
-                 return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, cb.MaxAmmoCountInMagazine);
+                var s = hg.HackData.HackStat;
+                 return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, hg.MaxAmmoCountInMagazine);
             }
             return new WeaponStatView();
         }
@@ -91,7 +91,7 @@ namespace _1.Scripts.Util
             if (weapon is GrenadeLauncher)
                 return SlotType.GrenadeLauncher;
             if (weapon is HackGun)
-                return SlotType.Crossbow;
+                return SlotType.HackGun;
             return SlotType.Main;
         }
     }

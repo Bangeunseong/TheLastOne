@@ -8,7 +8,7 @@ namespace _1.Scripts.UI
     {
         protected UIManager uiManager;
 
-        public virtual void Init(UIManager manager)
+        public virtual void Initialize(UIManager manager, object param = null)
         {
             uiManager = manager;
         }
@@ -24,7 +24,5 @@ namespace _1.Scripts.UI
         }
 
         public virtual void ResetUI(){}
-
-        public virtual void Initialize(object param = null) {}
     }
 }
