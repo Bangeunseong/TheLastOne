@@ -14,8 +14,7 @@ namespace _1.Scripts.UI.InGame.HUD
     {
         [SerializeField] private Transform questSlotContainer;
         [SerializeField] private GameObject questSlotPrefab;
-        [SerializeField] private QuestManager questManager;
-        
+
         private readonly List<QuestSlot> questSlots = new();
         private List<QuestData> questListCache = new();
         private Dictionary<int, List<ObjectiveProgress>> objectiveDictCache = new();
@@ -24,25 +23,12 @@ namespace _1.Scripts.UI.InGame.HUD
         {
             base.Initialize(manager, param);
             
-            var questManager = param as QuestManager ?? CoreManager.Instance.questManager;
-            
-            questListCache = questManager.activeQuests.Values.Select(q => q.data).ToList();
-            objectiveDictCache = questManager.activeQuests.ToDictionary(kv => kv.Key, kv => kv.Value.Objectives.Values.ToList());
-            foreach (var quest in questManager.activeQuests.Values)
-            {
-                Service.Log($"[QuestUI] QuestID={quest.data.questID}, currentObjectiveIndex={quest.currentObjectiveIndex}, objectives.Count={quest.Objectives.Count}");
-                foreach (var obj in quest.Objectives)
-                {
-                    var prog = obj.Value;
-                    Service.Log($"  [Objective] targetID={prog.data.targetID}, desc={prog.data.description}, current={prog.currentAmount}, required={prog.data.requiredAmount}, completed={prog.IsCompleted}");
-                }
-            }
-            
             LoadQuestData();
             SetQuestSlots();
             SetMainQuestNavigation();
             Refresh();
             gameObject.SetActive(false);
+            Service.Log("Initialized Quest UI");
         }
 
         public override void ResetUI()

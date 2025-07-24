@@ -6,7 +6,6 @@ namespace _1.Scripts.UI.Common
 {
     public class MenuHandler : MonoBehaviour
     {
-        [SerializeField] private InventoryHandler inventoryHandler;
         [SerializeField] private PauseHandler pauseHandler;
         
         public void SetPauseHandler(PauseHandler handler) => pauseHandler = handler;

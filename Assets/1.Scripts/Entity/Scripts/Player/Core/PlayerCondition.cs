@@ -178,10 +178,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
                 {
-                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                     LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
                     LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
                     transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
@@ -418,7 +418,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = true;
             CurrentHealth = MaxHealth;
             CurrentStamina = MaxStamina;
-            player.InputProvider.enabled = true;
+            player.InputProvider.XYAxis.action.Enable();
             player.PlayerInput.enabled = true;
         }
 
@@ -454,7 +454,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
-            player.InputProvider.enabled = true;
+            player.InputProvider.XYAxis.action.Enable();
         }
 
         public void OnDisablePlayerMovement()
@@ -462,7 +462,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
-            player.InputProvider.enabled = false;
+            player.InputProvider.XYAxis.action.Disable();
         }
 
         private void StopAllUniTasks()

@@ -63,8 +63,7 @@ namespace _1.Scripts.UI.Inventory
                 var info = prefab.GetComponent<PreviewWeaponHandler>();
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
-            playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
-            RefreshInventoryUI();
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             gameObject.SetActive(false);
         }
 
@@ -75,11 +74,15 @@ namespace _1.Scripts.UI.Inventory
             panelAnimator?.Play("Panel In");
             
             RefreshInventoryUI();
-            CoreManager.Instance.gameManager.PauseGame();
+
+            var player = CoreManager.Instance.gameManager.Player;
+            player.PlayerCondition.OnDisablePlayerMovement();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         public override void Hide() 
         {
-            if (panelAnimator != null && panelAnimator.isActiveAndEnabled)
+            if (panelAnimator && panelAnimator.isActiveAndEnabled)
             {
                 panelAnimator.Rebind();
                 panelAnimator.Play("Panel Out");
@@ -89,7 +92,11 @@ namespace _1.Scripts.UI.Inventory
             {
                 base.Hide();
             }
-            CoreManager.Instance.gameManager.ResumeGame(); 
+            
+            var player = CoreManager.Instance.gameManager.Player;
+            player.PlayerCondition.OnEnablePlayerMovement();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public override void ResetUI()
@@ -140,6 +147,7 @@ namespace _1.Scripts.UI.Inventory
         private void CalculateMaxStats()
         {
             if (!playerCondition) return;
+            
             foreach (var w in playerCondition.Weapons)
             {
                 var stat = SlotUtility.GetWeaponStat(w);
@@ -149,13 +157,12 @@ namespace _1.Scripts.UI.Inventory
                 maxAmmo = Mathf.Max(maxAmmo, stat.MaxAmmoCountInMagazine);
             }
         }
-
-
+        
         private void InitializeSlots()
         {
             if (!playerCondition) return;
 
-            for (int i = 0; i < slotType.Length && i < slotButtons.Count; i++)
+            for (int i = 0; i < slotButtons.Count; i++)
             {
                 var button = slotButtons[i];
                 button.onClick.RemoveAllListeners();

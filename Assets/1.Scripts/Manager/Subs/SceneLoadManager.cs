@@ -64,7 +64,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.spawnManager.ClearAllSpawnedEnemies();
             coreManager.uiManager.HideHUD();
             coreManager.uiManager.ResetUIByGroup(UIType.InGame);
-            
+            uiManager.UnregisterDynamicUIByGroup(UIType.InGame);
             
             // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
@@ -76,7 +76,6 @@ namespace _1.Scripts.Manager.Subs
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    uiManager.UnregisterDynamicUIByGroup(UIType.InGame);
                 }
             }
             
@@ -91,7 +90,8 @@ namespace _1.Scripts.Manager.Subs
             
             // Update Loading Progress
             LoadingProgress = 0f;
-            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
+            var loadingUI = uiManager.GetUI<LoadingUI>();
+            loadingUI.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
@@ -102,7 +102,7 @@ namespace _1.Scripts.Manager.Subs
             else
             {
                 LoadingProgress = 0.4f;
-                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
+                loadingUI.UpdateLoadingProgress(LoadingProgress);
             }
             
             // Load Resources & Create Pool used in Current Scene
@@ -121,20 +121,22 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="sceneName"></param>
         private async Task LoadSceneWithProgress(SceneType sceneName)
         {
+            var loadingUI = uiManager.GetUI<LoadingUI>();
+            
             SceneManager.sceneLoaded += OnSceneLoaded;
             sceneLoad = SceneManager.LoadSceneAsync(coreManager.IsDebug ? coreManager.DebugPrefix + sceneName : sceneName.ToString());
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
+                loadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
             LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
-            uiManager.GetUI<LoadingUI>()?.UpdateProgressText("Press any key to continue...");
+            loadingUI.UpdateLoadingProgress(LoadingProgress);
+            loadingUI.UpdateProgressText("Press any key to continue...");
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;
@@ -181,10 +183,6 @@ namespace _1.Scripts.Manager.Subs
             
             uiManager.HideUI<LoadingUI>();
             uiManager.RegisterDynamicUIByGroup(UIType.InGame);
-            uiManager.GetUI<QuestUI>().Refresh();
-            uiManager.GetUI<InventoryUI>().ResetUI();
-            uiManager.GetUI<InventoryUI>().Initialize(uiManager);
-            uiManager.GetUI<InventoryUI>().RefreshInventoryUI();
 
             switch (CurrentScene)
             {
@@ -202,7 +200,7 @@ namespace _1.Scripts.Manager.Subs
                     }
                     else
                     {
-                        player.PlayerCondition.IsPlayerHasControl = true;
+                        player.PlayerCondition.OnEnablePlayerMovement();
                         coreManager.spawnManager.SpawnEnemyBySpawnData(1);
                         if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
                     }
@@ -238,7 +236,6 @@ namespace _1.Scripts.Manager.Subs
         {
             var playerGo = GameObject.FindWithTag("Player");
             if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
-            player.PlayerCondition.IsPlayerHasControl = true;
             player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);

@@ -78,13 +78,11 @@ namespace _1.Scripts.Manager.Subs
         
         public bool RegisterDynamicUI<T>() where T : UIBase
         {
-            if (uiMap.ContainsKey(typeof(T))) return false;
-            
             var uiResource = coreManager.resourceManager.GetAsset<GameObject>(typeof(T).Name);
             if (!uiResource) return false;
             if (uiMap.TryGetValue(typeof(T), out var ui))
             {
-                ui.Initialize(this);
+                if (ui is T castedUI) castedUI.Initialize(this);
                 return true;
             }
             
@@ -97,6 +95,7 @@ namespace _1.Scripts.Manager.Subs
 
         public bool RegisterDynamicUIByGroup(UIType groupType)
         {
+            Service.Log("Start RegisterDynamicUIByGroup");
             MenuHandler = Object.FindObjectOfType<MenuHandler>();
             
             if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
@@ -145,6 +144,8 @@ namespace _1.Scripts.Manager.Subs
         public bool ShowHUD()
         {
             if (!uiGroupMap.TryGetValue(UIType.InGame_HUD, out var value)) return false;
+            
+            
             foreach (var type in value)
             {
                 var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);

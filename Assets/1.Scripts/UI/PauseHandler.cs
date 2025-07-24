@@ -9,7 +9,6 @@ namespace _1.Scripts.UI
     {
         [SerializeField] private BlurManager blurMgr;
         [SerializeField] private Animator pauseAnimator;
-        [SerializeField] private InventoryHandler inventoryHandler;
         
         [Header("Setting Panel")]
         [SerializeField] private CanvasGroup settingPanel;
@@ -20,20 +19,16 @@ namespace _1.Scripts.UI
 
         private bool isPaused;
         public bool IsPaused => isPaused;
-        public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
         
         public void Initialize(PauseMenuUI ui)
         {
+            coreManager = CoreManager.Instance;
             pauseMenuUI = ui;
         }
 
         public void TogglePause()
         {
-            if (inventoryHandler && inventoryHandler.IsInventoryOpen)
-            {
-                inventoryHandler.ToggleInventory();
-                return;
-            }
+            if (coreManager.uiManager.IsCutscene) return;
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();
