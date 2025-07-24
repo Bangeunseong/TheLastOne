@@ -107,8 +107,8 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowMiniGame();
+            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI.SetMiniGame();
             minigameUI.SetDescriptionText(Description);
             alphabetUI = minigameUI.GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
