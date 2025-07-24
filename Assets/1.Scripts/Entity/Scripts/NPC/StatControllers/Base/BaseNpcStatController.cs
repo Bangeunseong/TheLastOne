@@ -132,7 +132,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual void OnEnable()
         { 
             if (CoreManager.Instance.spawnManager.IsVisible) 
-                NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayersForStencil);
+                NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayersForStencil, false);
             foreach (Collider coll in colliders) { coll.enabled = true; }
         }
 

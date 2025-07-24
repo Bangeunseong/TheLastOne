@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
-using _1.Scripts.Entity.Scripts.NPC.AIControllers;
+﻿using System.Collections;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
-using _1.Scripts.Weapon.Scripts.Guns;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Unit_DroneBot : MonoBehaviour
 {
@@ -26,24 +21,21 @@ public class Unit_DroneBot : MonoBehaviour
 
 	public ParticleSystem p_hit, p_dead, p_smoke, p_fireL, p_fireSmokeL, p_fireR, p_fireSmokeR; //Particle effect  
 	private AudioSource m_AudioSource;
-	public LayerMask hittableLayer;
 
 	private Coroutine gotDamagedCoroutine;
 	private float gotDamagedParticleDuration = 0.5f;
 
 	private BehaviorTree behaviorTree;
 	private BaseNpcStatController statController;
+	[SerializeField] private LayerMask hittableLayer = 0;
 	
-	// Use this for initialization
-	void Start()
-	{
-		m_AudioSource = GetComponent<AudioSource>();
-	}
-
 	private void Awake()
 	{
+		m_AudioSource = GetComponent<AudioSource>();
 		behaviorTree = GetComponent<BehaviorTree>();
 		statController = GetComponent<BaseNpcStatController>();
+
+		hittableLayer = LayerConstants.ToLayerMask(LayerConstants.DefaultHittableLayers);
 	}
 
 	void f_hit() //hit
@@ -55,9 +47,7 @@ public class Unit_DroneBot : MonoBehaviour
 			StopCoroutine(gotDamagedCoroutine);
 		}
 
-		var statController = behaviorTree.GetVariable("statController") as SharedBaseNpcStatController;
-
-		if (statController != null && statController.Value is IStunnable stunnable)
+		if (statController != null && statController is IStunnable stunnable)
 		{
 			if (!stunnable.IsStunned)
 			{
@@ -134,32 +124,24 @@ public class Unit_DroneBot : MonoBehaviour
 		}
 		
 		Vector3 directionToTarget = (targetPos.Value - pos_side.position).normalized;
+
+		int targetMask = isAlly
+			? LayerConstants.ToLayerMask(LayerConstants.EnemyLayers)
+			: LayerConstants.ToLayerMask(LayerConstants.AllyLayers);
+		int finalMask = hittableLayer | targetMask;
 		
-		// 총알 생성
-		var shell = CoreManager.Instance.objectPoolManager.Get("Bullet");
-		if (shell.TryGetComponent(out Bullet bullet))
+		if (Physics.Raycast(pos_side.position, directionToTarget, out RaycastHit hit, 100f, finalMask))
 		{
-			// 레이어 마스크 설정
-			int allyMask = 1 << LayerConstants.Ally;
-			int enemyMask = 1 << LayerConstants.Enemy;
-			int finalLayerMask = hittableLayer;
+			bool targetDetected = isAlly
+				? LayerConstants.EnemyLayers.Contains(hit.collider.gameObject.layer) 
+				: LayerConstants.AllyLayers.Contains(hit.collider.gameObject.layer);
 
-			if (isAlly)
+			if (targetDetected && hit.collider.TryGetComponent(out IDamagable damagable))
 			{
-				finalLayerMask &= ~allyMask; // Ally 제거
-				finalLayerMask |= enemyMask; // Enemy 추가
+				damagable.OnTakeDamage(statController.RuntimeStatData.BaseDamage);
 			}
-			else
-			{
-				finalLayerMask &= ~enemyMask; // Enemy 제거
-				finalLayerMask |= allyMask;   // Ally 추가
-			}
-			
-			bullet.Initialize(pos_side.position, directionToTarget, 
-				150, shellSpeed + Random.Range(-shellSpeed * 0.2f, shellSpeed * 0.2f), 
-				statController.RuntimeStatData.BaseDamage, finalLayerMask);
 		}
-
+		
 		CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, -1,0);
 	}
 }
