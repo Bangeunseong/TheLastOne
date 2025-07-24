@@ -28,7 +28,7 @@ public class Unit_DroneBot : MonoBehaviour
 	private BehaviorTree behaviorTree;
 	private BaseNpcStatController statController;
 	[SerializeField] private LayerMask hittableLayer = 0;
-	[SerializeField] private float spreadAmount = 1f;
+	[SerializeField] private float spreadAmount = 0.5f;
 	
 	private void Awake()
 	{
