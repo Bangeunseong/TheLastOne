@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using _1.Scripts.UI.InGame.HUD;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.UI.InGame.Mission
 {
@@ -17,17 +18,18 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] float updateInterval = 5f;
         [SerializeField] float markerSpeed = 30f;
 
+        private Queue<GameObject> markers = new();
         private Transform target;
-        private NavigationPathFinder pathFinder;
+        private NavMeshPath navPath;
         private CancellationTokenSource cts;
 
         private void Awake()
         {
-            pathFinder = GetComponent<NavigationPathFinder>();
-            if (player == null)
+            navPath = new NavMeshPath();
+            if (!player)
             {
                 var go = GameObject.FindWithTag("Player");
-                if (go != null) player = go.transform;
+                if (go) player = go.transform;
             }
         }
 
@@ -35,7 +37,7 @@ namespace _1.Scripts.UI.InGame.Mission
         {                       
             DistanceUI.OnTargetChanged += OnTargetChanged;
             cts = new CancellationTokenSource();
-            if (DistanceUI.CurrentTarget != null)
+            if (DistanceUI.CurrentTarget)
                 OnTargetChanged(DistanceUI.CurrentTarget);
             PathUpdateLoop(cts.Token).Forget();
         }
@@ -43,6 +45,8 @@ namespace _1.Scripts.UI.InGame.Mission
         private void OnDisable()
         {
             DistanceUI.OnTargetChanged -= OnTargetChanged;
+            
+            while (markers.TryDequeue(out var marker)) Destroy(marker);
             cts?.Cancel();
             cts?.Dispose();
             cts = null;
@@ -61,10 +65,10 @@ namespace _1.Scripts.UI.InGame.Mission
             if (!player || !player.gameObject.activeInHierarchy)
             {
                 var go = GameObject.FindWithTag("Player");
-                if (go != null) player = go.transform;
+                if (go) player = go.transform;
             }
-            if (player == null || target == null || pathFinder == null) return;
-            var corners = pathFinder.GetPathCorners(player.position, target.position);
+            if (!player || !target) return;
+            var corners = GetPathCorners(player.position, target.position);
             if (corners.Length > 1)
                 AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();
         }
@@ -73,13 +77,13 @@ namespace _1.Scripts.UI.InGame.Mission
         {
             while (!token.IsCancellationRequested)
             {
-                if (player == null || target == null)
+                if (!player || !target)
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
                     continue;
                 }
 
-                var corners = pathFinder.GetPathCorners(player.position, target.position);
+                var corners = GetPathCorners(player.position, target.position);
                 if (corners.Length > 1) AnimateMarkerAlongPath(corners, token).Forget();
 
                 await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token, cancelImmediately: true);
@@ -88,13 +92,13 @@ namespace _1.Scripts.UI.InGame.Mission
 
         private async UniTask AnimateMarkerAlongPath(Vector3[] corners, CancellationToken token)
         {
-            if (corners.Length < 2 || player == null) return;
+            if (corners.Length < 2 || !player) return;
 
             corners[0] = player.position;
-            var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity);
-
+            var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity); 
             SetupMarkerVisual(marker);
-
+            
+            markers.Enqueue(marker);
             for (int i = 1; i < corners.Length; i++)
             {
                 while (marker && Vector3.Distance(marker.transform.position, corners[i]) > 0.05f)
@@ -104,11 +108,12 @@ namespace _1.Scripts.UI.InGame.Mission
                         corners[i],
                         markerSpeed * Time.deltaTime
                     );
-                    await UniTask.NextFrame(token, cancelImmediately: true);
+                    await UniTask.Yield(token, cancelImmediately: true);
                 }
             }
 
-            if (marker) Destroy(marker, 0.5f);
+            if (!markers.TryDequeue(out var deqMarker)) return;
+            Destroy(deqMarker, 0.5f);
         }
         
         private void SetupMarkerVisual(GameObject marker)
@@ -131,6 +136,13 @@ namespace _1.Scripts.UI.InGame.Mission
                 new[] { new GradientAlphaKey(0.2f, 0f), new GradientAlphaKey(0f, 1f) }
             );
             trail.colorGradient = grad;
+        }
+        
+        private Vector3[] GetPathCorners(Vector3 startPos, Vector3 targetPos)
+        {
+            navPath.ClearCorners();
+            NavMesh.CalculatePath(startPos, targetPos, NavMesh.AllAreas, navPath);
+            return navPath.corners;
         }
     }
 }

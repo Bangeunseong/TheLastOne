@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Items;
@@ -9,7 +7,6 @@ using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -169,6 +166,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
             playerInput.PlayerActions.ItemAction.canceled += OnItemActionCanceled;
+            playerInput.PlayerActions.ToggleInventory.started += OnInventoryToggled;
         }
         
         private void RemoveInputActionCallbacks()
@@ -193,13 +191,17 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
             playerInput.PlayerActions.ItemAction.canceled -= OnItemActionCanceled;
+            playerInput.PlayerActions.ToggleInventory.started -= OnInventoryToggled;
         }
         
         /* - 기본동작 관련 메소드 - */
-        protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
-        protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
-        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
+        protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
+
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+
+        protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
+
+        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { }
         /* -------------------- */
         
         /* - Aim 관련 메소드 - */
@@ -308,7 +310,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Interact 관련 메소드 - */
         protected virtual void OnInteractStarted(InputAction.CallbackContext context)
         {
-            if (playerCondition.IsDead || !playerCondition.IsPlayerHasControl) return;
+            if (!playerCondition.IsPlayerHasControl) return;
 
             IInteractable interactable = stateMachine.Player.PlayerInteraction.Interactable;
             switch (interactable)
@@ -328,12 +330,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Skill 관련 메소드 - */
         protected virtual void OnFocusStarted(InputAction.CallbackContext context)
         {
-            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            if (!playerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeFocusGauge()) return;
         }
         protected virtual void OnInstinctStarted(InputAction.CallbackContext context)
         {
-            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            if (!playerCondition.IsPlayerHasControl) return;
             if (!playerCondition.OnConsumeInstinctGauge()) return;
         }
         /* -------------------- */
@@ -341,15 +343,19 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         /* - Item 관련 메소드 - */
         protected virtual void OnItemActionStarted(InputAction.CallbackContext context)
         {
-            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            if (!playerCondition.IsPlayerHasControl) return;
             stateMachine.Player.PlayerInventory.OnItemActionStarted();
         }
 
         protected virtual void OnItemActionCanceled(InputAction.CallbackContext context)
         {
-            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            if (!playerCondition.IsPlayerHasControl) return;
             stateMachine.Player.PlayerInventory.OnItemActionCanceled();
         }
         /* ------------------- */
+
+        /* - Inventory UI Toggle - */
+        protected virtual void OnInventoryToggled(InputAction.CallbackContext context) { }
+        /* ----------------------- */
     }
 }

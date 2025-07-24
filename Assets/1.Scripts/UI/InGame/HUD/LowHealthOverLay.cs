@@ -3,9 +3,9 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
-    public class LowHealthOverLay : MonoBehaviour
+    public class LowHealthOverLay : UIBase
     {
         [SerializeField] private Image topGradient;
         [SerializeField] private Image bottomGradient;
@@ -32,20 +32,16 @@ namespace _1.Scripts.UI.InGame
 
         private void Start()
         {
-            if (playerCondition == null)
+            if (!playerCondition)
             {
                 playerCondition = FindObjectOfType<PlayerCondition>();
             }
 
             playerCondition.OnDamage += HandleHit;
             
-            SetOverlayColer(Color.clear);
+            SetOverlayColor(Color.clear);
         }
-
-        private void OnDestroy()
-        {
-            if (playerCondition != null) playerCondition.OnDamage -= HandleHit;
-        }
+        
         private void Update()
         {
             float ratio = playerCondition.CurrentHealth / (float)playerCondition.MaxHealth;
@@ -65,12 +61,17 @@ namespace _1.Scripts.UI.InGame
 
             if (tint != lastColor)
             {
-                SetOverlayColer(tint);
+                SetOverlayColor(tint);
                 lastColor = tint;
             }
         }
 
-        private void SetOverlayColer(Color color)
+        private void OnDestroy()
+        {
+            if (playerCondition) playerCondition.OnDamage -= HandleHit;
+        }
+        
+        private void SetOverlayColor(Color color)
         {
             topGradient.color = color;
             bottomGradient.color = color;

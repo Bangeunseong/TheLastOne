@@ -1,10 +1,11 @@
 using System;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.Mission;
 using TMPro;
 using UnityEngine;
 
-namespace _1.Scripts.UI.InGame.Mission
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class DistanceUI : UIBase
     {
@@ -16,28 +17,19 @@ namespace _1.Scripts.UI.InGame.Mission
 
         public static Transform CurrentTarget { get; private set; }
         public static event Action<Transform> OnTargetChanged;
-
-        public override void Init(UIManager manager)
+        
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
-            player = CoreManager.Instance.gameManager.Player?.transform;
-            Hide();
+            base.Initialize(manager, param);
+            SetTarget(null);
+            gameObject.SetActive(false);
         }
         
         public override void ResetUI() { SetTarget(null); }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is (Transform playerTransform, Transform targetTransform))
-            {
-                player = playerTransform;
-                SetTarget(targetTransform);
-            }
-        }
         
         public void SetTarget(Transform newTarget)
         {
-            if (!player) player = CoreManager.Instance.gameManager.Player?.transform;
+            player = CoreManager.Instance.gameManager.Player.transform;
             target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);

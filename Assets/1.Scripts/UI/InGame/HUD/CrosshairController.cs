@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using PlayerInput = _1.Scripts.Entity.Scripts.Player.Core.PlayerInput;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class CrosshairController : MonoBehaviour
     {
@@ -21,19 +21,13 @@ namespace _1.Scripts.UI.InGame
         
         private Coroutine modifyCoroutine;
         private Coroutine shrinkCoroutine;
-
-        private void Start()
-        {
-            originalScale = crosshairRectTransform.localScale;
-        }
-
-        void OnEnable()
+        
+        private void OnEnable()
         {
             if (playerInput == null)
             {
                 playerInput = FindObjectOfType<PlayerInput>();
-
-                playerInput.PlayerActions.Enable();
+                
                 aimAction = playerInput.PlayerActions.Aim;
                 fireAction = playerInput.PlayerActions.Fire;
             }
@@ -42,10 +36,15 @@ namespace _1.Scripts.UI.InGame
             fireAction.started += OnFirePerformed;
             fireAction.canceled += OnFireCanceled;
         }
-
+        private void Start()
+        {
+            originalScale = crosshairRectTransform.localScale;
+        }
+        
         private void OnDisable()
         {
             if (playerInput == null) return;
+            
             aimAction.started -= OnAimStarted;
             aimAction.canceled  -= OnAimCanceled;
             fireAction.started -= OnFirePerformed;

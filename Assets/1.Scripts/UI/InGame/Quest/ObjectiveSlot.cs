@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Quests.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _1.Scripts.UI.InGame.Quest
 {

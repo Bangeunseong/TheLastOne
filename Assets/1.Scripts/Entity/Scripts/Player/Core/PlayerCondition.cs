@@ -9,6 +9,7 @@ using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -51,6 +52,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsCrouching { get; set; }
         [field: SerializeField] public bool IsUsingFocus { get; private set; }
         [field: SerializeField] public bool IsUsingInstinct { get; private set; }
+        [field: SerializeField] public bool IsInMiniGame { get; set; }
         [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
@@ -84,10 +86,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
         [field: SerializeField] public bool IsReloading { get; private set; }
+
+        [Header("Components")] 
+        [SerializeField] private Player player;
         
         // Fields
         private CoreManager coreManager;
-        private Player player;
         private SoundPlayer reloadPlayer;
 
         private CancellationTokenSource playerCTS;
@@ -133,7 +137,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void Initialize(DataTransferObject data)
         {
             coreManager = CoreManager.Instance;
-            player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
             // Initialize Weapons
@@ -175,10 +178,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
                 {
-                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                     LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
                     LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
                     transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
@@ -301,7 +304,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
-            coreManager.uiManager.GetUI<InGameUI>().UpdateFocus(CurrentFocusGauge);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
             return true;
         }
@@ -415,7 +418,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = true;
             CurrentHealth = MaxHealth;
             CurrentStamina = MaxStamina;
-            player.InputProvider.enabled = true;
+            player.InputProvider.XYAxis.action.Enable();
             player.PlayerInput.enabled = true;
         }
 
@@ -451,8 +454,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
-            player.PlayerInput.enabled = true;
-            player.InputProvider.enabled = true;
+            player.InputProvider.XYAxis.action.Enable();
         }
 
         public void OnDisablePlayerMovement()
@@ -460,8 +462,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
-            player.PlayerInput.enabled = false;
-            player.InputProvider.enabled = false;
+            player.InputProvider.XYAxis.action.Disable();
         }
 
         private void StopAllUniTasks()

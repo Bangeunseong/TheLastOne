@@ -1,6 +1,7 @@
 ﻿using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using Unity.Collections;
 using UnityEngine;
 

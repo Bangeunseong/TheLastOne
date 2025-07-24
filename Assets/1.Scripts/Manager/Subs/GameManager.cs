@@ -142,11 +142,7 @@ namespace _1.Scripts.Manager.Subs
             IsGamePaused = true;
             
             coreManager.timeScaleManager.ChangeTimeScale(0);
-            Player.Pov.m_HorizontalAxis.Reset();
-            Player.Pov.m_VerticalAxis.Reset();
-            Player.InputProvider.enabled = false;
-            Player.PlayerInput.enabled = false;
-            
+            Player.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -159,14 +155,11 @@ namespace _1.Scripts.Manager.Subs
             
             if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
             else coreManager.timeScaleManager.ChangeTimeScale(1);
-
-            if (Player.PlayerCondition.IsPlayerHasControl)
-            {
-                Player.PlayerInput.enabled = true;
-                Player.InputProvider.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+            
+            if (Player.PlayerCondition.IsInMiniGame) return;
+            Player.PlayerCondition.OnEnablePlayerMovement();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public void ExitGame()
