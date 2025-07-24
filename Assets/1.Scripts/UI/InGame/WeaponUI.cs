@@ -73,6 +73,49 @@ namespace _1.Scripts.UI.InGame
         public override void ResetUI()
         {
             lastSelectedIndex = -1;
+            for (int i = 0; i < slotTransform.Length; i++)
+            {
+                slotTransform[i].localScale = normalScale;
+                slotImage[i].color = Color.clear;
+                slotText[i].text = string.Empty;
+                slotAmmoText[i].text = string.Empty;
+                slotAmmoText[i].enabled = false;
+                slotText[i].enabled = false;
+                SetSlotAlpha(i, idleAlpha);
+
+                if (targetScales != null && i < targetScales.Length) targetScales[i] = normalScale;
+            }
+
+            if (selectedSlotImage != null)
+            {
+                foreach (var image in selectedSlotImage)
+                {
+                    if (image)
+                    {
+                        var color = image.color;
+                        color.a = idleAlpha;
+                        image.color = color;
+                    }
+                }
+            }
+
+            currentAmmoText.text = string.Empty;
+            currentTotalAmmoText.text = string.Empty;
+            if (ammoSlotFrame) ammoSlotFrame.gameObject.SetActive(false);
+
+            isPanelVisible = false;
+
+            if (hideCoroutine != null)
+            {
+                StopCoroutine(hideCoroutine);
+                hideCoroutine = null;
+            }
+
+            if (panelAnimator)
+            {
+                panelAnimator.ResetTrigger("Show");
+                panelAnimator.ResetTrigger("Hide");
+            }
         }
 
         private void Update()

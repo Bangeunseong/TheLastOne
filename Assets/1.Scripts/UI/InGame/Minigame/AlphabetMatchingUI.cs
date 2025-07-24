@@ -21,7 +21,6 @@ namespace _1.Scripts.UI.InGame.Minigame
             foreach (var cell in cells)
                 Destroy(cell.gameObject);
             cells.Clear();
-
             foreach (var t in s)
             {
                 var go = Instantiate(cellPrefab, cellRoot);

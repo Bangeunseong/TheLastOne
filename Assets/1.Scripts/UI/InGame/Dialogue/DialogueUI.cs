@@ -30,7 +30,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager);
-            ClearText();
+            ClearTexts();
             Hide();
         }
 
@@ -55,7 +55,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
         public override void ResetUI()
         {
             StopTyping();
-            ClearText();
+            ClearTexts();
         }
 
         private IEnumerator TypeDialogue(string sentence)
@@ -101,7 +101,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
         }
 
-        private void ClearText()
+        private void ClearTexts()
         {
             nameText.text = "";
             dialogueText.text = "";

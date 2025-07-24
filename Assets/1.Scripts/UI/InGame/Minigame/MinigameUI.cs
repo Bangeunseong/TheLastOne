@@ -45,6 +45,12 @@ namespace _1.Scripts.UI.InGame
             SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
             ShowLoopText(false);
+
+            ClearTexts();
+            
+            alphabetMatchingUI.ResetUI();
+            wireConnectionUI.ResetUI();
+            chargeBarUI.ResetUI();
         }
 
         public override void Hide()
@@ -53,10 +59,7 @@ namespace _1.Scripts.UI.InGame
             else panel.SetActive(false);
         }
 
-        public void HideImmediately()
-        {
-            panel.SetActive(false);
-        }
+        public void HideImmediately() { panel.SetActive(false); }
 
         private IEnumerator HidePanelCoroutine()
         {
@@ -69,8 +72,8 @@ namespace _1.Scripts.UI.InGame
             ShowClearText(false);
             yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
-            yield return null;
         }
+        
         public void ShowPanel(bool show = true)
         {
             panel.SetActive(show);
@@ -135,7 +138,7 @@ namespace _1.Scripts.UI.InGame
             if (!show) alphabetMatchingUI.ResetUI();
         }
         
-        public void ShowMiniGame(string description = "", bool showLoop = false)
+        public void SetMiniGame(string description = "", bool showLoop = false)
         {
             ShowPanel(true);
             SetDescriptionText(description);
@@ -146,6 +149,16 @@ namespace _1.Scripts.UI.InGame
             ShowEnterText(true);
             SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
+        }
+
+        private void ClearTexts()
+        {
+            clearText.text = "";
+            loopText.text = "";
+            countdownText.text = "";
+            descriptionText.text = "";
+            timeText.text = "";
+            timeSlider.value = 0;
         }
     }
 }

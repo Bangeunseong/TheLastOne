@@ -62,7 +62,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
             
             // Initialize MiniGame
             minigameUI = uiManager.GetUI<MinigameUI>();
-            minigameUI.ShowMiniGame(Description);
+            minigameUI.SetMiniGame(Description);
             chargeBarUI = minigameUI.GetChargeBarUI();
             Initialize(chargeBarUI);
             enabled = true;

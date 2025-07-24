@@ -120,7 +120,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
             coreManager.uiManager.GetUI<InGameUI>().UpdateStateUI();
-            coreManager.uiManager.GetUI<QuestUI>().SetQuestSlots();
             coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
             
             StateMachine = new PlayerStateMachine(this);

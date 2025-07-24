@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Manager.Core;
@@ -33,7 +32,6 @@ namespace _1.Scripts.UI.InGame.Quest
             ClearAll();
             questListCache.Clear();
             objectiveDictCache.Clear();
-            Hide();
         }
         private void LoadQuestData()
         {
@@ -44,7 +42,7 @@ namespace _1.Scripts.UI.InGame.Quest
                 kv => kv.Value.Objectives.Values.ToList()
             );
         }
-        public void SetQuestSlots()
+        private void SetQuestSlots()
         {
             if (questSlots.Count > 0) ClearAll();
             foreach (var questData in questListCache)
