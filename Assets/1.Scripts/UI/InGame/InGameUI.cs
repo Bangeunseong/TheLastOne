@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Manager.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -84,6 +83,7 @@ namespace _1.Scripts.UI.InGame
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
         }
+        
         private void Initialize_HealthSegments()
         {
             if (healthSegments.Count > 0) return;

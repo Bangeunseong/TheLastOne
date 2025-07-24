@@ -11,10 +11,10 @@ namespace _1.Scripts.UI.Loading
         [SerializeField] private GameObject panel;
         public Slider progressSlider;
         public TextMeshProUGUI progressText;
-        
-        public override void Init(UIManager manager)
+
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             Hide();
         }
         
@@ -24,20 +24,12 @@ namespace _1.Scripts.UI.Loading
             progressText.text = "0.00%";
         }
         
-        public override void Show()
-        {
-            panel.SetActive(true);
-        }
-        public override void Hide()
-        {
-            panel.SetActive(false);
-        }
-        
         public void UpdateLoadingProgress(float progress)
         {
             progressSlider.value = progress;
             progressText.text = $"{progress * 100:0.00}%";
         }
+        
         public void UpdateProgressText(string text)
         {
             progressText.text = text;

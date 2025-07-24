@@ -20,7 +20,7 @@ namespace _1.Scripts.Manager.Subs
     {
         Persistent,
         InGame,
-        System,
+        InGame_HUD,
     }
     [Serializable] public class UIManager
     {
@@ -28,10 +28,22 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public Canvas RootCanvas { get; private set; }
         [field: SerializeField] public Transform UiRoot { get; private set; }
         
-        private Dictionary<Type, UIBase> uiMap = new();
-        private Dictionary<UIBase, bool> UIStateCache = new();
+        private readonly Dictionary<Type, UIBase> uiMap = new();
+        private readonly Dictionary<UIType, List<Type>> uiGroupMap = new()
+        {
+            {
+                UIType.Persistent, new List<Type> { typeof(LoadingUI), typeof(FadeUI), typeof(LobbyUI) }
+            },
+            { 
+                UIType.InGame, new List<Type> { typeof(InGameUI), typeof(DistanceUI), typeof(WeaponUI),
+                typeof(QuickSlotUI), typeof(QuestUI), typeof(MinigameUI), typeof(InventoryUI), 
+                typeof(PauseMenuUI), typeof(DialogueUI), typeof(GameOverUI) } 
+            },
+            {
+                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI),}
+            }
+        };
         private CoreManager coreManager;
-        private Dictionary<UIType, List<Type>> uiGroupMap = new();
         
         public bool IsCutscene { get; private set; }
         
@@ -45,50 +57,68 @@ namespace _1.Scripts.Manager.Subs
                 UiRoot = canvas.transform;
             }
             
-            RegisterUIGroup();
-            RegisterStaticUI<LoadingUI>();
-            RegisterStaticUI<LobbyUI>();
-            RegisterStaticUI<FadeUI>();
-            ShowUI<LobbyUI>();
-            GetUI<FadeUI>().FadeIn();
+            RegisterStaticUI<LoadingUI>(); RegisterStaticUI<LobbyUI>(); RegisterStaticUI<FadeUI>();
+            ShowUI<LobbyUI>(); GetUI<FadeUI>().FadeIn();
+        }
+
+        private bool RegisterStaticUI<T>() where T : UIBase
+        {
+            var ui = Object.FindObjectOfType<T>(true);
+            if (!ui || uiMap.TryGetValue(typeof(T), out var val)) return false;
+            
+            ui.Initialize(this);
+            uiMap.Add(typeof(T), ui);
+            return true;
         }
         
-        private void RegisterUIGroup()
+        public bool RegisterDynamicUI<T>() where T : UIBase
         {
-            uiGroupMap[UIType.Persistent] = new List<Type>
+            if (uiMap.ContainsKey(typeof(T))) return false;
+            
+            var uiResource = coreManager.resourceManager.GetAsset<GameObject>(typeof(T).Name);
+            if (!uiResource) return false;
+            if (!uiResource.TryGetComponent(out T dynamicUI)) return false;
+            if (!uiMap.TryAdd(typeof(T), dynamicUI))
             {
-                typeof(LoadingUI),
-                typeof(FadeUI),
-                typeof(LobbyUI),
-            };
-
-            uiGroupMap[UIType.InGame] = new List<Type>
-            {
-                typeof(InGameUI),
-                typeof(DistanceUI),
-                typeof(WeaponUI),
-                typeof(QuickSlotUI),
-                typeof(QuestUI),
-                typeof(MinigameUI),
-                typeof(InventoryUI),
-                typeof(PauseMenuUI),
-                typeof(DialogueUI)
-            };
-
-            uiGroupMap[UIType.System] = new List<Type>
-            {
-                typeof(GameOverUI),
-            };
-        }
-
-        public bool RegisterDynamicUI<T>(T dynamicUI) where T : UIBase
-        {
-            if (uiMap.TryAdd(typeof(T), dynamicUI))
-            {
-                
+                if (!uiMap.TryGetValue(typeof(T), out var ui)) return false;
+                ui.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
+                return true;
             }
 
-            return false;
+            Object.Instantiate(dynamicUI, UiRoot);
+            dynamicUI.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
+            return true;
+        }
+
+        public bool RegisterDynamicUIByGroup(UIType groupType)
+        {
+            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(RegisterDynamicUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+            return true;
+        }
+
+        public bool UnregisterDynamicUI<T>() where T : UIBase
+        {
+            if (!uiMap.TryGetValue(typeof(T), out var dynamicUI)) return false;
+            
+            uiMap.Remove(typeof(T));
+            Object.Destroy(dynamicUI.gameObject);
+            return true;
+        }
+
+        public bool UnregisterDynamicUIByGroup(UIType groupType)
+        {
+            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(UnregisterDynamicUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+            return true;
         }
         
         public T GetUI<T>() where T : UIBase
@@ -96,146 +126,116 @@ namespace _1.Scripts.Manager.Subs
             return uiMap.TryGetValue(typeof(T), out var ui) ? ui as T : null;
         }
 
-        public T ShowUI<T>() where T : UIBase
+        public bool ShowUI<T>() where T : UIBase
         {
-            var ui = GetUI<T>() ?? LoadUI<T>();
+            if (!uiMap.TryGetValue(typeof(T), out var ui)) return false;
             ui.Show();
-            return ui;
+            return true;
         }
-        
-        public void ShowUIGroup(UIType group)
-        {
-            if (!uiGroupMap.TryGetValue(group, out var value)) return;
 
+        public bool ShowHUD()
+        {
+            if (!uiGroupMap.TryGetValue(UIType.InGame_HUD, out var value)) return false;
             foreach (var type in value)
             {
                 var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);
                 method?.Invoke(this, null);
             }
-        }
-        
-        public void HideUI<T>() where T : UIBase
-        {
-            var ui = GetUI<T>();
-            if (ui) ui.Hide();
-            else Debug.Log($"{typeof(T).Name}이 uiMap에 없음");
+            return true;
         }
 
-        public T LoadUI<T>() where T : UIBase
+        public bool ShowUIByGroup(UIType groupType)
         {
-            if (uiMap.TryGetValue(typeof(T), out var existingUI))
-            {
-                InjectHandler(existingUI);
-                return existingUI as T;
-            }
-            
-            string address = typeof(T).Name;
-            var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
-            if (!prefab) return null;
-            
-            var instance = Object.Instantiate(prefab, UiRoot, false);
-            if (!instance.TryGetComponent(out T component)) return null;
-            component.Init(this);
-            InjectHandler(component);
-            uiMap[typeof(T)] = component;
-            Service.Log($"UI {typeof(T).Name} Registered");
-            return component;
-        }
-        
-        public void LoadUIGroup(UIType group)
-        {
-            if (!uiGroupMap.TryGetValue(group, out var value)) return;
-
+            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
             foreach (var type in value)
             {
-                var method = typeof(UIManager).GetMethod(nameof(LoadUI))?.MakeGenericMethod(type);
+                var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);
                 method?.Invoke(this, null);
             }
-        }
-        
-        private void RegisterStaticUI<T>() where T : UIBase
-        {
-            var ui = Object.FindObjectOfType<T>(true);
-            if (ui && !uiMap.ContainsKey(typeof(T)))
-            {
-                ui.Init(this);
-                uiMap.Add(typeof(T), ui);
-                Service.Log($"UI {typeof(T).Name} Registered");
-            }
+            return true;
         }
 
-        public void ResetUI()
+        public bool ShowPauseMenu()
         {
-            foreach (var ui in uiMap.Values)
-            {
-                ui.Hide();
-                ui.ResetUI();
-            }
+            if (!HideUIByGroup(UIType.InGame)) return false;
+            ShowUI<PauseMenuUI>();
+            return true;
         }
 
-        public void InitializeUI<T>(object param) where T : UIBase
+        public bool HideUI<T>() where T : UIBase
         {
-            var ui = GetUI<T>();
-            ui?.Initialize(param);
+            if (!uiMap.TryGetValue(typeof(T), out var ui)) return false;
+            ui.Hide();
+            return true;
         }
-        
-        public void InitializeAllUI(object param)
+
+        public bool HideHUD()
         {
-            foreach (var ui in uiMap.Values)
+            if (!uiGroupMap.TryGetValue(UIType.InGame_HUD, out var value)) return false;
+            foreach (var type in value)
             {
-                ui.Initialize(param);
+                var method = typeof(UIManager).GetMethod(nameof(HideUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
             }
+            return true;
+        }
+
+        public bool HideUIByGroup(UIType groupType)
+        {
+            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
+            foreach (var type in value)
+            {
+                var method = typeof(UIManager).GetMethod(nameof(HideUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
+            }
+            return true;
         }
         
-        public void UnloadUI<T>() where T : UIBase
+        public bool HidePauseMenu()
         {
-            Debug.Log($"UnloadUI {typeof(T).Name}");
+            return HideUIByGroup(UIType.InGame) && ShowHUD();
+        }
+
+        public void ResetUI<T>() where T : UIBase
+        {
             if (!uiMap.TryGetValue(typeof(T), out var ui)) return;
-            Object.Destroy(ui.gameObject);
-            uiMap.Remove(typeof(T));
+            ui.ResetUI();
         }
-
-        public void UnloadUIGroup(UIType group)
+        
+        public bool ResetHUD()
         {
-            if (!uiGroupMap.TryGetValue(group, out var value)) return;
-
+            if (!uiGroupMap.TryGetValue(UIType.InGame_HUD, out var value)) return false;
             foreach (var type in value)
             {
-                var method = typeof(UIManager).GetMethod(nameof(UnloadUI))?.MakeGenericMethod(type);
+                var method = typeof(UIManager).GetMethod(nameof(ResetUI))?.MakeGenericMethod(type);
                 method?.Invoke(this, null);
             }
+            return true;
         }
-        
-        public void HideAndSaveAllUI()
+
+        public bool ResetUIByGroup(UIType groupType)
         {
-            UIStateCache.Clear();
-            foreach (var ui in uiMap.Values)
+            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
+            foreach (var type in value)
             {
-                UIStateCache[ui] = ui.gameObject.activeInHierarchy;
-                ui.Hide();
+                var method = typeof(UIManager).GetMethod(nameof(ResetUI))?.MakeGenericMethod(type);
+                method?.Invoke(this, null);
             }
-        }
-        
-        public void RestoreAllUI()
-        {
-            foreach (var kvp in UIStateCache)
-            {
-                if (kvp.Value) kvp.Key.Show();
-            }
-            UIStateCache.Clear();
+            return true;
         }
         
         public void OnCutsceneStarted(PlayableDirector _)
         {
             IsCutscene = true;
-            HideAndSaveAllUI();
+            HideUIByGroup(UIType.InGame);
         }
+        
         public void OnCutsceneStopped(PlayableDirector director)
         {
             director.played -= OnCutsceneStarted;
             director.stopped -= OnCutsceneStopped;
             IsCutscene = false;
-            RestoreAllUI();
+            if (!ShowHUD()) throw new MissingReferenceException();
         }
 
         private void InjectHandler(UIBase ui)

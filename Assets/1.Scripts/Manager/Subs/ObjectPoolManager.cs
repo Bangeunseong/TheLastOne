@@ -211,11 +211,11 @@ namespace _1.Scripts.Manager.Subs
                     if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
                     {
                         await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
-                        coreManager.sceneLoadManager.LoadingProgress += 0.2f;
                     }
                 }
             }
-
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
+            
             if (!scenePrefabMap.TryGetValue(sceneName, out HashSet<string> prefabsToLoad))
             {
                 // 풀 만들기가 필요없는 씬
