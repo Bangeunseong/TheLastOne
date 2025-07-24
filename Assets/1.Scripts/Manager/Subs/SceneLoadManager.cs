@@ -181,8 +181,6 @@ namespace _1.Scripts.Manager.Subs
             
             uiManager.HideUI<LoadingUI>();
             uiManager.RegisterDynamicUIByGroup(UIType.InGame);
-            uiManager.GetUI<QuestUI>().ResetUI();
-            uiManager.GetUI<QuestUI>().Initialize(uiManager);
             uiManager.GetUI<QuestUI>().Refresh();
             uiManager.GetUI<InventoryUI>().ResetUI();
             uiManager.GetUI<InventoryUI>().Initialize(uiManager);

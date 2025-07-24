@@ -1,5 +1,6 @@
 using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private Image leftGradient;
         [SerializeField] private Image rightGradient;
         
-        private PlayerCondition playerCondition;
+        [SerializeField] private PlayerCondition playerCondition;
         
         [Range(0,1)] public float threshold1 = 0.75f;
         [Range(0,1)] public float threshold2 = 0.5f;
@@ -34,20 +35,46 @@ namespace _1.Scripts.UI.InGame.HUD
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            if (playerCondition)
-                playerCondition.OnDamage -= HandleHit;
+            var player = CoreManager.Instance.gameManager.Player;
+            playerCondition = (player) ? player.PlayerCondition : null;
 
-            playerCondition = param as PlayerCondition;
-            if (playerCondition)
-                playerCondition.OnDamage += HandleHit;
+            if (playerCondition) playerCondition.OnDamage += HandleHit;
 
             SetOverlayColor(Color.clear);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+            if (!playerCondition) return;
+
+            float ratio = playerCondition.CurrentHealth / (float)playerCondition.MaxHealth;
+            Color tint;
+            
+            if (ratio <= threshold3) tint = color3;
+            else if (ratio <= threshold2) tint = color2;
+            else if (ratio <= threshold1) tint = color1;
+            else tint = color0;
+            
+            float pulseSpeed = 2f;
+            float pulseStrength = -0.3f;
+            float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f * pulseStrength;
+            
+            float finalAlpha = Mathf.Clamp01(tint.a + pulse + flashAlpha);
+            tint.a = finalAlpha;
+
+            if (tint != lastColor)
+            {
+                SetOverlayColor(tint);
+                lastColor = tint;
+            }
         }
         
         private void Update()
         {
-            if (!playerCondition) return;
+            playerCondition = (CoreManager.Instance.gameManager.Player) ? CoreManager.Instance.gameManager.Player.PlayerCondition : null;
 
+            if (!playerCondition) return;
             float ratio = playerCondition.CurrentHealth / (float)playerCondition.MaxHealth;
             Color tint;
             
