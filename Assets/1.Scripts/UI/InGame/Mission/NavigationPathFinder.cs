@@ -9,7 +9,7 @@ namespace _1.Scripts.UI.InGame.Mission
     {
         private NavMeshPath navPath;
 
-        void Awake()
+        private void Awake()
         {
             navPath = new NavMeshPath();
         }
