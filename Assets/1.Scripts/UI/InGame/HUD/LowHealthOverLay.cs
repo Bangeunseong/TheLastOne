@@ -3,7 +3,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class LowHealthOverLay : MonoBehaviour
     {

@@ -4,14 +4,13 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public enum SlotType
     {

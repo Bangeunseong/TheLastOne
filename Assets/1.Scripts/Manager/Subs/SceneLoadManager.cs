@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame.HUD;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using Unity.Collections;
@@ -179,7 +181,13 @@ namespace _1.Scripts.Manager.Subs
             
             uiManager.HideUI<LoadingUI>();
             uiManager.RegisterDynamicUIByGroup(UIType.InGame);
-            
+            uiManager.GetUI<QuestUI>().ResetUI();
+            uiManager.GetUI<QuestUI>().Initialize(uiManager);
+            uiManager.GetUI<QuestUI>().Refresh();
+            uiManager.GetUI<InventoryUI>().ResetUI();
+            uiManager.GetUI<InventoryUI>().Initialize(uiManager);
+            uiManager.GetUI<InventoryUI>().RefreshInventoryUI();
+
             switch (CurrentScene)
             {
                 case SceneType.Stage1: 

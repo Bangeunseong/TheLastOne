@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Util;
 using TMPro;
 using UnityEngine;
@@ -63,6 +64,7 @@ namespace _1.Scripts.UI.Inventory
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
             playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
+            RefreshInventoryUI();
             gameObject.SetActive(false);
         }
 
@@ -76,10 +78,17 @@ namespace _1.Scripts.UI.Inventory
             CoreManager.Instance.gameManager.PauseGame();
         }
         public override void Hide() 
-        { 
-            panelAnimator?.Rebind();
-            panelAnimator?.Play("Panel Out");
-            base.Hide();
+        {
+            if (panelAnimator != null && panelAnimator.isActiveAndEnabled)
+            {
+                panelAnimator.Rebind();
+                panelAnimator.Play("Panel Out");
+                StartCoroutine(HideCoroutine());
+            }
+            else
+            {
+                base.Hide();
+            }
             CoreManager.Instance.gameManager.ResumeGame(); 
         }
 
@@ -207,6 +216,12 @@ namespace _1.Scripts.UI.Inventory
             recoilText.text = Mathf.RoundToInt(recoil).ToString();
             ammoText.text = ammoCount.ToString();
             weightText.text = weight.ToString("F1");
+        }
+
+        private IEnumerator HideCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+            base.Hide();
         }
     }
 }

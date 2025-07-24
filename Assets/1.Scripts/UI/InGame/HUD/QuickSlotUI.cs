@@ -1,5 +1,4 @@
 using System.Collections;
-using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using Michsky.UI.Shift;
@@ -9,7 +8,7 @@ using UnityEngine.UI;
 using Cursor = UnityEngine.Cursor;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class QuickSlotUI : UIBase
     {

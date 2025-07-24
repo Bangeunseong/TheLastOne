@@ -4,6 +4,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 

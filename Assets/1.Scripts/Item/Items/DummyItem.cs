@@ -5,6 +5,7 @@ using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using UnityEngine;
 
 namespace _1.Scripts.Item.Items

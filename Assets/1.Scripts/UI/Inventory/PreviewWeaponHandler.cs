@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
 
