@@ -51,6 +51,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsCrouching { get; set; }
         [field: SerializeField] public bool IsUsingFocus { get; private set; }
         [field: SerializeField] public bool IsUsingInstinct { get; private set; }
+        [field: SerializeField] public bool IsInMiniGame { get; set; }
         [field: SerializeField] public bool IsPlayerHasControl { get; set; } = true;
         [field: SerializeField] public bool IsDead { get; private set; }
         
@@ -84,10 +85,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
         [field: SerializeField] public bool IsReloading { get; private set; }
+
+        [Header("Components")] 
+        [SerializeField] private Player player;
         
         // Fields
         private CoreManager coreManager;
-        private Player player;
         private SoundPlayer reloadPlayer;
 
         private CancellationTokenSource playerCTS;
@@ -133,7 +136,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void Initialize(DataTransferObject data)
         {
             coreManager = CoreManager.Instance;
-            player = coreManager.gameManager.Player;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
             // Initialize Weapons
@@ -451,7 +453,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnEnablePlayerMovement()
         {
             IsPlayerHasControl = true;
-            player.PlayerInput.enabled = true;
             player.InputProvider.enabled = true;
         }
 
@@ -460,7 +461,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsPlayerHasControl = false;
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
-            player.PlayerInput.enabled = false;
             player.InputProvider.enabled = false;
         }
 

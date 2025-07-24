@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Inventory;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -169,6 +170,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
             playerInput.PlayerActions.ItemAction.canceled += OnItemActionCanceled;
+            playerInput.PlayerActions.ToggleInventory.started += OnInventoryToggled;
         }
         
         private void RemoveInputActionCallbacks()
@@ -193,6 +195,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
             playerInput.PlayerActions.ItemAction.canceled -= OnItemActionCanceled;
+            playerInput.PlayerActions.ToggleInventory.started -= OnInventoryToggled;
         }
         
         /* - 기본동작 관련 메소드 - */
@@ -351,5 +354,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             stateMachine.Player.PlayerInventory.OnItemActionCanceled();
         }
         /* ------------------- */
+
+        /* - Inventory UI Toggle - */
+        protected virtual void OnInventoryToggled(InputAction.CallbackContext context)
+        {
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+        }
+        /* ----------------------- */
     }
 }

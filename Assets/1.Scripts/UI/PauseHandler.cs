@@ -21,11 +21,10 @@ namespace _1.Scripts.UI
         private bool isPaused;
         public bool IsPaused => isPaused;
         public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
-
-        private void Start()
+        
+        public void Initialize(PauseMenuUI ui)
         {
-            coreManager = CoreManager.Instance;
-            pauseMenuUI = coreManager.uiManager.GetUI<PauseMenuUI>(); ;
+            pauseMenuUI = ui;
         }
 
         public void TogglePause()
@@ -47,7 +46,9 @@ namespace _1.Scripts.UI
 
         private void Pause()
         {
-            coreManager.gameManager.PauseGame();
+            if (!pauseMenuUI) return;
+            
+            CoreManager.Instance.gameManager.PauseGame();
             blurMgr.BlurInAnim();
             pauseMenuUI.Show();
             pauseAnimator.Play("Window In");
@@ -63,7 +64,9 @@ namespace _1.Scripts.UI
 
         private void Resume()
         {
-            coreManager.gameManager.ResumeGame();
+            if (!pauseMenuUI) return;
+            
+            CoreManager.Instance.gameManager.ResumeGame();
             blurMgr.BlurOutAnim();
             pauseAnimator.Play("Window Out");
             pauseMenuUI.Hide();

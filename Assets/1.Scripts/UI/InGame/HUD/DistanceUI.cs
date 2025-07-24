@@ -1,10 +1,11 @@
 using System;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.Mission;
 using TMPro;
 using UnityEngine;
 
-namespace _1.Scripts.UI.InGame.Mission
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class DistanceUI : UIBase
     {
@@ -21,7 +22,7 @@ namespace _1.Scripts.UI.InGame.Mission
         {
             base.Initialize(manager, param);
             SetTarget(null);
-            Hide();
+            gameObject.SetActive(false);
         }
         
         public override void ResetUI() { SetTarget(null); }

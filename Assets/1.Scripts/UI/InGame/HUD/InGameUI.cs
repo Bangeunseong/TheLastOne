@@ -60,7 +60,7 @@ namespace _1.Scripts.UI.InGame
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            Hide();
+            gameObject.SetActive(false);
         }
 
         public override void Show()

@@ -29,7 +29,6 @@ namespace _1.Scripts.UI.InGame
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            Hide();
             
             coreManager = CoreManager.Instance;
             quickSlotGroup.alpha = 0;
@@ -42,6 +41,8 @@ namespace _1.Scripts.UI.InGame
                 slotEvents[i].enterEvent.AddListener(() => { currentSlot = idx; });
                 slotEvents[i].exitEvent.AddListener(() => { currentSlot = -1; });
             }
+            
+            gameObject.SetActive(false);
         }
 
         public override void Show()

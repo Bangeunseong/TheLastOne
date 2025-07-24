@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _1.Scripts.UI.Inventory;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
@@ -19,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             base.Exit();
             StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
+            coreManager.uiManager.HideUI<InventoryUI>();
         }
 
         public override void PhysicsUpdate()
@@ -51,6 +53,15 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             base.OnReloadStarted(context);
             playerCondition.TryStartReload();
+        }
+
+        protected override void OnInventoryToggled(InputAction.CallbackContext context)
+        {
+            base.OnInventoryToggled(context);
+            
+            var ui = coreManager.uiManager.GetUI<InventoryUI>();
+            if (ui.gameObject.activeInHierarchy) coreManager.uiManager.HideUI<InventoryUI>();
+            else coreManager.uiManager.ShowUI<InventoryUI>();
         }
     }
 }

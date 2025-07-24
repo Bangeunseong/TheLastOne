@@ -226,13 +226,11 @@ namespace _1.Scripts.MiniGame.ChargeBars
             await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             minigameUI.Hide();
             
-            if (cancel) console.OnFinished();
-            else console.OnCleared(success);
+            if (!cancel) console.OnCleared(success);
             
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
             endgameCTS.Dispose(); endgameCTS = null;
-            
             enabled = false;
         }
     }

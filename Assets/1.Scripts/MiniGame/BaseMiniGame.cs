@@ -30,12 +30,17 @@ namespace _1.Scripts.MiniGame
         protected virtual void OnEnable()
         {
             isFinished = IsPlaying = IsCounting = false;
+            player.PlayerCondition.IsInMiniGame = true;
             player?.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        
-        protected virtual void OnDisable() { }
+
+        protected virtual void OnDisable()
+        {
+            player.PlayerCondition.IsInMiniGame = false;
+            coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
+        }
         
         public virtual void StartMiniGame(Console con, Player ply)
         {

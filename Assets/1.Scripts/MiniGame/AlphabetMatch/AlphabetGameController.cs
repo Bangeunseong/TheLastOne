@@ -179,8 +179,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             uiManager.HideUI<MinigameUI>();
             alphabetUI = null;
             
-            if (cancel) console.OnFinished();
-            else console.OnCleared(success);
+            if (!cancel) console.OnCleared(success);
             
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;

@@ -74,7 +74,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider) InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();

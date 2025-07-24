@@ -64,7 +64,7 @@ namespace _1.Scripts.UI.InGame
         {
             base.Initialize(manager, param);
             targetScales = new Vector3[slotTransform.Length];
-            Hide();
+            gameObject.SetActive(false);
         }
         
         public override void ResetUI()
@@ -123,7 +123,6 @@ namespace _1.Scripts.UI.InGame
                 slotTransform[i].localScale = Vector3.Lerp(slotTransform[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
             }
         }
-        
         
         public void Refresh(bool playShowAnimation = true)
         { 

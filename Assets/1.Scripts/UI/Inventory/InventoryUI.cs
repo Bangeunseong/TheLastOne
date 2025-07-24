@@ -62,15 +62,20 @@ namespace _1.Scripts.UI.Inventory
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
             playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
-            Hide();
+            gameObject.SetActive(false);
         }
 
         public override void Show()
         {
-            panel.SetActive(true);
+            base.Show();
             RefreshInventoryUI();
+            CoreManager.Instance.gameManager.PauseGame();
         }
-        public override void Hide() { panel.SetActive(false); }
+        public override void Hide() 
+        { 
+            base.Hide();
+            CoreManager.Instance.gameManager.ResumeGame(); 
+        }
 
         public override void ResetUI()
         {
@@ -176,8 +181,6 @@ namespace _1.Scripts.UI.Inventory
             if (previewPrefabs.TryGetValue(slot, out var prefab))
                 currentPreviewWeapon = Instantiate(prefab, previewSpawnPoint.position, previewSpawnPoint.rotation);
         }
-
-
         
         public void RefreshInventoryUI()
         {

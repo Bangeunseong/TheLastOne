@@ -29,9 +29,9 @@ namespace _1.Scripts.UI.InGame.Dialogue
 
         public override void Initialize(UIManager manager, object param = null)
         {
-            base.Initialize(manager);
+            base.Initialize(manager, param);
             ClearTexts();
-            Hide();
+            gameObject.SetActive(false);
         }
 
         public override void Show()

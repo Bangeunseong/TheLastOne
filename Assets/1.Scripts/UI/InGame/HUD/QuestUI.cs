@@ -24,7 +24,7 @@ namespace _1.Scripts.UI.InGame.Quest
             LoadQuestData();
             SetQuestSlots();
             SetMainQuestNavigation();
-            Hide();
+            gameObject.SetActive(false);
         }
 
         public override void ResetUI()

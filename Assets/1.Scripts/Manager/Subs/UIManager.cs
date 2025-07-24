@@ -5,6 +5,7 @@ using _1.Scripts.UI;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Dialogue;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Minigame;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
@@ -28,6 +29,9 @@ namespace _1.Scripts.Manager.Subs
         [field: Header("UI Mapping")]
         [field: SerializeField] public Canvas RootCanvas { get; private set; }
         [field: SerializeField] public Transform UiRoot { get; private set; }
+        
+        [field: Header("Handler")]
+        [field: SerializeField] public MenuHandler MenuHandler { get; private set; }
         
         private readonly Dictionary<Type, UIBase> uiMap = new();
         private readonly Dictionary<UIType, List<Type>> uiGroupMap = new()
@@ -93,12 +97,16 @@ namespace _1.Scripts.Manager.Subs
 
         public bool RegisterDynamicUIByGroup(UIType groupType)
         {
+            MenuHandler = Object.FindObjectOfType<MenuHandler>();
+            
             if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
             foreach (var type in value)
             {
                 var method = typeof(UIManager).GetMethod(nameof(RegisterDynamicUI))?.MakeGenericMethod(type);
                 method?.Invoke(this, null);
             }
+            
+            AddHandler(uiMap[typeof(PauseMenuUI)]);
             return true;
         }
 
@@ -228,38 +236,14 @@ namespace _1.Scripts.Manager.Subs
             if (!ShowHUD()) throw new MissingReferenceException();
         }
 
-        private void InjectHandler(UIBase ui)
+        private void AddHandler(UIBase ui)
         {
-            var menuHandler = GameObject.FindObjectOfType<MenuHandler>();
-
-            if (ui is InventoryUI inventoryUI)
-            {
-                var inventoryHandler = inventoryUI.GetComponent<InventoryHandler>();
-                if (menuHandler && inventoryHandler)
-                    menuHandler.SetInventoryHandler(inventoryHandler);
-
-                var pauseHandler = CoreManager.Instance.uiManager.GetUI<PauseMenuUI>()?.GetComponent<PauseHandler>();
-                if (pauseHandler)
-                {
-                    pauseHandler.SetInventoryHandler(inventoryHandler);
-                    inventoryHandler.SetPauseHandler(pauseHandler);
-                }
-            }
-
-            if (ui is PauseMenuUI pauseMenuUI)
-            {
-                var pauseHandler = pauseMenuUI.GetComponent<PauseHandler>();
-                if (menuHandler && pauseHandler)
-                    menuHandler.SetPauseHandler(pauseHandler);
-                pauseHandler.SetPauseMenuUI(pauseMenuUI);
-
-                var inventoryHandler = CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.GetComponent<InventoryHandler>();
-                if (inventoryHandler)
-                {        
-                    pauseHandler.SetInventoryHandler(inventoryHandler);
-                    inventoryHandler.SetPauseHandler(pauseHandler);
-                }
-            }
+            if (ui is not PauseMenuUI pauseMenuUI) return;
+            
+            var pauseHandler = pauseMenuUI.GetComponent<PauseHandler>();
+            if (MenuHandler && pauseHandler)
+                MenuHandler.SetPauseHandler(pauseHandler);
+            pauseHandler.SetPauseMenuUI(pauseMenuUI);
         }
     }
 }

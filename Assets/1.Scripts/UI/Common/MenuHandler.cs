@@ -9,11 +9,9 @@ namespace _1.Scripts.UI.Common
         [SerializeField] private InventoryHandler inventoryHandler;
         [SerializeField] private PauseHandler pauseHandler;
         
-        public void SetInventoryHandler(InventoryHandler handler) => inventoryHandler = handler;
         public void SetPauseHandler(PauseHandler handler) => pauseHandler = handler;
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Tab)) inventoryHandler?.ToggleInventory();
             if (Input.GetKeyDown(KeyCode.Escape)) pauseHandler?.TogglePause();
         }
     }

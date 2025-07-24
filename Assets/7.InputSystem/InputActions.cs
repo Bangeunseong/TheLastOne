@@ -179,6 +179,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""5562765b-8cfe-4856-a599-a23d0b18295f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -412,6 +421,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ItemAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5eb72567-90e7-42da-b651-9f58aa34fabe"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -437,6 +457,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Focus = m_Player.FindAction("Focus", throwIfNotFound: true);
         m_Player_Instinct = m_Player.FindAction("Instinct", throwIfNotFound: true);
         m_Player_ItemAction = m_Player.FindAction("ItemAction", throwIfNotFound: true);
+        m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -515,6 +536,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Focus;
     private readonly InputAction m_Player_Instinct;
     private readonly InputAction m_Player_ItemAction;
+    private readonly InputAction m_Player_ToggleInventory;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -536,6 +558,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Focus => m_Wrapper.m_Player_Focus;
         public InputAction @Instinct => m_Wrapper.m_Player_Instinct;
         public InputAction @ItemAction => m_Wrapper.m_Player_ItemAction;
+        public InputAction @ToggleInventory => m_Wrapper.m_Player_ToggleInventory;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -596,6 +619,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ItemAction.started += instance.OnItemAction;
             @ItemAction.performed += instance.OnItemAction;
             @ItemAction.canceled += instance.OnItemAction;
+            @ToggleInventory.started += instance.OnToggleInventory;
+            @ToggleInventory.performed += instance.OnToggleInventory;
+            @ToggleInventory.canceled += instance.OnToggleInventory;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -651,6 +677,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ItemAction.started -= instance.OnItemAction;
             @ItemAction.performed -= instance.OnItemAction;
             @ItemAction.canceled -= instance.OnItemAction;
+            @ToggleInventory.started -= instance.OnToggleInventory;
+            @ToggleInventory.performed -= instance.OnToggleInventory;
+            @ToggleInventory.canceled -= instance.OnToggleInventory;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -687,5 +716,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnFocus(InputAction.CallbackContext context);
         void OnInstinct(InputAction.CallbackContext context);
         void OnItemAction(InputAction.CallbackContext context);
+        void OnToggleInventory(InputAction.CallbackContext context);
     }
 }

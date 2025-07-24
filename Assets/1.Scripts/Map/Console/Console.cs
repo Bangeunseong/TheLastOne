@@ -87,13 +87,7 @@ namespace _1.Scripts.Map.Console
             {
                 IsOnCooldown = true;
                 AlertBody?.SetActive(true);
-                coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
             }
-        }
-
-        public void OnFinished()
-        {
-            coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
         }
 
         public void OpenDoors()

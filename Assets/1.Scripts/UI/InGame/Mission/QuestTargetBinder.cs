@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.HUD;
 using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Mission

@@ -3,7 +3,7 @@ using _1.Scripts.Manager.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HackingProgress
 {
     public class HackingProgressUI : MonoBehaviour
     {

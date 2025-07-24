@@ -14,8 +14,8 @@ namespace _1.Scripts.UI.Common
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button reloadButton;
         [SerializeField] private Button quitButton;
+        
         private PauseHandler pauseHandler;
-
         public CanvasGroup SettingPanel => settingPanel;
         public Animator SettingAnimator => settingAnimator;
 
@@ -24,6 +24,7 @@ namespace _1.Scripts.UI.Common
             base.Initialize(manager, param);
             
             pauseHandler = FindObjectOfType<PauseHandler>();
+            pauseHandler.Initialize(this);
             
             resumeButton.onClick.RemoveAllListeners();
             reloadButton.onClick.RemoveAllListeners();
@@ -45,12 +46,13 @@ namespace _1.Scripts.UI.Common
                 pauseHandler.TogglePause();
                 CoreManager.Instance.MoveToIntroScene();
             });
-            Hide();
+            gameObject.SetActive(false);
         }
         
         public override void Show() {  panel.SetActive(true); }
 
         public override void Hide() { panel.SetActive(false); }
+        
         public override void ResetUI() { Hide(); }
     }
 }
