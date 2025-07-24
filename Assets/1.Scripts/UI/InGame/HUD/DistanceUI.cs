@@ -17,19 +17,18 @@ namespace _1.Scripts.UI.InGame.Mission
         public static Transform CurrentTarget { get; private set; }
         public static event Action<Transform> OnTargetChanged;
         
-
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            player = CoreManager.Instance.gameManager.Player?.transform;
             SetTarget(null);
             Hide();
         }
+        
         public override void ResetUI() { SetTarget(null); }
         
         public void SetTarget(Transform newTarget)
         {
-            if (!player) player = CoreManager.Instance.gameManager.Player?.transform;
+            if (!player) player = CoreManager.Instance.gameManager.Player.transform;
             target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);

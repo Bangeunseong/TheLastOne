@@ -23,26 +23,37 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] public Image[] slotIcons;
         [SerializeField] private TextMeshProUGUI[] slotCounts;
         
-        private PlayerInventory inventory;
+        private CoreManager coreManager;
         private int currentSlot = -1;
 
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
             Hide();
+            
+            coreManager = CoreManager.Instance;
             quickSlotGroup.alpha = 0;
+            quickSlotGroup.blocksRaycasts = false;
             quickSlotPanel.SetActive(false);
-
+            
             for (int i = 0; i < slotEvents.Length; i++)
             {
                 int idx = i;
                 slotEvents[i].enterEvent.AddListener(() => { currentSlot = idx; });
                 slotEvents[i].exitEvent.AddListener(() => { currentSlot = -1; });
             }
-            ResetUI();
         }
 
-        
+        public override void Show()
+        {
+            OpenQuickSlot();
+        }
+
+        public override void Hide()
+        {
+            CloseQuickSlot();
+        }
+
         public override void ResetUI()
         {
             currentSlot = -1;
@@ -62,7 +73,7 @@ namespace _1.Scripts.UI.InGame
             if (quickSlotPanelAnimator) quickSlotPanelAnimator.Rebind();
         }
         
-        public void OpenQuickSlot()
+        private void OpenQuickSlot()
         {
             currentSlot = -1;
             quickSlotPanel.SetActive(true);
@@ -70,19 +81,20 @@ namespace _1.Scripts.UI.InGame
             quickSlotGroup.blocksRaycasts = true;
             quickSlotPanelAnimator.Play("Panel In");
             foreach (var slot in slotEvents) slot.exitEvent.Invoke();
+            
             RefreshQuickSlot();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
-        public void CloseAndUse()
+        public void CloseQuickSlot()
         {
             if (!quickSlotPanel.activeInHierarchy) return;
             
             quickSlotPanelAnimator.Play("Panel Out");
             quickSlotGroup.alpha = 0;
             quickSlotGroup.blocksRaycasts = false;
-            StartCoroutine(CloseQuickSlot());
+            StartCoroutine(CloseQuickSlot_Coroutine());
             
             if (currentSlot != -1) UseSlot(currentSlot);
             else if (currentSlot == -1)
@@ -94,9 +106,8 @@ namespace _1.Scripts.UI.InGame
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-
-
-        private IEnumerator CloseQuickSlot()
+        
+        private IEnumerator CloseQuickSlot_Coroutine()
         {
             yield return new WaitForSeconds(0.1f);
             quickSlotPanel.SetActive(false);
@@ -110,8 +121,7 @@ namespace _1.Scripts.UI.InGame
 
         private void RefreshQuickSlot()
         {
-            if (!inventory) return;
-            var items = inventory.Items;
+            var items = coreManager.gameManager.Player.PlayerInventory.Items;
             for (int i = 0; i < slotIcons.Length; i++)
             {
                 ItemType type = (ItemType)i;

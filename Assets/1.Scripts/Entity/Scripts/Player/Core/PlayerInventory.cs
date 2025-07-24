@@ -30,7 +30,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsOpenUIAction = Time.unscaledTime - timeSinceLastPressed >= HoldDurationToOpen;
 
             if (!IsOpenUIAction) return;
-            coreManager.uiManager?.GetUI<QuickSlotUI>().OpenQuickSlot();
+            
+            coreManager.uiManager.ShowUI<QuickSlotUI>();
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -70,7 +71,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             switch (IsOpenUIAction)
             {
                 case true:
-                    coreManager.uiManager.GetUI<QuickSlotUI>()?.CloseAndUse(); 
+                    coreManager.uiManager.HideUI<QuickSlotUI>();
                     player.InputProvider.enabled = true; break;
                 case false: OnUseItem(); break;
             }

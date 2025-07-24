@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _1.Scripts.UI.InGame.Mission
 {
@@ -16,12 +17,12 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] float markerSpeed = 30f;
 
         private Transform target;
-        private NavigationPathFinder pathFinder;
+        private NavMeshPath navPath;
         private CancellationTokenSource cts;
 
         private void Awake()
         {
-            pathFinder = GetComponent<NavigationPathFinder>();
+            navPath = new NavMeshPath();
             if (!player)
             {
                 var go = GameObject.FindWithTag("Player");
@@ -61,8 +62,8 @@ namespace _1.Scripts.UI.InGame.Mission
                 var go = GameObject.FindWithTag("Player");
                 if (go) player = go.transform;
             }
-            if (!player || !target || !pathFinder) return;
-            var corners = pathFinder.GetPathCorners(player.position, target.position);
+            if (!player || !target) return;
+            var corners = GetPathCorners(player.position, target.position);
             if (corners.Length > 1)
                 AnimateMarkerAlongPath(corners, cts?.Token ?? CancellationToken.None).Forget();
         }
@@ -77,7 +78,7 @@ namespace _1.Scripts.UI.InGame.Mission
                     continue;
                 }
 
-                var corners = pathFinder.GetPathCorners(player.position, target.position);
+                var corners = GetPathCorners(player.position, target.position);
                 if (corners.Length > 1) AnimateMarkerAlongPath(corners, token).Forget();
 
                 await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token, cancelImmediately: true);
@@ -129,6 +130,13 @@ namespace _1.Scripts.UI.InGame.Mission
                 new[] { new GradientAlphaKey(0.2f, 0f), new GradientAlphaKey(0f, 1f) }
             );
             trail.colorGradient = grad;
+        }
+        
+        private Vector3[] GetPathCorners(Vector3 startPos, Vector3 targetPos)
+        {
+            navPath.ClearCorners();
+            NavMesh.CalculatePath(startPos, targetPos, NavMesh.AllAreas, navPath);
+            return navPath.corners;
         }
     }
 }

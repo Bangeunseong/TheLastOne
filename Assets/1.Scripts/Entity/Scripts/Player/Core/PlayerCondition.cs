@@ -301,7 +301,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
-            coreManager.uiManager.GetUI<InGameUI>().UpdateFocus(CurrentFocusGauge);
+            coreManager.uiManager.GetUI<InGameUI>()?.UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
             return true;
         }

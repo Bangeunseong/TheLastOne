@@ -1,11 +1,10 @@
 using System.Collections;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame.Minigame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.Minigame
 {
     public class MinigameUI : UIBase
     {
@@ -48,9 +47,9 @@ namespace _1.Scripts.UI.InGame
 
             ClearTexts();
             
-            alphabetMatchingUI.ResetUI();
-            wireConnectionUI.ResetUI();
-            chargeBarUI.ResetUI();
+            alphabetMatchingUI.Hide();
+            wireConnectionUI.Hide();
+            chargeBarUI.Hide();
         }
 
         public override void Hide()

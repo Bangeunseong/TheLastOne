@@ -41,11 +41,7 @@ namespace _1.Scripts.UI.InGame
             
             SetOverlayColor(Color.clear);
         }
-
-        private void OnDestroy()
-        {
-            if (playerCondition) playerCondition.OnDamage -= HandleHit;
-        }
+        
         private void Update()
         {
             float ratio = playerCondition.CurrentHealth / (float)playerCondition.MaxHealth;
@@ -70,6 +66,11 @@ namespace _1.Scripts.UI.InGame
             }
         }
 
+        private void OnDestroy()
+        {
+            if (playerCondition) playerCondition.OnDamage -= HandleHit;
+        }
+        
         private void SetOverlayColor(Color color)
         {
             topGradient.color = color;

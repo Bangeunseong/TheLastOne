@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
 using UnityEngine;
@@ -55,19 +56,15 @@ namespace _1.Scripts.UI.InGame
         private Coroutine hideCoroutine;
         private bool isPanelVisible = false;
 
-        private PlayerCondition  playerCondition;
+        private PlayerCondition playerCondition;
         private int lastSelectedIndex = -1;
         
 
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                targetScales = new Vector3[slotTransform.Length];
-                Refresh(false);
-            }
+            targetScales = new Vector3[slotTransform.Length];
+            Hide();
         }
         
         public override void ResetUI()
@@ -130,12 +127,14 @@ namespace _1.Scripts.UI.InGame
         
         public void Refresh(bool playShowAnimation = true)
         { 
-            var weapons = playerCondition?.Weapons;
-            var available = playerCondition?.AvailableWeapons;
-            int selectedIndex = playerCondition?.EquippedWeaponIndex ?? -1;
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
+            var weapons = playerCondition.Weapons;
+            var available = playerCondition.AvailableWeapons;
+            int selectedIndex = playerCondition.EquippedWeaponIndex;
 
             if (weapons == null || available == null) return;
-            if (weapons.Count <=0 || available.Count <=0) return;
+            if (weapons.Count <= 0 || available.Count <= 0) return;
 
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;

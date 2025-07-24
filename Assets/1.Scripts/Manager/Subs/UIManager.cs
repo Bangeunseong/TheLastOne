@@ -5,6 +5,7 @@ using _1.Scripts.UI;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Dialogue;
+using _1.Scripts.UI.InGame.Minigame;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
@@ -77,17 +78,16 @@ namespace _1.Scripts.Manager.Subs
             
             var uiResource = coreManager.resourceManager.GetAsset<GameObject>(typeof(T).Name);
             if (!uiResource) return false;
-            if (!uiResource.TryGetComponent(out T dynamicUI)) return false;
-            
-            if (!uiMap.TryAdd(typeof(T), dynamicUI))
+            if (uiMap.TryGetValue(typeof(T), out var ui))
             {
-                if (!uiMap.TryGetValue(typeof(T), out var ui)) return false;
-                ui.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
+                ui.Initialize(this);
                 return true;
             }
+            
             var instance = Object.Instantiate(uiResource, UiRoot);
             if (!instance.TryGetComponent(out T instanceUI)) return false;
-            instanceUI.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
+            instanceUI.Initialize(this);
+            uiMap.Add(typeof(T), instanceUI);
             return true;
         }
 
@@ -137,17 +137,6 @@ namespace _1.Scripts.Manager.Subs
         public bool ShowHUD()
         {
             if (!uiGroupMap.TryGetValue(UIType.InGame_HUD, out var value)) return false;
-            foreach (var type in value)
-            {
-                var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);
-                method?.Invoke(this, null);
-            }
-            return true;
-        }
-
-        public bool ShowUIByGroup(UIType groupType)
-        {
-            if (!uiGroupMap.TryGetValue(groupType, out var value)) return false;
             foreach (var type in value)
             {
                 var method = typeof(UIManager).GetMethod(nameof(ShowUI))?.MakeGenericMethod(type);

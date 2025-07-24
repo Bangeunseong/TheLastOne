@@ -12,9 +12,7 @@ namespace _1.Scripts.UI.InGame.Minigame
         
         private List<AlphabetCell> cells = new();
         
-        public override void Show() { panel.SetActive(true); }
-        public override void Hide() { panel.SetActive(false); HideAll(); }
-        public override void ResetUI() { Hide(); }
+        public override void Hide() { base.Hide(); HideAll(); }
         
         public void CreateAlphabet(string s)
         {

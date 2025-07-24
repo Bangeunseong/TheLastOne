@@ -17,9 +17,5 @@ namespace _1.Scripts.UI.InGame.Minigame
             if (!Bottom) Bottom = this.TryGetChildComponent<RectTransform>("Bottom");
             if (!WireContainer) WireContainer = this.TryGetChildComponent<RectTransform>("WireContainer");
         }
-
-        public override void Show() { Panel.gameObject.SetActive(true); }
-        public override void Hide() { Panel.gameObject.SetActive(false); }
-        public override void ResetUI() { Hide(); }
     }
 }

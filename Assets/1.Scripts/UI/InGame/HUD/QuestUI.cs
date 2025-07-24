@@ -33,6 +33,7 @@ namespace _1.Scripts.UI.InGame.Quest
             questListCache.Clear();
             objectiveDictCache.Clear();
         }
+        
         private void LoadQuestData()
         {
             var questManager = CoreManager.Instance.questManager;
@@ -42,6 +43,7 @@ namespace _1.Scripts.UI.InGame.Quest
                 kv => kv.Value.Objectives.Values.ToList()
             );
         }
+        
         private void SetQuestSlots()
         {
             if (questSlots.Count > 0) ClearAll();

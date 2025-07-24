@@ -33,7 +33,6 @@ namespace _1.Scripts.UI.InGame
 
         private void LateUpdate()
         {
-            if (!camera) camera = Camera.main?.transform;
             if (!target || !camera) return;
             transform.position = target.position + Vector3.up * offsetY;
             transform.LookAt(camera);
