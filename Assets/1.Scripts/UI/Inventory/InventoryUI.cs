@@ -15,6 +15,7 @@ namespace _1.Scripts.UI.Inventory
     {
         [Header("UI")]
         [SerializeField] private GameObject panel;
+        [SerializeField] private Animator panelAnimator;
         [Header("SlotType")]
         [SerializeField] private SlotType[] slotType;
         
@@ -61,13 +62,16 @@ namespace _1.Scripts.UI.Inventory
                 var info = prefab.GetComponent<PreviewWeaponHandler>();
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
-            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
             gameObject.SetActive(false);
         }
 
         public override void Show()
         {
             base.Show();
+            panelAnimator?.Rebind();
+            panelAnimator?.Play("Panel In");
+            
             RefreshInventoryUI();
 
             var player = CoreManager.Instance.gameManager.Player;
@@ -80,6 +84,8 @@ namespace _1.Scripts.UI.Inventory
 
         public override void Hide()
         {
+            panelAnimator?.Rebind();
+            panelAnimator?.Play("Panel Out");
             base.Hide();
             
             var player = CoreManager.Instance.gameManager.Player;
