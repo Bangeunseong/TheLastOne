@@ -11,12 +11,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.StencilAbles
     public class StencilAbleForDrone : MonoBehaviour
     {
         private BaseNpcStatController statController;
-        private Transform rootRenderer;
         
         private void Awake()
         {
             statController = GetComponent<BaseNpcStatController>();
-            rootRenderer = this.TryGetChildComponent<Transform>("DronBot");
         }
 
         public void StencilLayerOnOrNot(bool isOn)
@@ -24,12 +22,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StencilAbles
             if (isOn)
             {
                 int layerMask = statController.RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy;
-                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, layerMask);
+                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayersForStencil);
             }
             else
             {
                 int layerMask = statController.RuntimeStatData.IsAlly ? LayerConstants.Ally : LayerConstants.Enemy;
-                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, layerMask);
+                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayersForStencil);
             }
         }
     }

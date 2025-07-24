@@ -57,19 +57,44 @@ namespace _1.Scripts.Util
         }
 
         /// <summary>
-        /// 자식들 전부 레이어 변환
+        /// 자식 레이어 전부 변환, 변환을 무시해야하는 레이어가 있다면 추가
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="layer"></param>
-        public static void SetLayerRecursively(GameObject obj, int layer)
+        /// <param name="ignoreLayers"></param>
+        public static void SetLayerRecursively(GameObject obj, int layer, HashSet<int> ignoreLayers = null)
         {
-            obj.layer = layer;
+            if (ignoreLayers == null || !ignoreLayers.Contains(obj.layer))
+            {
+                obj.layer = layer;
+            }
+            
             foreach (Transform child in obj.transform)
             {
                 SetLayerRecursively(child.gameObject, layer);
             }
         }
 
+        /// <summary>
+        /// 해킹 시 모든 레이어 아군레이어로 변환
+        /// </summary>
+        /// <param name="obj"></param>
+        public static void SetLayerRecursively_Hacking(GameObject obj)
+        {
+            if (obj.layer == LayerConstants.Enemy) obj.layer = LayerConstants.Ally;
+            else if (obj.layer == LayerConstants.StencilEnemy) obj.layer = LayerConstants.StencilAlly;
+            else if (obj.layer == LayerConstants.Head_E) obj.layer = LayerConstants.Head_P;
+            else if (obj.layer == LayerConstants.Chest_E) obj.layer = LayerConstants.Chest_P;
+            else if (obj.layer == LayerConstants.Arm_E) obj.layer = LayerConstants.Arm_P;
+            else if (obj.layer == LayerConstants.Belly_E) obj.layer = LayerConstants.Belly_P;
+            else if (obj.layer == LayerConstants.Leg_E) obj.layer = LayerConstants.Leg_P;
+            
+            foreach (Transform child in obj.transform)
+            {
+                SetLayerRecursively_Hacking(child.gameObject);
+            }
+        }
+        
         /// <summary>
         /// Npc를 씬에서 사라지게 할 때 사용
         /// </summary>
