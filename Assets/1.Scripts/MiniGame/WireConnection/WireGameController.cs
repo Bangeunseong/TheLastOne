@@ -47,7 +47,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.ShowUI<MinigameUI>();
+            minigameUI = uiManager.GetUI<MinigameUI>();
             minigameUI.ShowMiniGame(Description);
             wireConnectionUI = minigameUI.GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 

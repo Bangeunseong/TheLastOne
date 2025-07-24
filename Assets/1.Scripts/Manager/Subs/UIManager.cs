@@ -78,15 +78,16 @@ namespace _1.Scripts.Manager.Subs
             var uiResource = coreManager.resourceManager.GetAsset<GameObject>(typeof(T).Name);
             if (!uiResource) return false;
             if (!uiResource.TryGetComponent(out T dynamicUI)) return false;
+            
             if (!uiMap.TryAdd(typeof(T), dynamicUI))
             {
                 if (!uiMap.TryGetValue(typeof(T), out var ui)) return false;
                 ui.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
                 return true;
             }
-
-            Object.Instantiate(dynamicUI, UiRoot);
-            dynamicUI.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
+            var instance = Object.Instantiate(uiResource, UiRoot);
+            if (!instance.TryGetComponent(out T instanceUI)) return false;
+            instanceUI.Initialize(this, coreManager.gameManager.Player.PlayerCondition);
             return true;
         }
 

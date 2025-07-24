@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Manager.Core;
@@ -23,7 +24,6 @@ namespace _1.Scripts.UI.InGame.Quest
             base.Initialize(manager, param);
             LoadQuestData();
             SetQuestSlots();
-            Refresh();
             SetMainQuestNavigation();
             Hide();
         }
@@ -44,13 +44,13 @@ namespace _1.Scripts.UI.InGame.Quest
                 kv => kv.Value.Objectives.Values.ToList()
             );
         }
-        private void SetQuestSlots()
+        public void SetQuestSlots()
         {
-            ClearAll();
+            if (questSlots.Count > 0) ClearAll();
             foreach (var questData in questListCache)
             {
-                var go = Instantiate(questSlotPrefab, questSlotContainer);
-                var questSlot = go.GetComponent<QuestSlot>();
+                var go = Instantiate(questSlotPrefab, questSlotContainer, false);
+                if (!go.TryGetComponent(out QuestSlot questSlot)) { Destroy(go); return; }
                 if (objectiveDictCache.TryGetValue(questData.questID, out var obj))
                 {
                     questSlot.Initialize(questData, obj);

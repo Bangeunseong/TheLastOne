@@ -81,14 +81,14 @@ namespace _1.Scripts.Manager.Subs
                 }
             }
             
+            // Hide Lobby and Show Loading
+            uiManager.HideUI<LobbyUI>();
+            uiManager.ShowUI<LoadingUI>();
+            
             var loadingScene = 
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
                     coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
             while (!loadingScene!.isDone) { await Task.Yield(); }
-
-            // Hide Lobby and Show Loading
-            uiManager.HideUI<LobbyUI>();
-            uiManager.ShowUI<LoadingUI>();
             
             // Update Loading Progress
             LoadingProgress = 0f;
@@ -177,12 +177,12 @@ namespace _1.Scripts.Manager.Subs
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
             coreManager.gameManager.Initialize_Player(player);
+            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
+            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
             
             uiManager.HideUI<LoadingUI>();
             uiManager.RegisterDynamicUIByGroup(UIType.InGame);
-            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
-            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
-
+            
             switch (CurrentScene)
             {
                 case SceneType.Stage1: 

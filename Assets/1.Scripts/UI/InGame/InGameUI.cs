@@ -18,7 +18,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI levelText;
 
         [Header("체력바")] 
-        [SerializeField] private Image healthSegmentPrefab;
+        [SerializeField] private GameObject healthSegmentPrefab;
         [SerializeField] private Transform healthSegmentContainer;
         [SerializeField] private int healthSegmentValue = 10;
         [SerializeField] private Animator healthBackgroundAnimator;
@@ -62,18 +62,16 @@ namespace _1.Scripts.UI.InGame
             if (param is PlayerCondition newPlayerCondition)
             {
                 playerCondition = newPlayerCondition;
-                UpdateStateUI();
                 Hide();
             }
         }
 
         public override void ResetUI()
         {
-            playerCondition = null;
             Hide();
         }
         
-        private void UpdateStateUI()
+        public void UpdateStateUI()
         {
             Initialize_HealthSegments();
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
@@ -93,10 +91,11 @@ namespace _1.Scripts.UI.InGame
                 int count = playerCondition.MaxHealth / healthSegmentValue;
                 for (int i = 0; i < count; i++)
                 {
-                    var segment = Instantiate(healthSegmentPrefab, healthSegmentContainer);
-                    segment.type = Image.Type.Filled;
-                    segment.fillAmount = 1f;
-                    healthSegments.Add(segment);
+                    var segment = Instantiate(healthSegmentPrefab, healthSegmentContainer, false);
+                    if (!segment.TryGetComponent(out Image img)) { Destroy(segment); continue; }
+                    img.type = Image.Type.Filled;
+                    img.fillAmount = 1f;
+                    healthSegments.Add(img);
                     segment.gameObject.SetActive(true);
                     if (segment.TryGetComponent(out Animator animator))
                         healthSegmentAnimators.Add(animator);
