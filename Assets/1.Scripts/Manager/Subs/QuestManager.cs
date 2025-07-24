@@ -56,6 +56,8 @@ namespace _1.Scripts.Manager.Subs
 
         public void Reset()
         {
+            foreach (var objective in activeQuests.SelectMany(quest => quest.Value.Objectives))
+                objective.Value.RemoveIncludedEvents();
             activeQuests.Clear();
         }
 

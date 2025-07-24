@@ -32,7 +32,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
         [field: SerializeField] public float Speed { get; private set; } = 5f;
         [field: SerializeField] public int CurrentBarIndex { get; private set; }
         
-        private List<Bar> bars;
+        private List<Bar> bars = new();
         private Vector2 direction = Vector2.right;
         private ChargeBarUI chargeBarUI;
         private MinigameUI minigameUI;
@@ -118,6 +118,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
             base.CancelMiniGame();
             
             // Clear all remaining bars
+            countdownCTS?.Cancel();
             ResetAllBars();
             FinishGame(true);
         }
