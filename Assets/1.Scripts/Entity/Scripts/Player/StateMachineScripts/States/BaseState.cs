@@ -200,9 +200,21 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         
         /* - 기본동작 관련 메소드 - */
         protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-        protected virtual void OnJumpStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
-        protected virtual void OnRunStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
-        protected virtual void OnCrouchStarted(InputAction.CallbackContext context) { if (!playerCondition.IsPlayerHasControl) return; }
+
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+        {
+            if (!playerCondition.IsPlayerHasControl) return;
+        }
+
+        protected virtual void OnRunStarted(InputAction.CallbackContext context)
+        {
+            if (!playerCondition.IsPlayerHasControl) return;
+        }
+
+        protected virtual void OnCrouchStarted(InputAction.CallbackContext context)
+        {
+            if (!playerCondition.IsPlayerHasControl) return;
+        }
         /* -------------------- */
         
         /* - Aim 관련 메소드 - */

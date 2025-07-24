@@ -22,18 +22,14 @@ namespace _1.Scripts.UI.Common
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            
-            if (playerCondition) playerCondition.OnDeath -= OnPlayerDeath;
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                playerCondition.OnDeath += OnPlayerDeath;
-            }
+
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnDeath -= OnPlayerDeath;
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnDeath += OnPlayerDeath;
         }
         
         public override void Show()
         {
-            panel.SetActive(true);
+            base.Show();
             if (fadeInCoroutine != null)
             {
                 StopCoroutine(fadeInCoroutine);

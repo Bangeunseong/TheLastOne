@@ -61,7 +61,7 @@ namespace _1.Scripts.UI.Inventory
                 var info = prefab.GetComponent<PreviewWeaponHandler>();
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
-            playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             gameObject.SetActive(false);
         }
 
@@ -125,6 +125,7 @@ namespace _1.Scripts.UI.Inventory
         private void CalculateMaxStats()
         {
             if (!playerCondition) return;
+            
             foreach (var w in playerCondition.Weapons)
             {
                 var stat = SlotUtility.GetWeaponStat(w);
@@ -134,8 +135,7 @@ namespace _1.Scripts.UI.Inventory
                 maxAmmo = Mathf.Max(maxAmmo, stat.MaxAmmoCountInMagazine);
             }
         }
-
-
+        
         private void InitializeSlots()
         {
             if (!playerCondition) return;

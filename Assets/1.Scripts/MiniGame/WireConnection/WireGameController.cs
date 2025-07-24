@@ -91,6 +91,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         
         protected override void OnDisable()
         {
+            base.OnDisable();
             countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllConnections();

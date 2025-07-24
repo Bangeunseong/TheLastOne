@@ -29,7 +29,7 @@ namespace _1.Scripts.UI.InGame.HUD
         
         public void SetTarget(Transform newTarget)
         {
-            if (!player) player = CoreManager.Instance.gameManager.Player.transform;
+            player = CoreManager.Instance.gameManager.Player.transform;
             target = newTarget;
             CurrentTarget = newTarget;
             OnTargetChanged?.Invoke(newTarget);

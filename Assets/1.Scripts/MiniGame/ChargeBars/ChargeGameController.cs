@@ -108,6 +108,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllBars();

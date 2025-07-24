@@ -177,10 +177,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
                 {
-                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                     LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
                     LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
                     transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                    Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
                 
                 for (var i = 0; i < data.AvailableWeapons.Length; i++)
