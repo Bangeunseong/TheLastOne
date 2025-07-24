@@ -26,7 +26,7 @@ namespace _1.Scripts.Manager.Subs
     {
         [field: Header("UI Mapping")]
         [field: SerializeField] public Canvas RootCanvas { get; private set; }
-        [SerializeField] private Transform uiRoot;
+        [field: SerializeField] public Transform UiRoot { get; private set; }
         
         private Dictionary<Type, UIBase> uiMap = new();
         private Dictionary<UIBase, bool> UIStateCache = new();
@@ -42,7 +42,7 @@ namespace _1.Scripts.Manager.Subs
             if (canvas)
             {
                 RootCanvas = canvas.GetComponent<Canvas>();
-                uiRoot = canvas.transform;
+                UiRoot = canvas.transform;
             }
             
             RegisterUIGroup();
@@ -55,14 +55,14 @@ namespace _1.Scripts.Manager.Subs
         
         private void RegisterUIGroup()
         {
-            uiGroupMap[UIType.Persistent] = new()
+            uiGroupMap[UIType.Persistent] = new List<Type>
             {
                 typeof(LoadingUI),
                 typeof(FadeUI),
                 typeof(LobbyUI),
             };
 
-            uiGroupMap[UIType.InGame] = new()
+            uiGroupMap[UIType.InGame] = new List<Type>
             {
                 typeof(InGameUI),
                 typeof(DistanceUI),
@@ -75,10 +75,20 @@ namespace _1.Scripts.Manager.Subs
                 typeof(DialogueUI)
             };
 
-            uiGroupMap[UIType.System] = new()
+            uiGroupMap[UIType.System] = new List<Type>
             {
                 typeof(GameOverUI),
             };
+        }
+
+        public bool RegisterDynamicUI<T>(T dynamicUI) where T : UIBase
+        {
+            if (uiMap.TryAdd(typeof(T), dynamicUI))
+            {
+                
+            }
+
+            return false;
         }
         
         public T GetUI<T>() where T : UIBase
@@ -123,7 +133,7 @@ namespace _1.Scripts.Manager.Subs
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
             if (!prefab) return null;
             
-            var instance = Object.Instantiate(prefab, uiRoot, false);
+            var instance = Object.Instantiate(prefab, UiRoot, false);
             if (!instance.TryGetComponent(out T component)) return null;
             component.Init(this);
             InjectHandler(component);
