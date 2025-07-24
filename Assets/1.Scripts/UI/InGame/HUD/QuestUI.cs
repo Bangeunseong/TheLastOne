@@ -5,9 +5,10 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Quests.Data;
 using _1.Scripts.UI.InGame.Mission;
+using _1.Scripts.UI.InGame.Quest;
 using UnityEngine;
 
-namespace _1.Scripts.UI.InGame.Quest
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class QuestUI : UIBase
     {
@@ -24,6 +25,7 @@ namespace _1.Scripts.UI.InGame.Quest
             LoadQuestData();
             SetQuestSlots();
             SetMainQuestNavigation();
+            Refresh();
             gameObject.SetActive(false);
         }
 

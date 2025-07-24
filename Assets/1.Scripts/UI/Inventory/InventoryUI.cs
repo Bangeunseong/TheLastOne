@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Util;
 using TMPro;
 using UnityEngine;
@@ -81,12 +82,18 @@ namespace _1.Scripts.UI.Inventory
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
-        public override void Hide()
+        public override void Hide() 
         {
-            panelAnimator?.Rebind();
-            panelAnimator?.Play("Panel Out");
-            base.Hide();
+            if (panelAnimator && panelAnimator.isActiveAndEnabled)
+            {
+                panelAnimator.Rebind();
+                panelAnimator.Play("Panel Out");
+                StartCoroutine(HideCoroutine());
+            }
+            else
+            {
+                base.Hide();
+            }
             
             var player = CoreManager.Instance.gameManager.Player;
             player.InputProvider.enabled = true;
@@ -218,6 +225,12 @@ namespace _1.Scripts.UI.Inventory
             recoilText.text = Mathf.RoundToInt(recoil).ToString();
             ammoText.text = ammoCount.ToString();
             weightText.text = weight.ToString("F1");
+        }
+
+        private IEnumerator HideCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+            base.Hide();
         }
     }
 }

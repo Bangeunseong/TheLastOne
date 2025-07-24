@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class InGameUI : UIBase
     {
