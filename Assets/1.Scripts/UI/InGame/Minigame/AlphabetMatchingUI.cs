@@ -12,7 +12,9 @@ namespace _1.Scripts.UI.InGame.Minigame
         [SerializeField] private GameObject panel;
         [SerializeField] private Transform cellRoot;
         [SerializeField] private GameObject cellPrefab;
+        
         private List<AlphabetCell> cells = new();
+        
         public override void Show() { panel.SetActive(true); }
         public override void Hide() { panel.SetActive(false); HideAll(); }
         public override void ResetUI() { Hide(); }
@@ -23,25 +25,31 @@ namespace _1.Scripts.UI.InGame.Minigame
                 Destroy(cell.gameObject);
             cells.Clear();
 
-            for (int i = 0; i < s.Length; i++)
+            for (var i = 0; i < s.Length; i++)
             {
                 var go = Instantiate(cellPrefab, cellRoot);
-                var cell = go.GetComponent<AlphabetCell>();
+                if (!go.TryGetComponent(out AlphabetCell cell)) continue;
                 cell.SetChar(s[i]);
                 cells.Add(cell);
             }
         }
-        public void ShowAlphabet(bool active) { foreach (var cell in cells) cell.gameObject.SetActive(active); }
+
+        public void ShowAlphabet(bool active)
+        {
+            foreach (var cell in cells) cell.gameObject.SetActive(active);
+        }
+        
         public void AlphabetAnim(int index, bool correct)
         {
             if (index < 0 || index >= cells.Count) return;
+            
             if (correct) cells[index].PlayCorrectAnim();
             else cells[index].PlayWrongAnim();
         }
+        
         private void HideAll()
         {
-            foreach (var cell in cells)
-                Destroy(cell.gameObject);
+            foreach (var cell in cells) Destroy(cell.gameObject);
             cells.Clear();
         }
     }

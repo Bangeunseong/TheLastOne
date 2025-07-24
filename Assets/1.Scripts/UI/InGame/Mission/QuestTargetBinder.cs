@@ -7,15 +7,14 @@ using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.Analytics;
 
-
 namespace _1.Scripts.UI.InGame.Mission
 {
-    [Serializable]
-    public class QuestTargetBinding
+    [Serializable] public class QuestTargetBinding
     {
         public int questID;
         public Transform target;
     }
+    
     public class QuestTargetBinder : MonoBehaviour
     {
         [Header("Quest Target Bindings")]
