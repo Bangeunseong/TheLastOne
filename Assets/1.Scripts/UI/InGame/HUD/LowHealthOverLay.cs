@@ -1,11 +1,12 @@
 using System.Collections;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace _1.Scripts.UI.InGame.HUD
 {
-    public class LowHealthOverLay : MonoBehaviour
+    public class LowHealthOverLay : UIBase
     {
         [SerializeField] private Image topGradient;
         [SerializeField] private Image bottomGradient;
@@ -30,20 +31,23 @@ namespace _1.Scripts.UI.InGame.HUD
         private float flashAlpha;
         private Coroutine flashCoroutine;
 
-        private void Start()
+        public override void Initialize(UIManager manager, object param = null)
         {
-            if (!playerCondition)
-            {
-                playerCondition = FindObjectOfType<PlayerCondition>();
-            }
+            base.Initialize(manager, param);
+            if (playerCondition)
+                playerCondition.OnDamage -= HandleHit;
 
-            playerCondition.OnDamage += HandleHit;
-            
+            playerCondition = param as PlayerCondition;
+            if (playerCondition)
+                playerCondition.OnDamage += HandleHit;
+
             SetOverlayColor(Color.clear);
         }
         
         private void Update()
         {
+            if (!playerCondition) return;
+
             float ratio = playerCondition.CurrentHealth / (float)playerCondition.MaxHealth;
             Color tint;
             

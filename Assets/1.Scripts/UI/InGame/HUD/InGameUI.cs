@@ -39,10 +39,6 @@ namespace _1.Scripts.UI.InGame.HUD
         private Coroutine focusEffectCoroutine;
         private Coroutine instinctEffectCoroutine;
         
-        [field: Header("Handler")]
-        [field: SerializeField] public InventoryHandler InventoryHandler { get; private set; }
-        [field: SerializeField] public PauseHandler PauseHandler { get; private set; }
-        
         [field: Header("Game Control")]
         [SerializeField] private Button exitGameButton;
         [SerializeField] private Button loadGameButton;
