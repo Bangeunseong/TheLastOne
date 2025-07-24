@@ -40,7 +40,6 @@ namespace _1.Scripts.UI.InGame.HUD
         private Coroutine instinctEffectCoroutine;
         
         [field: Header("Handler")]
-        [field: SerializeField] public InventoryHandler InventoryHandler { get; private set; }
         [field: SerializeField] public PauseHandler PauseHandler { get; private set; }
         
         [field: Header("Game Control")]
