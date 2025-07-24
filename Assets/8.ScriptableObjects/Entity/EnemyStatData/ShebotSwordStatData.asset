@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a90191b8dfb31748bef72acacc8eae7, type: 3}
   m_Name: ShebotSwordStatData
   m_EditorClassIdentifier: 
-  entityName: 
+  entityName: ShebotSword
   isPlayer: 0
   isAlly: 0
-  maxHealth: 0
-  baseDamage: 0
+  maxHealth: 150
+  baseDamage: 15
   baseAttackRate: 0
   armor: 0
-  maxArmor: 0
-  moveSpeed: 0
-  runMultiplier: 0
+  maxArmor: 10
+  moveSpeed: 3
+  runMultiplier: 3
   walkMultiplier: 0
   footStepSounds: []
   hitSounds: []
   deathSounds: []
-  detectRange: 0
-  attackRange: 0
-  alertDuration: 0
-  alertRadius: 0
-  minWaitingDuration: 0
-  maxWaitingDuration: 0
-  minWanderingDistance: 0
-  maxWanderingDistance: 0
+  detectRange: 15
+  attackRange: 5
+  alertDuration: 3
+  alertRadius: 50
+  minWaitingDuration: 5
+  maxWaitingDuration: 10
+  minWanderingDistance: 10
+  maxWanderingDistance: 15

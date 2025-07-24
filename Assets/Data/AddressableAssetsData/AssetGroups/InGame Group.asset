@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Address: ReconDroneStatData
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Stage1
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b0ab298866360414581b6a182659ff06
     m_Address: Shell
@@ -40,7 +40,7 @@ MonoBehaviour:
     m_Address: SuicideDroneStatData
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Stage1
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdc07fe471b3f1347b0fc9accb4c772f
     m_Address: ReconDroneNotHackable
@@ -128,13 +128,6 @@ MonoBehaviour:
     - Stage1
     - Stage2
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 73a100272e614dd4d965b1a1963b9462
-    m_Address: Bullet
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Stage1
-    - Stage2
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 71d01b6829cbd004b94ff7a40a085b70
     m_Address: Assets/2.Prefabs/Item/Shield_Prefab.prefab
     m_ReadOnly: 0
@@ -162,6 +155,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     - Stage2
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c5ef753dd55cad46bf8277c9fd388d4
+    m_Address: ShebotSwordStatData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Common
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
