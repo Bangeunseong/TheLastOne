@@ -28,6 +28,7 @@ public class Unit_DroneBot : MonoBehaviour
 	private BehaviorTree behaviorTree;
 	private BaseNpcStatController statController;
 	[SerializeField] private LayerMask hittableLayer = 0;
+	[SerializeField] private float spreadAmount = 1f;
 	
 	private void Awake()
 	{
@@ -125,6 +126,11 @@ public class Unit_DroneBot : MonoBehaviour
 		
 		Vector3 directionToTarget = (targetPos.Value - pos_side.position).normalized;
 
+		directionToTarget.x += Random.Range(-spreadAmount, spreadAmount);
+		directionToTarget.y += Random.Range(-spreadAmount, spreadAmount);
+		directionToTarget.z += Random.Range(-spreadAmount, spreadAmount);
+		directionToTarget.Normalize();
+		
 		int targetMask = isAlly
 			? LayerConstants.ToLayerMask(LayerConstants.EnemyLayers)
 			: LayerConstants.ToLayerMask(LayerConstants.AllyLayers);
