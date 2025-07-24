@@ -155,8 +155,9 @@ namespace _1.Scripts.Manager.Subs
             
             if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
             else coreManager.timeScaleManager.ChangeTimeScale(1);
-            if (!Player.PlayerCondition.IsInMiniGame)
-                Player.PlayerCondition.OnEnablePlayerMovement();
+            
+            if (Player.PlayerCondition.IsInMiniGame) return;
+            Player.PlayerCondition.OnEnablePlayerMovement();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }

@@ -46,18 +46,21 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnJumpStarted(InputAction.CallbackContext context)
         {
             base.OnJumpStarted(context);
+            if (!playerCondition.IsPlayerHasControl) return;
             stateMachine.ChangeState(stateMachine.JumpState);
         }
 
         protected override void OnReloadStarted(InputAction.CallbackContext context)
         {
             base.OnReloadStarted(context);
+            if (!playerCondition.IsPlayerHasControl) return;
             playerCondition.TryStartReload();
         }
 
         protected override void OnInventoryToggled(InputAction.CallbackContext context)
         {
             base.OnInventoryToggled(context);
+            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
             
             var ui = coreManager.uiManager.GetUI<InventoryUI>();
             if (ui.gameObject.activeInHierarchy) coreManager.uiManager.HideUI<InventoryUI>();

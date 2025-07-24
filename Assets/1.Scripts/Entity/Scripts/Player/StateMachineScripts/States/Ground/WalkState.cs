@@ -23,20 +23,20 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
-            
             playerCondition.CancelStaminaTask();
         }
 
         protected override void OnCrouchStarted(InputAction.CallbackContext context)
         {
             base.OnCrouchStarted(context);
+            if (!playerCondition.IsPlayerHasControl) return;
             stateMachine.ChangeState(stateMachine.CrouchState);
         }
 
         protected override void OnRunStarted(InputAction.CallbackContext context)
         {
             base.OnRunStarted(context);
-            if (playerCondition.IsAiming || playerCondition.IsAttacking) return;
+            if (!playerCondition.IsPlayerHasControl || playerCondition.IsAiming || playerCondition.IsAttacking) return;
             stateMachine.ChangeState(stateMachine.RunState);
         }
     }
