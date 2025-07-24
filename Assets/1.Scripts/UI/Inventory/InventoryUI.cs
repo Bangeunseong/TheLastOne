@@ -69,12 +69,19 @@ namespace _1.Scripts.UI.Inventory
         {
             base.Show();
             RefreshInventoryUI();
-            CoreManager.Instance.gameManager.PauseGame();
+
+            var player = CoreManager.Instance.gameManager.Player;
+            player.Pov.m_HorizontalAxis.Reset();
+            player.Pov.m_VerticalAxis.Reset();
+            player.InputProvider.enabled = false;
         }
-        public override void Hide() 
-        { 
+
+        public override void Hide()
+        {
             base.Hide();
-            CoreManager.Instance.gameManager.ResumeGame(); 
+            
+            var player = CoreManager.Instance.gameManager.Player;
+            player.InputProvider.enabled = true;
         }
 
         public override void ResetUI()
