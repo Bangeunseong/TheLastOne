@@ -45,20 +45,21 @@ namespace _1.Scripts.UI.InGame
         
         public override void ResetUI()
         {
-            inventory = null;
             currentSlot = -1;
-            foreach (var icon in slotIcons)
+            for (int i = 0; i < slotIcons.Length; i++)
             {
-                icon.sprite = null;
-                icon.enabled = false;
+                slotIcons[i].sprite = null;
+                slotIcons[i].enabled = false;
+
+                slotCounts[i].text = string.Empty;
+                slotCounts[i].gameObject.SetActive(false);
             }
-            foreach (var count in slotCounts)
-            {
-                count.text = "";
-                count.gameObject.SetActive(false);
-            }
+
             quickSlotPanel.SetActive(false);
-            quickSlotGroup.alpha = 0;
+            quickSlotGroup.alpha = 0f;
+            quickSlotGroup.blocksRaycasts = false;
+
+            if (quickSlotPanelAnimator) quickSlotPanelAnimator.Rebind();
         }
         
         public void OpenQuickSlot()

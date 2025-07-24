@@ -24,7 +24,7 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private Animator healthBackgroundAnimator;
         private List<Animator> healthSegmentAnimators = new List<Animator>();
         private List<Image> healthSegments = new List<Image>();
-        private float prevhealth;
+        private float prevHealth;
 
         [Header("스테미나")] 
         [SerializeField] private Animator staminaAnimator;
@@ -69,8 +69,7 @@ namespace _1.Scripts.UI.InGame
 
         public override void ResetUI()
         {
-            playerCondition = null;
-            Hide();
+            ResetStatement();
         }
         
         private void UpdateStateUI()
@@ -103,7 +102,7 @@ namespace _1.Scripts.UI.InGame
                 }
                 healthSegmentPrefab.gameObject.SetActive(false);
             }
-            prevhealth = playerCondition.CurrentHealth;
+            prevHealth = playerCondition.CurrentHealth;
         }
         
         public void UpdateHealthSlider(float current, float max)
@@ -119,13 +118,13 @@ namespace _1.Scripts.UI.InGame
                 else healthSegments[i].fillAmount = 0f;
             }
 
-            if (healthBackgroundAnimator && current < prevhealth) healthBackgroundAnimator.SetTrigger("Damaged");
-            if (current < prevhealth && healthSegmentAnimators != null)
+            if (healthBackgroundAnimator && current < prevHealth) healthBackgroundAnimator.SetTrigger("Damaged");
+            if (current < prevHealth && healthSegmentAnimators != null)
             {
                 for (int i = 0; i < full && i < healthSegmentAnimators.Count; i++)
                     healthSegmentAnimators[i].SetTrigger("Damaged");
             }
-            prevhealth = current;
+            prevHealth = current;
         }
 
         public void UpdateStaminaSlider(float current, float max)
@@ -201,5 +200,39 @@ namespace _1.Scripts.UI.InGame
         public void UpdateItemProgress(float progress) { progressFillImage.fillAmount = Mathf.Clamp01(progress); }
 
         public void ShowMessage(string message) { messageText.text = message; }
+
+        private void ResetStatement()
+        {
+            foreach (var segment in healthSegments)
+            {
+                segment.fillAmount = 0f;
+                segment.gameObject.SetActive(false);
+            }
+
+            healthSegments.Clear();
+            healthSegmentAnimators.Clear();
+            healthText.text = "";
+            maxHealthText.text = "";
+            staminaSlider.value = 0f;
+            staminaAnimator.SetBool("IsLack", false);
+            armorSlider.value = 0f;
+            armorSlider.enabled = false;
+            instinctGaugeImage.fillAmount = 0f;
+            focusGaugeImage.fillAmount = 0f;
+            if (instinctEffectCoroutine != null)
+            {
+                StopCoroutine(instinctEffectCoroutine);
+                instinctEffectCoroutine = null;
+            }
+            if (focusEffectCoroutine != null)
+            {
+                StopCoroutine(focusEffectCoroutine);
+                focusEffectCoroutine = null;
+            }
+            levelText.text = "";
+            progressFillImage.enabled = false;
+            progressFillImage.fillAmount = 0f;
+            messageText.text = "";
+        }
     }
 }

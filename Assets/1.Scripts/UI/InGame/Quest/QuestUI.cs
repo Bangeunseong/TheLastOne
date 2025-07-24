@@ -22,8 +22,6 @@ namespace _1.Scripts.UI.InGame.Quest
         {
             base.Initialize(manager, param);
             LoadQuestData();
-            SetQuestSlots();
-            Refresh();
             SetMainQuestNavigation();
             Hide();
         }
@@ -33,7 +31,6 @@ namespace _1.Scripts.UI.InGame.Quest
             ClearAll();
             questListCache.Clear();
             objectiveDictCache.Clear();
-            Hide();
         }
         private void LoadQuestData()
         {
@@ -44,22 +41,7 @@ namespace _1.Scripts.UI.InGame.Quest
                 kv => kv.Value.Objectives.Values.ToList()
             );
         }
-        private void SetQuestSlots()
-        {
-            ClearAll();
-            foreach (var questData in questListCache)
-            {
-                var go = Instantiate(questSlotPrefab, questSlotContainer);
-                var questSlot = go.GetComponent<QuestSlot>();
-                if (objectiveDictCache.TryGetValue(questData.questID, out var obj))
-                {
-                    questSlot.Initialize(questData, obj);
-                    questSlots.Add(questSlot);
-                }
-                else Destroy(go);
-            }
-        }
-
+        
         private void ClearAll()
         {
             foreach (var slot in questSlots)
@@ -69,6 +51,18 @@ namespace _1.Scripts.UI.InGame.Quest
 
         public void Refresh()
         {
+            ClearAll();
+            foreach (var questData in questListCache)
+            {
+                var go = Instantiate(questSlotPrefab, questSlotContainer);
+                if (!go.TryGetComponent(out QuestSlot questSlot)) { Destroy(go); return; }
+                if (objectiveDictCache.TryGetValue(questData.questID, out var obj))
+                {
+                    questSlot.Initialize(questData, obj);
+                    questSlots.Add(questSlot);
+                }
+                else Destroy(go);
+            }
             for (int i = 0; i < questSlots.Count; i++)
             {
                 var questSlot = questSlots[i];

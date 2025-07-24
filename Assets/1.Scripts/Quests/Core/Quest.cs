@@ -43,7 +43,6 @@ namespace _1.Scripts.Quests.Core
 
             var currentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(currentObjective.data.targetID);
-            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();
         }
 
         public void ResumeQuest(QuestInfo info, Console[] consoles)
@@ -77,7 +76,6 @@ namespace _1.Scripts.Quests.Core
             
             var currentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(currentObjective.data.targetID);
-            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();
         }
 
         public void UpdateObjectiveProgress(int objectiveId)

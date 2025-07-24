@@ -74,7 +74,6 @@ namespace _1.Scripts.UI.Inventory
 
         public override void ResetUI()
         {
-            playerCondition = null;
             ClearSlotButtons();
             ClearPreviewWeapon();
             ClearText();
@@ -86,6 +85,8 @@ namespace _1.Scripts.UI.Inventory
             {
                 button.gameObject.SetActive(false);
                 button.onClick.RemoveAllListeners();
+                var label = button.GetComponentInChildren<TextMeshProUGUI>();
+                if (label) label.text = string.Empty;
             }
         }
 
@@ -100,8 +101,20 @@ namespace _1.Scripts.UI.Inventory
 
         private void ClearText()
         {
-            titleText.text = "";
-            descriptionText.text = "";
+            titleText.text = string.Empty;
+            descriptionText.text = string.Empty;
+
+            damageText.text = string.Empty;
+            rpmText.text = string.Empty;
+            recoilText.text = string.Empty;
+            weightText.text = string.Empty;
+            ammoText.text = string.Empty;
+
+            damageSlider.value = 0f;
+            rpmSlider.value = 0f;
+            recoilSlider.value = 0f;
+            weightSlider.value = 0f;
+            ammoSlider.value = 0f;
         }
 
         private void CalculateMaxStats()
