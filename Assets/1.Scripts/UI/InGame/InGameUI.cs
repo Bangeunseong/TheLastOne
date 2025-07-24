@@ -54,31 +54,25 @@ namespace _1.Scripts.UI.InGame
         
         private PlayerCondition playerCondition;
         private bool isPaused = false;
-
-        public override void Init(UIManager manager)
-        {
-            base.Init(manager);
-            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
-            Initialize_HealthSegments();
-            Hide();
-        }
         
+        private void Awake() { progressFillImage.enabled = false; }
+        
+        public override void Initialize(UIManager manager, object param = null)
+        {
+            base.Initialize(manager, param);
+            if (param is PlayerCondition newPlayerCondition)
+            {
+                playerCondition = newPlayerCondition;
+                UpdateStateUI();
+                Hide();
+            }
+        }
+
         public override void ResetUI()
         {
             playerCondition = null;
             Hide();
         }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                UpdateStateUI();
-            }
-        }
-
-        private void Awake() { progressFillImage.enabled = false; }
         
         private void UpdateStateUI()
         {
@@ -90,7 +84,7 @@ namespace _1.Scripts.UI.InGame
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
         }
-        public void Initialize_HealthSegments()
+        private void Initialize_HealthSegments()
         {
             if (healthSegments.Count > 0) return;
             
