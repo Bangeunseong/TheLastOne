@@ -74,6 +74,8 @@ namespace _1.Scripts.UI.Inventory
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         public override void Hide()
@@ -82,6 +84,8 @@ namespace _1.Scripts.UI.Inventory
             
             var player = CoreManager.Instance.gameManager.Player;
             player.InputProvider.enabled = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public override void ResetUI()
