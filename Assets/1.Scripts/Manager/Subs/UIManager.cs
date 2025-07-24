@@ -22,20 +22,18 @@ namespace _1.Scripts.Manager.Subs
         InGame,
         System,
     }
-    [Serializable]
-    public class UIManager
+    [Serializable] public class UIManager
     {
         [field: Header("UI Mapping")]
         [field: SerializeField] public Canvas RootCanvas { get; private set; }
         [SerializeField] private Transform uiRoot;
         
-        public bool IsCutscene { get; private set; }
-        
         private Dictionary<Type, UIBase> uiMap = new();
         private Dictionary<UIBase, bool> UIStateCache = new();
         private CoreManager coreManager;
-
         private Dictionary<UIType, List<Type>> uiGroupMap = new();
+        
+        public bool IsCutscene { get; private set; }
         
         public void Start()
         {
@@ -94,6 +92,7 @@ namespace _1.Scripts.Manager.Subs
             ui.Show();
             return ui;
         }
+        
         public void ShowUIGroup(UIType group)
         {
             if (!uiGroupMap.TryGetValue(group, out var value)) return;
@@ -123,6 +122,7 @@ namespace _1.Scripts.Manager.Subs
             string address = typeof(T).Name;
             var prefab = coreManager.resourceManager.GetAsset<GameObject>(address);
             if (!prefab) return null;
+            
             var instance = Object.Instantiate(prefab, uiRoot, false);
             if (!instance.TryGetComponent(out T component)) return null;
             component.Init(this);
@@ -131,6 +131,7 @@ namespace _1.Scripts.Manager.Subs
             Service.Log($"UI {typeof(T).Name} Registered");
             return component;
         }
+        
         public void LoadUIGroup(UIType group)
         {
             if (!uiGroupMap.TryGetValue(group, out var value)) return;

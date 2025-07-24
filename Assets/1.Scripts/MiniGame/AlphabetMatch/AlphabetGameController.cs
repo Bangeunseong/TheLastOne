@@ -100,7 +100,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             {
                 alphabetUI.AlphabetAnim(CurrentIndex, true);
                 CurrentIndex++;
-            }
+            } else alphabetUI.AlphabetAnim(CurrentIndex, false);
         }
 
         public override void StartMiniGame(Console con, Player ply)
