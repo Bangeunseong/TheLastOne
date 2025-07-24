@@ -22,11 +22,13 @@ namespace _1.Scripts.UI.InGame.HUD
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
+            
             LoadQuestData();
             SetQuestSlots();
             SetMainQuestNavigation();
             Refresh();
             gameObject.SetActive(false);
+            Service.Log("Initialized Quest UI");
         }
 
         public override void ResetUI()

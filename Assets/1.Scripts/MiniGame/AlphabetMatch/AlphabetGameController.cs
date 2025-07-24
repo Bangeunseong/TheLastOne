@@ -119,7 +119,9 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.CancelMiniGame();
             
-            countdownCTS?.Cancel();
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+
+            if (isFinished) return;
             FinishGame(true);
         }
         

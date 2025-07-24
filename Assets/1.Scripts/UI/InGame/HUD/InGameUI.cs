@@ -59,7 +59,6 @@ namespace _1.Scripts.UI.InGame.HUD
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             gameObject.SetActive(false);
         }
 
@@ -87,7 +86,8 @@ namespace _1.Scripts.UI.InGame.HUD
         
         public void UpdateStateUI()
         {
-            if (!playerCondition) { Service.Log("InGameUI : PlayerCondition is Null!"); return; }
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
             Initialize_HealthSegments();
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);

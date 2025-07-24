@@ -1,4 +1,5 @@
-﻿using _1.Scripts.UI.Inventory;
+﻿using _1.Scripts.UI.Common;
+using _1.Scripts.UI.Inventory;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -59,7 +60,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnInventoryToggled(InputAction.CallbackContext context)
         {
             base.OnInventoryToggled(context);
-            if (!stateMachine.Player.PlayerCondition.IsPlayerHasControl) return;
+            if (coreManager.gameManager.IsGamePaused) return;
             
             var ui = coreManager.uiManager.GetUI<InventoryUI>();
             if (ui.gameObject.activeInHierarchy) coreManager.uiManager.HideUI<InventoryUI>();

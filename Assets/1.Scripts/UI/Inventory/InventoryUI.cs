@@ -63,7 +63,7 @@ namespace _1.Scripts.UI.Inventory
                 var info = prefab.GetComponent<PreviewWeaponHandler>();
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
-            playerCondition = CoreManager.Instance.gameManager.Player?.PlayerCondition;
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             gameObject.SetActive(false);
         }
 
@@ -76,9 +76,7 @@ namespace _1.Scripts.UI.Inventory
             RefreshInventoryUI();
 
             var player = CoreManager.Instance.gameManager.Player;
-            player.Pov.m_HorizontalAxis.Reset();
-            player.Pov.m_VerticalAxis.Reset();
-            player.InputProvider.enabled = false;
+            player.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -96,7 +94,7 @@ namespace _1.Scripts.UI.Inventory
             }
             
             var player = CoreManager.Instance.gameManager.Player;
-            player.InputProvider.enabled = true;
+            player.PlayerCondition.OnEnablePlayerMovement();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -164,7 +162,7 @@ namespace _1.Scripts.UI.Inventory
         {
             if (!playerCondition) return;
 
-            for (int i = 0; i < slotType.Length && i < slotButtons.Count; i++)
+            for (int i = 0; i < slotButtons.Count; i++)
             {
                 var button = slotButtons[i];
                 button.onClick.RemoveAllListeners();

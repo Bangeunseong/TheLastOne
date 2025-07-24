@@ -119,8 +119,10 @@ namespace _1.Scripts.MiniGame.ChargeBars
             base.CancelMiniGame();
             
             // Clear all remaining bars
-            countdownCTS?.Cancel();
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             ResetAllBars();
+
+            if (isFinished) return;
             FinishGame(true);
         }
 

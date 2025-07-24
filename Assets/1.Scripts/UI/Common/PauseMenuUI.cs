@@ -23,7 +23,7 @@ namespace _1.Scripts.UI.Common
         {
             base.Initialize(manager, param);
             
-            pauseHandler = FindObjectOfType<PauseHandler>();
+            pauseHandler = GetComponent<PauseHandler>();
             pauseHandler.Initialize(this);
             
             resumeButton.onClick.RemoveAllListeners();

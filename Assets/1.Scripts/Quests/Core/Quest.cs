@@ -70,8 +70,7 @@ namespace _1.Scripts.Quests.Core
             
             if (info.completionList.All(val => val.Value))
             { 
-                isCompleted = true; 
-                CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Refresh();
+                isCompleted = true;
                 return;
             }
             
@@ -82,11 +81,9 @@ namespace _1.Scripts.Quests.Core
         public void UpdateObjectiveProgress(int objectiveId)
         {
             var objective = Objectives[objectiveId];
-            
             CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Refresh();
-
-            if (!objective.IsCompleted) return;
             
+            if (!objective.IsCompleted) return;
             objective.Deactivate();
 
             if (Objectives.Any(val => val.Value.IsActivated))

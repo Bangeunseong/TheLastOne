@@ -22,11 +22,13 @@ namespace _1.Scripts.UI
         
         public void Initialize(PauseMenuUI ui)
         {
+            coreManager = CoreManager.Instance;
             pauseMenuUI = ui;
         }
 
         public void TogglePause()
         {
+            if (coreManager.uiManager.IsCutscene) return;
             isPaused = !isPaused;
             if (isPaused) Pause();
             else Resume();

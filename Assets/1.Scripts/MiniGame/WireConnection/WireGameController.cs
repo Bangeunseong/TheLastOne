@@ -107,6 +107,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             ResetAllConnections();
             ResetAllSockets();
             
+            if (isFinished) return;
             FinishGame(true);
         }
         

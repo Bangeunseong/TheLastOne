@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.UI.InGame.HUD;
 using Cysharp.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace _1.Scripts.UI.InGame.Mission
         [SerializeField] float updateInterval = 5f;
         [SerializeField] float markerSpeed = 30f;
 
+        private Queue<GameObject> markers = new();
         private Transform target;
         private NavMeshPath navPath;
         private CancellationTokenSource cts;
@@ -43,6 +45,8 @@ namespace _1.Scripts.UI.InGame.Mission
         private void OnDisable()
         {
             DistanceUI.OnTargetChanged -= OnTargetChanged;
+            
+            while (markers.TryDequeue(out var marker)) Destroy(marker);
             cts?.Cancel();
             cts?.Dispose();
             cts = null;
@@ -91,10 +95,10 @@ namespace _1.Scripts.UI.InGame.Mission
             if (corners.Length < 2 || !player) return;
 
             corners[0] = player.position;
-            var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity);
-
+            var marker = Instantiate(markerPrefab, corners[0], Quaternion.identity); 
             SetupMarkerVisual(marker);
-
+            
+            markers.Enqueue(marker);
             for (int i = 1; i < corners.Length; i++)
             {
                 while (marker && Vector3.Distance(marker.transform.position, corners[i]) > 0.05f)
@@ -104,11 +108,12 @@ namespace _1.Scripts.UI.InGame.Mission
                         corners[i],
                         markerSpeed * Time.deltaTime
                     );
-                    await UniTask.NextFrame(token, cancelImmediately: true);
+                    await UniTask.Yield(token, cancelImmediately: true);
                 }
             }
 
-            if (marker) Destroy(marker, 0.5f);
+            if (!markers.TryDequeue(out var deqMarker)) return;
+            Destroy(deqMarker, 0.5f);
         }
         
         private void SetupMarkerVisual(GameObject marker)
