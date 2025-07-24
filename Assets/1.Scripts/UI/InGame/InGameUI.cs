@@ -83,6 +83,7 @@ namespace _1.Scripts.UI.InGame
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
         }
+        
         private void Initialize_HealthSegments()
         {
             if (healthSegments.Count > 0) return;

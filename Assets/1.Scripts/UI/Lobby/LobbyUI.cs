@@ -18,11 +18,13 @@ namespace _1.Scripts.UI.Lobby
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
+            
             startButton.onClick.AddListener(OnStartButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             exitButton.onClick.AddListener(OnQuitButtonClicked);
+            Hide();
         }
-        
+
         private void OnStartButtonClicked()
         {
             CoreManager.Instance.StartGame();

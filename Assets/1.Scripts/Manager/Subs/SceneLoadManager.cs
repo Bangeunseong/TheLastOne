@@ -67,9 +67,6 @@ namespace _1.Scripts.Manager.Subs
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
             
-            uiManager.HideAndSaveAllUI();
-            uiManager.ShowUI<LoadingUI>();
-            
             // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
             {
@@ -80,8 +77,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    uiManager.UnloadUIGroup(UIType.InGame);
-                    uiManager.UnloadUIGroup(UIType.System);
+                    uiManager.UnregisterDynamicUIByGroup(UIType.InGame);
                 }
             }
             
@@ -89,24 +85,34 @@ namespace _1.Scripts.Manager.Subs
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
                     coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
             while (!loadingScene!.isDone) { await Task.Yield(); }
+
+            // Hide Lobby and Show Loading
+            uiManager.HideUI<LobbyUI>();
+            uiManager.ShowUI<LoadingUI>();
             
+            // Update Loading Progress
             LoadingProgress = 0f;
             uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
+            {
+                // Load Common Resource used in Game Scene
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
+            }
             else
             {
                 LoadingProgress = 0.4f;
                 uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(LoadingProgress);
             }
             
+            // Load Resources & Create Pool used in Current Scene
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
-            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             coreManager.soundManager.CacheSoundGroup();
             await coreManager.soundManager.LoadClips();
+            await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
             
+            // Load Scene
             await LoadSceneWithProgress(CurrentScene);
         }
         
@@ -170,13 +176,10 @@ namespace _1.Scripts.Manager.Subs
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
             var playerObj = GameObject.FindWithTag("Player");
             if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
-            
             coreManager.gameManager.Initialize_Player(player);
+            
             uiManager.HideUI<LoadingUI>();
-            
-            uiManager.LoadUIGroup(UIType.InGame);
-            uiManager.LoadUIGroup(UIType.System);
-            
+            uiManager.RegisterDynamicUIByGroup(UIType.InGame);
             coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
             coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
 
@@ -198,7 +201,7 @@ namespace _1.Scripts.Manager.Subs
                     {
                         player.PlayerCondition.IsPlayerHasControl = true;
                         coreManager.spawnManager.SpawnEnemyBySpawnData(1);
-                        uiManager.ShowUIGroup(UIType.InGame);
+                        if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
                     }
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType type)) 
                         coreManager.soundManager.PlayBGM(type, index: 0);
@@ -225,6 +228,7 @@ namespace _1.Scripts.Manager.Subs
         {
             coreManager.gameManager.PauseGame();
             coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
         }
 
         private void OnCutsceneStopped_IntroOfStage1(PlayableDirector director)
@@ -236,9 +240,7 @@ namespace _1.Scripts.Manager.Subs
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
-            
-            uiManager.ShowUIGroup(UIType.InGame);
-            uiManager.HideUI<DialogueUI>();
+            coreManager.uiManager.OnCutsceneStopped(director);
             
             director.played -= OnCutsceneStarted_IntroOfStage1;
             director.stopped -= OnCutsceneStopped_IntroOfStage1;
