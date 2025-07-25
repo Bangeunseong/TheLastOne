@@ -28,7 +28,6 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         [field: SerializeField] public int CurrentIndex { get; private set; }
         [field: SerializeField] public int CurrentLoopCount { get; private set; }
 
-        private MinigameUI minigameUI;
         private AlphabetMatchingUI alphabetUI;
         private CancellationTokenSource countdownCTS;
         private CancellationTokenSource endgameCTS;
@@ -107,21 +106,18 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.GetUI<MinigameUI>();
-            minigameUI.SetMiniGame();
-            minigameUI.SetDescriptionText(Description);
-            alphabetUI = minigameUI.GetAlphabetMatchingUI();
+            uiManager.GetUI<MinigameUI>().SetMiniGame();
+            uiManager.GetUI<MinigameUI>().SetDescriptionText(Description);
+            alphabetUI = uiManager.GetUI<MinigameUI>().GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
             enabled = true;
         }
 
         public override void CancelMiniGame()
         {
-            base.CancelMiniGame();
+            if (!isActiveAndEnabled || isFinished) return;
             
             countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
-
-            if (isFinished) return;
             FinishGame(true);
         }
         
@@ -129,10 +125,10 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             startTime = Time.unscaledTime;
             CurrentAlphabets = GetAlphabets();
-            minigameUI.ShowPanel();
-            minigameUI.ShowLoopText(IsLoop);
+            uiManager.GetUI<MinigameUI>().ShowPanel();
+            uiManager.GetUI<MinigameUI>().ShowLoopText(IsLoop);
             if (IsLoop && LoopCount > 0) 
-                minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
             CurrentIndex = 0;
@@ -147,24 +143,24 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask StartCountdown_Async()
         {
-            minigameUI.StartCountdownUI(Delay);
-            minigameUI.ShowAlphabetMatching(true);
+            uiManager.GetUI<MinigameUI>().StartCountdownUI(Delay);
+            uiManager.GetUI<MinigameUI>().ShowAlphabetMatching(true);
             
             var t = 0f;
             while (t < Delay)
             {
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
-                minigameUI.SetCountdownText(Delay - t);
+                uiManager.GetUI<MinigameUI>().SetCountdownText(Delay - t);
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: countdownCTS.Token, cancelImmediately: true);
             }
             
-            minigameUI.ShowCountdownText(false);
+            uiManager.GetUI<MinigameUI>().ShowCountdownText(false);
             
             alphabetUI.CreateAlphabet(CurrentAlphabets);
             alphabetUI.ShowAlphabet(true);
-            minigameUI.StartTimerUI(Duration);
+            uiManager.GetUI<MinigameUI>().StartTimerUI(Duration);
             if (IsLoop && LoopCount > 0)
-                minigameUI.UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
+                uiManager.GetUI<MinigameUI>().UpdateLoopCount(CurrentLoopCount + 1, LoopCount);
             
             CurrentIndex = 0;
             IsCounting = false; 
@@ -175,7 +171,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
 
         protected override async UniTask EndGame_Async(bool cancel, bool success, float duration)
         {
-            minigameUI.ShowEndResult(success);
+            uiManager.GetUI<MinigameUI>().ShowEndResult(success);
             alphabetUI.ShowAlphabet(false);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             uiManager.HideUI<MinigameUI>();
