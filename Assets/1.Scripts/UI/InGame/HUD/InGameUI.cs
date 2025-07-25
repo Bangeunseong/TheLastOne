@@ -16,7 +16,6 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private Slider armorSlider;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI maxHealthText;
-        [SerializeField] private TextMeshProUGUI levelText;
 
         [Header("체력바")] 
         [SerializeField] private GameObject healthSegmentPrefab;
@@ -92,7 +91,6 @@ namespace _1.Scripts.UI.InGame.HUD
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
             UpdateArmorSlider(playerCondition.CurrentShield, playerCondition.MaxShield);
-            UpdateLevelUI(playerCondition.Level);
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
         }
@@ -165,8 +163,11 @@ namespace _1.Scripts.UI.InGame.HUD
             instinctGaugeImage.fillAmount = instinct;
             
             if (!gameObject.activeInHierarchy) return;
-            if (instinct >= 1f && instinctEffectCoroutine == null) instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
-            else if (instinct < 1f && instinctEffectCoroutine != null)
+            
+            bool canTriggerInstinctEffect = instinct >= 1f && playerCondition && playerCondition.CurrentHealth <= 50;
+            
+            if (canTriggerInstinctEffect && instinctEffectCoroutine == null) instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
+            else if (!canTriggerInstinctEffect && instinctEffectCoroutine != null)
             {
                 StopCoroutine(instinctEffectCoroutine);
                 instinctEffectCoroutine = null;
@@ -186,9 +187,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 focusEffectCoroutine = null;
             }
         }
-
-        public void UpdateLevelUI(int level) { levelText.text = $"Lvl. {level}"; }
-
+        
         private IEnumerator FocusEffectCoroutine()
         {
             while (true)
@@ -238,7 +237,6 @@ namespace _1.Scripts.UI.InGame.HUD
                 StopCoroutine(focusEffectCoroutine);
                 focusEffectCoroutine = null;
             }
-            levelText.text = "";
             progressFillImage.enabled = false;
             progressFillImage.fillAmount = 0f;
             messageText.text = "";

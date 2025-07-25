@@ -36,6 +36,9 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private TextMeshProUGUI currentAmmoText;
         [SerializeField] private TextMeshProUGUI currentTotalAmmoText;
         [SerializeField] private Image ammoSlotFrame;
+        [SerializeField] private RectTransform currentAmmoRectTransform;
+        [SerializeField] private float shakeDuration = 0.2f;
+        [SerializeField] private float shakeStrength = 3f;
 
         [Header("Scale 세팅")]
         [SerializeField] private Vector3 normalScale = Vector3.one;
@@ -58,12 +61,17 @@ namespace _1.Scripts.UI.InGame.HUD
         private PlayerCondition playerCondition;
         private int lastSelectedIndex = -1;
         
+        private Vector3 originalLocalPosition;
+        private Coroutine shakeCoroutine;
+        private int lastMag = -1;
 
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
             targetScales = new Vector3[slotTransform.Length];
             gameObject.SetActive(false);
+            
+            if (currentAmmoRectTransform) originalLocalPosition = currentAmmoRectTransform.localPosition;
         }
         
         public override void ResetUI()
@@ -212,6 +220,16 @@ namespace _1.Scripts.UI.InGame.HUD
 
             var currentWeapon = weapons[selectedIndex];
             var (mag, total) = SlotUtility.GetWeaponAmmo(currentWeapon);
+
+            if (lastMag != -1 && mag < lastMag)
+            {
+                if (shakeCoroutine != null)
+                    StopCoroutine(shakeCoroutine);
+                shakeCoroutine = StartCoroutine(ShakeCoroutine());
+            }
+            
+            lastMag = mag;
+            
             if (mag > 0 || total > 0)
             {
                 ammoSlotFrame.gameObject.SetActive(true);
@@ -224,6 +242,20 @@ namespace _1.Scripts.UI.InGame.HUD
                 currentAmmoText.text = string.Empty;
                 currentTotalAmmoText.text = string.Empty;
             }
+        }
+
+        private IEnumerator ShakeCoroutine()
+        {
+            float timer = 0f;
+            while (timer < shakeDuration)
+            {
+                float offsetX = Random.Range(-shakeStrength, shakeStrength);
+                float offsetY = Random.Range(-shakeStrength, shakeStrength);
+                currentAmmoRectTransform.localPosition = originalLocalPosition + new Vector3(offsetX, offsetY, 0f);
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            currentAmmoRectTransform.localPosition = originalLocalPosition;
         }
     }
 }
