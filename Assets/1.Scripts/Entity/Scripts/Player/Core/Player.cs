@@ -4,6 +4,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
@@ -74,7 +75,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider) InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
@@ -119,13 +120,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
             
-            coreManager.uiManager.InitializeUI<InGameUI>(PlayerCondition);
-            coreManager.uiManager.InitializeUI<DistanceUI>(transform);
-            coreManager.uiManager.InitializeUI<WeaponUI>(PlayerCondition);
-            coreManager.uiManager.InitializeUI<InventoryUI>(PlayerCondition);
-            coreManager.uiManager.InitializeUI<QuickSlotUI>(PlayerInventory);
-            coreManager.uiManager.InitializeUI<QuestUI>(transform);
-            coreManager.uiManager.InitializeUI<GameOverUI>(PlayerCondition);
+            coreManager.uiManager.GetUI<InGameUI>().UpdateStateUI();
+            coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);

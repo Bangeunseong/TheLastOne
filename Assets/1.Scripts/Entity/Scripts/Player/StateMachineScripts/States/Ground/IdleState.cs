@@ -38,6 +38,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         protected override void OnCrouchStarted(InputAction.CallbackContext context)
         {
             base.OnCrouchStarted(context);
+            if (!playerCondition.IsPlayerHasControl) return;
             stateMachine.ChangeState(stateMachine.CrouchState);
         }
     }

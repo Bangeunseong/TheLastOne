@@ -33,7 +33,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
         protected override void Awake()
         {
             base.Awake();
-            rootRenderer = this.TryGetChildComponent<Transform>("DronBot"); 
             
             if (originalTransforms.Count == 0) CacheOriginalTransforms();
         }
@@ -81,7 +80,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             
             penaltyToken?.Cancel();
             penaltyToken?.Dispose();
-            penaltyToken = new CancellationTokenSource();
+            penaltyToken = NpcUtil.CreateLinkedNpcToken();
             
             _= DamageAndArmorIncrease(baseDamage, baseArmor, penaltyToken.Token);
             behaviorTree.SetVariableValue("shouldAlertNearBy", true);

@@ -26,15 +26,12 @@ namespace _1.Scripts.UI.InGame.Dialogue
         [SerializeField] private CanvasGroup canvasGroup;
         
         private Coroutine typingCoroutine;
-        public override void Init(UIManager manager)
-        {
-            base.Init(manager);
-            gameObject.SetActive(false);
-        }
 
-        public override void Initialize(object param = null)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            ClearText();
+            base.Initialize(manager, param);
+            ClearTexts();
+            gameObject.SetActive(false);
         }
 
         public override void Show()
@@ -58,7 +55,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
         public override void ResetUI()
         {
             StopTyping();
-            ClearText();
+            ClearTexts();
         }
 
         private IEnumerator TypeDialogue(string sentence)
@@ -104,7 +101,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
         }
 
-        private void ClearText()
+        private void ClearTexts()
         {
             nameText.text = "";
             dialogueText.text = "";
