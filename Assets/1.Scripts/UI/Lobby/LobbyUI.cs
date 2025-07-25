@@ -25,6 +25,16 @@ namespace _1.Scripts.UI.Lobby
             Hide();
         }
 
+        public override void Show()
+        {
+            panel.SetActive(true);
+        }
+
+        public override void Hide()
+        {
+            panel.SetActive(false);
+        }
+
         private void OnStartButtonClicked()
         {
             CoreManager.Instance.StartGame();

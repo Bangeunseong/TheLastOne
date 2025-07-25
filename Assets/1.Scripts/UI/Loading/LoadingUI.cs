@@ -17,7 +17,17 @@ namespace _1.Scripts.UI.Loading
             base.Initialize(manager, param);
             Hide();
         }
-        
+
+        public override void Show()
+        {
+            panel.SetActive(true);
+        }
+
+        public override void Hide()
+        {
+            panel.SetActive(false);
+        }
+
         public override void ResetUI()
         {
             progressSlider.value = 0f;

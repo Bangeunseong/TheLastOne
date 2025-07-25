@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
-using _1.Scripts.Entity.Scripts.Player.Core;
-using _1.Scripts.Entity.Scripts.Player.Data;
-using _1.Scripts.Item.Common;
-using _1.Scripts.MiniGame.WireConnection;
-using _1.Scripts.Util;
-using _1.Scripts.Weapon.Scripts.Common;
-using UnityEditor;
-using UnityEngine;
-
-namespace _6.Debug
-{
+﻿namespace _6.Debug
+{ 
+#if UNITY_EDITOR
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+    using _1.Scripts.Entity.Scripts.Player.Core;
+    using _1.Scripts.Entity.Scripts.Player.Data;
+    using _1.Scripts.Item.Common;
+    using _1.Scripts.MiniGame.WireConnection;
+    using _1.Scripts.Util;
+    using _1.Scripts.Weapon.Scripts.Common;
+    using UnityEditor;
+    using UnityEngine;
+    
     public class CustomDebugWindow : EditorWindow
     {
         private GameObject playerObj;
@@ -43,13 +44,20 @@ namespace _6.Debug
 
             if (GUILayout.Button("Find Spawn Points & Create S.O."))
             {
-#if UNITY_EDITOR
                 var itemSpawnObjects = GameObject.FindGameObjectsWithTag("ItemSpawnPoint");
-                var medkitSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
-                var nanoAmpleSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
-                var staminaPillSpawnPoints = itemSpawnObjects.Where(obj =>  obj.name.Contains("_EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
-                var shieldSpawnPoints = itemSpawnObjects.Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
-                
+                var medkitSpawnPoints = itemSpawnObjects
+                    .Where(obj => obj.name.Contains("_Medkit", StringComparison.OrdinalIgnoreCase)).Select(obj =>
+                        new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var nanoAmpleSpawnPoints = itemSpawnObjects
+                    .Where(obj => obj.name.Contains("_NanoAmple", StringComparison.OrdinalIgnoreCase)).Select(obj =>
+                        new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var staminaPillSpawnPoints = itemSpawnObjects
+                    .Where(obj => obj.name.Contains("_EnergyBar", StringComparison.OrdinalIgnoreCase)).Select(obj =>
+                        new CustomTransform(obj.transform.position, obj.transform.rotation));
+                var shieldSpawnPoints = itemSpawnObjects
+                    .Where(obj => obj.name.Contains("_Shield", StringComparison.OrdinalIgnoreCase)).Select(obj =>
+                        new CustomTransform(obj.transform.position, obj.transform.rotation));
+
                 var weaponSpawnObjects = GameObject.FindGameObjectsWithTag("WeaponSpawnPoint");
                 var pistolSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_Pistol", StringComparison.OrdinalIgnoreCase))
@@ -63,9 +71,9 @@ namespace _6.Debug
                 var crossbowSpawnPoints = weaponSpawnObjects
                     .Where(obj => obj.name.Contains("_Crossbow", StringComparison.OrdinalIgnoreCase))
                     .Select(obj => new CustomTransform(obj.transform.position, obj.transform.rotation));
-                
+
                 // 아이템들과는 달리 DroneSpawnPoints_indexone 이런식으로 하나하나 선언해야 함 (위치들만 찾는게 아니라 인덱스도 검사해야 함)
-                var enemySpawnObjects = GameObject.FindGameObjectsWithTag("EnemySpawnPoint"); 
+                var enemySpawnObjects = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
                 var enemyDict = new Dictionary<(int, EnemyType), List<CustomTransform>>();
 
                 foreach (var obj in enemySpawnObjects)
@@ -83,30 +91,37 @@ namespace _6.Debug
 
                     enemyDict[key].Add(new CustomTransform(obj.transform.position, obj.transform.rotation));
                 }
-                
+
                 var data = CreateInstance<SpawnData>();
-                
-                
+
+
                 data.SetSpawnPoints(ItemType.Medkit, medkitSpawnPoints.ToArray());
                 data.SetSpawnPoints(ItemType.NanoAmple, nanoAmpleSpawnPoints.ToArray());
                 data.SetSpawnPoints(ItemType.EnergyBar, staminaPillSpawnPoints.ToArray());
                 data.SetSpawnPoints(ItemType.Shield, shieldSpawnPoints.ToArray());
-                
+
                 data.SetSpawnPoints(WeaponType.Pistol, pistolSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.Rifle, rifleSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.GrenadeLauncher, glSpawnPoints.ToArray());
                 data.SetSpawnPoints(WeaponType.HackGun, crossbowSpawnPoints.ToArray());
-                
+
                 foreach (var ((index, type), list) in enemyDict)
                 {
-                    UnityEngine.Debug.Log($"{index}: {type}: {list}");
+                    Debug.Log($"{index}: {type}: {list}");
                     data.SetSpawnPoints(index, type, list.ToArray());
                 }
-                
+
                 AssetDatabase.CreateAsset(data, "Assets/8.ScriptableObjects/SpawnPoint/SpawnPoints.asset");
                 AssetDatabase.SaveAssets();
-#endif
+            }
+
+            if (GUILayout.Button("Clear PlayerPrefs"))
+            {
+                PlayerPrefs.DeleteAll();
+                PlayerPrefs.Save();
+                Service.Log("PlayerPrefs 초기화 완료!");
             }
         }
     }
+    #endif
 }
