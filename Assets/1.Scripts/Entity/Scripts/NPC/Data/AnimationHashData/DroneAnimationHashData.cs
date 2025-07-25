@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
 {
-    [Serializable]
     public static class DroneAnimationHashData
     {
         public static readonly int Repair = Animator.StringToHash("DroneBot_Repair");
@@ -22,5 +21,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public static readonly int Idle2 = Animator.StringToHash("DroneBot_Idle2");
         public static readonly int Idle1 = Animator.StringToHash("DroneBot_Idle1");
         public static readonly int Fire = Animator.StringToHash("DroneBot_Fire");
+    }
+
+    public static class ShebotAnimationHashData
+    {
+        
     }
 }

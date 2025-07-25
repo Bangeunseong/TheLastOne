@@ -48,8 +48,7 @@ namespace _1.Scripts.Util
         /// <param name="turnSpeed"></param>
         public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f)
         {
-            if (target == null || self == null)
-                return;
+            if (target == null || self == null) return;
 
             Vector3 dir = target.position - self.position;
             dir.y = 0;
