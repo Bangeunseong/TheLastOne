@@ -2082,6 +2082,11 @@ PrefabInstance:
       propertyPath: m_Convex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 977634942808976616, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <PenaltyRate>k__BackingField
+      value: 0.125
+      objectReference: {fileID: 0}
     - target: {fileID: 1187862517402066249, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Convex
@@ -2127,6 +2132,11 @@ PrefabInstance:
       propertyPath: m_Convex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1969463180618210301, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <PenaltyRate>k__BackingField
+      value: 0.125
+      objectReference: {fileID: 0}
     - target: {fileID: 1993559397541543102, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2140,7 +2150,7 @@ PrefabInstance:
     - target: {fileID: 2067323108350874023, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: <IsLoop>k__BackingField
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2067323108350874023, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
@@ -2570,7 +2580,7 @@ PrefabInstance:
     - target: {fileID: 7217932430748695327, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: <IsLoop>k__BackingField
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7217932430748695327, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
@@ -2601,6 +2611,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Convex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731057842917205141, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: <PenaltyRate>k__BackingField
+      value: 0.125
       objectReference: {fileID: 0}
     - target: {fileID: 7775406119160805344, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
@@ -2660,7 +2675,7 @@ PrefabInstance:
     - target: {fileID: 9141977089464908378, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: <IsLoop>k__BackingField
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9141977089464908378, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}

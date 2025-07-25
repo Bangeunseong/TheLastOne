@@ -29,6 +29,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
         [field: SerializeField] public float Delay { get; private set; } = 3f;
         [field: SerializeField] public float ChargeRate { get; private set; } = 0.25f;
         [field: SerializeField] public float LossRate { get; private set; } = 0.1f;
+        [field: SerializeField] public float PenaltyRate { get; private set; } = 0.125f;
         [field: SerializeField] public float Speed { get; private set; } = 5f;
         [field: SerializeField] public int CurrentBarIndex { get; private set; }
         
@@ -92,7 +93,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
                 {
                     bars[CurrentBarIndex].IncreaseValue(ChargeRate);
                     RepositionTargetObj();
-                }
+                } else bars[CurrentBarIndex].DecreaseValue(PenaltyRate);
             }
             if (CurrentBarIndex < BarCount)
                 bars[CurrentBarIndex].DecreaseValue(LossRate * Time.unscaledDeltaTime);

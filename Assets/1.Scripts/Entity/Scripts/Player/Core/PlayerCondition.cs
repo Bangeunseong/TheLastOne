@@ -25,13 +25,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class PlayerCondition : MonoBehaviour
     {
+        [field: Header("Base Condition Data")]
+        [field: SerializeField] public PlayerStatData StatData { get; private set; }
+        
         [field: Header("Low Pass Filter Settings")]
         [field: SerializeField] public AudioLowPassFilter LowPassFilter { get; private set; }
         [field: SerializeField] public float LowestPoint { get; private set; }
         [field: SerializeField] public float HighestPoint { get; private set; }
-        
-        [field: Header("Base Condition Data")]
-        [field: SerializeField] public PlayerStatData StatData { get; private set; }
         
         [field: Header("Current Condition Data")]
         [field: SerializeField] public int MaxHealth { get; private set; }

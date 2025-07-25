@@ -127,7 +127,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         
         private void ResetGame()
         {
-            IsPlaying = IsCounting = false;
+            startTime = Time.unscaledTime;
             CurrentAlphabets = GetAlphabets();
             minigameUI.ShowPanel();
             minigameUI.ShowLoopText(IsLoop);
