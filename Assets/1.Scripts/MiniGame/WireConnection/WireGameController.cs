@@ -47,8 +47,8 @@ namespace _1.Scripts.MiniGame.WireConnection
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowMiniGame(Description);
+            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI.SetMiniGame(Description);
             wireConnectionUI = minigameUI.GetWireConnectionUI(); 
             Initialize(uiManager.RootCanvas, wireConnectionUI); 
             wireConnectionUI.Show();
@@ -91,6 +91,7 @@ namespace _1.Scripts.MiniGame.WireConnection
         
         protected override void OnDisable()
         {
+            base.OnDisable();
             countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllConnections();
@@ -106,6 +107,7 @@ namespace _1.Scripts.MiniGame.WireConnection
             ResetAllConnections();
             ResetAllSockets();
             
+            if (isFinished) return;
             FinishGame(true);
         }
         
@@ -191,13 +193,11 @@ namespace _1.Scripts.MiniGame.WireConnection
             await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             minigameUI.Hide();
             
-            if (cancel) console.OnFinished();
-            else console.OnCleared(success);
+            if (!cancel) console.OnCleared(success);
             
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
             endgameCTS.Dispose(); endgameCTS = null;
-            
             enabled = false;
         }
 

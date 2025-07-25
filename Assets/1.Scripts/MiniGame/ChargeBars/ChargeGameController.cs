@@ -61,8 +61,8 @@ namespace _1.Scripts.MiniGame.ChargeBars
             base.StartMiniGame(con, ply);
             
             // Initialize MiniGame
-            minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowMiniGame(Description);
+            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI.SetMiniGame(Description);
             chargeBarUI = minigameUI.GetChargeBarUI();
             Initialize(chargeBarUI);
             enabled = true;
@@ -108,6 +108,7 @@ namespace _1.Scripts.MiniGame.ChargeBars
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             endgameCTS?.Cancel(); endgameCTS?.Dispose(); endgameCTS = null;
             ResetAllBars();
@@ -118,8 +119,10 @@ namespace _1.Scripts.MiniGame.ChargeBars
             base.CancelMiniGame();
             
             // Clear all remaining bars
-            countdownCTS?.Cancel();
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
             ResetAllBars();
+
+            if (isFinished) return;
             FinishGame(true);
         }
 
@@ -226,13 +229,11 @@ namespace _1.Scripts.MiniGame.ChargeBars
             await UniTask.WaitForSeconds(duration, true, cancellationToken: endgameCTS.Token, cancelImmediately: true);
             minigameUI.Hide();
             
-            if (cancel) console.OnFinished();
-            else console.OnCleared(success);
+            if (!cancel) console.OnCleared(success);
             
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;
             endgameCTS.Dispose(); endgameCTS = null;
-            
             enabled = false;
         }
     }

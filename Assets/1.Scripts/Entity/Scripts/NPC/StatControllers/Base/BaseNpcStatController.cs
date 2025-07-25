@@ -16,6 +16,7 @@ using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HackingProgress;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
 using UnityEditor;

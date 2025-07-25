@@ -5,6 +5,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Data;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Mission;
 using _1.Scripts.UI.InGame.Quest;
 using AYellowpaper.SerializedCollections;
@@ -43,7 +44,6 @@ namespace _1.Scripts.Quests.Core
 
             var currentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(currentObjective.data.targetID);
-            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();
         }
 
         public void ResumeQuest(QuestInfo info, Console[] consoles)
@@ -70,24 +70,20 @@ namespace _1.Scripts.Quests.Core
             
             if (info.completionList.All(val => val.Value))
             { 
-                isCompleted = true; 
-                CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Refresh();
+                isCompleted = true;
                 return;
             }
             
             var currentObjective = Objectives[currentObjectiveIndex];
             QuestTargetBinder.Instance.SetCurrentTarget(currentObjective.data.targetID);
-            CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Initialize();
         }
 
         public void UpdateObjectiveProgress(int objectiveId)
         {
             var objective = Objectives[objectiveId];
-            
             CoreManager.Instance.uiManager.GetUI<QuestUI>()?.Refresh();
-
-            if (!objective.IsCompleted) return;
             
+            if (!objective.IsCompleted) return;
             objective.Deactivate();
 
             if (Objectives.Any(val => val.Value.IsActivated))

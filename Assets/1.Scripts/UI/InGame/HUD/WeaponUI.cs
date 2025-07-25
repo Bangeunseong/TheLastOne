@@ -1,24 +1,22 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Guns;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public enum SlotType
     {
         Main,
         Pistol,
-        Crossbow,
+        HackGun,
         GrenadeLauncher,
     }
     public class WeaponUI : UIBase
@@ -57,57 +55,84 @@ namespace _1.Scripts.UI.InGame
         private Coroutine hideCoroutine;
         private bool isPanelVisible = false;
 
-        private PlayerCondition  playerCondition;
+        private PlayerCondition playerCondition;
         private int lastSelectedIndex = -1;
+        
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
-            targetScales = new Vector3[slotType.Length];
-            for (int i = 0; i < slotType.Length; i++)
-            {
-                slotTransform[i].localScale = normalScale;
-                targetScales[i] = normalScale;
-                SetSlotAlpha(i, idleAlpha);
-                if (slotAnimator[i]) slotAnimator[i].enabled = false;
-            }
-            
-            if (panelAnimator) panelAnimator.Play("Hidden", 0, 1f);
-            Hide();
+            base.Initialize(manager, param);
+            targetScales = new Vector3[slotTransform.Length];
+            gameObject.SetActive(false);
         }
         
         public override void ResetUI()
         {
-            playerCondition = null;
             lastSelectedIndex = -1;
-        }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerCondition newPlayerCondition)
+            for (int i = 0; i < slotTransform.Length; i++)
             {
-                playerCondition = newPlayerCondition;
-                Refresh(false);
+                slotTransform[i].localScale = normalScale;
+                slotImage[i].color = Color.clear;
+                slotText[i].text = string.Empty;
+                slotAmmoText[i].text = string.Empty;
+                slotAmmoText[i].enabled = false;
+                slotText[i].enabled = false;
+                SetSlotAlpha(i, idleAlpha);
+
+                if (targetScales != null && i < targetScales.Length) targetScales[i] = normalScale;
+            }
+
+            if (selectedSlotImage != null)
+            {
+                foreach (var image in selectedSlotImage)
+                {
+                    if (image)
+                    {
+                        var color = image.color;
+                        color.a = idleAlpha;
+                        image.color = color;
+                    }
+                }
+            }
+
+            currentAmmoText.text = string.Empty;
+            currentTotalAmmoText.text = string.Empty;
+            if (ammoSlotFrame) ammoSlotFrame.gameObject.SetActive(false);
+
+            isPanelVisible = false;
+
+            if (hideCoroutine != null)
+            {
+                StopCoroutine(hideCoroutine);
+                hideCoroutine = null;
+            }
+
+            if (panelAnimator)
+            {
+                panelAnimator.ResetTrigger("Show");
+                panelAnimator.ResetTrigger("Hide");
             }
         }
 
         private void Update()
         {
+            if (targetScales == null) return;
             for (int i = 0; i < slotTransform.Length; i++)
             {
                 slotTransform[i].localScale = Vector3.Lerp(slotTransform[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
             }
         }
         
-        
         public void Refresh(bool playShowAnimation = true)
         { 
-            var weapons = playerCondition?.Weapons;
-            var available = playerCondition?.AvailableWeapons;
-            int selectedIndex = playerCondition?.EquippedWeaponIndex ?? -1;
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
+            var weapons = playerCondition.Weapons;
+            var available = playerCondition.AvailableWeapons;
+            int selectedIndex = playerCondition.EquippedWeaponIndex;
 
             if (weapons == null || available == null) return;
-            if (weapons.Count <=0 || available.Count <=0) return;
+            if (weapons.Count <= 0 || available.Count <= 0) return;
 
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;
@@ -132,7 +157,7 @@ namespace _1.Scripts.UI.InGame
                 slotAmmoText[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : string.Empty;
                 slotAmmoText[i].color = slotWeapon is Gun ? selectedColor : selectedAmmoColor;
 
-                bool isSelected = slotWeapon != null && weapons[selectedIndex] == slotWeapon;
+                bool isSelected = slotWeapon && weapons[selectedIndex] == slotWeapon;
                 slotText[i].enabled = isSelected;
                 slotAmmoText[i].enabled = isSelected && (mag > 0 || total > 0);
 

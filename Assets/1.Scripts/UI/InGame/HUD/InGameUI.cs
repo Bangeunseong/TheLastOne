@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class InGameUI : UIBase
     {
@@ -19,13 +19,13 @@ namespace _1.Scripts.UI.InGame
         [SerializeField] private TextMeshProUGUI levelText;
 
         [Header("체력바")] 
-        [SerializeField] private Image healthSegmentPrefab;
+        [SerializeField] private GameObject healthSegmentPrefab;
         [SerializeField] private Transform healthSegmentContainer;
         [SerializeField] private int healthSegmentValue = 10;
         [SerializeField] private Animator healthBackgroundAnimator;
         private List<Animator> healthSegmentAnimators = new List<Animator>();
         private List<Image> healthSegments = new List<Image>();
-        private float prevhealth;
+        private float prevHealth;
 
         [Header("스테미나")] 
         [SerializeField] private Animator staminaAnimator;
@@ -40,7 +40,6 @@ namespace _1.Scripts.UI.InGame
         private Coroutine instinctEffectCoroutine;
         
         [field: Header("Handler")]
-        [field: SerializeField] public InventoryHandler InventoryHandler { get; private set; }
         [field: SerializeField] public PauseHandler PauseHandler { get; private set; }
         
         [field: Header("Game Control")]
@@ -54,34 +53,41 @@ namespace _1.Scripts.UI.InGame
         
         private PlayerCondition playerCondition;
         private bool isPaused = false;
-
-        public override void Init(UIManager manager)
-        {
-            base.Init(manager);
-            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
-            Initialize_HealthSegments();
-            Hide();
-        }
         
-        public override void ResetUI()
-        {
-            playerCondition = null;
-            Hide();
-        }
-
-        public override void Initialize(object param = null)
-        {
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                UpdateStateUI();
-            }
-        }
-
         private void Awake() { progressFillImage.enabled = false; }
         
-        private void UpdateStateUI()
+        public override void Initialize(UIManager manager, object param = null)
         {
+            base.Initialize(manager, param);
+            gameObject.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+            if (!playerCondition) return;
+            if (playerCondition.CurrentFocusGauge >= 1f)
+                focusEffectCoroutine ??= StartCoroutine(FocusEffectCoroutine());
+            if (playerCondition.CurrentInstinctGauge >= 1f)
+                instinctEffectCoroutine ??= StartCoroutine(InstinctEffectCoroutine());
+        }
+
+        public override void Hide()
+        {
+            if (focusEffectCoroutine != null) { StopCoroutine(focusEffectCoroutine); focusEffectCoroutine = null; }
+            if (instinctEffectCoroutine != null) { StopCoroutine(instinctEffectCoroutine); instinctEffectCoroutine = null; }
+            base.Hide();
+        }
+
+        public override void ResetUI()
+        {
+            ResetStatement();
+        }
+        
+        public void UpdateStateUI()
+        {
+            playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            
             Initialize_HealthSegments();
             UpdateHealthSlider(playerCondition.CurrentHealth, playerCondition.MaxHealth);
             UpdateStaminaSlider(playerCondition.CurrentStamina, playerCondition.MaxStamina);
@@ -90,26 +96,27 @@ namespace _1.Scripts.UI.InGame
             UpdateInstinct(playerCondition.CurrentInstinctGauge);
             UpdateFocus(playerCondition.CurrentFocusGauge);
         }
-        public void Initialize_HealthSegments()
+        
+        private void Initialize_HealthSegments()
         {
-            if (healthSegments.Count > 0) return;
-            
-            if (healthSegmentPrefab && healthSegmentContainer)
+            if (healthSegments.Count > 0)
             {
-                int count = playerCondition.MaxHealth / healthSegmentValue;
-                for (int i = 0; i < count; i++)
-                {
-                    var segment = Instantiate(healthSegmentPrefab, healthSegmentContainer);
-                    segment.type = Image.Type.Filled;
-                    segment.fillAmount = 1f;
-                    healthSegments.Add(segment);
-                    segment.gameObject.SetActive(true);
-                    if (segment.TryGetComponent(out Animator animator))
-                        healthSegmentAnimators.Add(animator);
-                }
-                healthSegmentPrefab.gameObject.SetActive(false);
+                prevHealth = playerCondition.CurrentHealth;
+                return;
             }
-            prevhealth = playerCondition.CurrentHealth;
+
+            if (!healthSegmentPrefab || !healthSegmentContainer) return;
+            int count = playerCondition.MaxHealth / healthSegmentValue;
+            for (int i = 0; i < count; i++)
+            {
+                var segment = Instantiate(healthSegmentPrefab, healthSegmentContainer, false);
+                if(!segment.TryGetComponent(out Image img)) { Destroy(segment); continue; }
+                img.type = Image.Type.Filled;
+                img.fillAmount = 1f;
+                healthSegments.Add(img);
+                segment.gameObject.SetActive(true);
+                if (segment.TryGetComponent(out Animator animator)) healthSegmentAnimators.Add(animator);
+            }
         }
         
         public void UpdateHealthSlider(float current, float max)
@@ -125,13 +132,13 @@ namespace _1.Scripts.UI.InGame
                 else healthSegments[i].fillAmount = 0f;
             }
 
-            if (healthBackgroundAnimator && current < prevhealth) healthBackgroundAnimator.SetTrigger("Damaged");
-            if (current < prevhealth && healthSegmentAnimators != null)
+            if (healthBackgroundAnimator && current < prevHealth) healthBackgroundAnimator.SetTrigger("Damaged");
+            if (current < prevHealth && healthSegmentAnimators != null)
             {
                 for (int i = 0; i < full && i < healthSegmentAnimators.Count; i++)
                     healthSegmentAnimators[i].SetTrigger("Damaged");
             }
-            prevhealth = current;
+            prevHealth = current;
         }
 
         public void UpdateStaminaSlider(float current, float max)
@@ -156,7 +163,8 @@ namespace _1.Scripts.UI.InGame
         {
             float instinct = Mathf.Clamp01(value);
             instinctGaugeImage.fillAmount = instinct;
-
+            
+            if (!gameObject.activeInHierarchy) return;
             if (instinct >= 1f && instinctEffectCoroutine == null) instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
             else if (instinct < 1f && instinctEffectCoroutine != null)
             {
@@ -170,6 +178,7 @@ namespace _1.Scripts.UI.InGame
             float focus = Mathf.Clamp01(value);
             focusGaugeImage.fillAmount = focus;
             
+            if (!gameObject.activeInHierarchy) return;
             if (focus >= 1f && focusEffectCoroutine == null) focusEffectCoroutine = StartCoroutine(FocusEffectCoroutine());
             else if (focus < 1f && focusEffectCoroutine != null)
             {
@@ -184,8 +193,8 @@ namespace _1.Scripts.UI.InGame
         {
             while (true)
             {
-                focusEffectAnimator.SetTrigger("Full");
                 focusEffectAnimator.ResetTrigger("Full");
+                focusEffectAnimator.SetTrigger("Full");
                 yield return new WaitForSeconds(0.5f);
             }
         }
@@ -207,5 +216,32 @@ namespace _1.Scripts.UI.InGame
         public void UpdateItemProgress(float progress) { progressFillImage.fillAmount = Mathf.Clamp01(progress); }
 
         public void ShowMessage(string message) { messageText.text = message; }
+
+        private void ResetStatement()
+        {
+            healthSegmentAnimators.Clear();
+            foreach(var segment in healthSegments) Destroy(segment.gameObject);
+            healthSegments.Clear();
+            
+            healthText.text = ""; maxHealthText.text = "";
+            staminaSlider.value = 0f; staminaAnimator.SetBool("IsLack", false);
+            armorSlider.value = 0f; armorSlider.enabled = false;
+            instinctGaugeImage.fillAmount = 0f;
+            focusGaugeImage.fillAmount = 0f;
+            if (instinctEffectCoroutine != null)
+            {
+                StopCoroutine(instinctEffectCoroutine);
+                instinctEffectCoroutine = null;
+            }
+            if (focusEffectCoroutine != null)
+            {
+                StopCoroutine(focusEffectCoroutine);
+                focusEffectCoroutine = null;
+            }
+            levelText.text = "";
+            progressFillImage.enabled = false;
+            progressFillImage.fillAmount = 0f;
+            messageText.text = "";
+        }
     }
 }

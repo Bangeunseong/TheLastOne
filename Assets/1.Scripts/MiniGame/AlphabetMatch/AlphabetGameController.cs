@@ -107,8 +107,8 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.StartMiniGame(con, ply);
             
-            minigameUI = uiManager.ShowUI<MinigameUI>();
-            minigameUI.ShowMiniGame();
+            minigameUI = uiManager.GetUI<MinigameUI>();
+            minigameUI.SetMiniGame();
             minigameUI.SetDescriptionText(Description);
             alphabetUI = minigameUI.GetAlphabetMatchingUI();
             alphabetUI.ResetUI();
@@ -119,7 +119,9 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
         {
             base.CancelMiniGame();
             
-            countdownCTS?.Cancel();
+            countdownCTS?.Cancel(); countdownCTS?.Dispose(); countdownCTS = null;
+
+            if (isFinished) return;
             FinishGame(true);
         }
         
@@ -179,8 +181,7 @@ namespace _1.Scripts.MiniGame.AlphabetMatch
             uiManager.HideUI<MinigameUI>();
             alphabetUI = null;
             
-            if (cancel) console.OnFinished();
-            else console.OnCleared(success);
+            if (!cancel) console.OnCleared(success);
             
             Cursor.lockState = CursorLockMode.Locked; 
             Cursor.visible = false;

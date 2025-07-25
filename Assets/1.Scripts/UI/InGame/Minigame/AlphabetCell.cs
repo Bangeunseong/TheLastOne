@@ -1,29 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class AlphabetCell : MonoBehaviour
+namespace _1.Scripts.UI.InGame.Minigame
 {
-    [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private Animator animator;
+    public class AlphabetCell : MonoBehaviour
+    {
+        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private Animator animator;
 
-    public void SetChar(char c)
-    {
-        text.text = c.ToString();
-    }
+        public void SetChar(char c)
+        {
+            text.text = c.ToString();
+        }
 
-    public void PlayCorrectAnim()
-    {
-        if (animator) animator.SetTrigger("Correct");
-    }
-    public void PlayWrongAnim()
-    {
-        if (animator) animator.SetTrigger("Wrong");
-    }
-    public void ResetCell()
-    {
-        text.text = "";
-        if (animator) animator.Rebind();
+        public void PlayCorrectAnim()
+        {
+            if (animator) animator.SetTrigger("Correct");
+        }
+
+        public void PlayWrongAnim()
+        {
+            if (animator) animator.SetTrigger("Wrong");
+        }
+
+        public void ResetCell()
+        {
+            text.text = "";
+            if (animator) animator.Rebind();
+        }
     }
 }

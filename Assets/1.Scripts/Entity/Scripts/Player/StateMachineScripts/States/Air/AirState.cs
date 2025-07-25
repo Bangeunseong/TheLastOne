@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using _1.Scripts.UI.Inventory;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
@@ -16,8 +17,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
             // Cancel Crouch
             playerCondition.OnCrouch(false, 0.1f);
             
-            // Stop Reload Coroutine
-            playerCondition.TryCancelReload();
+            // Hide Inventory UI
+            coreManager.uiManager.HideUI<InventoryUI>();
         }
 
         public override void Exit()

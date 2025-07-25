@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +18,18 @@ namespace _1.Scripts.UI.Common
 
         private PlayerCondition playerCondition;
         private Coroutine fadeInCoroutine;
+        
+        public override void Initialize(UIManager manager, object param = null)
+        {
+            base.Initialize(manager, param);
 
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnDeath -= OnPlayerDeath;
+            CoreManager.Instance.gameManager.Player.PlayerCondition.OnDeath += OnPlayerDeath;
+        }
+        
         public override void Show()
         {
-            panel.SetActive(true);
+            base.Show();
             if (fadeInCoroutine != null)
             {
                 StopCoroutine(fadeInCoroutine);
@@ -37,16 +45,6 @@ namespace _1.Scripts.UI.Common
             canvasGroup.alpha = 0;
             gameOverTextGroup.alpha = 0;
             buttonsGroup.alpha = 0;
-        }
-
-        public override void Initialize(object param = null)
-        {
-            if (playerCondition) playerCondition.OnDeath -= OnPlayerDeath;
-            if (param is PlayerCondition newPlayerCondition)
-            {
-                playerCondition = newPlayerCondition;
-                playerCondition.OnDeath += OnPlayerDeath;
-            }
         }
 
         private void Awake()

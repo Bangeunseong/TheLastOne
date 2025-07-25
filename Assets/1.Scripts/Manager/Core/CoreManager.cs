@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Linq;
 using System.Threading;
@@ -177,8 +176,9 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
-            uiManager.ResetUI();
+            uiManager.ResetUIByGroup(UIType.InGame);
             gameManager.ExitGame();
+            
             _ = LoadDataAndScene();
         }
         
@@ -188,7 +188,7 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
-            uiManager.ResetUI();
+            uiManager.ResetUIByGroup(UIType.InGame);
             gameManager.ExitGame();
 
             StartCoroutine(FadeOutAndLoadSceneCoroutine(sceneType));
@@ -203,7 +203,7 @@ namespace _1.Scripts.Manager.Core
             questManager.Reset();
             spawnManager.Reset();
             timeScaleManager.Reset();
-            uiManager.ResetUI();
+            uiManager.ResetUIByGroup(UIType.InGame);
             gameManager.ExitGame();
             
             StartCoroutine(FadeOutAndLoadSceneCoroutine(SceneType.IntroScene));
@@ -211,7 +211,9 @@ namespace _1.Scripts.Manager.Core
 
         private IEnumerator FadeOutAndLoadSceneCoroutine(SceneType sceneType)
         {
-            uiManager.ShowUI<FadeUI>().FadeOut();
+            var fade = uiManager.GetUI<FadeUI>();
+            fade.Show(); 
+            fade.FadeOut();
             yield return new WaitForSecondsRealtime(1.5f);
             _ = LoadScene(sceneType);
         }

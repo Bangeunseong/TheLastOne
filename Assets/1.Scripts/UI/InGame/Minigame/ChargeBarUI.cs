@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _1.Scripts.UI.InGame.Minigame
 {
@@ -20,9 +19,5 @@ namespace _1.Scripts.UI.InGame.Minigame
             if (!TargetObj) TargetObj = this.TryGetChildComponent<RectTransform>("TargetObj");
             if (!ControlObj) ControlObj = this.TryGetChildComponent<RectTransform>("ControlObj");
         }
-        
-        public override void Show() { Panel.gameObject.SetActive(true); }
-        public override void Hide() { Panel.gameObject.SetActive(false); }
-        public override void ResetUI() { Hide(); }
     }
 }

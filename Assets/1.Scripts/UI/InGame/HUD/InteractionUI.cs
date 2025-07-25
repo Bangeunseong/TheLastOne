@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.HUD
 {
     public class InteractionUI : MonoBehaviour
     {

@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame.Minigame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _1.Scripts.UI.InGame
+namespace _1.Scripts.UI.InGame.Minigame
 {
     public class MinigameUI : UIBase
     {
@@ -31,9 +29,9 @@ namespace _1.Scripts.UI.InGame
         public WireConnectionUI GetWireConnectionUI() => wireConnectionUI;
         public ChargeBarUI GetChargeBarUI() => chargeBarUI;
 
-        public override void Init(UIManager manager)
+        public override void Initialize(UIManager manager, object param = null)
         {
-            base.Init(manager);
+            base.Initialize(manager, param);
             panel.SetActive(false);
         }
         
@@ -46,6 +44,12 @@ namespace _1.Scripts.UI.InGame
             SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
             ShowLoopText(false);
+
+            ClearTexts();
+            
+            alphabetMatchingUI.Hide();
+            wireConnectionUI.Hide();
+            chargeBarUI.Hide();
         }
 
         public override void Hide()
@@ -54,10 +58,7 @@ namespace _1.Scripts.UI.InGame
             else panel.SetActive(false);
         }
 
-        public void HideImmediately()
-        {
-            panel.SetActive(false);
-        }
+        public void HideImmediately() { panel.SetActive(false); }
 
         private IEnumerator HidePanelCoroutine()
         {
@@ -70,8 +71,8 @@ namespace _1.Scripts.UI.InGame
             ShowClearText(false);
             yield return new WaitForSeconds(0.5f);
             panel.SetActive(false);
-            yield return null;
         }
+        
         public void ShowPanel(bool show = true)
         {
             panel.SetActive(show);
@@ -102,19 +103,22 @@ namespace _1.Scripts.UI.InGame
         }
 
         public void SetDescriptionText(string text) { descriptionText.text = text; }
-        public void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
+        private void ShowDescriptionText(bool show = true) => descriptionText.gameObject.SetActive(show);
         public void ShowLoopText(bool show = true) => loopText.gameObject.SetActive(show);
-        public void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
-        public void SetClearText(bool success, string text)
+        private void ShowClearText(bool show = true) => clearText.gameObject.SetActive(show);
+
+        private void SetClearText(bool success, string text)
         {
             clearText.text = text;
             clearText.color = success ? Color.cyan : Color.red;
         }
-        public void ShowEnterText(bool show = true) => enterText.SetActive(show);
+
+        private void ShowEnterText(bool show = true) => enterText.SetActive(show);
         public void ShowCountdownText(bool show = true) => countdownText.gameObject.SetActive(show);
         public void SetCountdownText(float t) => countdownText.text = t > 0 ? t.ToString("F0") : "0";
-        public void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
-        public void SetTimeSlider(float current, float max)
+        private void ShowTimeSlider(bool show = true) => timeSlider.gameObject.SetActive(show);
+
+        private void SetTimeSlider(float current, float max)
         {
             timeSlider.maxValue = max;
             timeSlider.value = current;
@@ -133,7 +137,7 @@ namespace _1.Scripts.UI.InGame
             if (!show) alphabetMatchingUI.ResetUI();
         }
         
-        public void ShowMiniGame(string description = "", bool showLoop = false)
+        public void SetMiniGame(string description = "", bool showLoop = false)
         {
             ShowPanel(true);
             SetDescriptionText(description);
@@ -144,6 +148,16 @@ namespace _1.Scripts.UI.InGame
             ShowEnterText(true);
             SetTimeSlider(0f, 0f);
             ShowTimeSlider(false);
+        }
+
+        private void ClearTexts()
+        {
+            clearText.text = "";
+            loopText.text = "";
+            countdownText.text = "";
+            descriptionText.text = "";
+            timeText.text = "";
+            timeSlider.value = 0;
         }
     }
 }
