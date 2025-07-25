@@ -41,7 +41,7 @@ namespace _1.Scripts.UI
 
         private void Pause()
         {
-            if (!pauseMenuUI) return;
+            if (!pauseMenuUI || coreManager.uiManager.IsCutscene) return;
             CoreManager.Instance.uiManager.HideHUD();
             CoreManager.Instance.gameManager.PauseGame();
             blurMgr.BlurInAnim();
@@ -59,7 +59,7 @@ namespace _1.Scripts.UI
 
         private void Resume()
         {
-            if (!pauseMenuUI) return;
+            if (!pauseMenuUI || coreManager.uiManager.IsCutscene) return;
             CoreManager.Instance.uiManager.ShowHUD();
             CoreManager.Instance.gameManager.ResumeGame();
             blurMgr.BlurOutAnim();

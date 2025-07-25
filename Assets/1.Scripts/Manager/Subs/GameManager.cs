@@ -138,9 +138,10 @@ namespace _1.Scripts.Manager.Subs
         public void PauseGame()
         {
             if (!Player) return;
-
-            IsGamePaused = true;
             
+            Service.Log("Game Paused!");
+            IsGamePaused = true;
+               
             coreManager.timeScaleManager.ChangeTimeScale(0);
             Player.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
@@ -151,6 +152,7 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Player) return;
 
+            Service.Log("Game Resumed!");
             IsGamePaused = false;
             
             if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
