@@ -580,8 +580,7 @@ MonoBehaviour:
     <CurrentTimeScale>k__BackingField: 1
     <TargetTimeScale>k__BackingField: 1
   dialogueManager:
-    dialogueDataList:
-    - {fileID: 11400000, guid: a19f687dfc96d90429d46c6714a15f00, type: 2}
+    dialogueDataList: []
   <IsDebug>k__BackingField: 1
   <DebugPrefix>k__BackingField: TestScene_
 --- !u!4 &1367050390

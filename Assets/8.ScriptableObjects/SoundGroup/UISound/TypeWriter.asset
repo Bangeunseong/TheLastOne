@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7695c392c1ea64c8ac5e4e80bfb45f, type: 3}
   m_Name: TypeWriter
   m_EditorClassIdentifier: 
-  groupName: 
-  audioClips: []
+  groupName: TypeWriter
+  audioClips:
+  - m_AssetGUID: 5ce829a5e4e37e94ca7d54bb871ee1e4
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

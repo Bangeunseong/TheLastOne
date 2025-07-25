@@ -16,3 +16,4 @@ MonoBehaviour:
   sequence:
   - Speaker: DRONE
     Message: '[ALERT][ALERT][ALERT][ALERT][ALERT][ALERT][ALERT][ALERT]...'
+    SpeakerType: 1
