@@ -37,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     /// <summary>
     /// Npc 스텟 공통로직 정의
     /// </summary>
-    public abstract class BaseNpcStatController : MonoBehaviour, IDamagable, IStunnable, IHackable
+    public abstract class BaseNpcStatController : MonoBehaviour, IStunnable, IHackable
     {
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
@@ -135,7 +135,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual void OnEnable()
         { 
             if (CoreManager.Instance.spawnManager.IsVisible) 
-                NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayersForStencil, false);
+                NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayerMask_ForStencil, false);
             foreach (Collider coll in colliders) { coll.enabled = true; }
         }
 
@@ -168,7 +168,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 foreach (Light objlight in lights) { objlight.enabled = false; }
                 foreach (Collider coll in colliders) { coll.enabled = false; }
                 
-                behaviorTree.SetVariableValue("IsDead", true);
+                behaviorTree.SetVariableValue(BehaviorNames.IsDead, true);
                 PlayDeathAnimation();
                 IsDead = true;
             }
@@ -273,7 +273,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         private async UniTaskVoid OnStunnedAsync(float duration, CancellationToken token)
         {
             isStunned = true;
-            behaviorTree.SetVariableValue("CanRun", false);
+            behaviorTree.SetVariableValue(BehaviorNames.CanRun, false);
             ResetAIState();
 
             onStunParticle.Play();
@@ -285,21 +285,21 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             isStunned = false;
-            behaviorTree.SetVariableValue("CanRun", true);
+            behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
         }
         
         protected virtual void ResetAIState()
         {
-            behaviorTree.SetVariableValue("target_Transform", null);
-            behaviorTree.SetVariableValue("target_Pos", Vector3.zero);
-            behaviorTree.SetVariableValue("shouldLookTarget", false);
-            behaviorTree.SetVariableValue("IsAlerted", false);
-            behaviorTree.SetVariableValue("timer", 0f);
+            behaviorTree.SetVariableValue(BehaviorNames.TargetTransform, null);
+            behaviorTree.SetVariableValue(BehaviorNames.TargetPos, Vector3.zero);
+            behaviorTree.SetVariableValue(BehaviorNames.ShouldLookTarget, false);
+            behaviorTree.SetVariableValue(BehaviorNames.IsAlerted, false);
+            behaviorTree.SetVariableValue(BehaviorNames.Timer, 0f);
 
-            var enemyLight = behaviorTree.GetVariable("Enemy_Light") as SharedLight;
-            var allyLight = behaviorTree.GetVariable("Ally_Light") as SharedLight;
-            var agent = behaviorTree.GetVariable("agent") as SharedNavMeshAgent;
-            var selfTransform = behaviorTree.GetVariable("self_Transform") as SharedTransform;
+            var enemyLight = behaviorTree.GetVariable(BehaviorNames.EnemyLight) as SharedLight;
+            var allyLight = behaviorTree.GetVariable(BehaviorNames.AllyLight) as SharedLight;
+            var agent = behaviorTree.GetVariable(BehaviorNames.Agent) as SharedNavMeshAgent;
+            var selfTransform = behaviorTree.GetVariable(BehaviorNames.SelfTransform) as SharedTransform;
 
             if (enemyLight != null && enemyLight.Value != null)
             {

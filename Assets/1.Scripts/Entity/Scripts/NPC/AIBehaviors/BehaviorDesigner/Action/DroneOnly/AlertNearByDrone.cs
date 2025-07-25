@@ -52,9 +52,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				var BT = col.GetComponent<global::BehaviorDesigner.Runtime.BehaviorTree>();
 				if (BT != null)
 				{
-					BT.SetVariableValue("target_Transform", targetTransform.Value);
-					BT.SetVariableValue("target_Pos", targetPos.Value);
-					BT.SetVariableValue("IsAlerted", true);
+					BT.SetVariableValue(BehaviorNames.TargetTransform, targetTransform.Value);
+					BT.SetVariableValue(BehaviorNames.TargetPos, targetPos.Value);
+					BT.SetVariableValue(BehaviorNames.IsAlerted, true);
 				}
 			}
 			

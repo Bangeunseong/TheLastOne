@@ -31,8 +31,10 @@ namespace _1.Scripts.Util
                 int targetLayer = hit.collider.gameObject.layer;
 
                 return isAlly
-                    ? targetLayer == LayerConstants.Enemy || LayerConstants.EnemyLayers.Contains(targetLayer)
-                    : targetLayer == LayerConstants.Ally || LayerConstants.AllyLayers.Contains(targetLayer);
+                    ? targetLayer == LayerConstants.Enemy ||
+                      (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0   
+                    : targetLayer == LayerConstants.Ally || 
+                      (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0;
             }
 
             return false;
@@ -46,8 +48,7 @@ namespace _1.Scripts.Util
         /// <param name="turnSpeed"></param>
         public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f)
         {
-            if (target == null || self == null)
-                return;
+            if (target == null || self == null) return;
 
             Vector3 dir = target.position - self.position;
             dir.y = 0;
@@ -63,18 +64,18 @@ namespace _1.Scripts.Util
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="layer"></param>
-        /// <param name="ignoreLayers"></param>
+        /// <param name="ignoreLayerMask"></param>
         /// <param name="includeSelf"></param>
-        public static void SetLayerRecursively(GameObject obj, int layer, HashSet<int> ignoreLayers = null, bool includeSelf = true)
+        public static void SetLayerRecursively(GameObject obj, int layer, int ignoreLayerMask = 0, bool includeSelf = true)
         {
-            if (includeSelf && (ignoreLayers == null || !ignoreLayers.Contains(obj.layer)))
+            if (includeSelf && (ignoreLayerMask == 0 || (ignoreLayerMask & LayerConstants.ToLayerMask(obj.layer)) != 0))
             {
                 obj.layer = layer;
             }
             
             foreach (Transform child in obj.transform)
             {
-                SetLayerRecursively(child.gameObject, layer, ignoreLayers, true);
+                SetLayerRecursively(child.gameObject, layer, ignoreLayerMask, true);
             }
         }
 

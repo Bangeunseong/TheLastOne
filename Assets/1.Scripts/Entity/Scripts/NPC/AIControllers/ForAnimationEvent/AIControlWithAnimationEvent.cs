@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
+using _1.Scripts.Static;
 using _1.Scripts.Util;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,29 +23,29 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         
         public void AIOffForAnimationEvent()
         {
-            behaviorTree.SetVariableValue("CanRun", false);
+            behaviorTree.SetVariableValue(BehaviorNames.CanRun, false);
         }
 
         public void AIOnForAnimationEvent()
         {
-            var statController = behaviorTree.GetVariable("statController") as SharedBaseNpcStatController;
+            var statController = behaviorTree.GetVariable(BehaviorNames.StatController) as SharedBaseNpcStatController;
 
             if (statController != null && statController.Value is IStunnable stunnable)
             {
                 if (!stunnable.IsStunned)
                 {
-                    behaviorTree.SetVariableValue("CanRun", true);
+                    behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
                 }
             }
             else
             {
-                behaviorTree.SetVariableValue("CanRun", true);
+                behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
             }
         }
 
         public void SetDestinationNullForAnimationEvent()
         {
-            var sharedAgent = behaviorTree.GetVariable("agent") as SharedNavMeshAgent;
+            var sharedAgent = behaviorTree.GetVariable(BehaviorNames.Agent) as SharedNavMeshAgent;
 
             if (sharedAgent != null && sharedAgent.Value != null)
             {
