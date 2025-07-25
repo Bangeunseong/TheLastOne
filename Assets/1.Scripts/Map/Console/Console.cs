@@ -36,6 +36,7 @@ namespace _1.Scripts.Map.Console
         
         private CoreManager coreManager;
         private float timeSinceLastFailed;
+        private bool isInteracted;
         
         private void Awake()
         {
@@ -70,13 +71,15 @@ namespace _1.Scripts.Map.Console
             if (!ownerObj.TryGetComponent(out Player player)) return;
             Service.Log("Interacted!");
             
-            if (IsCleared || IsOnCooldown) return;
+            if (IsCleared || IsOnCooldown || isInteracted) return;
+            isInteracted = true;
             CurrentMiniGame = UnityEngine.Random.Range(0, MiniGames.Count);
             MiniGames[CurrentMiniGame].StartMiniGame(this, player);
         }
 
         public void OnCancelInteract()
         {
+            isInteracted = false;
             MiniGames[CurrentMiniGame].CancelMiniGame();
         }
 
@@ -85,6 +88,7 @@ namespace _1.Scripts.Map.Console
             if (success) OnClear();
             else
             {
+                isInteracted = false;
                 IsOnCooldown = true;
                 AlertBody?.SetActive(true);
             }
@@ -98,7 +102,7 @@ namespace _1.Scripts.Map.Console
         
         private void OnClear()
         {
-            IsCleared = true;
+            IsCleared = true; isInteracted = false;
             if (!CutScene)
             {
                 coreManager.gameManager.Player.PlayerCondition.OnEnablePlayerMovement();
