@@ -22,12 +22,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StencilAbles
             if (isOn)
             {
                 int layerMask = statController.RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy;
-                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayersForStencil, false);
+                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayerMask_ForStencil, false);
             }
             else
             {
                 int layerMask = statController.RuntimeStatData.IsAlly ? LayerConstants.Ally : LayerConstants.Enemy;
-                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayersForStencil, false);
+                NpcUtil.SetLayerRecursively(this.gameObject, layerMask, LayerConstants.IgnoreLayerMask_ForStencil, false);
             }
         }
     }
