@@ -22,7 +22,11 @@ namespace _1.Scripts.MiniGame
         protected float startTime;
         protected bool isFinished;
 
-        protected virtual void Awake() { coreManager = CoreManager.Instance;}
+        protected virtual void Awake()
+        {
+            coreManager = CoreManager.Instance;
+            uiManager = coreManager.uiManager;
+        }
         protected virtual void Reset() { }
         protected virtual void Start() { }
         protected virtual void Update() { }
@@ -46,19 +50,13 @@ namespace _1.Scripts.MiniGame
         {
             console = con;
             player = ply;
-            coreManager = CoreManager.Instance;
-            uiManager = coreManager.uiManager;
         }
 
-        public virtual void CancelMiniGame()
-        {
-            if (!isActiveAndEnabled || isFinished) return;
-            isFinished = true;
-        }
+        public virtual void CancelMiniGame() { }
         
         protected void FinishGame(bool isCanceled, bool isSuccess = false, float duration = 0f)
         {
-            // Service.Log("Finished Game");
+            Service.Log("Finished Game");
             isFinished = true;
             _ = EndGame_Async(isCanceled, isSuccess, duration);
         }
