@@ -113,12 +113,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 20f88d3e874558f4bb6a6e5940b2dc54
-    m_Address: PanelManager
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Common
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2d910db66ca228a4f9f8087c34d763c6
     m_Address: QuickSlotUI
     m_ReadOnly: 0

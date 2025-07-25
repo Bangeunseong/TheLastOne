@@ -459,9 +459,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnDisablePlayerMovement()
         {
             IsPlayerHasControl = false;
-            player.Pov.m_HorizontalAxis.Reset();
-            player.Pov.m_VerticalAxis.Reset();
+            
             player.InputProvider.XYAxis.action.Disable();
+            player.Pov.m_HorizontalAxis.Reset(); 
+            player.Pov.m_VerticalAxis.Reset();
         }
 
         private void StopAllUniTasks()

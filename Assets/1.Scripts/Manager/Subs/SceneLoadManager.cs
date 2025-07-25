@@ -195,8 +195,8 @@ namespace _1.Scripts.Manager.Subs
                     {
                         playable.played += OnCutsceneStarted_IntroOfStage1;
                         playable.played += uiManager.OnCutsceneStarted;
-                        playable.stopped += OnCutsceneStopped_IntroOfStage1;
                         playable.stopped += uiManager.OnCutsceneStopped;
+                        playable.stopped += OnCutsceneStopped_IntroOfStage1;
                         playable.Play();
                     }
                     else
@@ -228,6 +228,7 @@ namespace _1.Scripts.Manager.Subs
 
         private void OnCutsceneStarted_IntroOfStage1(PlayableDirector director)
         {
+            coreManager.gameManager.Player.InputProvider.enabled = false;
             coreManager.gameManager.PauseGame();
             coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
             coreManager.uiManager.OnCutsceneStarted(director);
@@ -235,9 +236,9 @@ namespace _1.Scripts.Manager.Subs
 
         private void OnCutsceneStopped_IntroOfStage1(PlayableDirector director)
         {
-            var playerGo = GameObject.FindWithTag("Player");
-            if (playerGo == null || !playerGo.TryGetComponent(out Player player)) return;
+            var player = coreManager.gameManager.Player;
             player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
