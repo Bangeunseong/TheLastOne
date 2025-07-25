@@ -183,6 +183,7 @@ namespace _1.Scripts.Manager.Subs
             
             uiManager.HideUI<LoadingUI>();
             uiManager.RegisterDynamicUIByGroup(UIType.InGame);
+            coreManager.gameManager.PauseGame();
 
             switch (CurrentScene)
             {
@@ -227,7 +228,6 @@ namespace _1.Scripts.Manager.Subs
 
         private void OnCutsceneStarted_IntroOfStage1(PlayableDirector director)
         {
-            coreManager.gameManager.PauseGame();
             coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
             coreManager.uiManager.OnCutsceneStarted(director);
         }
