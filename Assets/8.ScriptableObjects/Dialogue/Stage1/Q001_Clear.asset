@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a273edb0851a5c4ab08df9b7fb62ce5, type: 3}
+  m_Name: Q001_Clear
+  m_EditorClassIdentifier: 
+  dialogueKey: Q001_Clear
+  sequence:
+  - Speaker: '[SYSTEM]'
+    Message: Prolonged cryosleep has resulted in severe physical weakness. Please
+      use a Nano-Heal Ampoule.
+  - Speaker: '[SYSTEM]'
+    Message: Locating nearest Nano-Heal Ampoule. Guiding you to the closest available
+      supply.
+  - Speaker: '[SYSTEM]'
+    Message: "The optimal route will be indicated by your suit\u2019s guidance system,
+      projected as a laser path on the facility floor."
+  - Speaker: '[SYSTEM]'
+    Message: Disengaging the base door lockdown.

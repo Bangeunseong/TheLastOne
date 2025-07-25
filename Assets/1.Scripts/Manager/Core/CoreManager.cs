@@ -25,6 +25,7 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public QuestManager questManager;
         [SerializeField] public SoundManager soundManager;
         [SerializeField] public TimeScaleManager timeScaleManager;
+        [SerializeField] public DialogueManager dialogueManager;
         
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
@@ -59,6 +60,7 @@ namespace _1.Scripts.Manager.Core
             questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
+            dialogueManager = new DialogueManager();
         }
 
         private void Reset()
@@ -74,6 +76,7 @@ namespace _1.Scripts.Manager.Core
             questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
+            dialogueManager = new DialogueManager();
         }
 
         // Start is called before the first frame update
@@ -94,6 +97,7 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Start();
             spawnManager.Start();
             questManager.Start();
+            dialogueManager.Start();
             
             await resourceManager.LoadAssetsByLabelAsync("IntroScene");
             soundManager.CacheSoundGroup();

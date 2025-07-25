@@ -23,6 +23,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q001_Clear
   - targetID: 5
     description: Collect Items on the Table
     type: 2
@@ -30,6 +31,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q002_Clear
   - targetID: 6
     description: Hack Single Drone
     type: 3
@@ -37,6 +39,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q003_Clear
   - targetID: 0
     description: Hack the Sub Console to open the Lab
     type: 0
@@ -44,6 +47,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q004_Clear
   - targetID: 1
     description: Hack the Sub Console to open the Maintenence
     type: 0
@@ -51,6 +55,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q005_Clear
   - targetID: 2
     description: Hack the Main Console
     type: 0
@@ -58,6 +63,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q006_Clear
   - targetID: 3
     description: Kill all remaining drones
     type: 1
@@ -65,6 +71,7 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: Q007_Clear
   - targetID: 100
     description: Exit To Main Door
     type: 4
@@ -72,3 +79,4 @@ MonoBehaviour:
     onCompletedAction:
       m_PersistentCalls:
         m_Calls: []
+    dialogueKey: 
