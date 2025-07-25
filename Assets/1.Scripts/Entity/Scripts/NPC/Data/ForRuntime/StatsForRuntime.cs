@@ -152,4 +152,46 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             DetectRange = suicideSO.DetectRange;
         }
     }
+    
+    public class RuntimeShebotSwordStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
+    {
+        private readonly ShebotSwordStatData swordSO;
+        
+        public float DetectRange { get; set; }
+        public float AttackRange { get; set; }
+        public float AlertDuration { get; set; }
+        public float AlertRadius { get; set; }
+        public float MinWaitingDuration { get; set; }
+        public float MaxWaitingDuration { get; set;  }
+        public float MinWanderingDistance { get; set; }
+        public float MaxWanderingDistance { get; set; }
+
+        public RuntimeShebotSwordStatData(ShebotSwordStatData so) : base(so)
+        {
+            swordSO = so;
+            
+            DetectRange = so.DetectRange;
+            AttackRange = so.AttackRange;
+            AlertDuration = so.AlertDuration;
+            AlertRadius = so.AlertRadius;
+            MinWaitingDuration = so.MinWaitingDuration;
+            MaxWaitingDuration = so.MaxWaitingDuration;
+            MinWanderingDistance = so.MinWanderingDistance;
+            MaxWanderingDistance = so.MaxWanderingDistance;
+        }
+
+        public override void ResetStats()
+        {
+            base.ResetStats();
+            
+            DetectRange = swordSO.DetectRange;
+            AttackRange = swordSO.AttackRange;
+            AlertDuration = swordSO.AlertDuration;
+            AlertRadius = swordSO.AlertRadius;
+            MinWaitingDuration = swordSO.MinWaitingDuration;
+            MaxWaitingDuration = swordSO.MaxWaitingDuration;
+            MinWanderingDistance = swordSO.MinWanderingDistance;
+            MaxWanderingDistance = swordSO.MaxWanderingDistance;
+        }
+    }
 }

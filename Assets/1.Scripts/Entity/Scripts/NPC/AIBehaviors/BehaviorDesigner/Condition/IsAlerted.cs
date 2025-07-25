@@ -35,31 +35,42 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				return TaskStatus.Failure;
 			}
 			
-			bool isAlly = statController.Value.RuntimeStatData.IsAlly;
+			bool ally = statController.Value.RuntimeStatData.IsAlly;
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = detectable.DetectRange;
             
-			int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally;
+			int layerMask = ally ? 1 << LayerConstants.Enemy : 1 << LayerConstants.Ally;
 			
 			Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
-			foreach (var col in colliders)
+			
+			System.Array.Sort(colliders, (a, b) =>
 			{
-				if (!col.CompareTag("Player"))
+				float distA = (a.bounds.center - selfPos).sqrMagnitude;
+				float distB = (b.bounds.center - selfPos).sqrMagnitude;
+				return distA.CompareTo(distB);
+			});
+			
+			foreach (var collider in colliders)
+			{
+				if (!collider.CompareTag("Player"))
 				{
-					var statCtrl = col.GetComponent<BaseNpcStatController>();
+					var statCtrl = collider.GetComponent<BaseNpcStatController>();
 					if (statCtrl == null || statCtrl.IsDead || statCtrl.isHacking)
 					{
 						continue;
 					}
 				}
 
-				Vector3 center = col.bounds.center;
-				if (NpcUtil.IsTargetVisible(selfCollider.Value.bounds.center, center, 100f, isAlly))
+				int layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
+				Vector3 colliderPos = targetChest.bounds.center;
+				
+				if (NpcUtil.IsTargetVisible(selfCollider.Value.bounds.center, colliderPos, 100f, ally))
 				{
 					if (isAlertedOnce != null) isAlertedOnce.Value = true;
 					
-					targetTransform.Value = col.transform;
-					targetPos.Value = center;
+					targetTransform.Value = collider.transform;
+					targetPos.Value = colliderPos;
 					return TaskStatus.Success;
 				}
 			}

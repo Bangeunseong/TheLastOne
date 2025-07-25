@@ -53,7 +53,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				if (BT != null)
 				{
 					BT.SetVariableValue("target_Transform", targetTransform.Value);
-					BT.SetVariableValue("target_Pos", targetPos);
+					BT.SetVariableValue("target_Pos", targetPos.Value);
 					BT.SetVariableValue("IsAlerted", true);
 				}
 			}
