@@ -42,10 +42,10 @@ namespace _1.Scripts.Manager.Subs
             { 
                 UIType.InGame, new List<Type> { typeof(InGameUI), typeof(DistanceUI), typeof(WeaponUI),
                 typeof(QuickSlotUI), typeof(QuestUI), typeof(MinigameUI), typeof(InventoryUI), 
-                typeof(PauseMenuUI), typeof(DialogueUI), typeof(GameOverUI) } 
+                typeof(PauseMenuUI), typeof(DialogueUI), typeof(GameOverUI), typeof(LowHealthOverLay) } 
             },
             {
-                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI),}
+                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI), typeof(LowHealthOverLay)}
             }
         };
         private CoreManager coreManager;
