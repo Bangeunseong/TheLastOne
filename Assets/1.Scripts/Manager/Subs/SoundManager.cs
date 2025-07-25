@@ -26,6 +26,7 @@ namespace _1.Scripts.Manager.Subs
         ButtonClick,
         PopupOpen,
         PopupClose,
+        TypeWriter,
         
         // Player SFX
         PlayerHit,

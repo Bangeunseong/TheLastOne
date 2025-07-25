@@ -163,8 +163,11 @@ namespace _1.Scripts.UI.InGame.HUD
             instinctGaugeImage.fillAmount = instinct;
             
             if (!gameObject.activeInHierarchy) return;
-            if (instinct >= 1f && instinctEffectCoroutine == null) instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
-            else if (instinct < 1f && instinctEffectCoroutine != null)
+            
+            bool canTriggerInstinctEffect = instinct >= 1f && playerCondition && playerCondition.CurrentHealth <= 50;
+            
+            if (canTriggerInstinctEffect && instinctEffectCoroutine == null) instinctEffectCoroutine = StartCoroutine(InstinctEffectCoroutine());
+            else if (!canTriggerInstinctEffect && instinctEffectCoroutine != null)
             {
                 StopCoroutine(instinctEffectCoroutine);
                 instinctEffectCoroutine = null;

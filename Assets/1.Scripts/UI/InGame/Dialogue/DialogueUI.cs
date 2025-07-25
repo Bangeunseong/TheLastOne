@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Dialogue;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 namespace _1.Scripts.UI.InGame.Dialogue
 {
+    public enum SpeakerType
+    {
+        Ally,
+        Enemy,
+        Player,
+        None
+    }
+    
     public class DialogueUI : UIBase
     {
         [Header("Dialogue UI")]
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI dialogueText;
         [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private UIManagerText nameTextUIManager;
+        [SerializeField] private UIManagerText dialogueTextUIManager;
+        [SerializeField] private UIManagerImage frameUIManager;
         
         private Coroutine dialogueRoutine;
         private Coroutine fadeRoutine;
@@ -91,12 +105,26 @@ namespace _1.Scripts.UI.InGame.Dialogue
             var data = sequence[index];
             nameText.text = data.Speaker;
             dialogueText.text = "";
+
+            if (data.SpeakerType == SpeakerType.Enemy)
+            {
+                nameTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                dialogueTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                frameUIManager.colorType = UIManagerImage.ColorType.Negative;
+            }
+            else
+            {
+                nameTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                dialogueTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                frameUIManager.colorType = UIManagerImage.ColorType.Primary;
+            }
             
             yield return StartCoroutine(FadeIn(0.15f));
 
             foreach (char c in data.Message)
             {
                 dialogueText.text += c;
+                CoreManager.Instance.soundManager.PlayUISFX(SfxType.TypeWriter);
                 yield return new WaitForSeconds(0.01f);
             }
 
