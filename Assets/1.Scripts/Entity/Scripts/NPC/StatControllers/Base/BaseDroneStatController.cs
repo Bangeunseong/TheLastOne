@@ -83,7 +83,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             penaltyToken = NpcUtil.CreateLinkedNpcToken();
             
             _= DamageAndArmorIncrease(baseDamage, baseArmor, penaltyToken.Token);
-            behaviorTree.SetVariableValue("shouldAlertNearBy", true);
+            behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
         }
         
         private async UniTaskVoid DamageAndArmorIncrease(int baseDamage, float baseArmor, CancellationToken token)
