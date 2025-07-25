@@ -50,7 +50,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             Vector3 selfPos = selfTransform.Value.position;
             float range = boomable.BoomRange;
             
-            int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally | 1 << LayerConstants.Chest;
+            int layerMask = isAlly ? 1 << LayerConstants.Chest_E : 1 << LayerConstants.Chest_P;
             Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
             foreach (Collider collider in colliders)
             {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.DamageConvert;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Interfaces;
@@ -47,16 +48,17 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         public bool IsDead { get; private set; }
         
         [Header("Components")]
-        protected Animator animator;
-        protected BehaviorTree behaviorTree;
-        protected NavMeshAgent agent;
-        private Collider[] colliders;
-        private Light[] lights;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected BehaviorTree behaviorTree;
+        [SerializeField] protected NavMeshAgent agent;
+        [SerializeField] private Collider[] colliders;
+        [SerializeField] private Light[] lights;
+        [SerializeField] private DamageConvertForNpc[] damageConvertForNpc;
+        [SerializeField] protected ParticleSystem onStunParticle;
         
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
-        [SerializeField] protected ParticleSystem onStunParticle;
         
         [Header("Hacking_Process")]
         public bool isHacking;
@@ -64,7 +66,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] private bool useSelfDefinedChance = true;
         [SerializeField] protected float hackingDuration = 3f;
         [SerializeField] protected float successChance = 0.7f;
-        [SerializeField] protected Transform rootRenderer;
         protected virtual bool CanBeHacked => canBeHacked; // 오버라이드해서 false로 바꾸거나, 인스펙터에서 설정
         private HackingProgressUI hackingProgressUI;
         private Dictionary<Transform, int> originalLayers = new();
@@ -83,14 +84,31 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         
         protected virtual void Awake()
         {
+            animator ??= GetComponent<Animator>();
+            behaviorTree ??= GetComponent<BehaviorTree>();
+            agent ??= GetComponent<NavMeshAgent>();
+            onStunParticle ??= this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
+            if (damageConvertForNpc == null || damageConvertForNpc.Length == 0) damageConvertForNpc = GetComponentsInChildren<DamageConvertForNpc>();
+            if (lights == null || lights.Length == 0) lights = GetComponentsInChildren<Light>();
+            if (colliders == null || colliders.Length == 0) colliders = GetComponentsInChildren<Collider>();
+            IsDead = false;
+            
+            foreach (DamageConvertForNpc convert in damageConvertForNpc) { convert.Initialize(this); }
+            CacheOriginalLayers(this.transform);
+        }
+        
+        /// <summary>
+        /// Components 초기화 용도
+        /// </summary>
+        private void Reset()
+        {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
             agent = GetComponent<NavMeshAgent>();
             lights = GetComponentsInChildren<Light>();
             colliders = GetComponentsInChildren<Collider>();
-            IsDead = false;
-            
-            CacheOriginalLayers(this.transform);
+            damageConvertForNpc = GetComponentsInChildren<DamageConvertForNpc>();
+            onStunParticle = this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
         }
         
         /// <summary>
@@ -115,7 +133,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         protected virtual void OnEnable()
         { 
             if (CoreManager.Instance.spawnManager.IsVisible) 
-                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy);
+                NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayersForStencil, false);
             foreach (Collider coll in colliders) { coll.enabled = true; }
         }
 
@@ -224,16 +242,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         private void HackingSuccess()
         {
             RuntimeStatData.IsAlly = true;
-
-            if (rootRenderer.gameObject.layer == LayerConstants.StencilEnemy)
-            {
-                NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
-                NpcUtil.SetLayerRecursively(rootRenderer.gameObject, LayerConstants.StencilAlly);
-            }
-            else
-            {
-                NpcUtil.SetLayerRecursively(gameObject, LayerConstants.Ally);
-            }
+            NpcUtil.SetLayerRecursively_Hacking(this.gameObject);
 
             if (shouldCountHackingQuest)
             {

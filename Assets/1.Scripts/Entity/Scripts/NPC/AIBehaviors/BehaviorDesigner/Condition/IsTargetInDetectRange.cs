@@ -38,6 +38,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 
 			Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
 
+			System.Array.Sort(colliders, (a, b) =>
+			{
+				float distA = (a.bounds.center - selfPos).sqrMagnitude;
+				float distB = (b.bounds.center - selfPos).sqrMagnitude;
+				return distA.CompareTo(distB);
+			});
+			
 			foreach (var collider in colliders)
 			{
 				if (!collider.CompareTag("Player"))
@@ -49,7 +56,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					}
 				}
 
-				Vector3 colliderPos = collider.bounds.center;
+				int layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
+				Vector3 colliderPos = targetChest.bounds.center;
 
 				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
 				{
