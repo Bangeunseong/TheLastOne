@@ -372,7 +372,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead) return;
             Experience -= Level * 120;
             Level++;
-            coreManager.uiManager.GetUI<InGameUI>()?.UpdateLevelUI(Level);
             CoreManager.Instance.SaveData_QueuedAsync();
         }
 

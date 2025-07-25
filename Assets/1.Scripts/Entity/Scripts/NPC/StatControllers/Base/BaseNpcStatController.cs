@@ -77,6 +77,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
         [SerializeField] private bool shouldCountKillQuest;
         [SerializeField] private int[] killQuestIndex;
+
+        private static bool hasFirstkilled = false;
         
         // 이 스크립트에서 사용하는 토큰들
         private CancellationTokenSource hackCts;
@@ -153,6 +155,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 
             if (RuntimeStatData.MaxHealth <= 0) // 사망
             {
+                if (!hasFirstkilled)
+                {
+                    hasFirstkilled = true;
+                    CoreManager.Instance.dialogueManager.TriggerDialogue("FirstKill");
+                }
                 if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
                 {
                     foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);

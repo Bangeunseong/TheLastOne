@@ -10,5 +10,6 @@ namespace _1.Scripts.Quests.Data
         public string title;
         public string description;
         public List<ObjectiveData> objectives;
+        
     }
 }

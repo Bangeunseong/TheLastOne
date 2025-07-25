@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1069,6 +1069,8 @@ MonoBehaviour:
     <OriginalFixedDeltaTime>k__BackingField: 0
     <CurrentTimeScale>k__BackingField: 1
     <TargetTimeScale>k__BackingField: 1
+  dialogueManager:
+    dialogueDataList: []
   <IsDebug>k__BackingField: 1
   <DebugPrefix>k__BackingField: TestScene_
 --- !u!4 &1367050390

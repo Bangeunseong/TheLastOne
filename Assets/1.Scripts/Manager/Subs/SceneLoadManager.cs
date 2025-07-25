@@ -107,6 +107,7 @@ namespace _1.Scripts.Manager.Subs
             
             // Load Resources & Create Pool used in Current Scene
             await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            coreManager.dialogueManager.CacheDialogueData();
             coreManager.soundManager.CacheSoundGroup();
             await coreManager.soundManager.LoadClips();
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
