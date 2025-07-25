@@ -162,6 +162,84 @@ MonoBehaviour:
     m_SerializedLabels:
     - Common
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b231e11fce110244a8c8388772f62b4c
+    m_Address: Q001_Clear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11eb5a104de2e8f4482f916c07ec3721
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q002_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 389d26dc55db1d440a40e77b481663c8
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q003_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 967d73f8eec243248992be3a8a793504
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q004_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb63658352aee364fbf519a965e496ea
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q005_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e2348fcdc90cc343ae9b08c38db3f47
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q006_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 518ab3be09cd3ee44b66de3b0a8e8628
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/Q007_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 925d8eeb5de9c1949b8ff41bfe5db05b
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/T001_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed8eef816a8b30b42ab7b60354e1525c
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/T002_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9ef3b6fd2d00ce45a793111a5b7fa24
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/T003_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df9924107f360ca44beeef4dd3d799e7
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/T003_Clear 1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30607beddefc8a749aadaf31c10aac3b
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/T005_Clear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af615e9c4b4338246a8d5620ac8f4e71
+    m_Address: Assets/8.ScriptableObjects/Dialogue/Stage1/FirstKill.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stage1
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7667d1b5b9d9e3342b6122c6f131c22d, type: 2}
   m_SchemaSet:

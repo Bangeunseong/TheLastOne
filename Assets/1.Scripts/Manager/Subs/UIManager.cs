@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI;
 using _1.Scripts.UI.Common;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.Dialogue;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Minigame;
-using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.InGame.Quest;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
@@ -41,8 +38,8 @@ namespace _1.Scripts.Manager.Subs
             },
             { 
                 UIType.InGame, new List<Type> { typeof(InGameUI), typeof(DistanceUI), typeof(WeaponUI),
-                typeof(QuickSlotUI), typeof(QuestUI), typeof(MinigameUI), typeof(InventoryUI), 
-                typeof(PauseMenuUI), typeof(DialogueUI), typeof(GameOverUI), typeof(LowHealthOverLay) } 
+                typeof(QuickSlotUI), typeof(QuestUI), typeof(DialogueUI), typeof(MinigameUI), typeof(InventoryUI), 
+                typeof(PauseMenuUI), typeof(GameOverUI), typeof(LowHealthOverLay) } 
             },
             {
                 UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI), typeof(LowHealthOverLay)}

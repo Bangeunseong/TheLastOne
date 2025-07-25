@@ -1,31 +1,36 @@
 using System.Collections;
+using System.Collections.Generic;
+using _1.Scripts.Dialogue;
+using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 namespace _1.Scripts.UI.InGame.Dialogue
 {
-    public struct DialogueData
+    public enum SpeakerType
     {
-        public string Speaker;
-        public string Message;
-        public float FadeInTime;
-
-        public DialogueData(string speaker, string message, float fadeInTime = 0.2f)
-        {
-            Speaker = speaker;
-            Message = message;
-            FadeInTime = fadeInTime;
-        }
+        Ally,
+        Enemy,
+        Player,
+        None
     }
+    
     public class DialogueUI : UIBase
     {
         [Header("Dialogue UI")]
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI dialogueText;
         [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private UIManagerText nameTextUIManager;
+        [SerializeField] private UIManagerText dialogueTextUIManager;
+        [SerializeField] private UIManagerImage frameUIManager;
         
-        private Coroutine typingCoroutine;
+        private Coroutine dialogueRoutine;
+        private Coroutine fadeRoutine;
+        private bool isShowing = false;
 
         public override void Initialize(UIManager manager, object param = null)
         {
@@ -36,9 +41,9 @@ namespace _1.Scripts.UI.InGame.Dialogue
 
         public override void Show()
         {
+            if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
             canvasGroup.alpha = 0;
             gameObject.SetActive(true);
-            StartCoroutine(FadeIn(0.2f));
         }
 
         public override void Hide()
@@ -49,23 +54,92 @@ namespace _1.Scripts.UI.InGame.Dialogue
                 gameObject.SetActive(false);
                 return;
             }
-            if (canvasGroup) StartCoroutine(FadeOut(0.15f));
-            else gameObject.SetActive(false);
+            if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
+            fadeRoutine = StartCoroutine(FadeOut(0.15f));
         }
         public override void ResetUI()
         {
-            StopTyping();
+            StopDialogueRoutine();
             ClearTexts();
+            if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
+            canvasGroup.alpha = 0;
+            gameObject.SetActive(false);
+        }
+        
+        private void ClearTexts()
+        {
+            nameText.text = "";
+            dialogueText.text = "";
+        }
+        
+        private void StopDialogueRoutine()
+        {
+            if (dialogueRoutine != null)
+            {
+                StopCoroutine(dialogueRoutine);
+                dialogueRoutine = null;
+            }
+        }
+        
+        public void ShowSequence(List<DialogueData> sequence)
+        {
+            if (sequence == null || sequence.Count == 0) return;
+            StopDialogueRoutine();
+            if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
+
+            gameObject.SetActive(true);
+            canvasGroup.alpha = 0;
+            ClearTexts();
+            dialogueRoutine = StartCoroutine(PlayDialogueSequence(sequence, 0));
         }
 
-        private IEnumerator TypeDialogue(string sentence)
+        private IEnumerator PlayDialogueSequence(List<DialogueData> sequence, int index)
         {
+            if (index >= sequence.Count)
+            {
+                yield return StartCoroutine(FadeOut(0.15f));
+                gameObject.SetActive(false);
+                yield break;
+            }
+
+            var data = sequence[index];
+            nameText.text = data.Speaker;
             dialogueText.text = "";
-            foreach (char c in sentence)
+
+            if (data.SpeakerType == SpeakerType.Enemy)
+            {
+                nameTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                dialogueTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                frameUIManager.colorType = UIManagerImage.ColorType.Negative;
+            }
+            else
+            {
+                nameTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                dialogueTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                frameUIManager.colorType = UIManagerImage.ColorType.Primary;
+            }
+            
+            yield return StartCoroutine(FadeIn(0.15f));
+
+            foreach (char c in data.Message)
             {
                 dialogueText.text += c;
-                yield return new WaitForSeconds(0.025f);
+                CoreManager.Instance.soundManager.PlayUISFX(SfxType.TypeWriter);
+                yield return new WaitForSeconds(0.01f);
             }
+
+            float minTime = 1.5f;
+            float perChar = 0.01f;
+            float wait = minTime + data.Message.Length * perChar;
+            yield return new WaitForSeconds(wait);
+
+            for (int i = dialogueText.text.Length - 1; i >= 0; i--)
+            {
+                dialogueText.text = dialogueText.text.Substring(0, i);
+                yield return new WaitForSeconds(0.01f);
+            }
+            
+            yield return PlayDialogueSequence(sequence, index + 1);
         }
 
         private IEnumerator FadeIn(float duration)
@@ -91,20 +165,6 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
             canvasGroup.alpha = 0;
             gameObject.SetActive(false);
-        }
-        private void StopTyping()
-        {
-            if (typingCoroutine != null)
-            {
-                StopCoroutine(typingCoroutine);
-                typingCoroutine = null;
-            }
-        }
-
-        private void ClearTexts()
-        {
-            nameText.text = "";
-            dialogueText.text = "";
         }
     }
 }

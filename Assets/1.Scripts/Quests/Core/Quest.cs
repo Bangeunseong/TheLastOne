@@ -85,6 +85,9 @@ namespace _1.Scripts.Quests.Core
             
             if (!objective.IsCompleted) return;
             objective.Deactivate();
+            
+            if (!string.IsNullOrEmpty(objective.data.dialogueKey))
+                CoreManager.Instance.dialogueManager.TriggerDialogue(objective.data.dialogueKey);
 
             if (Objectives.Any(val => val.Value.IsActivated))
                 currentObjectiveIndex = Objectives.FirstOrDefault(val => val.Value.IsActivated).Key;
