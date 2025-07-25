@@ -27,40 +27,22 @@
             public static readonly int Arm_E = LayerMask.NameToLayer("Arm_E");
             public static readonly int Leg_E = LayerMask.NameToLayer("Leg_E");
             
-            public static readonly HashSet<int> DefaultHittableLayers = new()
-            {
-                Wall, Ground, Interactable
-            };
-            
-            public static readonly HashSet<int> AllyLayers = new()
-            {
-                Head_P, Chest_P, Belly_P, Arm_P, Leg_P
-            };
+            public static readonly int DefaultHittableLayerMask =
+                (1 << Wall) | (1 << Ground) | (1 << Interactable);
+        
+            public static readonly int AllyLayerMask =
+                (1 << Head_P) | (1 << Chest_P) | (1 << Belly_P) | (1 << Arm_P) | (1 << Leg_P);
 
-            public static readonly HashSet<int> EnemyLayers = new()
-            {
-                Head_E, Chest_E, Belly_E, Arm_E, Leg_E
-            };
-            
-            public static readonly HashSet<int> IgnoreLayersForStencil = new()
-            {
-                Head_P, Chest_P, Belly_P, Arm_P, Leg_P,
-                Head_E, Chest_E, Belly_E, Arm_E, Leg_E, 
-            };
+            public static readonly int EnemyLayerMask =
+                (1 << Head_E) | (1 << Chest_E) | (1 << Belly_E) | (1 << Arm_E) | (1 << Leg_E);
+        
+            public static readonly int IgnoreLayerMask_ForStencil =
+                (1 << Head_P) | (1 << Chest_P) | (1 << Belly_P) | (1 << Arm_P) | (1 << Leg_P) |
+                (1 << Head_E) | (1 << Chest_E) | (1 << Belly_E) | (1 << Arm_E) | (1 << Leg_E);
 
-            /// <summary>
-            /// 레이어 HashSet들 레이어마스크로 변환
-            /// </summary>
-            /// <param name="layers"></param>
-            /// <returns></returns>
-            public static int ToLayerMask(HashSet<int> layers)
+            public static int ToLayerMask(int layer)
             {
-                int mask = 0;
-                foreach (int layer in layers)
-                {
-                    mask |= (1 << layer);
-                }
-                return mask;
+                return 1 << layer;
             }
         }
     }

@@ -36,7 +36,7 @@ public class Unit_DroneBot : MonoBehaviour
 		behaviorTree = GetComponent<BehaviorTree>();
 		statController = GetComponent<BaseNpcStatController>();
 
-		hittableLayer = LayerConstants.ToLayerMask(LayerConstants.DefaultHittableLayers);
+		hittableLayer = LayerConstants.DefaultHittableLayerMask;
 	}
 
 	void f_hit() //hit
@@ -130,17 +130,19 @@ public class Unit_DroneBot : MonoBehaviour
 		directionToTarget.y += Random.Range(-spreadAmount, spreadAmount);
 		directionToTarget.z += Random.Range(-spreadAmount, spreadAmount);
 		directionToTarget.Normalize();
-		
+
 		int targetMask = isAlly
-			? LayerConstants.ToLayerMask(LayerConstants.EnemyLayers)
-			: LayerConstants.ToLayerMask(LayerConstants.AllyLayers);
+			? LayerConstants.EnemyLayerMask
+			: LayerConstants.AllyLayerMask;
 		int finalMask = hittableLayer | targetMask;
 		
 		if (Physics.Raycast(pos_side.position, directionToTarget, out RaycastHit hit, 100f, finalMask))
 		{
+			int targetLayer = hit.collider.gameObject.layer;
+
 			bool targetDetected = isAlly
-				? LayerConstants.EnemyLayers.Contains(hit.collider.gameObject.layer) 
-				: LayerConstants.AllyLayers.Contains(hit.collider.gameObject.layer);
+				? (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0
+				: (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0; 
 
 			if (targetDetected && hit.collider.TryGetComponent(out IDamagable damagable))
 			{
