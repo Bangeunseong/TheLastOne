@@ -9,23 +9,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 {
     public abstract class BaseShebotStatController : BaseNpcStatController
     {
-        [Header("DamageConvert")]
-        [SerializeField] private DamageConvertForNpc[] damageConvertForNpc;
-        
-        private void Reset()
-        {
-            damageConvertForNpc = GetComponentsInChildren<DamageConvertForNpc>();
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            foreach (DamageConvertForNpc convert in damageConvertForNpc)
-            {
-                convert.Initialize(this);
-            }
-
-            rootRenderer = this.transform;
-        }
+        // 쉬봇 공통기능 정의 (확장가능성 염두)
     }
 }

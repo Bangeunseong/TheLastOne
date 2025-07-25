@@ -19,8 +19,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.DamageConvert
         }
 
         public void OnTakeDamage(int damage)
-        {
-            _statController.OnTakeDamage(Mathf.CeilToInt(damage *  DamageMultiplier));
+        { 
+            _statController?.OnTakeDamage(Mathf.CeilToInt(damage *  DamageMultiplier));
         }
     }
 }
