@@ -157,7 +157,7 @@ namespace _1.Scripts.Manager.Subs
             if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
-            soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
+            soundPlayer.Play2D(clip, duration, sfxVolume);
             return soundPlayer;
         }
         
@@ -183,7 +183,7 @@ namespace _1.Scripts.Manager.Subs
             var obj = poolManager.Get("SoundPlayer");
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
-            soundPlayer.Play3D(clip, duration, masterVolume * sfxVolume, position);
+            soundPlayer.Play3D(clip, duration, sfxVolume, position);
             return soundPlayer;
         }
         

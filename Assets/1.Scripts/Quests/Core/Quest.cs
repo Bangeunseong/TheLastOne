@@ -17,12 +17,12 @@ namespace _1.Scripts.Quests.Core
     {
         public QuestData data;
         public int currentObjectiveIndex;
-        public SerializedDictionary<int, ObjectiveProgress> Objectives;
+        public Dictionary<int, ObjectiveProgress> Objectives;
         public bool isCompleted;
 
         public void Initialize()
         {
-            Objectives = new SerializedDictionary<int, ObjectiveProgress>();
+            Objectives = new Dictionary<int, ObjectiveProgress>();
             foreach (var objective in data.objectives)
             {
                 Objectives.Add(objective.targetID, new ObjectiveProgress{questId = data.questID, data = objective});
