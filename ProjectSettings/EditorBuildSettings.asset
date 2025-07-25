@@ -14,13 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/0.Scenes/TestScenes/Features/TestScene_Stage1.unity
     guid: b71606a757e0c7346a3bbeb2baa00849
-  - enabled: 1
+  - enabled: 0
     path: Assets/0.Scenes/TestScenes/Features2/TestScene2_IntroScene.unity
     guid: de268a2d630901749aa8f8016396a6bb
-  - enabled: 1
+  - enabled: 0
     path: Assets/0.Scenes/TestScenes/Features2/TestScene2_Loading.unity
     guid: 04cd78e6aed05cb48acf56fdb84b2121
-  - enabled: 1
+  - enabled: 0
     path: Assets/0.Scenes/TestScenes/Features2/TestScene2_Stage1.unity
     guid: 64c7858b16b3b5f4ba05c9fd48a2eb8a
   m_configObjects:

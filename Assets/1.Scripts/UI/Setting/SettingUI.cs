@@ -34,16 +34,13 @@ namespace _1.Scripts.UI.Setting
         private Resolution[] resolutions;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
 
-        private void Awake()
+        private void Start()
         {
-            resolutions = Screen.resolutions;
-            InitSensitivitySliders();
-            InitResolutionSelector();
+            resolutions = Screen.resolutions; 
+            InitSensitivitySliders(); 
+            InitResolutionSelector(); 
             InitFullscreenModeSelector();
-        }
-
-        public void Initialize()
-        {
+            
             LoadSettings();
             AddListeners();
         }
@@ -85,7 +82,7 @@ namespace _1.Scripts.UI.Setting
             for (int i = 0; i < resolutions.Length; i++)
             {
                 var r = resolutions[i];
-                string option = $"{r.width}x{r.height} {r.refreshRate}hz";
+                string option = $"{r.width}x{r.height} {r.refreshRateRatio}hz";
                 resolutionSelector.CreateNewItem(option);
             }
 
@@ -94,7 +91,7 @@ namespace _1.Scripts.UI.Setting
                 int idx = i;
                 resolutionSelector.itemList[i].onValueChanged.AddListener(() => OnResolutionChanged(idx));
             }
-
+            
             int defaultIdx = PlayerPrefs.GetInt("ResolutionIndex", GetCurrentResolutionIndex());
             resolutionSelector.index = defaultIdx;
             resolutionSelector.UpdateUI();
@@ -130,7 +127,7 @@ namespace _1.Scripts.UI.Setting
                 var r = resolutions[i];
                 if (r.width == Screen.currentResolution.width &&
                     r.height == Screen.currentResolution.height &&
-                    r.refreshRate == Screen.currentResolution.refreshRate)
+                    r.refreshRateRatio.value.Equals(Screen.currentResolution.refreshRateRatio.value))
                     return i;
             }
             return 0;
