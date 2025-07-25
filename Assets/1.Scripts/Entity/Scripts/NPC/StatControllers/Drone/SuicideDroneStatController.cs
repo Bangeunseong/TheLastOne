@@ -10,6 +10,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
     {
         private RuntimeSuicideDroneStatData runtimeSuicideDroneStatData;
         
+        protected override void Awake()
+        {
+            base.Awake();
+            var suicideDroneStatData = CoreManager.Instance.resourceManager.GetAsset<SuicideDroneStatData>("SuicideDroneStatData"); // 자신만의 데이터 가져오기
+            runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData);
+            runtimeStatData = runtimeSuicideDroneStatData;
+        }
+        // 이후 runtimeSuicideDroneStatData 수정 시 베이스에 반영
+        
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -22,13 +31,5 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             animator.SetTrigger(DroneAnimationHashData.Repair);
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            var suicideDroneStatData = CoreManager.Instance.resourceManager.GetAsset<SuicideDroneStatData>("SuicideDroneStatData"); // 자신만의 데이터 가져오기
-            runtimeSuicideDroneStatData = new RuntimeSuicideDroneStatData(suicideDroneStatData);
-            runtimeStatData = runtimeSuicideDroneStatData;
-        }
-        // 이후 runtimeSuicideDroneStatData 수정 시 베이스에 반영
     }
 }
