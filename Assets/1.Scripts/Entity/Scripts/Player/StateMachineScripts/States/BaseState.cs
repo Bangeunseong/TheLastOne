@@ -108,12 +108,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
-            speed = currentHorizontalSpeed switch
+            if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
             {
-                >= 0 and < 0.1f => 0.1f,
-                >= 0.1f => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime);
+                speed = Mathf.Round(speed * 1000f) / 1000f;
+            }
+            else speed = targetSpeed;
+            
             // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
