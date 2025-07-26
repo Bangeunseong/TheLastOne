@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2103914784768596861
+--- !u!114 &-9160563693562092293
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,15 +20,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Glow_Crossbow
-  m_Shader: {fileID: -6465566751694194690, guid: ad5b0f0f5b0a8ce4f806e25a8731feb9,
+  m_Name: Glow_Sight
+  m_Shader: {fileID: -6465566751694194690, guid: 964f8a8a15583154c86bef534d4b470c,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -78,19 +78,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_1d934dbd7da84c9e8e8fb00a58b88011_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: d7dc90ae582722548a47149a00024365, type: 3}
+        m_Texture: {fileID: 2800000, guid: e1dc6a908c96a924781f7d9a3fb85b71, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_4a0daedd65ba4f1fb914f56f60bb574e_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 18769a0cda7902c4f9faa286150c3d0e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7d0e04ce7da81394eb99aaea9269530b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_b6fadfa410284ae699003e0d4f25497a_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 53073ceddd0401c47a2fd72df15e7fcd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9e3f2a8d808891f458922611ab88a2d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_fa978578ad584d6da5f5d7d8675232f3_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 261671251c285004d968fc14d93ffd3d, type: 3}
+        m_Texture: {fileID: 2800000, guid: aabafa876d60bcc4680ada0121ccc994, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
