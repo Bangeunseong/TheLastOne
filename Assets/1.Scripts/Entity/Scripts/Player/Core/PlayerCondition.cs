@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
@@ -8,7 +7,6 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
@@ -18,20 +16,18 @@ using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using JetBrains.Annotations;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     public class PlayerCondition : MonoBehaviour
     {
+        [Header("Components")] 
+        [SerializeField] private Player player;
+        [SerializeField] private PlayerWeapon playerWeapon;
+        
         [field: Header("Base Condition Data")]
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
-        
-        [field: Header("Low Pass Filter Settings")]
-        [field: SerializeField] public AudioLowPassFilter LowPassFilter { get; private set; }
-        [field: SerializeField] public float LowestPoint { get; private set; }
-        [field: SerializeField] public float HighestPoint { get; private set; }
         
         [field: Header("Current Condition Data")]
         [field: SerializeField] public int MaxHealth { get; private set; }
@@ -47,8 +43,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float WeightSpeedMultiplier { get; private set; } = 1f;
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float AttackRate { get; private set; }
-        [field: SerializeField] public int Level { get; private set; }
-        [field: SerializeField] public int Experience { get; private set; }
         [field: SerializeField] public bool IsCrouching { get; set; }
         [field: SerializeField] public bool IsUsingFocus { get; private set; }
         [field: SerializeField] public bool IsUsingInstinct { get; private set; }
@@ -66,19 +60,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
         
-        [field: Header("Damage Converters")]
-        [field: SerializeField] public List<DamageConverter> DamageConverters { get; private set; } = new();
-       
-        [field: Header("Saved Position & Rotation")]
-        [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
-        [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
-
-        [field: Header("Weapons")]
-        [field: SerializeField] public GameObject ArmPivot { get; private set; }
-        [field: SerializeField] public List<Animator> WeaponAnimators { get; private set; } = new();
-        [field: SerializeField] public List<BaseWeapon> Weapons { get; private set; } = new();
-        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
-
         [field: Header("Weapon States")]
         [field: SerializeField] public int EquippedWeaponIndex { get; private set; }
         [field: SerializeField] public float RecoilMultiplier { get; private set; } = 1f;
@@ -86,9 +67,15 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public bool IsSwitching { get; private set; }
         [field: SerializeField] public bool IsAiming { get; private set; }
         [field: SerializeField] public bool IsReloading { get; private set; }
-
-        [Header("Components")] 
-        [SerializeField] private Player player;
+        
+        [field: Header("Low Pass Filter Settings")]
+        [field: SerializeField] public AudioLowPassFilter LowPassFilter { get; private set; }
+        [field: SerializeField] public float LowestPoint { get; private set; }
+        [field: SerializeField] public float HighestPoint { get; private set; }
+        
+        [field: Header("Saved Position & Rotation")]
+        [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
+        [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
         
         // Fields
         private CoreManager coreManager;
@@ -110,24 +97,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void Awake()
         {
-            if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!player) player = this.TryGetComponent<Player>();
+            if (!playerWeapon) playerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
-            
-            if (DamageConverters.Count <= 0) 
-                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
-            if (WeaponAnimators.Count <= 0)
-                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         private void Reset()
         {
-            if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
+            if (!player) player = this.TryGetComponent<Player>();
+            if (!playerWeapon) playerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
-            
-            if (DamageConverters.Count <= 0) 
-                DamageConverters.AddRange(GetComponentsInChildren<DamageConverter>(true));
-            if (WeaponAnimators.Count <= 0)
-                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         /// <summary>
@@ -139,19 +118,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager = CoreManager.Instance;
             StatData = coreManager.resourceManager.GetAsset<PlayerStatData>("Player");
             
-            // Initialize Weapons
-            var listOfGuns = GetComponentsInChildren<BaseWeapon>(true);
-            foreach (var weapon in listOfGuns)
-            {
-                weapon.Initialize(gameObject, data);
-                Weapons.Add(weapon);
-                AvailableWeapons.Add(false);
-            }
-            if (AvailableWeapons.Count > 0) AvailableWeapons[0] = true;
-
-            // Initialize Damage Converters
-            foreach (var converter in DamageConverters) converter.Initialize(this);
-            
             if (data == null)
             {
                 Service.Log("DataTransferObject is null");
@@ -162,13 +128,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
                 CurrentFocusGauge = CurrentInstinctGauge = 0f;
-                Level = 1;
-                Experience = 0;
             }
             else
             {
                 Service.Log("DataTransferObject is not null");
-                Level = data.characterInfo.level; Experience = data.characterInfo.experience;
                 MaxHealth = data.characterInfo.maxHealth; CurrentHealth = data.characterInfo.health;
                 MaxStamina = data.characterInfo.maxStamina; CurrentStamina = data.characterInfo.stamina;
                 MaxShield = data.characterInfo.maxShield; CurrentShield = data.characterInfo.shield;
@@ -183,9 +146,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
                     Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
-                
-                for (var i = 0; i < data.AvailableWeapons.Length; i++)
-                    AvailableWeapons[i] = data.AvailableWeapons[i];
                 
                 UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             }
@@ -359,27 +319,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             };
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
         }
-        
-        public void OnTakeExp(int exp)
-        {
-            if (IsDead) return;
-            Experience += exp;
-            if (Experience >= Level * 120) { OnLevelUp(); return; } // 조정 필요
-        }
-
-        private void OnLevelUp()
-        {
-            if (IsDead) return;
-            Experience -= Level * 120;
-            Level++;
-            CoreManager.Instance.SaveData_QueuedAsync();
-        }
 
         private void OnDead()
         {
             IsDead = true;
             IsPlayerHasControl = false;
-            ArmPivot.SetActive(false);
+            playerWeapon.ArmPivot.SetActive(false);
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -410,40 +355,30 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
             seq.Append(cam.DOShakeRotation(0.25f, 10f, 20, 90f, true));
         }
-     
-        public void OnReset()
-        {
-            IsDead = false;
-            IsPlayerHasControl = true;
-            CurrentHealth = MaxHealth;
-            CurrentStamina = MaxStamina;
-            player.InputProvider.XYAxis.action.Enable();
-            player.PlayerInput.enabled = true;
-        }
 
         public void OnAttack()
         {
             if (!IsAttacking) return;
-            switch (Weapons[EquippedWeaponIndex])
+            switch (playerWeapon.Weapons[EquippedWeaponIndex])
             {
                 case Gun gun:
                     if (gun.OnShoot())
                     {
-                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                         coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
                     }
                     break;
                 case GrenadeLauncher grenadeThrower:
                     if (grenadeThrower.OnShoot())
                     {
-                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                         coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
                 case HackGun hackingGun:
                     if (hackingGun.OnShoot())
                     {
-                        WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetTrigger(player.AnimationData.ShootParameterHash);
                         coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                     }
                     break;
@@ -571,7 +506,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private async UniTaskVoid AimAsync(bool isAim, float targetFoV, float transitionTime, CancellationToken token)
         {
             float currentFoV = player.FirstPersonCamera.m_Lens.FieldOfView;
-            WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.AimParameterHash, isAim);
+            playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.AimParameterHash, isAim);
             
             var time = 0f;
             while (time < transitionTime)
@@ -594,7 +529,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead || IsSwitching || EquippedWeaponIndex <= 0) return false;
             
-            switch (Weapons[EquippedWeaponIndex])
+            switch (playerWeapon.Weapons[EquippedWeaponIndex])
             {
                 case Gun { IsReadyToReload: false }:
                     return false;
@@ -605,7 +540,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         gun.IsReloading = false;
                         IsReloading = false;
-                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
                     
                     // Play Reload AudioClip
@@ -627,7 +562,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         grenadeLauncher.IsReloading = false;
                         IsReloading = false;
-                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
 
                     // Player Reload AudioClip
@@ -648,7 +583,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                         reloadCTS?.Cancel(); reloadCTS?.Dispose();
                         crossbow.IsReloading = false;
                         IsReloading = false;
-                        WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                        playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
                     
                     // Player Reload AudioClip
@@ -669,22 +604,22 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (IsDead || EquippedWeaponIndex <= 0) return false;
             
             reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
-            switch (Weapons[EquippedWeaponIndex])
+            switch (playerWeapon.Weapons[EquippedWeaponIndex])
             {
                 case Gun gun:
                     gun.IsReloading = false;
-                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
                 case GrenadeLauncher grenadeLauncher:
                     grenadeLauncher.IsReloading = false;
-                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
                 case HackGun crossbow:
                     crossbow.IsReloading = false;
-                    WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
+                    playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     break;
             }
-            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             
             if (reloadPlayer) reloadPlayer.Stop();
             reloadPlayer = null;
@@ -693,9 +628,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         private async UniTaskVoid ReloadAsync(float interval, CancellationToken token)
         {
-            var currentAnimator = WeaponAnimators[EquippedWeaponIndex];
+            var currentAnimator = playerWeapon.WeaponAnimators[EquippedWeaponIndex];
             
-            if (Weapons[EquippedWeaponIndex] is Gun gun)
+            if (playerWeapon.Weapons[EquippedWeaponIndex] is Gun gun)
             {
                 if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) return;
 
@@ -735,7 +670,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
-            } else if (Weapons[EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
+            } else if (playerWeapon.Weapons[EquippedWeaponIndex] is GrenadeLauncher grenadeLauncher)
             {
                 if (grenadeLauncher.CurrentAmmoCount <= 0 || grenadeLauncher.CurrentAmmoCountInMagazine ==
                     grenadeLauncher.MaxAmmoCountInMagazine)
@@ -777,7 +712,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, false);
                 currentAnimator.SetBool(player.AnimationData.EmptyParameterHash, false);
-            } else if (Weapons[EquippedWeaponIndex] is HackGun crossbow)
+            } else if (playerWeapon.Weapons[EquippedWeaponIndex] is HackGun crossbow)
             {
                 if (crossbow.CurrentAmmoCount <= 0 ||
                     crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
@@ -851,38 +786,38 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             switch (previousWeaponIndex)
             {
-                case 0: WeaponAnimators[previousWeaponIndex].SetFloat(
+                case 0: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.HandToOtherWeaponClipTime / duration); break; 
-                case 1: WeaponAnimators[previousWeaponIndex].SetFloat(
+                case 1: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.PistolToOtherWeaponClipTime / duration); break; 
-                case 2: WeaponAnimators[previousWeaponIndex].SetFloat(
+                case 2: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.RifleToOtherWeaponClipTime / duration); break;
-                case 3: WeaponAnimators[previousWeaponIndex].SetFloat(
+                case 3: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
-                case 4: WeaponAnimators[previousWeaponIndex].SetFloat(
+                case 4: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash,
                     player.AnimationData.HackGunToOtherWeaponClipTime / duration); break;
             }
             
             Service.Log("Switch Weapon");
             WeightSpeedMultiplier = 1f;
-            WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
+            playerWeapon.WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
-            WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
-            Weapons[previousWeaponIndex].gameObject.SetActive(false);
+            playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            playerWeapon.Weapons[previousWeaponIndex].gameObject.SetActive(false);
             
             coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(true);
             
             Service.Log("Wield Weapon");
-            Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
+            playerWeapon.Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
-            WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
+            playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
-            WeightSpeedMultiplier = Weapons[EquippedWeaponIndex] switch
+            WeightSpeedMultiplier = playerWeapon.Weapons[EquippedWeaponIndex] switch
             {
                 Gun gun => 1f - gun.GunData.GunStat.WeightPenalty,
                 GrenadeLauncher grenadeLauncher => 1f - grenadeLauncher.GrenadeData.GrenadeStat.WeightPenalty,

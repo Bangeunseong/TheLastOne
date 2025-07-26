@@ -2,13 +2,7 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.Common;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
-using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.InGame.Quest;
-using _1.Scripts.UI.Inventory;
-using _1.Scripts.UI.Loading;
 using Cinemachine;
 using UnityEngine;
 
@@ -16,7 +10,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
-    [RequireComponent(typeof(PlayerInventory))]
+    [RequireComponent(typeof(PlayerInventory), typeof(PlayerWeapon), typeof(PlayerDamageReceiver))]
     
     public class Player : MonoBehaviour
     {
@@ -25,6 +19,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public CharacterController Controller { get; private set; }
         [field: SerializeField] public PlayerInput PlayerInput { get; private set; }
         [field: SerializeField] public PlayerCondition PlayerCondition { get; private set; }
+        [field: SerializeField] public PlayerDamageReceiver PlayerDamageReceiver { get; private set; }
+        [field: SerializeField] public PlayerWeapon PlayerWeapon { get; private set; }
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
         [field: SerializeField] public PlayerGravity PlayerGravity { get; private set; }
         [field: SerializeField] public PlayerRecoil PlayerRecoil { get; private set; }
@@ -63,6 +59,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Animator) Animator = this.TryGetComponent<Animator>();
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
+            if (!PlayerDamageReceiver) PlayerDamageReceiver = this.TryGetComponent<PlayerDamageReceiver>();
+            if (!PlayerWeapon) PlayerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
@@ -86,6 +84,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Animator) Animator = this.TryGetComponent<Animator>();
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
+            if (!PlayerDamageReceiver) PlayerDamageReceiver = this.TryGetComponent<PlayerDamageReceiver>();
+            if (!PlayerWeapon) PlayerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
@@ -118,7 +118,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             // Core Component 선언 -> Save Data에 영향을 받는 것들에게만 적용
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
+            PlayerDamageReceiver.Initialize();
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
+            PlayerWeapon.Initialize(coreManager.gameManager.SaveData);
             
             coreManager.uiManager.GetUI<InGameUI>().UpdateStateUI();
             coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);

@@ -47,6 +47,7 @@ namespace _1.Scripts.UI.Inventory
         [SerializeField] private TextMeshProUGUI descriptionText;
         
         private PlayerCondition playerCondition;
+        private PlayerWeapon playerWeapon;
 
         private int maxDamage = 1000;
         private float maxRPM = 100f;
@@ -64,6 +65,7 @@ namespace _1.Scripts.UI.Inventory
                 if (info) previewPrefabs[info.slotType] = prefab;
             }
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            playerWeapon = CoreManager.Instance.gameManager.Player.PlayerWeapon;
             gameObject.SetActive(false);
         }
 
@@ -75,8 +77,7 @@ namespace _1.Scripts.UI.Inventory
             
             RefreshInventoryUI();
 
-            var player = CoreManager.Instance.gameManager.Player;
-            player.PlayerCondition.OnDisablePlayerMovement();
+            playerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -93,8 +94,7 @@ namespace _1.Scripts.UI.Inventory
                 base.Hide();
             }
             
-            var player = CoreManager.Instance.gameManager.Player;
-            player.PlayerCondition.OnEnablePlayerMovement();
+            playerCondition.OnEnablePlayerMovement();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -146,9 +146,9 @@ namespace _1.Scripts.UI.Inventory
 
         private void CalculateMaxStats()
         {
-            if (!playerCondition) return;
+            if (!playerWeapon) return;
             
-            foreach (var w in playerCondition.Weapons)
+            foreach (var w in playerWeapon.Weapons)
             {
                 var stat = SlotUtility.GetWeaponStat(w);
                 maxDamage = Mathf.Max(maxDamage, stat.Damage);
@@ -160,15 +160,15 @@ namespace _1.Scripts.UI.Inventory
         
         private void InitializeSlots()
         {
-            if (!playerCondition) return;
+            if (!playerWeapon) return;
 
             for (int i = 0; i < slotButtons.Count; i++)
             {
                 var button = slotButtons[i];
                 button.onClick.RemoveAllListeners();
                 
-                var slotWeapon = playerCondition.Weapons
-                    .Where((w, idx) => playerCondition.AvailableWeapons[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
+                var slotWeapon = playerWeapon.Weapons
+                    .Where((w, idx) => playerWeapon.AvailableWeapons[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
                 button.gameObject.SetActive(slotWeapon);
@@ -180,7 +180,7 @@ namespace _1.Scripts.UI.Inventory
                     var weapon = slotWeapon;
                     button.onClick.AddListener(() =>
                     {
-                        int idx = playerCondition.Weapons.IndexOf(weapon);
+                        int idx = playerWeapon.Weapons.IndexOf(weapon);
                         if (idx != -1) ShowWeapon(idx);
                     });
                 }
@@ -189,9 +189,9 @@ namespace _1.Scripts.UI.Inventory
 
         private void ShowWeapon(int index)
         {
-            if (!playerCondition || index < 0 || index >= playerCondition.Weapons.Count) return;
+            if (!playerWeapon || index < 0 || index >= playerWeapon.Weapons.Count) return;
             
-            var weapon = playerCondition.Weapons[index];
+            var weapon = playerWeapon.Weapons[index];
             var stat = SlotUtility.GetWeaponStat(weapon);
             
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);

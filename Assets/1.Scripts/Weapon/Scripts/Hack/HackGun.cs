@@ -127,7 +127,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             {
                 IsEmpty = true;
                 if (player)
-                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                    player.PlayerWeapon.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
             

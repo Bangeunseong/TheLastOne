@@ -16,6 +16,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
     {
         protected readonly PlayerStateMachine stateMachine;
         protected readonly PlayerCondition playerCondition;
+        protected readonly PlayerWeapon playerWeapon;
         protected readonly CoreManager coreManager;
         
         private float speed;
@@ -27,6 +28,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             stateMachine = machine;
             coreManager = CoreManager.Instance;
             playerCondition = stateMachine.Player.PlayerCondition;
+            playerWeapon = stateMachine.Player.PlayerWeapon;
         }
         
         public virtual void Enter()
@@ -108,15 +110,15 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
             speed = currentHorizontalSpeed switch
             {
-                >= 0 and < 1 => 1,
-                >= 1 => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
+                >= 0 and < 0.1f => 0.1f,
+                >= 0.1f => Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime),
                 _ => throw new ArgumentOutOfRangeException()
             };
             // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
-            if (playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
-                playerCondition.WeaponAnimators[playerCondition.EquippedWeaponIndex]
+            if (playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
+                playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex]
                     .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
             stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
             
@@ -226,7 +228,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected virtual void OnFireCanceled(InputAction.CallbackContext context)
         {
             playerCondition.IsAttacking = false;
-            switch (playerCondition.Weapons[playerCondition.EquippedWeaponIndex])
+            switch (playerWeapon.Weapons[playerCondition.EquippedWeaponIndex])
             {
                 case Gun gun: gun.IsAlreadyPlayedEmpty = false; break;
                 case GrenadeLauncher gL: gL.IsAlreadyPlayedEmpty = false; break;
@@ -244,27 +246,27 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
-            int weaponCount = playerCondition.Weapons.Count;
+            int weaponCount = playerWeapon.Weapons.Count;
             
-            if (weaponCount == 0 || !playerCondition.AvailableWeapons[1]) return;
+            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[1]) return;
             playerCondition.OnSwitchWeapon(1, 0.5f);
         }
         private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
-            int weaponCount = playerCondition.Weapons.Count;
+            int weaponCount = playerWeapon.Weapons.Count;
             
-            if (weaponCount == 0 || !playerCondition.AvailableWeapons[2]) return;
+            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[2]) return;
             playerCondition.OnSwitchWeapon(2, 0.5f);
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
-            int weaponCount = playerCondition.Weapons.Count;
+            int weaponCount = playerWeapon.Weapons.Count;
 
-            if (weaponCount == 0 || !playerCondition.AvailableWeapons[3]) return;
+            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[3]) return;
             playerCondition.OnSwitchWeapon(3, 1f);
         }
 
@@ -272,8 +274,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
-            int weaponCount = playerCondition.Weapons.Count;
-            if (weaponCount == 0 || !playerCondition.AvailableWeapons[4]) return;
+            int weaponCount = playerWeapon.Weapons.Count;
+            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[4]) return;
             playerCondition.OnSwitchWeapon(4, 0.5f);
         }
         private  void OnSwitchByScroll(InputAction.CallbackContext context)
@@ -286,10 +288,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         }
         private int GetAvailableWeaponIndex(float direction, int currentIndex)
         {
-            int count = playerCondition.Weapons.Count;
+            int count = playerWeapon.Weapons.Count;
             if (count == 0) return 0;
             
-            if (playerCondition.AvailableWeapons.Count <= 0) return 0;
+            if (playerWeapon.AvailableWeapons.Count <= 0) return 0;
 
             var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
             if (dir == 0) return 0;
@@ -298,7 +300,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             for (var i = 0; i < count; i++)
             {
                 nextIndex = (nextIndex + dir + count) % count;
-                if (playerCondition.AvailableWeapons[nextIndex])
+                if (playerWeapon.AvailableWeapons[nextIndex])
                 {
                     return nextIndex;
                 }
