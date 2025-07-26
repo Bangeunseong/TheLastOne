@@ -59,6 +59,7 @@ namespace _1.Scripts.UI.InGame.HUD
         private bool isPanelVisible = false;
 
         private PlayerCondition playerCondition;
+        private PlayerWeapon playerWeapon;
         private int lastSelectedIndex = -1;
         
         private Vector3 originalLocalPosition;
@@ -132,11 +133,12 @@ namespace _1.Scripts.UI.InGame.HUD
         }
         
         public void Refresh(bool playShowAnimation = true)
-        { 
+        {
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
+            playerWeapon = CoreManager.Instance.gameManager.Player.PlayerWeapon;
             
-            var weapons = playerCondition.Weapons;
-            var available = playerCondition.AvailableWeapons;
+            var weapons = playerWeapon.Weapons;
+            var available = playerWeapon.AvailableWeapons;
             int selectedIndex = playerCondition.EquippedWeaponIndex;
 
             if (weapons == null || available == null) return;

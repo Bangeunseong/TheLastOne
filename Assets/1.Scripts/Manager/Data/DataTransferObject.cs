@@ -39,8 +39,6 @@ namespace _1.Scripts.Manager.Data
         public int shield;
         public float damage;
         public float attackRate;
-        public int level;
-        public int experience;
         public float focusGauge;
         public float instinctGauge;
     }
@@ -83,9 +81,7 @@ namespace _1.Scripts.Manager.Data
             return
                 $"Character Stat.\n{characterInfo.maxHealth}, " +
                 $"{characterInfo.health}\n{characterInfo.damage}, " +
-                $"{characterInfo.attackRate}\n{characterInfo.level}, " +
-                $"{characterInfo.experience}" +
-
+                $"{characterInfo.attackRate}\n" +
                 "Weapon Info.\n" +
                 $"{Weapons}\n" +
                 $"{AvailableWeapons}\n" +

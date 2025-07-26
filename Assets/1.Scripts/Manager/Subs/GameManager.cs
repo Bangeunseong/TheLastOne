@@ -56,7 +56,6 @@ namespace _1.Scripts.Manager.Subs
                     maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
                     maxShield = Player.PlayerCondition.MaxShield, shield = Player.PlayerCondition.CurrentShield,
                     attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
-                    level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
                     focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
@@ -66,8 +65,8 @@ namespace _1.Scripts.Manager.Subs
 
             // Save Current Weapon Infos
             var newWeaponInfo = new List<WeaponInfo>();
-            var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
-            foreach (var weapon in Player.PlayerCondition.Weapons)
+            var newAvailableWeapons = Player.PlayerWeapon.AvailableWeapons.ToList();
+            foreach (var weapon in Player.PlayerWeapon.Weapons)
             {
                 switch (weapon)
                 {

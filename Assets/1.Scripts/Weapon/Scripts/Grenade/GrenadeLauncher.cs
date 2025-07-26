@@ -123,7 +123,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             {
                 isEmpty = true;
                 if (player)
-                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                    player.PlayerWeapon.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
 
