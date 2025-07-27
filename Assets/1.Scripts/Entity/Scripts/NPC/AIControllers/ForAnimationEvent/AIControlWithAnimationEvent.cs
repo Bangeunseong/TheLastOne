@@ -15,10 +15,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     public class AIControlWithAnimationEvent : MonoBehaviour
     {
         private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
-
+        private Animator animator;
+        
         private void Awake()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
+            animator = GetComponent<Animator>();
         }
         
         public void AIOffForAnimationEvent()
@@ -60,6 +62,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         public void DestroyObjectForAnimationEvent()
         {
             NpcUtil.DisableNpc(this.gameObject);
+        }
+
+        public void EnableApplyRootMotion()
+        {
+            animator.applyRootMotion = true;
         }
     }
 }
