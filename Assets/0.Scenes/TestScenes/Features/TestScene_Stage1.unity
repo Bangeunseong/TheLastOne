@@ -3358,11 +3358,6 @@ PrefabInstance:
       propertyPath: <LowPassFilter>k__BackingField
       value: 
       objectReference: {fileID: 1074753611}
-    - target: {fileID: 71050111894547790, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: <IsPlayerHasControl>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: <Pov>k__BackingField
