@@ -212,6 +212,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 CurrentAccuracy -= data.Data.IncreaseAccuracyRate * GunData.GunStat.Accuracy;
                 CurrentRecoil -= data.Data.ReduceRecoilRate * GunData.GunStat.Recoil;
                 CurrentMaxWeaponRange += data.Data.IncreaseDistanceRate * GunData.GunStat.MaxWeaponRange;
+                
+                if(data.Data.Type == PartType.ExtendedMag)
+                    CurrentMaxAmmoCountInMagazine += data.Data.IncreaseMaxAmmoCountInMagazine;
+                
                 EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
             }
             else
@@ -219,6 +223,14 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 CurrentAccuracy += data.Data.IncreaseAccuracyRate * GunData.GunStat.Accuracy;
                 CurrentRecoil += data.Data.ReduceRecoilRate * GunData.GunStat.Recoil;
                 CurrentMaxWeaponRange -= data.Data.IncreaseDistanceRate * GunData.GunStat.MaxWeaponRange;
+
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
+                    if (CurrentAmmoCountInMagazine > GunData.GunStat.MaxAmmoCountInMagazine)
+                        CurrentAmmoCount += CurrentAmmoCountInMagazine - GunData.GunStat.MaxAmmoCountInMagazine;
+                    CurrentMaxAmmoCountInMagazine -= data.Data.IncreaseMaxAmmoCountInMagazine;
+                }
+                
                 EquippedWeaponParts.Remove(data.Data.Type);
             }
         }

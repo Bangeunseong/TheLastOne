@@ -8,6 +8,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
         FlameArrester,
         Suppressor,
         Silencer,
+        ExtendedMag,
     }
     
     [CreateAssetMenu(fileName = "New WeaponPart Data", menuName = "ScriptableObjects/Weapon/Create New WeaponPart Data", order = 0)]
@@ -18,6 +19,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
         [field: SerializeField] public PartType Type { get; private set; }
         [field: SerializeField] public float IncreaseDistanceRate { get; private set; }
         [field: SerializeField] public float IncreaseAccuracyRate { get; private set; }
+        [field: SerializeField] public int IncreaseMaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public float ReduceRecoilRate { get; private set; }
         [field: SerializeField] public bool IsBasicPart { get; private set; }
     }
