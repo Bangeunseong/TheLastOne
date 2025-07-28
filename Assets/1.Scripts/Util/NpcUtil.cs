@@ -47,7 +47,7 @@ namespace _1.Scripts.Util
         /// <param name="self"></param>
         /// <param name="target"></param>
         /// <param name="turnSpeed"></param>
-        public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f)
+        public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f, float additionalYangle = 0f)
         {
             if (target == null || self == null) return;
 
@@ -57,7 +57,8 @@ namespace _1.Scripts.Util
             if (dir == Vector3.zero) return;
 
             Quaternion rot = Quaternion.LookRotation(dir);
-            self.rotation = Quaternion.Slerp(self.rotation, rot, Time.deltaTime * turnSpeed);
+            Quaternion additionalRotation = Quaternion.Euler(0, additionalYangle, 0);
+            self.rotation = Quaternion.Slerp(self.rotation, rot * additionalRotation, Time.deltaTime * turnSpeed);
         }
         
         /// <summary>
