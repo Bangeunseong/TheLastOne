@@ -30,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public static readonly int Shebot_Die = Animator.StringToHash("Shebot_Die");
         public static readonly int Shebot_Guard = Animator.StringToHash("Shebot_Guard");
         public static readonly int Shebot_Sword_Attack3 = Animator.StringToHash("Shebot_Sword_Attack3");
+        public static readonly int Shebot_Sword_Attack_Full = Animator.StringToHash("Shebot_Sword_Attack_Full");
         public static readonly int Shebot_Walk = Animator.StringToHash("Shebot_Walk");
     }
 }

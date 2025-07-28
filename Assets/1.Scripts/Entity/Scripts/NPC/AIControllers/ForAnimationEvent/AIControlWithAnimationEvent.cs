@@ -17,14 +17,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     {
         private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         private Animator animator;
-
+        
         private Shebot_Sword sword;
+        private Shebot_Shield shield;
         
         private void Awake()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
-            sword = GetComponentInChildren<Shebot_Sword>();
+            sword = GetComponentInChildren<Shebot_Sword>(true);
+            shield = GetComponentInChildren<Shebot_Shield>(true);
         }
         
         public void AIOffForAnimationEvent()
@@ -83,9 +85,20 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             sword?.EnableHit();
         }
+        
         public void SwordDisableHitForAnimationEvent()
         {
             sword?.DisableHit();
+        }
+
+        public void ShieldEnableForAnimationEvent()
+        {
+            shield?.EnableShield();
+        }
+        
+        public void ShieldDisableForAnimationEvent()
+        {
+            shield?.DisableShield();
         }
         #endregion
     }

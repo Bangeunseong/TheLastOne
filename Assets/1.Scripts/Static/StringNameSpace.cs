@@ -70,5 +70,7 @@ namespace _1.Scripts.Static
         public const string ExplosionParticle = "ExplosionParticle";
         public const string StatController = "statController";
         public const string IsInterrupted = "isInterrupted";
+        public const string ShieldUsedOnce = "shieldUsedOnce";
+        public const string hasEnteredShield = "hasEnteredShield";
     }
 }

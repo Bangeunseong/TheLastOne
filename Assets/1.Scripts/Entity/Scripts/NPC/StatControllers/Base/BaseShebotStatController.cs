@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.DamageConvert;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Static;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base

@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
@@ -35,7 +36,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         
         protected override void PlayHitAnimation()
         {
-            // 맞았을때 (소드는 해당X)
+            if (!IsStunned) behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
         }
 
         protected override void PlayDeathAnimation()

@@ -16,10 +16,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 
 		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;
+		public SharedBaseNpcStatController statController;
 		
 		public override void OnStart()
 		{
-			animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack3);
+			if (statController.Value.RuntimeStatData.IsAlly)
+			{
+				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack_Full);
+			}
+			else
+			{
+				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack3);
+			}
 		}
 
 		public override TaskStatus OnUpdate()
@@ -30,7 +38,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 				return TaskStatus.Success;
 			}
 			
-			NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, 50f);
+			// 아군일때만 피할수없게 공격
+			if (statController.Value.RuntimeStatData.IsAlly) NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, 50f);
 			return TaskStatus.Running;
 		}
 	}

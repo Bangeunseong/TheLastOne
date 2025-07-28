@@ -18,6 +18,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon
             statController = GetComponentInParent<BaseNpcStatController>();
         }
 
+        private void OnEnable()
+        {
+            canhit = false;
+        }
+
         public void EnableHit()
         {
             canhit = true;
@@ -28,7 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon
             canhit = false;
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             if (other.gameObject == this.gameObject) return;
             if (!canhit) return;
