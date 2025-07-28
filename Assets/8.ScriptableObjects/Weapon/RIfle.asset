@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Rifle
   m_EditorClassIdentifier: 
   <GunStat>k__BackingField:
+    <Description>k__BackingField: 
     <MaxAmmoCount>k__BackingField: 150
     <MaxWeaponRange>k__BackingField: 450
-    <Recoil>k__BackingField: 5
+    <Recoil>k__BackingField: 16
     <Damage>k__BackingField: 30
     <WeightPenalty>k__BackingField: 0.15
     <Type>k__BackingField: 0

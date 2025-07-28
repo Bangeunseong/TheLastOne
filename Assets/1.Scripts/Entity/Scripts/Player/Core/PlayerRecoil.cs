@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Manager.Core;
+﻿using System;
+using _1.Scripts.Manager.Core;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +13,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         
         // Fields
         private CoreManager coreManager;
+        private Player player;
         private Vector3 targetRotation;
         private Vector3 velocity;
         
@@ -21,14 +23,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private void Start()
         {
             coreManager = CoreManager.Instance;
+            player = coreManager.gameManager.Player;
         }
 
         private void Update()
         {
-            // 반동 점점 줄어들게
-            targetRotation = Vector3.SmoothDamp(targetRotation, Vector3.zero, ref velocity, 1f / recoilReturnSpeed);
-            if (!coreManager.gameManager.IsGamePaused)
-                CurrentRotation = Vector3.Lerp(CurrentRotation, targetRotation, recoilSnappiness * Time.unscaledDeltaTime);
+            CurrentRotation = Vector3.Lerp(CurrentRotation, targetRotation, Time.unscaledDeltaTime * recoilSnappiness);
+            targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, Time.unscaledDeltaTime * recoilReturnSpeed);
+            
+            player.Pov.m_HorizontalAxis.Value += CurrentRotation.y * Time.unscaledDeltaTime;
+            player.Pov.m_VerticalAxis.Value += CurrentRotation.x * Time.unscaledDeltaTime;
         }
 
         public void ApplyRecoil(float recoilX = -2f, float recoilY = 2f)

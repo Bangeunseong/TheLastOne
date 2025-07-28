@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   <GunStat>k__BackingField:
+    <Description>k__BackingField: 
     <MaxAmmoCount>k__BackingField: 60
     <MaxWeaponRange>k__BackingField: 150
-    <Recoil>k__BackingField: 3
+    <Recoil>k__BackingField: 12
     <Damage>k__BackingField: 25
+    <WeightPenalty>k__BackingField: 0
     <Type>k__BackingField: 1
     <MaxAmmoCountInMagazine>k__BackingField: 10
     <BulletSpeed>k__BackingField: 2

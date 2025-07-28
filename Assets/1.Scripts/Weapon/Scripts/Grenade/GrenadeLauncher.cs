@@ -3,9 +3,10 @@ using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Grenade
@@ -14,6 +15,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
     {
         [Header("Components")] 
         [SerializeField] private ParticleSystem muzzleFlashParticle;
+        [SerializeField] private SerializedDictionary<int, WeaponPart> weaponParts;
         
         [field: Header("Gun Data")]
         [field: SerializeField] public GrenadeData GrenadeData { get; protected set; }
@@ -43,6 +45,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (weaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Reset()
@@ -50,6 +57,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (weaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Update()
