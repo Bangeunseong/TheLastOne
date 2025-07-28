@@ -41,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
 
         protected override void PlayDeathAnimation()
         {
-            // 사망 시 애니메이션
+            animator.SetTrigger(ShebotAnimationHashData.Shebot_Die);
         }
 
         protected override void HackingFailurePenalty()
