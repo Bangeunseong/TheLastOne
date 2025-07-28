@@ -17,19 +17,21 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
         [SerializeField] private float minAlpha = 0.1f, maxAlpha = 0.4f;
         [SerializeField] private float minFontSize = 10, maxFontSize = 50;
 
+        
+        
         private void Start()
         {
             for (int i = 0; i < columnCount; i++)
             {
-                StartCoroutine(SpawnFocusMatrix(leftPanel));
+                StartCoroutine(SpawnInstinctMatrix(leftPanel));
             }
             for (int i = 0; i < columnCount; i++)
             {
-                StartCoroutine(SpawnFocusMatrix(rightPanel));
+                StartCoroutine(SpawnInstinctMatrix(rightPanel));
             }
         }
 
-        private IEnumerator SpawnFocusMatrix(RectTransform panel)
+        private IEnumerator SpawnInstinctMatrix(RectTransform panel)
         {
             float width = panel.rect.width;
             float height = panel.rect.height;
@@ -71,6 +73,23 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
             for (int i = 0; i < len; i++)
                 str += Random.value < 0.5f ? "0" : "1";
             return str;
+        }
+        
+        public void RestartEffect()
+        {
+            StopEffect();
+            StartCoroutine(SpawnInstinctMatrix(leftPanel));
+            StartCoroutine(SpawnInstinctMatrix(rightPanel));
+        }
+
+        public void StopEffect()
+        {
+            StopCoroutine(SpawnInstinctMatrix(leftPanel));
+            StopCoroutine(SpawnInstinctMatrix(rightPanel));
+            foreach (Transform child in leftPanel)
+                Destroy(child.gameObject);
+            foreach (Transform child in rightPanel)
+                Destroy(child.gameObject);
         }
     }
 }

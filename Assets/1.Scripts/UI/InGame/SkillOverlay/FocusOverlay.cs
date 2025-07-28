@@ -72,5 +72,22 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
                 str += Random.value < 0.5f ? "0" : "1";
             return str;
         }
+
+        public void RestartEffect()
+        {
+            StopEffect();
+            StartCoroutine(SpawnFocusMatrix(leftPanel));
+            StartCoroutine(SpawnFocusMatrix(rightPanel));
+        }
+
+        public void StopEffect()
+        {
+            StopCoroutine(SpawnFocusMatrix(leftPanel));
+            StopCoroutine(SpawnFocusMatrix(rightPanel));
+            foreach (Transform child in leftPanel)
+                Destroy(child.gameObject);
+            foreach (Transform child in rightPanel)
+                Destroy(child.gameObject);
+        }
     }
 }

@@ -19,23 +19,39 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
         public void ShowFocusOverlay()
         {
             HideAll();
-            if (focusOverlay) focusOverlay.gameObject.SetActive(true);
+            if (focusOverlay)
+            {
+                focusOverlay.gameObject.SetActive(true);
+                focusOverlay.RestartEffect();
+            }
         }
 
         public void HideFocusOverlay()
         {
-            if (focusOverlay) focusOverlay.gameObject.SetActive(false);
+            if (focusOverlay)
+            {
+                focusOverlay.StopEffect();
+                focusOverlay.gameObject.SetActive(false);
+            }
         }
 
         public void ShowInstinctOverlay()
         {
             HideAll();
-            if (instinctOverlay) instinctOverlay.gameObject.SetActive(true);
+            if (instinctOverlay)
+            {
+                instinctOverlay.gameObject.SetActive(true);
+                instinctOverlay.RestartEffect();
+            }
         }
 
         public void HideInstinctOverlay()
         {
-            if (instinctOverlay) instinctOverlay.gameObject.SetActive(false);
+            if (instinctOverlay)
+            {
+                instinctOverlay.gameObject.SetActive(false);
+                instinctOverlay.StopEffect();
+            }
         }
 
         public void HideAll()
