@@ -69,5 +69,6 @@ namespace _1.Scripts.Static
         public const string IsAlertedOnce = "isAlertedOnce";
         public const string ExplosionParticle = "ExplosionParticle";
         public const string StatController = "statController";
+        public const string IsInterrupted = "isInterrupted";
     }
 }

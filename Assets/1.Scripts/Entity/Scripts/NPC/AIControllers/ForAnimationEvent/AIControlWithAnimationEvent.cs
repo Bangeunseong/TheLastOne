@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
@@ -16,11 +17,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     {
         private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         private Animator animator;
+
+        private Shebot_Sword sword;
         
         private void Awake()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
+            sword = GetComponent<Shebot_Sword>();
         }
         
         public void AIOffForAnimationEvent()
@@ -68,5 +72,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             animator.applyRootMotion = true;
         }
+
+        public void InterruptBehaviorForAnimationEvent()
+        {
+            behaviorTree.SetVariableValue(BehaviorNames.IsInterrupted, true);
+        }
+
+        #region Sword전용
+        public void SwordEnableHitForAnimationEvent()
+        {
+            sword?.EnableHit();
+        }
+        public void SwordDisableHitForAnimationEvent()
+        {
+            sword?.DisableHit();
+        }
+        #endregion
     }
 }
