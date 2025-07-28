@@ -56,9 +56,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             var baseForward = stateMachine.Player.MainCameraTransform.forward;
             var baseRot = Quaternion.LookRotation(baseForward);
-            var recoilRot = Quaternion.Euler(stateMachine.Player.PlayerRecoil.CurrentRotation);
             
-            var rotatedForward = baseRot * recoilRot * Vector3.forward;
+            var rotatedForward = baseRot * Vector3.forward;
             Rotate(rotatedForward);
         }
 
@@ -108,12 +107,13 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
-            if (currentHorizontalSpeed < targetSpeed - 0.5f || currentHorizontalSpeed > targetSpeed + 0.5f)
+            if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime);
                 speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else speed = targetSpeed;
+            playerCondition.CurrentSpeed = speed;
             
             // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
             

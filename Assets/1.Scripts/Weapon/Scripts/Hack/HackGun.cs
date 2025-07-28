@@ -8,6 +8,7 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Hack
@@ -25,8 +26,11 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         [SerializeField] private Transform face;
         [field: SerializeField] public Transform BulletSpawnPoint { get; private set; }
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
-        [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
+        [field: SerializeField] public int CurrentMaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
+        [field: SerializeField] public float CurrentAccuracy { get; private set; }
+        [field: SerializeField] public float CurrentRecoil { get; private set; }
+        [field: SerializeField] public float CurrentMaxWeaponRange { get; private set; }
         
         [field: Header("Current Weapon State")]
         [field: SerializeField] public bool IsRecoiling { get; private set; }
@@ -40,7 +44,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
 
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
+        public bool IsReadyToReload => CurrentMaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
         
         private void Awake()
         {
@@ -71,7 +75,9 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             coreManager = CoreManager.Instance;
             timeSinceLastShotFired = 0f;
             IsRecoiling = false;
-            MaxAmmoCountInMagazine = HackData.HackStat.MaxAmmoCountInMagazine;
+            CurrentMaxAmmoCountInMagazine = HackData.HackStat.MaxAmmoCountInMagazine;
+            CurrentRecoil = HackData.HackStat.Recoil;
+            CurrentMaxWeaponRange = HackData.HackStat.MaxWeaponRange;
             
             owner = ownerObj;
             if (!ownerObj.TryGetComponent(out Player user)) return;
@@ -101,17 +107,28 @@ namespace _1.Scripts.Weapon.Scripts.Hack
                 CoreManager.Instance.soundManager.PlaySFX(SfxType.HackGunEmpty, BulletSpawnPoint.position);
                 return false;
             }
-            if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, HackData.HackStat.MaxWeaponRange, HittableLayer))
+            
+            if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, CurrentMaxWeaponRange, HittableLayer))
             {
                 if (hit.collider.TryGetComponent(out IHackable hackable))
                 {
                     var distance = Vector3.Distance(BulletSpawnPoint.position, hit.point);
                     hackable.Hacking(CalculateChance(distance));
+                } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
+                {
+                    var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                    bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                    bulletHole.transform.SetParent(hit.transform);
+                } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+                {
+                    var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                    bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                    bulletHole.transform.SetParent(hit.transform);
                 }
             }
             
             IsRecoiling = true;
-            if (player) player.PlayerRecoil.ApplyRecoil(-HackData.HackStat.Recoil * player.PlayerCondition.RecoilMultiplier);
+            if (player) player.PlayerRecoil.ApplyRecoil(-CurrentRecoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
             if (lightCurves) StartCoroutine(Flicker());
@@ -140,8 +157,8 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         {
             int reloadableAmmoCount;
             if (isOwnedByPlayer)
-                reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
-            else reloadableAmmoCount = MaxAmmoCountInMagazine - CurrentAmmoCount;
+                reloadableAmmoCount = Mathf.Min(CurrentMaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
+            else reloadableAmmoCount = CurrentMaxAmmoCountInMagazine - CurrentAmmoCount;
 
             if (reloadableAmmoCount <= 0) return false;
 
@@ -159,13 +176,18 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             return true;
         }
         
+        public void UpdateStatValues(WeaponPartData data, bool isWorn = true)
+        {
+            
+        }
+        
         private Vector3 GetDirectionOfBullet()
         {
             Vector3 targetPoint;
             
-            if (Physics.Raycast(face.position, face.forward, out var hit, HackData.HackStat.MaxWeaponRange,
+            if (Physics.Raycast(face.position, face.forward, out var hit, CurrentMaxWeaponRange,
                     HittableLayer)) { targetPoint = hit.point; }
-            else { targetPoint = face.position + face.forward * HackData.HackStat.MaxWeaponRange; }
+            else { targetPoint = face.position + face.forward * CurrentMaxWeaponRange; }
 
             return (targetPoint - BulletSpawnPoint.position).normalized;
         }

@@ -1746,7 +1746,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 70
+  far clip plane: 100
   field of view: 67.5
   orthographic: 0
   orthographic size: 5
@@ -3150,7 +3150,7 @@ MonoBehaviour:
     FieldOfView: 67.5
     OrthographicSize: 5
     NearClipPlane: 0.1
-    FarClipPlane: 70
+    FarClipPlane: 100
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -3358,6 +3358,18 @@ PrefabInstance:
       propertyPath: <LowPassFilter>k__BackingField
       value: 
       objectReference: {fileID: 1074753611}
+    - target: {fileID: 200022999173365747, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <Data>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: 495f3a8790881d940bbbcc3e83eb3649,
+        type: 2}
+    - target: {fileID: 2519122855541585051, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <Data>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: a6fa6f5deba8b974f9bdc2abec8d3d9c,
+        type: 2}
     - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: <Pov>k__BackingField
@@ -3431,7 +3443,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8890381894537087084, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 900053060764606500}
   m_SourcePrefab: {fileID: 100100000, guid: d1ad11f456aebf14297be286489d8ec9, type: 3}
 --- !u!4 &900053060764606495 stripped
 Transform:
@@ -3451,6 +3467,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b3d6da8acd252428eb1b6c1bc7bd85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &900053060764606497 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8895980663426541352, guid: d1ad11f456aebf14297be286489d8ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 900053060764606494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &900053060764606498 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8890381894537087084, guid: d1ad11f456aebf14297be286489d8ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 900053060764606494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &900053060764606499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3043556055560079772, guid: d1ad11f456aebf14297be286489d8ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 900053060764606494}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0410d0604274121a2d89e1c66dc532d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &900053060764606500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900053060764606498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0f7b7808c3439e939f11a27dbaa94a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Data>k__BackingField: {fileID: 0}
+  <IsWorn>k__BackingField: 0
+  <ParentWeapon>k__BackingField: {fileID: 900053060764606499}
+  <Parent>k__BackingField: {fileID: 900053060764606497}
+  <IronSight_A>k__BackingField: {fileID: 0}
+  <IronSight_B>k__BackingField: {fileID: 0}
 --- !u!1001 &1070521751526287027
 PrefabInstance:
   m_ObjectHideFlags: 0
