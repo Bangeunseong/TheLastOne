@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
@@ -47,6 +48,8 @@ namespace _1.Scripts.Manager.Data
     {
         public int currentAmmoCount;
         public int currentAmmoCountInMagazine;
+        public Dictionary<PartType, int> equippedParts;
+        public List<int> availableParts;
     }
 
     [Serializable] public class QuestInfo

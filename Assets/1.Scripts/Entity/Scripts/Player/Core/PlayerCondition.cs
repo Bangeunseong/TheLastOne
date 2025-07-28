@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Item.Common;
@@ -30,6 +29,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public PlayerStatData StatData { get; private set; }
         
         [field: Header("Current Condition Data")]
+        [field: SerializeField] public float CurrentSpeed { get; set; }
         [field: SerializeField] public int MaxHealth { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public float MaxStamina { get; private set; }
@@ -632,7 +632,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             if (playerWeapon.Weapons[EquippedWeaponIndex] is Gun gun)
             {
-                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.MaxAmmoCountInMagazine) return;
+                if (gun.CurrentAmmoCount <= 0 || gun.CurrentAmmoCountInMagazine == gun.CurrentMaxAmmoCountInMagazine) return;
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
@@ -715,7 +715,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             } else if (playerWeapon.Weapons[EquippedWeaponIndex] is HackGun crossbow)
             {
                 if (crossbow.CurrentAmmoCount <= 0 ||
-                    crossbow.CurrentAmmoCountInMagazine == crossbow.MaxAmmoCountInMagazine)
+                    crossbow.CurrentAmmoCountInMagazine == crossbow.CurrentMaxAmmoCountInMagazine)
                     return;
                 
                 // Animation Control (Reload Start)

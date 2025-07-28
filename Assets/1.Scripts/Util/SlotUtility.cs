@@ -71,7 +71,7 @@ namespace _1.Scripts.Util
             if (w is Gun g)
             {
                 var s = g.GunData.GunStat;
-                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, g.MaxAmmoCountInMagazine);
+                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, g.CurrentMaxAmmoCountInMagazine);
             }
             if (w is GrenadeLauncher gl)
             {
@@ -81,7 +81,7 @@ namespace _1.Scripts.Util
             if (w is HackGun hg)
             {
                 var s = hg.HackData.HackStat;
-                 return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, hg.MaxAmmoCountInMagazine);
+                 return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, hg.CurrentMaxAmmoCountInMagazine);
             }
             return new WeaponStatView();
         }
