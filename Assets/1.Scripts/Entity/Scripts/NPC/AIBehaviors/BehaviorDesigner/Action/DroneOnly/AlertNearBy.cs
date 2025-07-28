@@ -26,6 +26,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		
 		public override TaskStatus OnUpdate()
 		{
+			shouldAlertNearBy.Value = false;
 			if (isAlerted.Value) return TaskStatus.Success;
 			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
@@ -60,7 +61,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				}
 			}
 			
-			shouldAlertNearBy.Value = false;
 			return TaskStatus.Success;
 		}
 	}
