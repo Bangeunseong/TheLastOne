@@ -4,9 +4,9 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
 {
     public enum PartType
     {
-        IronSight,
         Sight,
         FlameArrester,
+        Suppressor,
         Silencer,
     }
     

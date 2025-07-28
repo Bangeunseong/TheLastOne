@@ -1,6 +1,7 @@
 ﻿using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -30,5 +31,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
         public abstract void Initialize(GameObject ownerObj, DataTransferObject dto = null);
         public abstract bool OnShoot();
         public abstract bool OnRefillAmmo(int ammo);
+        public abstract void UpdateStatValues(WeaponPart data, bool isWorn = true);
     }
 }

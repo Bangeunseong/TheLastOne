@@ -49,7 +49,7 @@ namespace _1.Scripts.Manager.Data
         public int currentAmmoCount;
         public int currentAmmoCountInMagazine;
         public Dictionary<PartType, int> equippedParts;
-        public List<int> availableParts;
+        public Dictionary<int, bool> equipableParts;
     }
 
     [Serializable] public class QuestInfo

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sight_HackGun2
   m_EditorClassIdentifier: 
   <Id>k__BackingField: 4
-  <Type>k__BackingField: 1
+  <Type>k__BackingField: 0
   <IncreaseDistanceRate>k__BackingField: 0
   <IncreaseAccuracyRate>k__BackingField: 0
   <ReduceRecoilRate>k__BackingField: 0
