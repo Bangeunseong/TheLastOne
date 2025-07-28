@@ -14,6 +14,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
     public class WeaponPartData : ScriptableObject
     {
         [field: Header("Part Settings")]
+        [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public PartType Type { get; private set; }
         [field: SerializeField] public float IncreaseDistanceRate { get; private set; }
         [field: SerializeField] public float IncreaseAccuracyRate { get; private set; }

@@ -30,11 +30,6 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
             if (!Parent) Parent = this.TryGetComponent<Transform>();
         }
 
-        private void Start()
-        {
-            IsWorn = Data.IsBasicPart;
-        }
-
         public void OnWear()
         {
             if (IsWorn) return;
@@ -50,6 +45,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
                 case Gun gun: gun.UpdateStatValues(Data); break;
                 case HackGun hackGun: hackGun.UpdateStatValues(Data); break;
             }
+            IsWorn = true;
         }
 
         public void OnUnWear()
@@ -62,7 +58,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
             }
             else
             {
-                Parent.gameObject.SetActive(true);
+                Parent.gameObject.SetActive(false);
             }
             
             switch (ParentWeapon)
@@ -70,6 +66,7 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
                 case Gun gun: gun.UpdateStatValues(Data, false); break;
                 case HackGun hackGun: hackGun.UpdateStatValues(Data, false); break;
             }
+            IsWorn = false;
         }
     }
 }

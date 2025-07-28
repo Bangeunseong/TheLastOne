@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Interfaces.Weapon;
@@ -9,6 +10,7 @@ using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Hack
@@ -18,6 +20,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
         [Header("Components")] 
         [SerializeField] private ParticleSystem muzzleFlashParticle;
         [SerializeField] private LightCurves lightCurves;
+        [SerializeField] private SerializedDictionary<int, WeaponPart> weaponParts;
         
         [field: Header("HackGun Data")]
         [field: SerializeField] public HackData HackData { get; private set; }
@@ -51,6 +54,11 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
+            if (weaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Reset()
@@ -58,6 +66,11 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
+            if (weaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Update()

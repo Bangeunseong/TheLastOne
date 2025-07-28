@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d0727488dc9424f8733910d9316dba2, type: 3}
-  m_Name: Sight_Rifle2
+  m_Name: Sight_GrenadeLauncher1
   m_EditorClassIdentifier: 
+  <Id>k__BackingField: 5
   <Type>k__BackingField: 1
   <IncreaseDistanceRate>k__BackingField: 0
   <IncreaseAccuracyRate>k__BackingField: 0
