@@ -72,7 +72,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			
 			if (targetTransform.Value != null)
 			{
-				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, additionalYangle: 45);
+				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, additionalYangle: 55);
 			}
 			
 			return TaskStatus.Running;
