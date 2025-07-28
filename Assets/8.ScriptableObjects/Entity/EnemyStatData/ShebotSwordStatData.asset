@@ -27,7 +27,7 @@ MonoBehaviour:
   hitSounds: []
   deathSounds: []
   detectRange: 15
-  attackRange: 5
+  attackRange: 2
   alertDuration: 3
   alertRadius: 50
   minWaitingDuration: 5

@@ -24,7 +24,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
-            sword = GetComponent<Shebot_Sword>();
+            sword = GetComponentInChildren<Shebot_Sword>();
         }
         
         public void AIOffForAnimationEvent()

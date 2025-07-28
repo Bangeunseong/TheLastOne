@@ -26,15 +26,16 @@ namespace _1.Scripts.Util
             Vector3 origin = npcPosition;
             Vector3 direction = (targetPosition - origin).normalized;
 
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
+            int layerMask = isAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;
+            int finallayerMask = LayerConstants.DefaultHittableLayerMask | layerMask;
+            
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance, finallayerMask))
             {
                 int targetLayer = hit.collider.gameObject.layer;
-
+                
                 return isAlly
-                    ? targetLayer == LayerConstants.Enemy ||
-                      (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0   
-                    : targetLayer == LayerConstants.Ally || 
-                      (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0;
+                    ? (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0   
+                    : (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0;
             }
 
             return false;

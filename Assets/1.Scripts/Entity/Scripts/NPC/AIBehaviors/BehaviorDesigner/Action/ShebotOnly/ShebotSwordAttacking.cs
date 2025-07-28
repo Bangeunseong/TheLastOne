@@ -1,5 +1,6 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -12,6 +13,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 	{
 		public SharedAnimator animator;
 		public SharedBool isInterrupted;
+
+		public SharedTransform selfTransform;
+		public SharedTransform targetTransform;
 		
 		public override void OnStart()
 		{
@@ -26,6 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 				return TaskStatus.Success;
 			}
 			
+			NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, 50f);
 			return TaskStatus.Running;
 		}
 	}

@@ -9,6 +9,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 {
     public abstract class BaseShebotStatController : BaseNpcStatController
     {
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         // 쉬봇 공통기능 정의 (확장가능성 염두)
     }
 }
