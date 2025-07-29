@@ -19,7 +19,7 @@ MonoBehaviour:
     <Recoil>k__BackingField: 12
     <Damage>k__BackingField: 25
     <WeightPenalty>k__BackingField: 0
-    <Type>k__BackingField: 1
+    <Type>k__BackingField: 2
     <MaxAmmoCountInMagazine>k__BackingField: 10
     <BulletSpeed>k__BackingField: 2
     <Accuracy>k__BackingField: 5

@@ -240,8 +240,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Stage1
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 18d14a8c1a812dc4592811bce489d35a
-    m_Address: PartBox
+  - m_GUID: 61e42ecbe5233824ebe7b23248c93c9a
+    m_Address: ItemBox
     m_ReadOnly: 0
     m_SerializedLabels:
     - Stage2
