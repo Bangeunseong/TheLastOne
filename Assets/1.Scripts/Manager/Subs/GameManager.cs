@@ -7,10 +7,12 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -65,14 +67,14 @@ namespace _1.Scripts.Manager.Subs
             };
 
             // Save Current Weapon Infos
-            var newWeaponInfo = new List<WeaponInfo>();
-            var newAvailableWeapons = Player.PlayerWeapon.AvailableWeapons.ToList();
+            var newWeaponInfo = new SerializedDictionary<WeaponType, WeaponInfo>();
+            var newAvailableWeapons = Player.PlayerWeapon.AvailableWeapons;
             foreach (var weapon in Player.PlayerWeapon.Weapons)
             {
-                switch (weapon)
+                switch (weapon.Value)
                 {
                     case Gun gun:
-                        newWeaponInfo.Add(new WeaponInfo
+                        newWeaponInfo.Add(gun.GunData.GunStat.Type, new WeaponInfo
                         {
                             currentAmmoCount = gun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine,
@@ -81,7 +83,7 @@ namespace _1.Scripts.Manager.Subs
                         });
                         break;
                     case GrenadeLauncher grenadeLauncher:
-                        newWeaponInfo.Add(new WeaponInfo
+                        newWeaponInfo.Add(WeaponType.GrenadeLauncher, new WeaponInfo
                         {
                             currentAmmoCount = grenadeLauncher.CurrentAmmoCount,
                             currentAmmoCountInMagazine = grenadeLauncher.CurrentAmmoCountInMagazine,
@@ -90,7 +92,7 @@ namespace _1.Scripts.Manager.Subs
                         });
                         break;
                     case HackGun hackGun:
-                        newWeaponInfo.Add(new WeaponInfo
+                        newWeaponInfo.Add(WeaponType.HackGun, new WeaponInfo
                         {
                             currentAmmoCount = hackGun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = hackGun.CurrentAmmoCountInMagazine,
@@ -100,8 +102,8 @@ namespace _1.Scripts.Manager.Subs
                         break;
                 }
             }
-            save.Weapons = newWeaponInfo.ToArray();
-            save.AvailableWeapons = newAvailableWeapons.ToArray();
+            save.weapons = newWeaponInfo;
+            save.availableWeapons = new SerializedDictionary<WeaponType, bool>(newAvailableWeapons);
 
             // Save Current Item Infos
             var newItemCountList = (from ItemType type in Enum.GetValues(typeof(ItemType)) select Player.PlayerInventory.Items[type].CurrentItemCount).ToList();

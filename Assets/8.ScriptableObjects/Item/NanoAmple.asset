@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NanoAmple
   m_EditorClassIdentifier: 
   Name: NanoAmple
-  ItemType: 0
+  ItemType: 1
   IsPlayerMovable: 1
   Value: 100
   Delay: 5

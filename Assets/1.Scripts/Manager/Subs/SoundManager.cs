@@ -71,7 +71,6 @@ namespace _1.Scripts.Manager.Subs
         WeaponTuning,
     }
     
-    
     [Serializable] public class SoundManager
     {
         [Header("Sound Groups")] 

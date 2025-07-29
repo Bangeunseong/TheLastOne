@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
-using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Util;
