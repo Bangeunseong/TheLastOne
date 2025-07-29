@@ -93,7 +93,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
 				
 			Vector3 directionToPlayer = (CoreManager.Instance.gameManager.Player.transform.position - selfTransform.Value.position).normalized;
-			Vector3 targetSpot = CoreManager.Instance.gameManager.Player.transform.position - directionToPlayer * stoppingDistance.Value;
+			Vector3 targetSpot = CoreManager.Instance.gameManager.Player.transform.position - directionToPlayer * (stoppingDistance.Value + 1.5f);
 				
 			if (NavMesh.SamplePosition(targetSpot, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
 			{

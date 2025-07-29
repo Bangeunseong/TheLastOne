@@ -48,7 +48,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			if (isInterrupted.Value)
 			{
 				isInterrupted.Value = false;
-				shield.Value.DisableShield();
+				shield.Value.DisableShieldAnimaton();
 				return TaskStatus.Success;
 			}
 
@@ -66,7 +66,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 
 			if (elapsedTime >= shieldDuration.Value)
 			{
-				shield.Value.DisableShield();
+				shield.Value.DisableShieldAnimaton();
 				return TaskStatus.Success;
 			}
 			

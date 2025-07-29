@@ -20,6 +20,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		public SharedBool shouldLookTarget;
 		public SharedBaseNpcStatController statController;
 
+		public bool isSniper;
+		
 		public override TaskStatus OnUpdate()
 		{
 			bool ally = statController.Value.RuntimeStatData.IsAlly;
@@ -56,7 +58,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					}
 				}
 
-				int layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				int layer;
+				if (isSniper) layer = ally ? LayerConstants.Head_E : LayerConstants.Head_P;
+				else layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				
 				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
 				Vector3 colliderPos = targetChest.bounds.center;
 

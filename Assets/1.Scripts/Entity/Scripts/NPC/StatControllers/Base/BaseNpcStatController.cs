@@ -137,10 +137,12 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             if (CoreManager.Instance.spawnManager.IsVisible) 
                 NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayerMask_ForStencil, false);
             foreach (Collider coll in colliders) { coll.enabled = true; }
+ 
+            animator.speed = 1f;
         }
 
-        protected abstract void PlayHitAnimation();
-        protected abstract void PlayDeathAnimation();
+        protected virtual void PlayHitAnimation() { animator.speed = 1f; }
+        protected virtual void PlayDeathAnimation() { animator.speed = 1f; }
         protected abstract void HackingFailurePenalty();
 
         public virtual void OnTakeDamage(int damage)
@@ -246,7 +248,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
         }
         
-        private void HackingSuccess()
+        protected virtual void HackingSuccess()
         {
             RuntimeStatData.IsAlly = true;
             NpcUtil.SetLayerRecursively_Hacking(this.gameObject);
@@ -275,7 +277,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             isStunned = true;
             behaviorTree.SetVariableValue(BehaviorNames.CanRun, false);
             ResetAIState();
-
+            animator.speed = 0f;
+            
             onStunParticle.Play();
             await UniTask.WaitForSeconds(duration, cancellationToken: token); // 원하는 시간만큼 유지
             
@@ -285,6 +288,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             isStunned = false;
+            animator.speed = 1f;
             behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
         }
         
