@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
@@ -52,6 +53,11 @@ namespace _1.Scripts.Manager.Data
         public Dictionary<int, bool> equipableParts;
     }
 
+    [Serializable] public class StageInfo
+    {
+        
+    }
+
     [Serializable] public class QuestInfo
     {
         public int currentObjectiveIndex;
@@ -64,21 +70,21 @@ namespace _1.Scripts.Manager.Data
         [Header("Character Stat.")]
         [SerializeField] public CharacterInfo characterInfo;
 
-        [field: Header("Character Weapons")] 
-        [field: SerializeField] public WeaponInfo[] Weapons { get; set; }
-        [field: SerializeField] public bool[] AvailableWeapons { get; set; }
+        [Header("Character Weapons")] 
+        [SerializeField] public SerializedDictionary<WeaponType, WeaponInfo> weapons;
+        [SerializeField] public SerializedDictionary<WeaponType, bool> availableWeapons;
 
         [field: Header("Character Items")]
         [field: SerializeField] public int[] Items { get; set; }
+        
+        [field: Header("Quests")]
+        [field: SerializeField] public SerializedDictionary<int, QuestInfo> Quests { get; private set; } = new();
         
         [Header("Stage Info.")] 
         [SerializeField] public SceneType currentSceneId;
         [SerializeField] public SerializableVector3 currentCharacterPosition;
         [SerializeField] public SerializableQuaternion currentCharacterRotation;
-
-        [field: Header("Quests")]
-        [field: SerializeField] public SerializedDictionary<int, QuestInfo> Quests { get; private set; } = new();
-
+        
         public override string ToString()
         {
             return
@@ -86,8 +92,8 @@ namespace _1.Scripts.Manager.Data
                 $"{characterInfo.health}\n{characterInfo.damage}, " +
                 $"{characterInfo.attackRate}\n" +
                 "Weapon Info.\n" +
-                $"{Weapons}\n" +
-                $"{AvailableWeapons}\n" +
+                $"{weapons}\n" +
+                $"{availableWeapons}\n" +
 
                 $"Stage Info.\n{currentCharacterPosition.ToVector3()}, " +
                 $"{currentCharacterRotation.ToQuaternion()}" +

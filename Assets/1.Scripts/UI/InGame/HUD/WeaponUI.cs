@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -137,12 +138,11 @@ namespace _1.Scripts.UI.InGame.HUD
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             playerWeapon = CoreManager.Instance.gameManager.Player.PlayerWeapon;
             
-            var weapons = playerWeapon.Weapons;
-            var available = playerWeapon.AvailableWeapons;
-            int selectedIndex = playerCondition.EquippedWeaponIndex;
-
-            if (weapons == null || available == null) return;
-            if (weapons.Count <= 0 || available.Count <= 0) return;
+            var weapons = playerWeapon.Weapons?.Select(val => val.Value).ToList();
+            var available = playerWeapon.AvailableWeapons?.Select(val => val.Value).ToList();
+            int selectedIndex = (int)playerCondition.EquippedWeaponIndex;
+            
+            if (weapons == null || available == null || weapons.Count <= 0 || available.Count <= 0) return;
 
             bool selectionChanged = selectedIndex != lastSelectedIndex;
             lastSelectedIndex = selectedIndex;

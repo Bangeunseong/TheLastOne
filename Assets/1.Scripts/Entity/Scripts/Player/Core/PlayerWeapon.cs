@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.Grenade;
+using _1.Scripts.Weapon.Scripts.Guns;
+using _1.Scripts.Weapon.Scripts.Hack;
+using _1.Scripts.Weapon.Scripts.Melee;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
@@ -10,26 +15,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
     {
         [field: Header("Weapons")]
         [field: SerializeField] public GameObject ArmPivot { get; private set; }
-        [field: SerializeField] public List<Animator> WeaponAnimators { get; private set; } = new();
-        [field: SerializeField] public List<BaseWeapon> Weapons { get; private set; } = new();
-        [field: SerializeField] public List<bool> AvailableWeapons { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<WeaponType, Animator> WeaponAnimators { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<WeaponType, BaseWeapon> Weapons { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<WeaponType, bool> AvailableWeapons { get; private set; } = new();
 
         private CoreManager coreManager;
         
         private void Awake()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
-            
-            if (WeaponAnimators.Count <= 0)
-                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         private void Reset()
         {
             if (!ArmPivot) ArmPivot = this.TryFindFirstChild("ArmPivot");
-            
-            if (WeaponAnimators.Count <= 0)
-                WeaponAnimators.AddRange(ArmPivot.GetComponentsInChildren<Animator>(true));
         }
 
         public void Initialize(DataTransferObject data)
@@ -41,14 +40,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             foreach (var weapon in listOfGuns)
             {
                 weapon.Initialize(gameObject, data);
-                Weapons.Add(weapon);
-                AvailableWeapons.Add(false);
+                var type = weapon switch
+                {
+                    Gun gun => gun.GunData.GunStat.Type, 
+                    GrenadeLauncher => WeaponType.GrenadeLauncher,
+                    HackGun => WeaponType.HackGun,
+                    Punch => WeaponType.Punch,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                Weapons.TryAdd(type, weapon);
+                WeaponAnimators.TryAdd(type, weapon.GetComponent<Animator>());
+                AvailableWeapons.TryAdd(type, false);
             }
-            if (AvailableWeapons.Count > 0) AvailableWeapons[0] = true;
+            if (AvailableWeapons.Count > 0) AvailableWeapons[WeaponType.Punch] = true;
 
             if (data == null) return;
-            for (var i = 0; i < data.AvailableWeapons.Length; i++)
-                AvailableWeapons[i] = data.AvailableWeapons[i];
+            foreach (var weapon in data.availableWeapons)
+                AvailableWeapons[weapon.Key] = weapon.Value;
         }
     }
 }

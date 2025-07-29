@@ -164,7 +164,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started += OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started += OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started += OnSwitchToGrenade;
-            playerInput.PlayerActions.SwitchToHack.started += OnSwitchToCrossbow;
+            playerInput.PlayerActions.SwitchToHack.started += OnSwitchToHackGun;
             playerInput.PlayerActions.Focus.started += OnFocusStarted;
             playerInput.PlayerActions.Instinct.started += OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started += OnItemActionStarted;
@@ -189,7 +189,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerInput.PlayerActions.SwitchToMain.started -= OnSwitchToMain;
             playerInput.PlayerActions.SwitchToSub.started -= OnSwitchToSecondary;
             playerInput.PlayerActions.SwitchToBomb.started -= OnSwitchToGrenade;
-            playerInput.PlayerActions.SwitchToHack.started -= OnSwitchToCrossbow;
+            playerInput.PlayerActions.SwitchToHack.started -= OnSwitchToHackGun;
             playerInput.PlayerActions.Focus.started -= OnFocusStarted;
             playerInput.PlayerActions.Instinct.started -= OnInstinctStarted;
             playerInput.PlayerActions.ItemAction.started -= OnItemActionStarted;
@@ -247,66 +247,58 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
-            int weaponCount = playerWeapon.Weapons.Count;
-            
-            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[1]) return;
-            playerCondition.OnSwitchWeapon(1, 0.5f);
+            if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.Rifle, out var value)) return;
+            if (!value) return;
+            playerCondition.OnSwitchWeapon(WeaponType.Rifle, 0.5f);
         }
         private void OnSwitchToSecondary(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
-            int weaponCount = playerWeapon.Weapons.Count;
-            
-            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[2]) return;
-            playerCondition.OnSwitchWeapon(2, 0.5f);
+            if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.Pistol, out var value)) return;
+            if (!value) return;
+            playerCondition.OnSwitchWeapon(WeaponType.Pistol, 0.5f);
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
-            int weaponCount = playerWeapon.Weapons.Count;
-
-            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[3]) return;
-            playerCondition.OnSwitchWeapon(3, 1f);
+            if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.GrenadeLauncher, out var value)) return;
+            if (!value) return;
+            playerCondition.OnSwitchWeapon(WeaponType.GrenadeLauncher, 1f);
         }
-
-        private void OnSwitchToCrossbow(InputAction.CallbackContext context)
+        private void OnSwitchToHackGun(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
 
-            int weaponCount = playerWeapon.Weapons.Count;
-            if (weaponCount == 0 || !playerWeapon.AvailableWeapons[4]) return;
-            playerCondition.OnSwitchWeapon(4, 0.5f);
+            if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.HackGun, out var value)) return;
+            if (!value) return;
+            playerCondition.OnSwitchWeapon(WeaponType.HackGun, 0.5f);
         }
-        private  void OnSwitchByScroll(InputAction.CallbackContext context)
+        private void OnSwitchByScroll(InputAction.CallbackContext context)
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
             var value = context.ReadValue<Vector2>();
-            int nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
-            playerCondition.OnSwitchWeapon(nextIndex, nextIndex == (int)WeaponType.GrenadeLauncher + 1 ? 1f : 0.5f);
+            WeaponType nextIndex = GetAvailableWeaponIndex(value.y, playerCondition.EquippedWeaponIndex);
+            playerCondition.OnSwitchWeapon(nextIndex, 0.5f);
         }
-        private int GetAvailableWeaponIndex(float direction, int currentIndex)
+        private WeaponType GetAvailableWeaponIndex(float direction, WeaponType currentIndex)
         {
             int count = playerWeapon.Weapons.Count;
-            if (count == 0) return 0;
             
-            if (playerWeapon.AvailableWeapons.Count <= 0) return 0;
-
             var dir = direction < 0f ? 1 : direction > 0f ? -1 : 0;
-            if (dir == 0) return 0;
+            if (dir == 0) return WeaponType.Punch;
 
-            int nextIndex = currentIndex;
+            int nextIndex = (int)currentIndex;
             for (var i = 0; i < count; i++)
             {
                 nextIndex = (nextIndex + dir + count) % count;
-                if (playerWeapon.AvailableWeapons[nextIndex])
-                {
-                    return nextIndex;
-                }
+                if (!playerWeapon.AvailableWeapons.TryGetValue((WeaponType)nextIndex, out var value)) continue;
+                if (!value) continue;
+                return (WeaponType)nextIndex;
             }
-            return 0;
+            return WeaponType.Punch;
         }
         /* --------------------------- */
         
