@@ -1,3 +1,4 @@
+using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
@@ -13,7 +14,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedVector3 targetPosition;
 		public SharedCollider playerCollider;
 		public SharedBool shouldLookTarget;
-
+		public SharedBaseNpcStatController statController;
+		
 		public override void OnStart()
 		{
 			if (playerCollider.Value == null)
@@ -25,6 +27,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 		public override TaskStatus OnUpdate()
 		{
+			if (statController.Value.RuntimeStatData.IsAlly) return TaskStatus.Success;
+			
 			targetTransform.Value = CoreManager.Instance.gameManager.Player.transform;
 			targetPosition.Value = playerCollider.Value.bounds.center;
 			shouldLookTarget.Value = true;

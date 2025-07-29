@@ -246,7 +246,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
         }
         
-        private void HackingSuccess()
+        protected virtual void HackingSuccess()
         {
             RuntimeStatData.IsAlly = true;
             NpcUtil.SetLayerRecursively_Hacking(this.gameObject);

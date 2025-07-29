@@ -48,5 +48,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         {
             // 해킹패널티
         }
+
+        protected override void HackingSuccess()
+        {
+            base.HackingSuccess();
+            behaviorTree.SetVariableValue(BehaviorNames.ShieldUsedOnce, false);
+        }
     }
 }
