@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
@@ -15,10 +16,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     public class AIControlWithAnimationEvent : MonoBehaviour
     {
         private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
-
+        private Animator animator;
+        
+        private Shebot_Sword sword;
+        private Shebot_Shield shield;
+        
         private void Awake()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
+            animator = GetComponent<Animator>();
+            sword = GetComponentInChildren<Shebot_Sword>(true);
+            shield = GetComponentInChildren<Shebot_Shield>(true);
         }
         
         public void AIOffForAnimationEvent()
@@ -61,5 +69,37 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             NpcUtil.DisableNpc(this.gameObject);
         }
+
+        public void EnableApplyRootMotion()
+        {
+            animator.applyRootMotion = true;
+        }
+
+        public void InterruptBehaviorForAnimationEvent()
+        {
+            behaviorTree.SetVariableValue(BehaviorNames.IsInterrupted, true);
+        }
+
+        #region Sword전용
+        public void SwordEnableHitForAnimationEvent()
+        {
+            sword?.EnableHit();
+        }
+        
+        public void SwordDisableHitForAnimationEvent()
+        {
+            sword?.DisableHit();
+        }
+
+        public void ShieldEnableForAnimationEvent()
+        {
+            shield?.EnableShield();
+        }
+        
+        public void ShieldDisableForAnimationEvent()
+        {
+            shield?.DisableShield();
+        }
+        #endregion
     }
 }

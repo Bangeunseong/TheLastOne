@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
@@ -54,6 +55,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVaria
         public static implicit operator SharedParticleSystem(ParticleSystem value)
         {
             return new SharedParticleSystem { Value = value };
+        }
+    }
+    
+    [System.Serializable]
+    public class SharedShebot_Shield : SharedVariable<Shebot_Shield>
+    {
+        public static implicit operator SharedShebot_Shield(Shebot_Shield value)
+        {
+            return new SharedShebot_Shield { Value = value };
         }
     }
 }

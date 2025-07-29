@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Static;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
@@ -23,23 +25,23 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         protected override void OnDisable()
         {
             base.OnDisable();
-            // 스탯 리셋
+            runtimeShebotSwordStatData.ResetStats();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            // 애니메이션 초기상태로 되돌리기
+            animator.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
         }
         
         protected override void PlayHitAnimation()
         {
-            // 맞았을때 (소드는 해당X)
+            if (!IsStunned) behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
         }
 
         protected override void PlayDeathAnimation()
         {
-            // 사망 시 애니메이션
+            animator.SetTrigger(ShebotAnimationHashData.Shebot_Die);
         }
 
         protected override void HackingFailurePenalty()

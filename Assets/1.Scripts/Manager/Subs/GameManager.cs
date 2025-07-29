@@ -10,6 +10,7 @@ using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -75,22 +76,26 @@ namespace _1.Scripts.Manager.Subs
                         {
                             currentAmmoCount = gun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine,
+                            equipableParts = new Dictionary<int, bool>(gun.EquipableWeaponParts),
+                            equippedParts = new Dictionary<PartType, int>(gun.EquippedWeaponParts),
                         });
                         break;
-                    case GrenadeLauncher grenadeThrower:
+                    case GrenadeLauncher grenadeLauncher:
                         newWeaponInfo.Add(new WeaponInfo
                         {
-                            currentAmmoCount = grenadeThrower.CurrentAmmoCount,
-                            currentAmmoCountInMagazine = grenadeThrower.CurrentAmmoCountInMagazine,
-
+                            currentAmmoCount = grenadeLauncher.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = grenadeLauncher.CurrentAmmoCountInMagazine,
+                            equipableParts = new Dictionary<int, bool>(grenadeLauncher.EquipableWeaponParts),
+                            equippedParts = new Dictionary<PartType, int>(grenadeLauncher.EquippedWeaponParts),
                         });
                         break;
-                    case HackGun hackingGun:
+                    case HackGun hackGun:
                         newWeaponInfo.Add(new WeaponInfo
                         {
-                            currentAmmoCount = hackingGun.CurrentAmmoCount,
-                            currentAmmoCountInMagazine = hackingGun.CurrentAmmoCountInMagazine,
-
+                            currentAmmoCount = hackGun.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = hackGun.CurrentAmmoCountInMagazine,
+                            equipableParts = new Dictionary<int, bool>(hackGun.EquipableWeaponParts),
+                            equippedParts = new Dictionary<PartType, int>(hackGun.EquippedWeaponParts),
                         });
                         break;
                 }
