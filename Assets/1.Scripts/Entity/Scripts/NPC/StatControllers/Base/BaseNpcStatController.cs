@@ -137,6 +137,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             if (CoreManager.Instance.spawnManager.IsVisible) 
                 NpcUtil.SetLayerRecursively(this.gameObject, RuntimeStatData.IsAlly ? LayerConstants.StencilAlly : LayerConstants.StencilEnemy, LayerConstants.IgnoreLayerMask_ForStencil, false);
             foreach (Collider coll in colliders) { coll.enabled = true; }
+ 
+            animator.speed = 1f;
         }
 
         protected virtual void PlayHitAnimation() { animator.speed = 1f; }
