@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Entity.Scripts.Player.Core;
+﻿using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -22,6 +23,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         
         [field: Header("Current Weapon Settings")]
         [field: SerializeField] public Transform ThrowPoint { get; private set; }
+        [field: SerializeField] public SerializedDictionary<PartType, int> EquippedWeaponParts { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<int, bool> EquipableWeaponParts { get; private set; } = new();
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
@@ -92,11 +95,17 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
+                
+                foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
+                foreach (var part in weapon.equippedParts) EquippedWeaponParts.Add(part.Key, part.Value);
             }
             else
             {
                 CurrentAmmoCount = 0;
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
+                
+                foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
+                foreach (var part in weaponParts.Where(val => val.Value.IsWorn)) EquippedWeaponParts.Add(part.Value.Data.Type, part.Value.Data.Id);
             }
                 
             face = user.CameraPivot;
@@ -165,6 +174,46 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (isOwnedByPlayer) CurrentAmmoCount -= 1;
             CurrentAmmoCountInMagazine += 1;
             isEmpty = CurrentAmmoCountInMagazine <= 0;
+            return true;
+        }
+        
+        public override void UpdateStatValues(WeaponPart data, bool isWorn = true)
+        {
+            if (isWorn)
+            {
+                EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
+            }
+            else
+            {
+                EquippedWeaponParts.Remove(data.Data.Type);
+            }
+        }
+        
+        public bool TryCollectWeaponPart(int id)
+        {
+            if (!EquipableWeaponParts.TryGetValue(id, out bool value)) return false;
+            if (value) return false;
+            EquipableWeaponParts[id] = true;
+            return true;
+        }
+
+        public bool TryEquipWeaponPart(PartType type, int id)
+        {
+            if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
+            if (!isEquipable || EquippedWeaponParts.ContainsKey(type)) return false;
+
+            if (!weaponParts.TryGetValue(id, out var part)) return false;
+            part.OnWear();
+            return true;
+        }
+
+        public bool TryUnequipWeaponPart(PartType type, int id)
+        {
+            if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
+            if (!currentPartId.Equals(id)) return false;
+
+            if (!weaponParts.TryGetValue(id, out var part)) return false;
+            part.OnUnWear();
             return true;
         }
 
