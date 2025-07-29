@@ -139,8 +139,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             foreach (Collider coll in colliders) { coll.enabled = true; }
         }
 
-        protected abstract void PlayHitAnimation();
-        protected abstract void PlayDeathAnimation();
+        protected virtual void PlayHitAnimation() { animator.speed = 1f; }
+        protected virtual void PlayDeathAnimation() { animator.speed = 1f; }
         protected abstract void HackingFailurePenalty();
 
         public virtual void OnTakeDamage(int damage)
@@ -275,7 +275,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             isStunned = true;
             behaviorTree.SetVariableValue(BehaviorNames.CanRun, false);
             ResetAIState();
-
+            animator.speed = 0f;
+            
             onStunParticle.Play();
             await UniTask.WaitForSeconds(duration, cancellationToken: token); // 원하는 시간만큼 유지
             
@@ -285,6 +286,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
 
             isStunned = false;
+            animator.speed = 1f;
             behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
         }
         

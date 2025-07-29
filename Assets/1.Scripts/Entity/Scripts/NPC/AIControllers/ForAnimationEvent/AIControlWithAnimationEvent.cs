@@ -5,6 +5,7 @@ using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables
 using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
@@ -80,6 +81,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
             behaviorTree.SetVariableValue(BehaviorNames.IsInterrupted, true);
         }
 
+        public void PlaySoundSignalForAnimationEvent()
+        {
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
+        }
+        public void PlaySoundBumForAnimationEvent()
+        {
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+        }
+        
         #region Sword전용
         public void SwordEnableHitForAnimationEvent()
         {
