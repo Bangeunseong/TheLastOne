@@ -218,7 +218,7 @@ namespace _1.Scripts.Manager.Core
             var fade = uiManager.GetUI<FadeUI>();
             fade.Show(); 
             fade.FadeOut();
-            yield return new WaitForSecondsRealtime(1.5f);
+            yield return new WaitForSecondsRealtime(1f);
             _ = LoadScene(sceneType);
         }
         

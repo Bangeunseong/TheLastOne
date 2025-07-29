@@ -32,6 +32,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         ReconDroneNotHackable,
         SuicideDroneNotHackable,
         BattleRoomReconDrone,
+        ShebotSniper,
+        ShebotRifle,
+        ShebotSword,
     }
     
     /// <summary>
