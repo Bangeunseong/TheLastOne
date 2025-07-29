@@ -106,8 +106,8 @@ public class Unit_DroneBot : MonoBehaviour
 
 	void f_fire(int side) //shot 
 	{
-		var targetTransform = behaviorTree.GetVariable("target_Transform") as SharedTransform;
-		var targetPos = behaviorTree.GetVariable("target_Pos") as SharedVector3;
+		var targetTransform = behaviorTree.GetVariable(BehaviorNames.TargetTransform) as SharedTransform;
+		var targetPos = behaviorTree.GetVariable(BehaviorNames.TargetPos) as SharedVector3;
 		bool isAlly = statController.RuntimeStatData.IsAlly;
 
 		if (targetTransform == null || targetTransform.Value == null) return;
