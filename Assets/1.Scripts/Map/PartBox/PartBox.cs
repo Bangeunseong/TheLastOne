@@ -64,6 +64,8 @@ namespace _1.Scripts.Map.PartBox
             player = coreManager.gameManager.Player;
             
             // TODO: Check Stage info. that this box is already opened
+            // isAlreadyOpened = true;
+            // gameObject.layer = LayerMask.NameToLayer("Default");
         }
 
         public void OnInteract(GameObject ownerObj)
@@ -88,8 +90,8 @@ namespace _1.Scripts.Map.PartBox
                         ammo.transform.SetPositionAndRotation(SpawnPoints.First().position, SpawnPoints.First().rotation);
                         break;
                     case BoxType.Item:
-                        var item = coreManager.objectPoolManager.Get(ItemType.Shield + "_Dummy");
-                        item.transform.SetPositionAndRotation(SpawnPoints.First().position, SpawnPoints.First().rotation);
+                        var item = coreManager.objectPoolManager.Get(ItemType.Shield + "_Prefab");
+                        item.transform.SetPositionAndRotation(SpawnPoints[1].position, SpawnPoints[1].rotation);
                         break;
                     case BoxType.Parts:
                         foreach (var weapon in player.PlayerWeapon.Weapons)
@@ -104,6 +106,7 @@ namespace _1.Scripts.Map.PartBox
 
         private void PlayOpeningAnimation()
         {
+            gameObject.layer = LayerMask.NameToLayer("Default");
             ParticleSystem.Play();
             Animator.SetTrigger(Open);
         }
