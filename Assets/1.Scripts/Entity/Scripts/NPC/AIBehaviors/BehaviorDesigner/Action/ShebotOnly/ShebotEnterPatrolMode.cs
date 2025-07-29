@@ -12,17 +12,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 	{
 		public SharedBool shouldLookTarget;
 		public SharedAnimator animator;
+		public SharedBaseNpcStatController statController;
 		
 		public override TaskStatus OnUpdate()
 		{
-			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-			if (!stateInfo.IsName("DroneBot_Hit1") &&
-			    !stateInfo.IsName("DroneBot_Hit2") &&
-			    !stateInfo.IsName("DroneBot_Hit3") &&
-			    !stateInfo.IsName("DroneBot_Hit4") &&
-			    !stateInfo.IsName("DroneBot_Idle1"))
+			if (!statController.Value.RuntimeStatData.IsAlly)
 			{
-				animator.Value.SetTrigger(DroneAnimationHashData.Idle1);
+				AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+				if (!stateInfo.IsName("Shebot_Idle"))
+				{
+					animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
+				}
 			}
 			
 			shouldLookTarget.Value = false; // 보통 노드구조 맨 끝자락에 배회할때 쓰니까 추가

@@ -26,15 +26,16 @@ namespace _1.Scripts.Util
             Vector3 origin = npcPosition;
             Vector3 direction = (targetPosition - origin).normalized;
 
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance))
+            int layerMask = isAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;
+            int finallayerMask = LayerConstants.DefaultHittableLayerMask | layerMask;
+            
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxViewDistance, finallayerMask))
             {
                 int targetLayer = hit.collider.gameObject.layer;
-
+                
                 return isAlly
-                    ? targetLayer == LayerConstants.Enemy ||
-                      (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0   
-                    : targetLayer == LayerConstants.Ally || 
-                      (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0;
+                    ? (LayerConstants.EnemyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0   
+                    : (LayerConstants.AllyLayerMask & LayerConstants.ToLayerMask(targetLayer)) != 0;
             }
 
             return false;
@@ -46,7 +47,7 @@ namespace _1.Scripts.Util
         /// <param name="self"></param>
         /// <param name="target"></param>
         /// <param name="turnSpeed"></param>
-        public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f)
+        public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f, float additionalYangle = 0f)
         {
             if (target == null || self == null) return;
 
@@ -56,7 +57,8 @@ namespace _1.Scripts.Util
             if (dir == Vector3.zero) return;
 
             Quaternion rot = Quaternion.LookRotation(dir);
-            self.rotation = Quaternion.Slerp(self.rotation, rot, Time.deltaTime * turnSpeed);
+            Quaternion additionalRotation = Quaternion.Euler(0, additionalYangle, 0);
+            self.rotation = Quaternion.Slerp(self.rotation, rot * additionalRotation, Time.deltaTime * turnSpeed);
         }
         
         /// <summary>
