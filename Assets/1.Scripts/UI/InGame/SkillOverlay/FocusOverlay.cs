@@ -17,8 +17,14 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
         [SerializeField] private float minAlpha = 0.1f, maxAlpha = 0.4f;
         [SerializeField] private float minFontSize = 10, maxFontSize = 50;
 
+        private Coroutine[] leftCoroutines;
+        private Coroutine[] rightCoroutines;
+
         private void Start()
         {
+            leftCoroutines = new Coroutine[columnCount];
+            rightCoroutines = new Coroutine[columnCount];
+            
             for (int i = 0; i < columnCount; i++)
             {
                 StartCoroutine(SpawnFocusMatrix(leftPanel));
@@ -76,18 +82,35 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
         public void RestartEffect()
         {
             StopEffect();
-            StartCoroutine(SpawnFocusMatrix(leftPanel));
-            StartCoroutine(SpawnFocusMatrix(rightPanel));
+
+            for (int i = 0; i < columnCount; i++)
+                leftCoroutines[i] = StartCoroutine(SpawnFocusMatrix(leftPanel));
+            for (int i = 0; i < columnCount; i++)
+                rightCoroutines[i] = StartCoroutine(SpawnFocusMatrix(rightPanel));
         }
 
         public void StopEffect()
         {
-            StopCoroutine(SpawnFocusMatrix(leftPanel));
-            StopCoroutine(SpawnFocusMatrix(rightPanel));
-            foreach (Transform child in leftPanel)
-                Destroy(child.gameObject);
-            foreach (Transform child in rightPanel)
-                Destroy(child.gameObject);
+            if (leftCoroutines != null)
+            {
+                for (int i = 0; i < leftCoroutines.Length; i++)
+                    if (leftCoroutines[i] != null)
+                    {
+                        StopCoroutine(leftCoroutines[i]);
+                        leftCoroutines[i] = null;
+                    }
+            }
+            if (rightCoroutines != null)
+            {
+                for (int i = 0; i < rightCoroutines.Length; i++)
+                    if (rightCoroutines[i] != null)
+                    {
+                        StopCoroutine(rightCoroutines[i]);
+                        rightCoroutines[i] = null;
+                    }
+            }
+            foreach (Transform child in leftPanel) Destroy(child.gameObject);
+            foreach (Transform child in rightPanel) Destroy(child.gameObject);
         }
     }
 }
