@@ -1,6 +1,7 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -48,6 +49,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				navMeshAgent.Value.SetDestination(hit.position);
 			}
 
+			NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value);
+			
 			return TaskStatus.Success;
 		}
 	}

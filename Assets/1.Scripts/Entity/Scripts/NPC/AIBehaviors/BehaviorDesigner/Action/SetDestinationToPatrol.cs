@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedTransform selfTransform;
 		public SharedBaseNpcStatController statController;
 		public SharedNavMeshAgent agent;
+		public SharedAnimator animator;
+		public bool isShebot;
 		
 		public SharedLight enemyLight;
 		public SharedLight allyLight;
@@ -43,6 +46,26 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			}
 			
 			agent.Value.SetDestination(targetPosition);
+			if (isShebot)
+			{
+				if (statController.Value.RuntimeStatData.IsAlly)
+				{
+					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+					
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
+					{
+						if (!stateInfo.IsName("Shebot_Idle")) animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
+					}
+					else
+					{
+						if (!stateInfo.IsName("Shebot_Walk")) animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Walk);
+					}
+				}
+				else
+				{
+					animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Walk);
+				}
+			}
 			return TaskStatus.Success;
 		}
 		
