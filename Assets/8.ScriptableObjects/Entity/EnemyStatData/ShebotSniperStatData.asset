@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: effb40a26a65d1f4eb6a33bef8f3149e, type: 3}
   m_Name: ShebotSniperStatData
   m_EditorClassIdentifier: 
-  entityName: 
+  entityName: ShebotSniper
   isPlayer: 0
   isAlly: 0
-  maxHealth: 0
-  baseDamage: 0
+  maxHealth: 150
+  baseDamage: 30
   baseAttackRate: 0
   armor: 0
-  maxArmor: 0
+  maxArmor: 10
   moveSpeed: 0
   runMultiplier: 0
   walkMultiplier: 0
   footStepSounds: []
   hitSounds: []
   deathSounds: []
-  detectRange: 0
-  attackRange: 0
+  detectRange: 30
+  attackRange: 30
   alertDuration: 0
-  alertRadius: 0
+  alertRadius: 50

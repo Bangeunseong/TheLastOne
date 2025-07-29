@@ -194,4 +194,34 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MaxWanderingDistance = swordSO.MaxWanderingDistance;
         }
     }
+    
+    public class RuntimeShebotSniperStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable
+    {
+        private readonly ShebotSniperStatData sniperSO;
+        
+        public float DetectRange { get; set; }
+        public float AttackRange { get; set; }
+        public float AlertDuration { get; set; }
+        public float AlertRadius { get; set; }
+
+        public RuntimeShebotSniperStatData(ShebotSniperStatData so) : base(so)
+        {
+            sniperSO = so;
+
+            DetectRange = so.DetectRange;
+            AttackRange = so.AttackRange;
+            AlertDuration = so.AlertDuration;
+            AlertRadius = so.AlertRadius;
+        }
+
+        public override void ResetStats()
+        {
+            base.ResetStats();
+            
+            DetectRange = sniperSO.DetectRange;
+            AttackRange = sniperSO.AttackRange;
+            AlertDuration = sniperSO.AlertDuration;
+            AlertRadius = sniperSO.AlertRadius;
+        }
+    }
 }
