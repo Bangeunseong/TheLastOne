@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Common;
@@ -15,18 +16,26 @@ namespace _1.Scripts.Item.Items
         [field: Header("Dummy Item Settings")]
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public ItemType ItemType { get; private set; }
-        [field: SerializeField] public Transform Body { get; private set; }
+        [field: SerializeField] public List<Transform> Renderers { get; private set; }
         
         public event Action OnPicked;
 
         private void Awake()
         {
-            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+            if (Renderers.Count <= 0)
+            {
+                Renderers.AddRange(this.TryGetChildComponents<Transform>("Body"));
+                Renderers.RemoveAt(0);
+            }
         }
 
         private void Reset()
         {
-            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+            if (Renderers.Count <= 0)
+            {
+                Renderers.AddRange(this.TryGetChildComponents<Transform>("Body"));
+                Renderers.RemoveAt(0);
+            }
         }
 
         private void OnEnable()
@@ -45,7 +54,8 @@ namespace _1.Scripts.Item.Items
         
         public void ChangeLayerOfBody(bool isTransparent)
         {
-            Body.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
+            foreach(var render in Renderers)
+                render.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
         }
 
         public void RemoveSelfFromSpawnedList()
