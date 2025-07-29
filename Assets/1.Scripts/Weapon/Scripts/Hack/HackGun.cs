@@ -16,19 +16,12 @@ namespace _1.Scripts.Weapon.Scripts.Hack
 {
     public class HackGun : BaseWeapon, IReloadable
     {
-        [Header("Components")] 
-        [SerializeField] private ParticleSystem muzzleFlashParticle;
-        [SerializeField] private LightCurves lightCurves;
-        [SerializeField] private SerializedDictionary<int, WeaponPart> weaponParts;
-        
         [field: Header("HackGun Data")]
         [field: SerializeField] public HackData HackData { get; private set; }
         
         [field: Header("Current HackGun Settings")]
         [SerializeField] private Transform face;
         [field: SerializeField] public Transform BulletSpawnPoint { get; private set; }
-        [field: SerializeField] public SerializedDictionary<PartType, int> EquippedWeaponParts { get; private set; } = new();
-        [field: SerializeField] public SerializedDictionary<int, bool> EquipableWeaponParts { get; private set; } = new();
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
         [field: SerializeField] public int CurrentMaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
@@ -99,7 +92,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             isOwnedByPlayer = true;
             if (dto != null)
             {
-                var weapon = dto.Weapons[(int)HackData.HackStat.Type];
+                var weapon = dto.weapons[HackData.HackStat.Type];
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
@@ -202,42 +195,30 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             {
                 CurrentRecoil -= data.Data.ReduceRecoilRate * HackData.HackStat.Recoil;
                 CurrentMaxWeaponRange += data.Data.IncreaseDistanceRate * HackData.HackStat.MaxWeaponRange;
+                
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
+                    CurrentMaxAmmoCountInMagazine += data.Data.IncreaseMaxAmmoCountInMagazine;
+                    // TODO: Refresh Ammo UI
+                }
+                
                 EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
             }
             else
             {
                 CurrentRecoil += data.Data.ReduceRecoilRate * HackData.HackStat.Recoil;
                 CurrentMaxWeaponRange -= data.Data.IncreaseDistanceRate * HackData.HackStat.MaxWeaponRange;
+                
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
+                    if (CurrentAmmoCountInMagazine > HackData.HackStat.MaxAmmoCountInMagazine)
+                        CurrentAmmoCount += CurrentAmmoCountInMagazine - HackData.HackStat.MaxAmmoCountInMagazine;
+                    CurrentMaxAmmoCountInMagazine -= data.Data.IncreaseMaxAmmoCountInMagazine;
+                    // TODO: Refresh Ammo UI
+                }
+                
                 EquippedWeaponParts.Remove(data.Data.Type);
             }
-        }
-        
-        public bool TryCollectWeaponPart(int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool value)) return false;
-            if (value) return false;
-            EquipableWeaponParts[id] = true;
-            return true;
-        }
-
-        public bool TryEquipWeaponPart(PartType type, int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
-            if (!isEquipable || EquippedWeaponParts.ContainsKey(type)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnWear();
-            return true;
-        }
-
-        public bool TryUnequipWeaponPart(PartType type, int id)
-        {
-            if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
-            if (!currentPartId.Equals(id)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnUnWear();
-            return true;
         }
         
         private Vector3 GetDirectionOfBullet()

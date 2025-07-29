@@ -6,6 +6,7 @@ using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Util;
+using _1.Scripts.Weapon.Scripts.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -150,7 +151,7 @@ namespace _1.Scripts.UI.Inventory
             
             foreach (var w in playerWeapon.Weapons)
             {
-                var stat = SlotUtility.GetWeaponStat(w);
+                var stat = SlotUtility.GetWeaponStat(w.Value);
                 maxDamage = Mathf.Max(maxDamage, stat.Damage);
                 maxRPM = Mathf.Max(maxRPM, stat.Rpm);
                 maxRecoil = Mathf.Max(maxRecoil, stat.Recoil);
@@ -167,8 +168,8 @@ namespace _1.Scripts.UI.Inventory
                 var button = slotButtons[i];
                 button.onClick.RemoveAllListeners();
                 
-                var slotWeapon = playerWeapon.Weapons
-                    .Where((w, idx) => playerWeapon.AvailableWeapons[idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
+                var slotWeapon = playerWeapon.Weapons.Select(val => val.Value).ToList()
+                    .Where((w, idx) => playerWeapon.AvailableWeapons[(WeaponType)idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
                     .FirstOrDefault();
 
                 button.gameObject.SetActive(slotWeapon);
@@ -180,7 +181,7 @@ namespace _1.Scripts.UI.Inventory
                     var weapon = slotWeapon;
                     button.onClick.AddListener(() =>
                     {
-                        int idx = playerWeapon.Weapons.IndexOf(weapon);
+                        int idx = playerWeapon.Weapons.Select(val => val.Value).ToList().IndexOf(weapon);
                         if (idx != -1) ShowWeapon(idx);
                     });
                 }
@@ -191,7 +192,7 @@ namespace _1.Scripts.UI.Inventory
         {
             if (!playerWeapon || index < 0 || index >= playerWeapon.Weapons.Count) return;
             
-            var weapon = playerWeapon.Weapons[index];
+            var weapon = playerWeapon.Weapons[(WeaponType)index];
             var stat = SlotUtility.GetWeaponStat(weapon);
             
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);

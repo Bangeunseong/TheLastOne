@@ -16,18 +16,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class Gun : BaseWeapon, IReloadable
     {
-        [Header("Components")] 
-        [SerializeField] private ParticleSystem muzzleFlashParticle;
-        [SerializeField] private LightCurves lightCurves;
-        [SerializeField] private SerializedDictionary<int, WeaponPart> weaponParts;
-        
         [field: Header("Gun Data")]
         [field: SerializeField] public GunData GunData { get; protected set; }
         
         [field: Header("Current Weapon Settings")]
         [field: SerializeField] public Transform BulletSpawnPoint { get; private set; }
-        [field: SerializeField] public SerializedDictionary<PartType, int> EquippedWeaponParts { get; private set; } = new();
-        [field: SerializeField] public SerializedDictionary<int, bool> EquipableWeaponParts { get; private set; } = new();
         [field: SerializeField] public Transform Face { get; private set; }
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
         [field: SerializeField] public int CurrentMaxAmmoCountInMagazine { get; private set; }
@@ -101,7 +94,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 isOwnedByPlayer = true;
                 if (dto != null)
                 {
-                    var weapon = dto.Weapons[(int)GunData.GunStat.Type];
+                    var weapon = dto.weapons[GunData.GunStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                     if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
@@ -212,9 +205,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 CurrentAccuracy -= data.Data.IncreaseAccuracyRate * GunData.GunStat.Accuracy;
                 CurrentRecoil -= data.Data.ReduceRecoilRate * GunData.GunStat.Recoil;
                 CurrentMaxWeaponRange += data.Data.IncreaseDistanceRate * GunData.GunStat.MaxWeaponRange;
-                
-                if(data.Data.Type == PartType.ExtendedMag)
+
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
                     CurrentMaxAmmoCountInMagazine += data.Data.IncreaseMaxAmmoCountInMagazine;
+                    // TODO: Refresh Ammo UI
+                }
                 
                 EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
             }
@@ -229,38 +225,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (CurrentAmmoCountInMagazine > GunData.GunStat.MaxAmmoCountInMagazine)
                         CurrentAmmoCount += CurrentAmmoCountInMagazine - GunData.GunStat.MaxAmmoCountInMagazine;
                     CurrentMaxAmmoCountInMagazine -= data.Data.IncreaseMaxAmmoCountInMagazine;
+                    // TODO: Refresh Ammo UI
                 }
                 
                 EquippedWeaponParts.Remove(data.Data.Type);
             }
-        }
-        
-        public bool TryCollectWeaponPart(int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool value)) return false;
-            if (value) return false;
-            EquipableWeaponParts[id] = true;
-            return true;
-        }
-
-        public bool TryEquipWeaponPart(PartType type, int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
-            if (!isEquipable || EquippedWeaponParts.ContainsKey(type)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnWear();
-            return true;
-        }
-
-        public bool TryUnequipWeaponPart(PartType type, int id)
-        {
-            if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
-            if (!currentPartId.Equals(id)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnUnWear();
-            return true;
         }
         
         /* - Utility Method - */
