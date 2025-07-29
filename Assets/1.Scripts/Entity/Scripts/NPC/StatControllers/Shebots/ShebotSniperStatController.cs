@@ -20,18 +20,23 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
         private CancellationTokenSource penaltyToken;
         
+        private LineRenderer lineRenderer;
+        
         protected override void Awake()
         {
             base.Awake();
             var shebotSwordStatData = CoreManager.Instance.resourceManager.GetAsset<ShebotSniperStatData>("ShebotSniperStatData"); // 자신만의 데이터 가져오기
             runtimeShebotSniperStatData = new RuntimeShebotSniperStatData(shebotSwordStatData);
             runtimeStatData = runtimeShebotSniperStatData;
+            
+            lineRenderer = GetComponent<LineRenderer>();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             runtimeShebotSniperStatData.ResetStats();
+            lineRenderer.enabled = false;
         }
 
         protected override void OnEnable()
@@ -49,6 +54,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         protected override void PlayDeathAnimation()
         {
             base.PlayDeathAnimation();
+            lineRenderer.enabled = false;
             // 죽는 모션 설정
         }
 

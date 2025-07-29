@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 
 namespace _1.Scripts.Util
@@ -47,11 +50,11 @@ namespace _1.Scripts.Util
         /// <param name="self"></param>
         /// <param name="target"></param>
         /// <param name="turnSpeed"></param>
-        public static void LookAtTarget(Transform self, Transform target, float turnSpeed = 15f, float additionalYangle = 0f)
+        public static void LookAtTarget(Transform self, Vector3 target, float turnSpeed = 15f, float additionalYangle = 0f)
         {
-            if (target == null || self == null) return;
+            if (target == Vector3.zero || self == null) return;
 
-            Vector3 dir = target.position - self.position;
+            Vector3 dir = target - self.position;
             dir.y = 0;
 
             if (dir == Vector3.zero) return;
@@ -59,6 +62,36 @@ namespace _1.Scripts.Util
             Quaternion rot = Quaternion.LookRotation(dir);
             Quaternion additionalRotation = Quaternion.Euler(0, additionalYangle, 0);
             self.rotation = Quaternion.Slerp(self.rotation, rot * additionalRotation, Time.deltaTime * turnSpeed);
+        }
+
+        /// <summary>
+        /// 두 지점 사이간에 라인렌더러 표시
+        /// </summary>
+        /// <param name="lineRenderer"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public static void DrawLineBetweenPoints(LineRenderer lineRenderer, Vector3 start, Vector3 end)
+        {
+            if (lineRenderer == null) return;
+            if (!lineRenderer.enabled) lineRenderer.enabled = true;
+            
+            lineRenderer.positionCount = 2;
+            lineRenderer.SetPosition(0, start);
+            lineRenderer.SetPosition(1, end);
+        }
+
+        public static void FireToTarget(Vector3 muzzlePosition, Vector3 direction, bool isAlly, int damage, float maxDistance = 100f)
+        {
+            int targetMask = isAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;
+            int finalMask = LayerConstants.DefaultHittableLayerMask | targetMask;
+            
+            if (Physics.Raycast(muzzlePosition, direction, out RaycastHit hit, maxDistance, finalMask))
+            {
+                if (hit.collider.TryGetComponent(out IDamagable damagable))
+                {
+                    damagable.OnTakeDamage(damage);
+                }
+            }
         }
         
         /// <summary>

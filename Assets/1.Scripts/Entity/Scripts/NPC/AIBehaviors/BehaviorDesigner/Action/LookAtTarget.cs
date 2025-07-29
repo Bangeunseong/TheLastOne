@@ -18,7 +18,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			if (shouldLookTarget.Value)
 			{
 				Service.Log("쳐다보는중");
-				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value);
+				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position);
 			}
 			return TaskStatus.Success;
 		}

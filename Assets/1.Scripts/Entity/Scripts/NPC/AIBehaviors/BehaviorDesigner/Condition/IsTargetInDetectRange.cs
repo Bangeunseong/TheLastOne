@@ -62,8 +62,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				if (isSniper) layer = ally ? LayerConstants.Head_E : LayerConstants.Head_P;
 				else layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
 				
-				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
-				Vector3 colliderPos = targetChest.bounds.center;
+				Collider targetCol = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
+				Vector3 colliderPos = targetCol.bounds.center;
 
 				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
 				{
