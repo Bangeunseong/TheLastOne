@@ -9,7 +9,6 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
@@ -170,7 +169,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             
             if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
-            if (GunData.GunStat.Type != WeaponType.Pistol) return true;
+            if (GunData.GunStat.Type == WeaponType.Rifle) return true;
             if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }
