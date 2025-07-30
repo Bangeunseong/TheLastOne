@@ -91,7 +91,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
                 
                 foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
-                foreach (var part in weapon.equippedParts) EquippedWeaponParts.Add(part.Key, part.Value);
+                foreach (var part in weapon.equippedParts) weaponParts[part.Value].OnWear();
             }
             else
             {
@@ -99,7 +99,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
                 
                 foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
-                foreach (var part in weaponParts.Where(val => val.Value.IsWorn)) EquippedWeaponParts.Add(part.Value.Data.Type, part.Value.Data.Id);
+                foreach (var part in weaponParts.Where(val => val.Value.Data.IsBasicPart)) 
+                    part.Value.OnWear();
             }
                 
             face = user.CameraPivot;
