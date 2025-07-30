@@ -14,17 +14,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
 {
     public class GrenadeLauncher : BaseWeapon, IReloadable
     {
-        [Header("Components")] 
-        [SerializeField] private ParticleSystem muzzleFlashParticle;
-        [SerializeField] private SerializedDictionary<int, WeaponPart> weaponParts;
-        
         [field: Header("Gun Data")]
         [field: SerializeField] public GrenadeData GrenadeData { get; protected set; }
         
         [field: Header("Current Weapon Settings")]
         [field: SerializeField] public Transform ThrowPoint { get; private set; }
-        [field: SerializeField] public SerializedDictionary<PartType, int> EquippedWeaponParts { get; private set; } = new();
-        [field: SerializeField] public SerializedDictionary<int, bool> EquipableWeaponParts { get; private set; } = new();
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
         [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
@@ -91,13 +85,13 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             isOwnedByPlayer = true;
             if (dto != null)
             {
-                var weapon = dto.Weapons[(int)GrenadeData.GrenadeStat.Type];
+                var weapon = dto.weapons[GrenadeData.GrenadeStat.Type];
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
                 
                 foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
-                foreach (var part in weapon.equippedParts) EquippedWeaponParts.Add(part.Key, part.Value);
+                foreach (var part in weapon.equippedParts) weaponParts[part.Value].OnWear();
             }
             else
             {
@@ -105,7 +99,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
                 
                 foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
-                foreach (var part in weaponParts.Where(val => val.Value.IsWorn)) EquippedWeaponParts.Add(part.Value.Data.Type, part.Value.Data.Id);
+                foreach (var part in weaponParts.Where(val => val.Value.Data.IsBasicPart)) 
+                    part.Value.OnWear();
             }
                 
             face = user.CameraPivot;
@@ -187,34 +182,6 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             {
                 EquippedWeaponParts.Remove(data.Data.Type);
             }
-        }
-        
-        public bool TryCollectWeaponPart(int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool value)) return false;
-            if (value) return false;
-            EquipableWeaponParts[id] = true;
-            return true;
-        }
-
-        public bool TryEquipWeaponPart(PartType type, int id)
-        {
-            if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
-            if (!isEquipable || EquippedWeaponParts.ContainsKey(type)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnWear();
-            return true;
-        }
-
-        public bool TryUnequipWeaponPart(PartType type, int id)
-        {
-            if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
-            if (!currentPartId.Equals(id)) return false;
-
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
-            part.OnUnWear();
-            return true;
         }
 
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)

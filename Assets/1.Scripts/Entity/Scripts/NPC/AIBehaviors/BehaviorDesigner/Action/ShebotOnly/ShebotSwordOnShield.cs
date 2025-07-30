@@ -48,7 +48,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			if (isInterrupted.Value)
 			{
 				isInterrupted.Value = false;
-				shield.Value.DisableShield();
+				shield.Value.DisableShieldAnimaton();
 				return TaskStatus.Success;
 			}
 
@@ -66,13 +66,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 
 			if (elapsedTime >= shieldDuration.Value)
 			{
-				shield.Value.DisableShield();
+				shield.Value.DisableShieldAnimaton();
 				return TaskStatus.Success;
 			}
 			
 			if (targetTransform.Value != null)
 			{
-				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, additionalYangle: 55);
+				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, additionalYangle: 55);
 			}
 			
 			return TaskStatus.Running;

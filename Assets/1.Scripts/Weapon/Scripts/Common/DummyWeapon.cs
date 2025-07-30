@@ -2,11 +2,9 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.UI.Inventory;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
-using _1.Scripts.Weapon.Scripts.Hack;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Common
@@ -14,7 +12,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
-        [field: SerializeField] public int Id { get; private set; }
+        [field: SerializeField] public int TargetId { get; private set; }
+        [field: SerializeField] public int InstanceId { get; private set; }
         [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public Transform[] Renderers { get; private set; }
         
@@ -57,41 +56,41 @@ namespace _1.Scripts.Weapon.Scripts.Common
         {
             CoreManager.Instance.spawnManager.RemoveWeaponFromSpawnedList(gameObject);
         }
+        
+        public void SetInstanceId(int instanceId) => InstanceId = instanceId;
 
         public void OnInteract(GameObject ownerObj)
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
+            if (!player.PlayerWeapon.AvailableWeapons.TryGetValue(Type, out var value)) return;
             
-            var index = -1;
-            for (var i = 0; i < player.PlayerWeapon.Weapons.Count; i++)
+            if (!value)
             {
-                if (player.PlayerWeapon.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type || 
-                    player.PlayerWeapon.Weapons[i] is GrenadeLauncher grenadeThrower && grenadeThrower.GrenadeData.GrenadeStat.Type == Type || 
-                    player.PlayerWeapon.Weapons[i] is HackGun crossbow && crossbow.HackData.HackStat.Type == Type)
-                {
-                    index = i; break;
-                }
-            }
-
-            if (!player.PlayerWeapon.AvailableWeapons[index])
-            {
-                player.PlayerWeapon.AvailableWeapons[index] = true;
-                player.PlayerCondition.OnSwitchWeapon(index, 0.5f);
+                player.PlayerWeapon.AvailableWeapons[Type] = true;
+                player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
             }
             else
             {
-                var result = player.PlayerWeapon.Weapons[index].OnRefillAmmo(
-                    player.PlayerWeapon.Weapons[index] is HackGun ? 5 :
-                    player.PlayerWeapon.Weapons[index] is GrenadeLauncher ? 6 : 
-                        player.PlayerWeapon.Weapons[index] is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol ? 30 : 60);
+                var result = player.PlayerWeapon.Weapons[Type].OnRefillAmmo(
+                    Type switch
+                    {
+                        WeaponType.HackGun => 5,
+                        WeaponType.GrenadeLauncher => 6,
+                        WeaponType.Pistol => 30,
+                        _ => 60
+                    });
                 if (!result) return;
             }
             
             player.PlayerCondition.LastSavedPosition = player.transform.position;
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
             
+            var save = CoreManager.Instance.gameManager.SaveData;
+            if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                info.completionDict.TryAdd(InstanceId, true);
+            
             OnPicked?.Invoke();
-            GameEventSystem.Instance.RaiseEvent(Id);
+            GameEventSystem.Instance.RaiseEvent(TargetId);
             CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Data
 {
-    [Serializable]
-    public class SerializableVector3
+    [Serializable] public class SerializableVector3
     {
         public float x, y, z;
         
@@ -18,8 +18,7 @@ namespace _1.Scripts.Manager.Data
         public Vector3 ToVector3() { return new Vector3(x, y, z); }
     }
 
-    [Serializable]
-    public class SerializableQuaternion
+    [Serializable] public class SerializableQuaternion
     {
         public float x, y, z, w;
         
@@ -48,15 +47,28 @@ namespace _1.Scripts.Manager.Data
     {
         public int currentAmmoCount;
         public int currentAmmoCountInMagazine;
-        public Dictionary<PartType, int> equippedParts;
-        public Dictionary<int, bool> equipableParts;
+        public SerializedDictionary<PartType, int> equippedParts;
+        public SerializedDictionary<int, bool> equipableParts;
+    }
+
+    [Serializable] public class StageInfo
+    {
+        [Header("Intro Play Verification")]
+        public bool isIntroPlayed;
+        
+        [Header("Last Saved Position & Rotation")]
+        public SerializableVector3 currentCharacterPosition;
+        public SerializableQuaternion currentCharacterRotation;
+
+        [Header("Completed Scene Event Ids")] 
+        public SerializedDictionary<int, bool> completionDict;
     }
 
     [Serializable] public class QuestInfo
     {
         public int currentObjectiveIndex;
-        public Dictionary<int, int> progresses;
-        public Dictionary<int, bool> completionList;
+        public SerializedDictionary<int, int> progresses;
+        public SerializedDictionary<int, bool> completionList;
     }
     
     [Serializable] public class DataTransferObject
@@ -64,21 +76,20 @@ namespace _1.Scripts.Manager.Data
         [Header("Character Stat.")]
         [SerializeField] public CharacterInfo characterInfo;
 
-        [field: Header("Character Weapons")] 
-        [field: SerializeField] public WeaponInfo[] Weapons { get; set; }
-        [field: SerializeField] public bool[] AvailableWeapons { get; set; }
+        [Header("Character Weapons")] 
+        [SerializeField] public SerializedDictionary<WeaponType, WeaponInfo> weapons;
+        [SerializeField] public SerializedDictionary<WeaponType, bool> availableWeapons;
 
         [field: Header("Character Items")]
         [field: SerializeField] public int[] Items { get; set; }
         
-        [Header("Stage Info.")] 
-        [SerializeField] public SceneType currentSceneId;
-        [SerializeField] public SerializableVector3 currentCharacterPosition;
-        [SerializeField] public SerializableQuaternion currentCharacterRotation;
-
         [field: Header("Quests")]
         [field: SerializeField] public SerializedDictionary<int, QuestInfo> Quests { get; private set; } = new();
-
+        
+        [Header("Stage Info.")] 
+        [SerializeField] public SceneType currentSceneId;
+        [SerializeField] public SerializedDictionary<SceneType, StageInfo> stageInfos;
+        
         public override string ToString()
         {
             return
@@ -86,11 +97,8 @@ namespace _1.Scripts.Manager.Data
                 $"{characterInfo.health}\n{characterInfo.damage}, " +
                 $"{characterInfo.attackRate}\n" +
                 "Weapon Info.\n" +
-                $"{Weapons}\n" +
-                $"{AvailableWeapons}\n" +
-
-                $"Stage Info.\n{currentCharacterPosition.ToVector3()}, " +
-                $"{currentCharacterRotation.ToQuaternion()}" +
+                $"{weapons}\n" +
+                $"{availableWeapons}\n" +
                 $"Quest Info.\n{Quests.Values}";
         }
     }

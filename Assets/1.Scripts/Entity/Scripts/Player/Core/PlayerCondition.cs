@@ -62,7 +62,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
         
         [field: Header("Weapon States")]
-        [field: SerializeField] public int EquippedWeaponIndex { get; private set; }
+        [field: SerializeField] public WeaponType EquippedWeaponIndex { get; private set; }
         [field: SerializeField] public float RecoilMultiplier { get; private set; } = 1f;
         [field: SerializeField] public bool IsAttacking { get; set; }
         [field: SerializeField] public bool IsSwitching { get; private set; }
@@ -140,11 +140,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 CurrentFocusGauge = data.characterInfo.focusGauge;
                 CurrentInstinctGauge = data.characterInfo.instinctGauge;
 
-                if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
+                if (data.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var info))
                 {
-                    LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
-                    LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
-                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                    LastSavedPosition = info.currentCharacterPosition.ToVector3(); 
+                    LastSavedRotation = info.currentCharacterRotation.ToQuaternion(); 
+                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation); 
                     Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
                 
@@ -528,7 +528,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Reload 관련 메소드 - */
         public bool TryStartReload()
         {
-            if (IsDead || IsSwitching || EquippedWeaponIndex <= 0) return false;
+            if (IsDead || IsSwitching || EquippedWeaponIndex == WeaponType.Punch) return false;
             
             switch (playerWeapon.Weapons[EquippedWeaponIndex])
             {
@@ -577,18 +577,18 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
                 case HackGun {IsReadyToReload: false}:
                     return false;
-                case HackGun crossbow:
+                case HackGun hackGun:
                 {
                     if (reloadCTS != null)
                     {
                         reloadCTS?.Cancel(); reloadCTS?.Dispose();
-                        crossbow.IsReloading = false;
+                        hackGun.IsReloading = false;
                         IsReloading = false;
                         playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetBool(player.AnimationData.ReloadParameterHash, false);
                     }
                     
                     // Player Reload AudioClip
-                    float reloadTime = crossbow.HackData.HackStat.ReloadTime;
+                    float reloadTime = hackGun.HackData.HackStat.ReloadTime;
                     reloadPlayer = coreManager.soundManager.PlayUISFX(SfxType.HackGunReload, reloadTime);
                     
                     // Start Reload Coroutine
@@ -602,7 +602,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         }
         public bool TryCancelReload()
         {
-            if (IsDead || EquippedWeaponIndex <= 0) return false;
+            if (IsDead || EquippedWeaponIndex == WeaponType.Punch) return false;
             
             reloadCTS?.Cancel(); reloadCTS?.Dispose(); reloadCTS = null;
             switch (playerWeapon.Weapons[EquippedWeaponIndex])
@@ -761,11 +761,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* --------------------- */
         
         /* - Weapon Switch 메소드 - */
-        public void OnSwitchWeapon(int currentWeaponIndex, float duration)
+        public void OnSwitchWeapon(WeaponType currentWeaponIndex, float duration)
         {
             IsAttacking = false;
             if (IsReloading) TryCancelReload();
-            int previousWeaponIndex = EquippedWeaponIndex;
+            WeaponType previousWeaponIndex = EquippedWeaponIndex;
             EquippedWeaponIndex = currentWeaponIndex;
             
             if (switchCTS != null)
@@ -777,7 +777,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             switchCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = SwitchAsync(previousWeaponIndex, currentWeaponIndex, duration, switchCTS.Token);
         }
-        private async UniTaskVoid SwitchAsync(int previousWeaponIndex, int currentWeaponIndex, float duration, CancellationToken token)
+        private async UniTaskVoid SwitchAsync(WeaponType previousWeaponIndex, WeaponType currentWeaponIndex, float duration, CancellationToken token)
         {
             if (previousWeaponIndex == currentWeaponIndex) { switchCTS = null; return; }
             IsSwitching = true;
@@ -787,21 +787,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             switch (previousWeaponIndex)
             {
-                case 0: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                case WeaponType.Punch: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.HandToOtherWeaponClipTime / duration); break; 
-                case 1: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                case WeaponType.Pistol: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.PistolToOtherWeaponClipTime / duration); break; 
-                case 2: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                case WeaponType.Rifle: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.RifleToOtherWeaponClipTime / duration); break;
-                case 3: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                case WeaponType.GrenadeLauncher: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash, 
                     player.AnimationData.GrenadeLauncherToOtherWeaponClipTime / duration); break;
-                case 4: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                case WeaponType.HackGun: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash,
                     player.AnimationData.HackGunToOtherWeaponClipTime / duration); break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(previousWeaponIndex), previousWeaponIndex, null);
             }
             
             Service.Log("Switch Weapon");

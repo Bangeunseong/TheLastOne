@@ -37,7 +37,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position - transform.up * GroundedOffset, GroundedRadius);
         }
     }

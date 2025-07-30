@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Common;
@@ -13,20 +14,29 @@ namespace _1.Scripts.Item.Items
     public class DummyItem : MonoBehaviour, IInteractable
     {
         [field: Header("Dummy Item Settings")]
-        [field: SerializeField] public int Id { get; private set; }
+        [field: SerializeField] public int TargetId { get; private set; }
+        [field: SerializeField] public int InstanceId { get; private set; }
         [field: SerializeField] public ItemType ItemType { get; private set; }
-        [field: SerializeField] public Transform Body { get; private set; }
+        [field: SerializeField] public List<Transform> Renderers { get; private set; }
         
         public event Action OnPicked;
 
         private void Awake()
         {
-            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+            if (Renderers.Count <= 0)
+            {
+                Renderers.AddRange(this.TryGetChildComponents<Transform>("Body"));
+                Renderers.RemoveAt(0);
+            }
         }
 
         private void Reset()
         {
-            if (!Body) Body = this.TryGetChildComponent<Transform>("Body");
+            if (Renderers.Count <= 0)
+            {
+                Renderers.AddRange(this.TryGetChildComponents<Transform>("Body"));
+                Renderers.RemoveAt(0);
+            }
         }
 
         private void OnEnable()
@@ -45,19 +55,26 @@ namespace _1.Scripts.Item.Items
         
         public void ChangeLayerOfBody(bool isTransparent)
         {
-            Body.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
+            foreach(var render in Renderers)
+                render.gameObject.layer = isTransparent ? LayerMask.NameToLayer("Stencil_Key") : LayerMask.NameToLayer("Default");
         }
 
         public void RemoveSelfFromSpawnedList()
         {
             CoreManager.Instance.spawnManager.RemoveItemFromSpawnedList(gameObject);
         }
+        
+        public void SetInstanceId(int instanceId) => InstanceId = instanceId;
 
         public void OnInteract(GameObject ownerObj)
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
             if (player.PlayerInventory.OnRefillItem(ItemType))
             {
+                var save = CoreManager.Instance.gameManager.SaveData;
+                if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                    info.completionDict.TryAdd(InstanceId, true);
+                
                 OnPicked?.Invoke();
                 CoreManager.Instance.objectPoolManager.Release(gameObject);
             }
@@ -66,7 +83,7 @@ namespace _1.Scripts.Item.Items
                 // Service.Log($"Failed to refill {ItemType}");
                 CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowMessage("Failed to refill {ItemType}");
             }
-            GameEventSystem.Instance.RaiseEvent(Id);
+            GameEventSystem.Instance.RaiseEvent(TargetId);
         }
 
         public void OnCancelInteract() { }

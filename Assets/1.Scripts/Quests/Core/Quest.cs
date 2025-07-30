@@ -7,8 +7,6 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Data;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Mission;
-using _1.Scripts.UI.InGame.Quest;
-using AYellowpaper.SerializedCollections;
 using Console = _1.Scripts.Map.Console.Console;
 
 namespace _1.Scripts.Quests.Core
@@ -31,7 +29,7 @@ namespace _1.Scripts.Quests.Core
                 {
                     case ObjectiveType.ClearStage1:
                     case ObjectiveType.ClearStage2:
-                        objective.onCompletedAction.AddListener(() => CoreManager.Instance.MoveToNextScene(SceneType.IntroScene));
+                        objective.onCompletedAction.AddListener(() => CoreManager.Instance.MoveToNextScene(SceneType.Stage2));
                         break;
                 }
             }
