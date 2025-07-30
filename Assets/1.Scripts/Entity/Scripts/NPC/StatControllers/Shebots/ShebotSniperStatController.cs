@@ -1,4 +1,5 @@
 using System.Threading;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
@@ -42,26 +43,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         protected override void OnEnable()
         {
             base.OnEnable();
-            // 애니메이션 초기상태 설정
+            animator.SetTrigger(ShebotAnimationData.Shebot_Rifle_Aim);
         }
 
         protected override void PlayHitAnimation()
         {
-            base.PlayHitAnimation();
-            // 맞는 모션 설정
+            // 맞는 모션 없으므로 넘김
         }
 
         protected override void PlayDeathAnimation()
         {
             base.PlayDeathAnimation();
             lineRenderer.enabled = false;
-            // 죽는 모션 설정
-        }
-
-        protected override void HackingSuccess()
-        {
-            base.HackingSuccess();
-            // 할게있다면 건들기
+            animator.SetTrigger(ShebotAnimationData.Shebot_Die);
         }
 
         protected override void HackingFailurePenalty()

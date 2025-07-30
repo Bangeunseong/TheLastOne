@@ -64,7 +64,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
 
         protected override void PlayHitAnimation()
         {
-            base.PlayHitAnimation();
+            animator.speed = 1f;
             int[] hitHashes =
             {
                 DroneAnimationData.Hit1,
