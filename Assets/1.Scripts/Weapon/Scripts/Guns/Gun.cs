@@ -108,7 +108,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     CurrentAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
                     
                     foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
-                    foreach (var part in weaponParts.Where(val => val.Value.IsWorn))
+                    foreach (var part in weaponParts.Where(val => val.Value.Data.IsBasicPart))
                         part.Value.OnWear();
                 }
                     

@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.WeaponDetails
 {
-    public enum PartType
+    [Serializable] public enum PartType
     {
         Sight,
         FlameArrester,
