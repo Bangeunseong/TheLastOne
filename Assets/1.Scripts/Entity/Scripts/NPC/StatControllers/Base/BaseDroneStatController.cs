@@ -55,22 +55,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
             base.PlayDeathAnimation();
             int[] deathHashes =
             {
-                DroneAnimationHashData.Dead1,
-                DroneAnimationHashData.Dead2,
-                DroneAnimationHashData.Dead3
+                DroneAnimationData.Dead1,
+                DroneAnimationData.Dead2,
+                DroneAnimationData.Dead3
             };
             animator.SetTrigger(deathHashes[UnityEngine.Random.Range(0, deathHashes.Length)]);
         }
 
         protected override void PlayHitAnimation()
         {
-            base.PlayHitAnimation();
+            animator.speed = 1f;
             int[] hitHashes =
             {
-                DroneAnimationHashData.Hit1,
-                DroneAnimationHashData.Hit2,
-                DroneAnimationHashData.Hit3,
-                DroneAnimationHashData.Hit4
+                DroneAnimationData.Hit1,
+                DroneAnimationData.Hit2,
+                DroneAnimationData.Hit3,
+                DroneAnimationData.Hit4
             };
             animator.SetTrigger(hitHashes[UnityEngine.Random.Range(0, hitHashes.Length)]);
         }

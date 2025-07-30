@@ -9,6 +9,7 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -54,9 +55,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void SetDestinationNullForAnimationEvent()
         {
-            var sharedAgent = behaviorTree.GetVariable(BehaviorNames.Agent) as SharedNavMeshAgent;
-
-            if (sharedAgent != null && sharedAgent.Value != null)
+            if (behaviorTree.GetVariable(BehaviorNames.Agent) is SharedNavMeshAgent sharedAgent && sharedAgent.Value != null)
             {
                 sharedAgent.Value.SetDestination(transform.position);
             }
@@ -109,6 +108,26 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         public void ShieldDisableForAnimationEvent()
         {
             shield?.DisableShield();
+        }
+        #endregion
+
+        #region Sniper전용
+
+        public void FireForAnimationEvent() // 애니메이션 이벤트로 분리해야 원하는 타이밍에 사격가능
+        {
+            var muzzleTransform = behaviorTree.GetVariable(BehaviorNames.MuzzleTransform) as SharedTransform;
+            var targetPos = behaviorTree.GetVariable(BehaviorNames.TargetPos) as SharedVector3;
+            var statController = behaviorTree.GetVariable(BehaviorNames.StatController) as SharedBaseNpcStatController;
+
+            if (muzzleTransform != null && targetPos != null && statController != null)
+            {
+                Vector3 muzzlePosition = muzzleTransform.Value.position;
+                Vector3 direction = (targetPos.Value - muzzlePosition).normalized;
+                bool isAlly = statController.Value.RuntimeStatData.IsAlly;
+                int damage = statController.Value.RuntimeStatData.BaseDamage;
+    
+                NpcUtil.FireToTarget(muzzlePosition, direction, isAlly, damage);
+            }
         }
         #endregion
     }

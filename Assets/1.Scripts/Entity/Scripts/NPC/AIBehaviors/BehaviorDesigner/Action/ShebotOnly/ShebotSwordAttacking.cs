@@ -22,11 +22,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		{
 			if (statController.Value.RuntimeStatData.IsAlly)
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack_Full);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
 			}
 			else
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack3);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
 			}
 		}
 
@@ -39,7 +39,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			}
 			
 			// 아군일때만 피할수없게 공격
-			if (statController.Value.RuntimeStatData.IsAlly) NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value, 50f);
+			if (statController.Value.RuntimeStatData.IsAlly) NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, 50f);
 			return TaskStatus.Running;
 		}
 	}

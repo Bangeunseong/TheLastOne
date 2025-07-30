@@ -1,4 +1,5 @@
 using System.Threading;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
@@ -20,42 +21,41 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
         private CancellationTokenSource penaltyToken;
         
+        private LineRenderer lineRenderer;
+        
         protected override void Awake()
         {
             base.Awake();
             var shebotSwordStatData = CoreManager.Instance.resourceManager.GetAsset<ShebotSniperStatData>("ShebotSniperStatData"); // 자신만의 데이터 가져오기
             runtimeShebotSniperStatData = new RuntimeShebotSniperStatData(shebotSwordStatData);
             runtimeStatData = runtimeShebotSniperStatData;
+            
+            lineRenderer = GetComponent<LineRenderer>();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             runtimeShebotSniperStatData.ResetStats();
+            lineRenderer.enabled = false;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            // 애니메이션 초기상태 설정
+            animator.SetTrigger(ShebotAnimationData.Shebot_Rifle_Aim);
         }
 
         protected override void PlayHitAnimation()
         {
-            base.PlayHitAnimation();
-            // 맞는 모션 설정
+            // 맞는 모션 없으므로 넘김
         }
 
         protected override void PlayDeathAnimation()
         {
             base.PlayDeathAnimation();
-            // 죽는 모션 설정
-        }
-
-        protected override void HackingSuccess()
-        {
-            base.HackingSuccess();
-            // 할게있다면 건들기
+            lineRenderer.enabled = false;
+            animator.SetTrigger(ShebotAnimationData.Shebot_Die);
         }
 
         protected override void HackingFailurePenalty()
@@ -80,6 +80,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
 
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
+        }
+
+        protected override void HackingSuccess()
+        {
+            base.HackingSuccess();
+            behaviorTree.SetVariableValue(BehaviorNames.ShootInterval, 0f);
         }
     }
 }
