@@ -25,13 +25,13 @@ namespace _1.Scripts.Map.SavePoint
             if (other.CompareTag("Player"))
             {
                 GameEventSystem.Instance.RaiseEvent(Id);
-                enabled = false;
             }
         }
 
         public void OnEventRaised(int eventID)
         {
             CoreManager.Instance.SaveData_QueuedAsync();
+            enabled = false;
         }
     }
 }

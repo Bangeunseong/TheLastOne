@@ -38,14 +38,17 @@ namespace _1.Scripts.Manager.Subs
         RifleShoot,
         GrenadeLauncherShoot,
         HackGunShoot,
+        SniperRifleShoot,
         PistolReload,
         RifleReload,
         GrenadeLauncherReload,
         HackGunReload,
+        SniperRifleReload,
         PistolEmpty,
         RifleEmpty,
         GrenadeLauncherEmpty,
         HackGunEmpty,
+        SniperRifleEmpty,
         
         // Grenade SFX
         GrenadeExplode,

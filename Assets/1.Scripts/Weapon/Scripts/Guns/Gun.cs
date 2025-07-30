@@ -9,7 +9,6 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
@@ -124,7 +123,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 if (!IsEmpty || IsAlreadyPlayedEmpty) return false;
                 IsAlreadyPlayedEmpty = true;
                 CoreManager.Instance.soundManager.PlaySFX(
-                    GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolEmpty : SfxType.RifleEmpty, BulletSpawnPoint.position);
+                    GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolEmpty,
+                        WeaponType.Rifle => SfxType.RifleEmpty,
+                        _ => SfxType.SniperRifleEmpty
+                    }, BulletSpawnPoint.position);
                 return false;
             }
             
@@ -157,7 +161,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             
             // Play Randomized Gun Shooting Sound
             CoreManager.Instance.soundManager
-                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolShoot : SfxType.RifleShoot, 
+                .PlaySFX(GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolShoot,
+                        WeaponType.Rifle => SfxType.RifleShoot,
+                        _ => SfxType.SniperRifleShoot
+                    }, 
                 BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
@@ -170,7 +179,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             
             if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
-            if (GunData.GunStat.Type != WeaponType.Pistol) return true;
+            if (GunData.GunStat.Type == WeaponType.Rifle) return true;
             if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }

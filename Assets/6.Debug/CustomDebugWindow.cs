@@ -93,8 +93,7 @@
                 }
 
                 var data = CreateInstance<SpawnData>();
-
-
+                
                 data.SetSpawnPoints(ItemType.Medkit, medkitSpawnPoints.ToArray());
                 data.SetSpawnPoints(ItemType.NanoAmple, nanoAmpleSpawnPoints.ToArray());
                 data.SetSpawnPoints(ItemType.EnergyBar, staminaPillSpawnPoints.ToArray());
