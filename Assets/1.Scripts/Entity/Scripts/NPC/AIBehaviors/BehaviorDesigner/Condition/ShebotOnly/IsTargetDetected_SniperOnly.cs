@@ -7,11 +7,11 @@ using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
+namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.ShebotOnly
 {
-	[TaskCategory("Every")]
-	[TaskDescription("IsTargetInDetectRange")]
-	public class IsTargetInDetectRange : Conditional
+	[TaskCategory("ShebotOnly")]
+	[TaskDescription("IsTargetDetected_SniperOnly")]
+	public class IsTargetDetected_SniperOnly : Conditional
 	{
 		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;
@@ -19,7 +19,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		public SharedFloat maxViewDistance;
 		public SharedBool shouldLookTarget;
 		public SharedBaseNpcStatController statController;
-
+		
+		private float rotationSpeed = 30f; // 커질수록 빠름
+		private float centerAngle = 0f;
+		private float rotationRange = 90f;
+		
 		public override TaskStatus OnUpdate()
 		{
 			bool ally = statController.Value.RuntimeStatData.IsAlly;
@@ -56,7 +60,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					}
 				}
 
-				int layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				int layer = ally ? LayerConstants.Head_E : LayerConstants.Head_P;
 				Collider targetCol = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
 				Vector3 colliderPos = targetCol.bounds.center;
 
@@ -68,6 +72,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					return TaskStatus.Success;
 				}
 			}
+			
+			// 정찰모션
+			float angle = Mathf.PingPong(Time.time * rotationSpeed, rotationRange * 2) - rotationRange;
+			Quaternion targetRotation = Quaternion.Euler(0f, centerAngle + angle, 0f);
+			selfTransform.Value.rotation = targetRotation;
 			
 			return TaskStatus.Failure;
 		}	
