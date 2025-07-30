@@ -124,7 +124,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             IsDead = false;
             isHacking = false;
             isStunned = false;
-            agent.enabled = false;
+            if (agent != null) agent.enabled = false;
             
             if (onStunParticle != null && onStunParticle.IsAlive())
             {

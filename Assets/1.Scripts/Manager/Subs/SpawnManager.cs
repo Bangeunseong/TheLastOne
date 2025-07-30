@@ -5,8 +5,10 @@ using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -55,13 +57,14 @@ namespace _1.Scripts.Manager.Subs
                 foreach (var val in pair.Value)
                 {
                     GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
+                    if (enemy.TryGetComponent(out BehaviorTree behaviorTree)) behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); // 위치조정 BT가 생성 시 위치조정을 무시할 가능성 있음
+
                     enemy.transform.position = val.position;
                     enemy.transform.rotation = val.rotation;
                         
-                    if (enemy.TryGetComponent(out NavMeshAgent agent)) // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
-                    {
-                        agent.enabled = true;
-                    }
+                    if (enemy.TryGetComponent(out NavMeshAgent agent)) agent.enabled = true; // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
+                    if (behaviorTree != null) behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
+                    
                     spawnedEnemies.Add(enemy);
                 }
             }
