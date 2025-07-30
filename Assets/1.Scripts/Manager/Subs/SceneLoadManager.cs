@@ -209,6 +209,8 @@ namespace _1.Scripts.Manager.Subs
                         coreManager.soundManager.PlayBGM(type, index: 0);
                     break;
                 case SceneType.Stage2:
+                    player.PlayerCondition.OnEnablePlayerMovement();
+                    if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
                     if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
                         coreManager.soundManager.PlayBGM(bgmType, index: 0);
                     break;
