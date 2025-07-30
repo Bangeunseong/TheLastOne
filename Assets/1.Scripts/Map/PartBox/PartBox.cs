@@ -63,9 +63,13 @@ namespace _1.Scripts.Map.PartBox
             coreManager = CoreManager.Instance;
             player = coreManager.gameManager.Player;
             
-            // TODO: Check Stage info. that this box is already opened
-            // isAlreadyOpened = true;
-            // gameObject.layer = LayerMask.NameToLayer("Default");
+            var save = CoreManager.Instance.gameManager.SaveData;
+            if (save is not { stageInfos: not null } ||
+                !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info)) return;
+            if (!info.completionDict.TryGetValue(Id, out var value) || !value) return;
+            
+            isAlreadyOpened = true;
+            gameObject.layer = LayerMask.NameToLayer("Default");
         }
 
         public void OnInteract(GameObject ownerObj)
@@ -73,6 +77,9 @@ namespace _1.Scripts.Map.PartBox
             if (!ownerObj.TryGetComponent(out Player p) || isAlreadyOpened) return;
             
             isAlreadyOpened = true;
+            var save = CoreManager.Instance.gameManager.SaveData;
+            if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                info.completionDict.TryAdd(Id, true);
             
             PlayOpeningAnimation();
         }

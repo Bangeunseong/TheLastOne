@@ -139,11 +139,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 CurrentFocusGauge = data.characterInfo.focusGauge;
                 CurrentInstinctGauge = data.characterInfo.instinctGauge;
 
-                if (data.currentSceneId == coreManager.sceneLoadManager.CurrentScene)
+                if (data.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var info))
                 {
-                    LastSavedPosition = data.currentCharacterPosition.ToVector3(); 
-                    LastSavedRotation = data.currentCharacterRotation.ToQuaternion(); 
-                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation);
+                    LastSavedPosition = info.currentCharacterPosition.ToVector3(); 
+                    LastSavedRotation = info.currentCharacterRotation.ToQuaternion(); 
+                    transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation); 
                     Service.Log(LastSavedPosition + "," +  LastSavedRotation);
                 }
                 

@@ -62,10 +62,43 @@ namespace _1.Scripts.Manager.Subs
                     focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
-                currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
-                currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
             };
 
+            if (SaveData == null)
+            {
+                save.stageInfos = new SerializedDictionary<SceneType, StageInfo>();
+                var newStageInfoOfCurrentScene = new StageInfo
+                {
+                    isIntroPlayed = true,
+                    currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
+                    currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
+                    completionDict = new SerializedDictionary<int, bool>(),
+                };
+                save.stageInfos.TryAdd(coreManager.sceneLoadManager.CurrentScene, newStageInfoOfCurrentScene);
+            }
+            else
+            {
+                save.stageInfos = new SerializedDictionary<SceneType, StageInfo>(SaveData.stageInfos);
+                if (!save.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var stageInfo))
+                {
+                    var newStageInfoOfCurrentScene = new StageInfo
+                    {
+                        isIntroPlayed = true,
+                        currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
+                        currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
+                        completionDict = new SerializedDictionary<int, bool>(),
+                    };
+                    save.stageInfos.TryAdd(coreManager.sceneLoadManager.CurrentScene, newStageInfoOfCurrentScene);
+                }
+                else
+                {
+                    stageInfo.currentCharacterPosition =
+                        new SerializableVector3(Player.PlayerCondition.LastSavedPosition);
+                    stageInfo.currentCharacterRotation = 
+                        new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation);
+                }
+            }
+            
             // Save Current Weapon Infos
             var newWeaponInfo = new SerializedDictionary<WeaponType, WeaponInfo>();
             var newAvailableWeapons = Player.PlayerWeapon.AvailableWeapons;
@@ -78,8 +111,8 @@ namespace _1.Scripts.Manager.Subs
                         {
                             currentAmmoCount = gun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine,
-                            equipableParts = new Dictionary<int, bool>(gun.EquipableWeaponParts),
-                            equippedParts = new Dictionary<PartType, int>(gun.EquippedWeaponParts),
+                            equipableParts = new SerializedDictionary<int, bool>(gun.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(gun.EquippedWeaponParts),
                         });
                         break;
                     case GrenadeLauncher grenadeLauncher:
@@ -87,8 +120,8 @@ namespace _1.Scripts.Manager.Subs
                         {
                             currentAmmoCount = grenadeLauncher.CurrentAmmoCount,
                             currentAmmoCountInMagazine = grenadeLauncher.CurrentAmmoCountInMagazine,
-                            equipableParts = new Dictionary<int, bool>(grenadeLauncher.EquipableWeaponParts),
-                            equippedParts = new Dictionary<PartType, int>(grenadeLauncher.EquippedWeaponParts),
+                            equipableParts = new SerializedDictionary<int, bool>(grenadeLauncher.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(grenadeLauncher.EquippedWeaponParts),
                         });
                         break;
                     case HackGun hackGun:
@@ -96,8 +129,8 @@ namespace _1.Scripts.Manager.Subs
                         {
                             currentAmmoCount = hackGun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = hackGun.CurrentAmmoCountInMagazine,
-                            equipableParts = new Dictionary<int, bool>(hackGun.EquipableWeaponParts),
-                            equippedParts = new Dictionary<PartType, int>(hackGun.EquippedWeaponParts),
+                            equipableParts = new SerializedDictionary<int, bool>(hackGun.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(hackGun.EquippedWeaponParts),
                         });
                         break;
                 }
@@ -115,10 +148,12 @@ namespace _1.Scripts.Manager.Subs
                 save.Quests[quest.Key] = new QuestInfo
                 {
                     currentObjectiveIndex = quest.Value.currentObjectiveIndex,
-                    progresses = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.currentAmount),
-                    completionList = quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted),
+                    progresses = new SerializedDictionary<int, int>(quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.currentAmount)),
+                    completionList = new SerializedDictionary<int, bool>(quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted)),
                 };
             }
+
+            SaveData = save;
             
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
             await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);

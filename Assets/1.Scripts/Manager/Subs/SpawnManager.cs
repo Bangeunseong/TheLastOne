@@ -4,6 +4,7 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using UnityEngine;
@@ -13,6 +14,10 @@ namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class SpawnManager
     {
+        public static int BaseWeaponIndex { get; private set; } = 1000; 
+        public static int BaseItemIndex { get; private set; } = 1100; 
+        public static int BaseItemBoxIndex { get; private set; } = 1200;
+        
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
         
@@ -29,7 +34,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager = CoreManager.Instance;
         }
         
-        public void ChangeSpawnDataAndInstantiate(SceneType sceneType)
+        public void ChangeSpawnDataAndInstantiate(SceneType sceneType, DataTransferObject dto)
         {
             CurrentSpawnData = sceneType switch
             {
@@ -37,51 +42,65 @@ namespace _1.Scripts.Manager.Subs
                 SceneType.Stage2 => coreManager.resourceManager.GetAsset<SpawnData>("SpawnPoints_Stage2"),
                 _ => null
             };
-            SpawnPropsBySpawnData();
+            SpawnPropsBySpawnData(sceneType, dto);
         }
 
         public void SpawnEnemyBySpawnData(int index)
         {
             if (CurrentSpawnData == null) return;
-            if (CurrentSpawnData.EnemySpawnPoints.TryGetValue(index, out var spawnPoints))
+            if (!CurrentSpawnData.EnemySpawnPoints.TryGetValue(index, out var spawnPoints)) return;
+            
+            foreach (var pair in spawnPoints)
             {
-                foreach (var pair in spawnPoints)
+                foreach (var val in pair.Value)
                 {
-                    foreach (var val in pair.Value)
-                    {
-                        GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
-                        enemy.transform.position = val.position;
-                        enemy.transform.rotation = val.rotation;
+                    GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
+                    enemy.transform.position = val.position;
+                    enemy.transform.rotation = val.rotation;
                         
-                        if (enemy.TryGetComponent(out NavMeshAgent agent)) // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
-                        {
-                            agent.enabled = true;
-                        }
-                        spawnedEnemies.Add(enemy);
+                    if (enemy.TryGetComponent(out NavMeshAgent agent)) // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
+                    {
+                        agent.enabled = true;
                     }
+                    spawnedEnemies.Add(enemy);
                 }
             }
         }
 
-        private void SpawnPropsBySpawnData()
+        private void SpawnPropsBySpawnData(SceneType sceneType, DataTransferObject dto = null)
         {
             if (CurrentSpawnData == null) return;
+            int weaponIndex = 0, itemIndex = 0;
             foreach (var pair in CurrentSpawnData.WeaponSpawnPoints)
             {
                 foreach (var val in pair.Value)
                 {
-                    var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
-                    obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                    spawnedWeapons.Add(obj);
+                    if (dto == null || !dto.stageInfos.TryGetValue(sceneType, out var info) || 
+                        !info.completionDict.TryGetValue(BaseWeaponIndex + weaponIndex, out var value) ||
+                        !value)
+                    {
+                        var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
+                        obj.transform.SetPositionAndRotation(val.position, val.rotation);
+                        if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.SetInstanceId(BaseWeaponIndex + weaponIndex);
+                        spawnedWeapons.Add(obj);
+                    }
+                    weaponIndex++;
                 }
             }
             foreach (var pair in CurrentSpawnData.ItemSpawnPoints)
             {
                 foreach (var val in pair.Value)
                 {
-                    var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
-                    obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                    spawnedItems.Add(obj);
+                    if (dto == null || !dto.stageInfos.TryGetValue(sceneType, out var info) || 
+                        !info.completionDict.TryGetValue(BaseItemIndex + itemIndex, out var value) ||
+                        !value)
+                    {
+                        var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
+                        obj.transform.SetPositionAndRotation(val.position, val.rotation);
+                        if (obj.TryGetComponent(out DummyItem item)) item.SetInstanceId(BaseItemIndex + itemIndex);
+                        spawnedItems.Add(obj);
+                    }
+                    itemIndex++;
                 }
             }
         }

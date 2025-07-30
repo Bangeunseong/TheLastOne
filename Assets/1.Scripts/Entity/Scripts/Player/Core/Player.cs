@@ -127,6 +127,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
+            
+            coreManager.SaveData_QueuedAsync();
         }
 
         private void FixedUpdate()

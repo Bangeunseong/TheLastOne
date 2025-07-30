@@ -33,8 +33,11 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
             if (IsWorn) return;
             if (IronSight_A && IronSight_B)
             {
-                IronSight_A.localRotation = Quaternion.Euler(IronSight_A.localRotation.x, IronSight_A.localRotation.y, IronSight_A.localRotation.z + 90f);
-                IronSight_B.localRotation = Quaternion.Euler(IronSight_B.localRotation.x, IronSight_B.localRotation.y, IronSight_B.localRotation.z - 90f);
+                var rotationOfA = IronSight_A.localRotation.eulerAngles;
+                var rotationOfB = IronSight_B.localRotation.eulerAngles;
+                Service.Log($"{rotationOfA}, {rotationOfB}");
+                IronSight_A.localRotation = Quaternion.Euler(rotationOfA.x, rotationOfA.y, rotationOfA.z - 90f);
+                IronSight_B.localRotation = Quaternion.Euler(rotationOfB.x, rotationOfB.y, rotationOfB.z + 90f);
             }
             else Parent.gameObject.SetActive(true);
 
@@ -47,8 +50,10 @@ namespace _1.Scripts.Weapon.Scripts.WeaponDetails
             if (!IsWorn) return;
             if (IronSight_A && IronSight_B)
             {
-                IronSight_A.localRotation = Quaternion.Euler(IronSight_A.localRotation.x, IronSight_A.localRotation.y, IronSight_A.localRotation.z - 90f);
-                IronSight_B.localRotation = Quaternion.Euler(IronSight_B.localRotation.x, IronSight_B.localRotation.y, IronSight_B.localRotation.z + 90f);
+                var rotationZofA = IronSight_A.localRotation.z;
+                var rotationZofB = IronSight_B.localRotation.z;
+                IronSight_A.localRotation = Quaternion.Euler(IronSight_A.localRotation.x, IronSight_A.localRotation.y, rotationZofA + 90f);
+                IronSight_B.localRotation = Quaternion.Euler(IronSight_B.localRotation.x, IronSight_B.localRotation.y, rotationZofB - 90f);
             }
             else
             {
