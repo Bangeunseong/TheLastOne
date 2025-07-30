@@ -144,7 +144,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             animator.speed = 1f;
         }
 
-        protected virtual void PlayHitAnimation() { animator.speed = 1f; }
+        protected abstract void PlayHitAnimation();
         protected virtual void PlayDeathAnimation() { animator.speed = 1f; }
         protected abstract void HackingFailurePenalty();
 
