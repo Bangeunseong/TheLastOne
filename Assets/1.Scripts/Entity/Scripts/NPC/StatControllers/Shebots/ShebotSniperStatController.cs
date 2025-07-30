@@ -81,5 +81,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
             runtimeStatData.BaseDamage = baseDamage;
             runtimeStatData.Armor = baseArmor;
         }
+
+        protected override void HackingSuccess()
+        {
+            base.HackingSuccess();
+            behaviorTree.SetVariableValue(BehaviorNames.ShootInterval, 0f);
+        }
     }
 }

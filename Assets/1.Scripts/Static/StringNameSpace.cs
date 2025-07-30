@@ -76,5 +76,6 @@ namespace _1.Scripts.Static
         public const string MuzzleTransform = "muzzle_Transform";
         public const string BaseRotation = "baseRotation";
         public const string DetectionGizmo = "detectionGizmo";
+        public const string ShootInterval = "shootInterval";
     }
 }
