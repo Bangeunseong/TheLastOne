@@ -123,7 +123,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 if (!IsEmpty || IsAlreadyPlayedEmpty) return false;
                 IsAlreadyPlayedEmpty = true;
                 CoreManager.Instance.soundManager.PlaySFX(
-                    GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolEmpty : SfxType.RifleEmpty, BulletSpawnPoint.position);
+                    GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolEmpty,
+                        WeaponType.Rifle => SfxType.RifleEmpty,
+                        _ => SfxType.SniperRifleEmpty
+                    }, BulletSpawnPoint.position);
                 return false;
             }
             
@@ -156,7 +161,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             
             // Play Randomized Gun Shooting Sound
             CoreManager.Instance.soundManager
-                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolShoot : SfxType.RifleShoot, 
+                .PlaySFX(GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolShoot,
+                        WeaponType.Rifle => SfxType.RifleShoot,
+                        _ => SfxType.SniperRifleShoot
+                    }, 
                 BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
