@@ -22,11 +22,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		{
 			if (statController.Value.RuntimeStatData.IsAlly)
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack_Full);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
 			}
 			else
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Sword_Attack3);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
 			}
 		}
 

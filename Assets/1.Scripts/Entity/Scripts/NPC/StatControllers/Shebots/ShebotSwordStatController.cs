@@ -47,7 +47,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         protected override void OnEnable()
         {
             base.OnEnable();
-            animator.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
+            animator.SetTrigger(ShebotAnimationData.Shebot_Idle);
         }
         
         protected override void PlayHitAnimation()
@@ -58,7 +58,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         protected override void PlayDeathAnimation()
         {
             base.PlayDeathAnimation();
-            animator.SetTrigger(ShebotAnimationHashData.Shebot_Die);
+            animator.SetTrigger(ShebotAnimationData.Shebot_Die);
         }
 
         protected override void HackingFailurePenalty()

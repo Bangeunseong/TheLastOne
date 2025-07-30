@@ -1,4 +1,5 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Static;
@@ -22,6 +23,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 		public SharedBaseNpcStatController statController;
 		public SharedDetectionGizmo detectionGizmo;
 		public SharedQuaternion baseRotation;
+		public SharedAnimator animator;
 		
 		private float rotationSpeed = 15f;
 		private float centerAngle = 0f;
@@ -30,6 +32,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 		public override void OnStart()
 		{
 			baseRotation.Value = selfTransform.Value.rotation;
+			
+			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+			if (!stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_AimStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_Aim);
 		}
 
 		public override TaskStatus OnUpdate()

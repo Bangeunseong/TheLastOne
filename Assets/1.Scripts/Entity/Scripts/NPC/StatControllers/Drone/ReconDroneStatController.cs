@@ -28,7 +28,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
         protected override void OnEnable()
         {
             base.OnEnable();
-            animator.SetTrigger(DroneAnimationHashData.Idle1);
+            animator.SetTrigger(DroneAnimationData.Idle1);
         }
 
     }
