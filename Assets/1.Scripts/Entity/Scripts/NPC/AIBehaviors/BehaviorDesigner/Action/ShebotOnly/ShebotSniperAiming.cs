@@ -54,15 +54,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
                     targetPos.Value = Vector3.zero;
                     targetTransform.Value = null;
                     isAlerted.Value = false;
-					
+                    
                     return TaskStatus.Failure;
                 }
             }
             
             targetPos.Value = targetHead.bounds.center;
             
-            NpcUtil.DrawLineBetweenPoints(lineRenderer.Value, muzzleTransform.Value.position, targetPos.Value);
-            NpcUtil.LookAtTarget(selfTransform.Value, targetPos.Value);
+            int layerMask = statController.Value.RuntimeStatData.IsAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;
+            int finallayerMask = LayerConstants.DefaultHittableLayerMask | layerMask;
+            Vector3 direction = (targetPos.Value - muzzleTransform.Value.position).normalized;
+            
+            Physics.Raycast(muzzleTransform.Value.position, direction, out RaycastHit hit, 1000, finallayerMask);
+            
+            NpcUtil.DrawLineBetweenPoints(lineRenderer.Value, muzzleTransform.Value.position, hit.point);
+            NpcUtil.LookAtTarget(selfTransform.Value, targetPos.Value, additionalYangle:45);
             
             return TaskStatus.Running;
         }

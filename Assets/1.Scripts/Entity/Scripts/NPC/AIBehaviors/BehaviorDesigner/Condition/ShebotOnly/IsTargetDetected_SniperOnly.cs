@@ -15,15 +15,23 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 	{
 		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;
+		public SharedTransform muzzleTransform;
 		public SharedVector3 targetPos;
 		public SharedFloat maxViewDistance;
 		public SharedBool shouldLookTarget;
 		public SharedBaseNpcStatController statController;
+		public SharedDetectionGizmo detectionGizmo;
+		public SharedQuaternion baseRotation;
 		
-		private float rotationSpeed = 30f; // 커질수록 빠름
+		private float rotationSpeed = 15f;
 		private float centerAngle = 0f;
-		private float rotationRange = 90f;
-		
+		private float rotationRange = 45f;
+
+		public override void OnStart()
+		{
+			baseRotation.Value = selfTransform.Value.rotation;
+		}
+
 		public override TaskStatus OnUpdate()
 		{
 			bool ally = statController.Value.RuntimeStatData.IsAlly;
@@ -41,7 +49,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 			int layerMask = ally ? (1 << LayerConstants.Enemy) : (1 << LayerConstants.Ally);
 
 			Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
-
+			detectionGizmo.Value.range = range;
+			
 			System.Array.Sort(colliders, (a, b) =>
 			{
 				float distA = (a.bounds.center - selfPos).sqrMagnitude;
@@ -58,13 +67,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 					{
 						continue;
 					}
-				}
+				}	
 
 				int layer = ally ? LayerConstants.Head_E : LayerConstants.Head_P;
 				Collider targetCol = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
 				Vector3 colliderPos = targetCol.bounds.center;
 
-				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
+				if (NpcUtil.IsTargetVisible(muzzleTransform.Value.position, colliderPos, maxViewDistance.Value, ally))
 				{
 					targetTransform.Value = collider.transform;
 					targetPos.Value = colliderPos;
@@ -75,10 +84,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 			
 			// 정찰모션
 			float angle = Mathf.PingPong(Time.time * rotationSpeed, rotationRange * 2) - rotationRange;
-			Quaternion targetRotation = Quaternion.Euler(0f, centerAngle + angle, 0f);
-			selfTransform.Value.rotation = targetRotation;
+			Quaternion offset = Quaternion.Euler(0f, angle, 0f);
+			selfTransform.Value.rotation = baseRotation.Value * offset;
 			
-			return TaskStatus.Failure;
-		}	
+			return TaskStatus.Running;
+		}
 	}
 }

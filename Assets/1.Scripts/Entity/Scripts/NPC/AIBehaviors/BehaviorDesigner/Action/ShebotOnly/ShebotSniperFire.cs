@@ -12,9 +12,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
     [TaskDescription("ShebotSniperFire")]
     public class ShebotSniperFire : global::BehaviorDesigner.Runtime.Tasks.Action
     {
+        public SharedTransform selfTransform;
         public SharedFloat shootInterval;
         public SharedFloat reloadingDuration;
         public SharedLineRenderer lineRenderer;
+        public SharedAnimator animator;
+        public SharedBool isAlerted;
+        public SharedTransform targetTransform;
+        public SharedVector3 targetPos;
+        public SharedQuaternion baseRotation;
+        public SharedLight enemyLight;
+        public SharedLight allyLight;
         
         private float timer;
         private bool hasFired;
@@ -33,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
             {
                 if (timer >= shootInterval.Value)
                 {
-                    // 쏘는 애니메이션 실행 (사격은 내부 애니메이션 이벤트에 존재)
+                    animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Rifle_fire);
                     lineRenderer.Value.enabled = false;
                     hasFired = true;
                     timer = 0f;
@@ -41,6 +49,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
             }
             else if (timer >= reloadingDuration.Value)
             {
+                enemyLight.Value.enabled = false;
+                allyLight.Value.enabled = false;
+                isAlerted.Value = false;
+                targetTransform.Value = null;
+                targetPos.Value = Vector3.zero;
+                baseRotation.Value = selfTransform.Value.rotation;
+                
                 return TaskStatus.Success;
             }
             

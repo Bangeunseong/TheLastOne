@@ -71,8 +71,10 @@ namespace _1.Scripts.Static
         public const string StatController = "statController";
         public const string IsInterrupted = "isInterrupted";
         public const string ShieldUsedOnce = "shieldUsedOnce";
-        public const string hasEnteredShield = "hasEnteredShield";
-        public const string muzzleLineRenderer = "muzzleLineRenderer";
+        public const string HasEnteredShield = "hasEnteredShield";
+        public const string MuzzleLineRenderer = "muzzleLineRenderer";
         public const string MuzzleTransform = "muzzle_Transform";
+        public const string BaseRotation = "baseRotation";
+        public const string DetectionGizmo = "detectionGizmo";
     }
 }

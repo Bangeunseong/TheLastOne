@@ -50,6 +50,7 @@ namespace _1.Scripts.Util
         /// <param name="self"></param>
         /// <param name="target"></param>
         /// <param name="turnSpeed"></param>
+        /// <param name="additionalYangle"></param>
         public static void LookAtTarget(Transform self, Vector3 target, float turnSpeed = 15f, float additionalYangle = 0f)
         {
             if (target == Vector3.zero || self == null) return;
@@ -80,6 +81,14 @@ namespace _1.Scripts.Util
             lineRenderer.SetPosition(1, end);
         }
 
+        /// <summary>
+        /// 적에게 사격, 사거리 임의 조정 가능
+        /// </summary>
+        /// <param name="muzzlePosition"></param>
+        /// <param name="direction"></param>
+        /// <param name="isAlly"></param>
+        /// <param name="damage"></param>
+        /// <param name="maxDistance"></param>
         public static void FireToTarget(Vector3 muzzlePosition, Vector3 direction, bool isAlly, int damage, float maxDistance = 100f)
         {
             int targetMask = isAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;

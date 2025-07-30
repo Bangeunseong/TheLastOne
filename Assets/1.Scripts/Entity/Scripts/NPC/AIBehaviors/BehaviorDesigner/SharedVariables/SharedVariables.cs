@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.NPC.Gizmo;
 using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using BehaviorDesigner.Runtime;
@@ -73,6 +74,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVaria
         public static implicit operator SharedLineRenderer(LineRenderer value)
         {
             return new SharedLineRenderer { Value = value };
+        }
+    }
+    
+    [System.Serializable]
+    public class SharedDetectionGizmo : SharedVariable<DetectionGizmo>
+    {
+        public static implicit operator SharedDetectionGizmo(DetectionGizmo value)
+        {
+            return new SharedDetectionGizmo { Value = value };
         }
     }
 }
