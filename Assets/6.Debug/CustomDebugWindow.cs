@@ -1,4 +1,7 @@
-﻿namespace _6.Debug
+﻿using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.InGame.Modification;
+
+namespace _6.Debug
 { 
 #if UNITY_EDITOR
     using System;
@@ -120,6 +123,18 @@
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.Save();
                 Service.Log("PlayerPrefs 초기화 완료!");
+            }
+
+            if (GUILayout.Button("Show ModificationUI"))
+            {
+                CoreManager.Instance.uiManager.ShowUI<ModificationUI>();
+                Service.Log("ModificationUI Show");
+            }
+
+            if (GUILayout.Button("Hide ModificationUI"))
+            {
+                CoreManager.Instance.uiManager.HideUI<ModificationUI>();
+                Service.Log("ModificationUI Hide");
             }
         }
     }
