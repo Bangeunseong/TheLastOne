@@ -546,7 +546,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     // Play Reload AudioClip
                     float reloadTime = gun.GunData.GunStat.ReloadTime;
                     reloadPlayer = coreManager.soundManager.PlayUISFX(
-                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : gun.GunData.GunStat.Type == WeaponType.Rifle ? SfxType.RifleReload : SfxType.SniperRifleReload, reloadTime);
+                        gun.GunData.GunStat.Type switch
+                        {
+                            WeaponType.Pistol => SfxType.PistolReload,
+                            WeaponType.Rifle => SfxType.RifleReload,
+                            _ => SfxType.SniperRifleReload
+                        }, reloadTime);
                     
                     // Start Reload Coroutine
                     reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
