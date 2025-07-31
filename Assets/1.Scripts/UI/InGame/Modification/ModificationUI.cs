@@ -433,9 +433,9 @@ namespace _1.Scripts.UI.InGame.Modification
             {
                 switch (partType)
                 {
-                    case PartType.Sight: return 1;
-                    case PartType.Silencer: return 7;
-                    case PartType.ExtendedMag: return 10; // 예시
+                    case PartType.Sight: return 14;
+                    case PartType.Silencer: return 15;
+                    case PartType.ExtendedMag: return 13;
                 }
             }
             return -1;
