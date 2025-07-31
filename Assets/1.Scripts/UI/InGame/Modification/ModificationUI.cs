@@ -74,10 +74,11 @@ namespace _1.Scripts.UI.InGame.Modification
         private Dictionary<WeaponType, BaseWeapon> ownedWeapons = new();
         private int currentWeaponIdx = 0;
         private WeaponType CurrentWeaponType => (currentWeaponIdx >= 0 && currentWeaponIdx < SlotOrder.Length) ? SlotOrder[currentWeaponIdx] : SlotOrder[0];
-        private BaseWeapon CurrentWeapon => ownedWeapons.GetValueOrDefault(CurrentWeaponType);
+        private BaseWeapon CurrentWeapon => ownedWeapons.TryGetValue(CurrentWeaponType, out var w) ? w : null;
+        private Dictionary<(PartType, int), WeaponPartData> partDataMap;
+        private WeaponPartData selectedPartData;
 
         private PartType? selectedPartType;
-        private WeaponPartData selectedPartData;
 
         private PlayerCondition playerCondition;
         private PlayerWeapon playerWeapon;
