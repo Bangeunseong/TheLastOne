@@ -52,7 +52,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 					
-					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
 					{
 						if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 					}
