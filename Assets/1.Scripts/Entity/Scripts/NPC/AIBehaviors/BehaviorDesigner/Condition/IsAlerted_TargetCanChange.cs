@@ -16,7 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 		public SharedBool isAlerted;
 
 		public SharedTransform selfTransform;
-		public SharedCollider selfCollider; 
+		public SharedTransform selfTransform_Head; 
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		
@@ -65,7 +65,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
 				Vector3 colliderPos = targetChest.bounds.center;
 				
-				if (NpcUtil.IsTargetVisible(selfCollider.Value.bounds.center, colliderPos, 100f, ally))
+				if (NpcUtil.IsTargetVisible(selfTransform_Head.Value.position, colliderPos, 100f, ally))
 				{
 					if (isAlertedOnce != null) isAlertedOnce.Value = true;
 					
