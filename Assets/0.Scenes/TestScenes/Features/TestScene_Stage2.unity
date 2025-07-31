@@ -8273,11 +8273,6 @@ PrefabInstance:
       propertyPath: <FirstPersonCamera>k__BackingField
       value: 
       objectReference: {fileID: 146709863}
-    - target: {fileID: 5169052325432286388, guid: d1ad11f456aebf14297be286489d8ec9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
