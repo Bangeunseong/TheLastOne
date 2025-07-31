@@ -190,6 +190,8 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             return true;
         }
         
+        public override bool TryForgeWeapon() { return false; }
+        
         public override void UpdateStatValues(WeaponPart data, bool isWorn = true)
         {
             if (isWorn)

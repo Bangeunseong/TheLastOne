@@ -1,21 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0727488dc9424f8733910d9316dba2, type: 3}
-  m_Name: ExtendedMag_HackGun
-  m_EditorClassIdentifier: 
-  <Id>k__BackingField: 12
-  <Type>k__BackingField: 4
-  <IncreaseDistanceRate>k__BackingField: 0
-  <IncreaseAccuracyRate>k__BackingField: 0
-  <IncreaseMaxAmmoCountInMagazine>k__BackingField: 2
-  <ReduceRecoilRate>k__BackingField: 0
-  <IsBasicPart>k__BackingField: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:e44c063971c7e3650a27ef62718a29de6a61c8fe6dd4173a98d91af699be86bf
+size 710

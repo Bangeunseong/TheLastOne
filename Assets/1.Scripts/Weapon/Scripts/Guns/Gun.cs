@@ -240,7 +240,31 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 EquippedWeaponParts.Remove(data.Data.Type);
             }
         }
-        
+
+        public override bool TryForgeWeapon()
+        {
+            if (!player || GunData.GunStat.Type != WeaponType.Pistol) return false;
+            var availableParts = new bool[3];
+
+            foreach (var available in EquipableWeaponParts.Where(val => val.Value))
+            {
+                if (!weaponParts.TryGetValue(available.Key, out var part)) continue;
+                switch (part.Data.Type)
+                {
+                    case PartType.Sight: availableParts[0] = true; break;
+                    case PartType.ExtendedMag: availableParts[1] = true; break;
+                    case PartType.Silencer: availableParts[2] = true; break;
+                }
+            }
+
+            if (!availableParts.All(val => val)) return false;
+            
+            player.PlayerWeapon.AvailableWeapons[WeaponType.Pistol] = false;
+            player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] = true;
+            player.PlayerCondition.OnSwitchWeapon(WeaponType.SniperRifle, 0.5f);
+            return true;
+        }
+
         /* - Utility Method - */
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)
         {
