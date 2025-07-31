@@ -13,15 +13,20 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		public SharedBool shouldLookTarget;
 		public SharedAnimator animator;
 		public SharedBaseNpcStatController statController;
+		public bool isRifle;
 		
 		public override TaskStatus OnUpdate()
 		{
 			if (!statController.Value.RuntimeStatData.IsAlly)
 			{
 				AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-				if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
+				if (!isRifle && !stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
 				{
 					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
+				}
+				else if (isRifle && !stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr))
+				{
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_idle);
 				}
 			}
 			
