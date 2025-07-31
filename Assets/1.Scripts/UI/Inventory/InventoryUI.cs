@@ -116,6 +116,13 @@ namespace _1.Scripts.UI.Inventory
             damageSlider.value = rpmSlider.value = recoilSlider.value = weightSlider.value = ammoSlider.value = 0f;
             currentWeaponType = null;
         }
+        
+        private WeaponType GetSlotWeaponType(int slotIdx)
+        {
+            var role = SlotOrder[slotIdx];
+            if (role != WeaponType.Pistol) return role;
+            return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol;
+        }
 
         private void SyncOwnedWeapons()
         {
@@ -150,7 +157,7 @@ namespace _1.Scripts.UI.Inventory
         {
             for (int i = 0; i < SlotOrder.Length && i < weaponButtons.Count; i++)
             {
-                var weaponType = SlotOrder[i];
+                var weaponType = GetSlotWeaponType(i);
                 var button = weaponButtons[i];
 
                 button.onClick.RemoveAllListeners();
@@ -201,8 +208,15 @@ namespace _1.Scripts.UI.Inventory
                 ShowWeapon(currentWeaponType.Value);
             else
             {
-                WeaponType? firstOwned = SlotOrder.FirstOrDefault(ownedWeapons.ContainsKey);
-                if (true) 
+                WeaponType? firstOwned = null;
+                for (int i = 0; i < SlotOrder.Length; i++)
+                {
+                    var t = GetSlotWeaponType(i);
+                    if (!ownedWeapons.ContainsKey(t)) continue;
+                    firstOwned = t;
+                    break;
+                }
+                if (firstOwned.HasValue)
                     ShowWeapon(firstOwned.Value);
                 else
                 {

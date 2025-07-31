@@ -115,7 +115,12 @@ namespace _1.Scripts.UI.InGame.HUD
             for (int i = 0; i < slotTransforms.Count; i++) 
                 slotTransforms[i].localScale = Vector3.Lerp(slotTransforms[i].localScale, targetScales[i], Time.deltaTime * scaleSpeed);
         }
-        
+        private WeaponType GetSlotWeaponType(int slotIdx)
+        {
+            var role = SlotOrder[slotIdx];
+            if (role != WeaponType.Pistol) return role;
+            return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol;
+        }
         public void Refresh(bool playShowAnimation = true)
         {
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
@@ -136,12 +141,18 @@ namespace _1.Scripts.UI.InGame.HUD
             }
 
             WeaponType equippedType = playerCondition ? playerCondition.EquippedWeaponIndex : WeaponType.Rifle;
-            int equippedSlotIdx = Array.IndexOf(SlotOrder, equippedType);
+            int equippedSlotIdx = -1;
+            for (int i = 0; i < SlotOrder.Length; i++)
+            {
+                if (GetSlotWeaponType(i) != equippedType) continue;
+                equippedSlotIdx = i;
+                break;
+            }
             bool isPunchEquipped = (equippedType == WeaponType.Punch);
 
             for (int i = 0; i < slotTransforms.Count && i < SlotOrder.Length; i++)
             {
-                WeaponType type = SlotOrder[i];
+                WeaponType type = GetSlotWeaponType(i);
                 bool slotHasWeapon = ownedWeapons.TryGetValue(type, out var weapon);
 
                 if (slotHasWeapon)
@@ -162,7 +173,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 bool isSelected = (!isPunchEquipped && i == equippedSlotIdx && slotHasWeapon);
 
                 slotTexts[i].enabled = isSelected;
-                slotAmmoTexts[i].enabled = isSelected && slotHasWeapon && slotAmmoTexts[i].text != "";
+                slotAmmoTexts[i].enabled = isSelected && slotAmmoTexts[i].text != "";
                 SetSlotAlpha(i, isSelected ? selectedSlotAlpha : idleAlpha);
                 targetScales[i] = isSelected ? selectedScale : normalScale;
             }
