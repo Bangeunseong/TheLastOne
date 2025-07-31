@@ -190,6 +190,14 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             return true;
         }
         
+        public override bool TryForgeWeapon() { return false; }
+        
+        public void UnlockAllParts()
+        {
+            var keys = EquipableWeaponParts.Keys.ToArray();
+            foreach (var key in keys) EquipableWeaponParts[key] = true;
+        }
+        
         public override void UpdateStatValues(WeaponPart data, bool isWorn = true)
         {
             if (isWorn)

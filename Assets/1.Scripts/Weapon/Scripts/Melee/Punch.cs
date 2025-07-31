@@ -11,5 +11,6 @@ namespace _1.Scripts.Weapon.Scripts.Melee
         public override bool OnShoot() { return false; }
         public override bool OnRefillAmmo(int ammo) { return false; }
         public override void UpdateStatValues(WeaponPart data, bool isWorn = true) { }
+        public override bool TryForgeWeapon() { return false; }
     }
 }

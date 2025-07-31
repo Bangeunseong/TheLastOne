@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
 using _1.Scripts.UI.InGame.HUD;
+using _1.Scripts.UI.InGame.SkillOverlay;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -546,7 +547,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     // Play Reload AudioClip
                     float reloadTime = gun.GunData.GunStat.ReloadTime;
                     reloadPlayer = coreManager.soundManager.PlayUISFX(
-                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : gun.GunData.GunStat.Type == WeaponType.Rifle ? SfxType.RifleReload : SfxType.SniperRifleReload, reloadTime);
+                        gun.GunData.GunStat.Type switch
+                        {
+                            WeaponType.Pistol => SfxType.PistolReload,
+                            WeaponType.Rifle => SfxType.RifleReload,
+                            _ => SfxType.SniperRifleReload
+                        }, reloadTime);
                     
                     // Start Reload Coroutine
                     reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
@@ -842,6 +848,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             focusCTS?.Cancel(); focusCTS?.Dispose();
             focusCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
+            coreManager.uiManager.GetUI<SkillOverlayUI>()?.ShowFocusOverlay();
             _ = FocusAsync(StatData.focusSkillTime, focusCTS.Token);
         }
         private async UniTaskVoid FocusAsync(float duration, CancellationToken token)
@@ -859,11 +866,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager.timeScaleManager.ChangeTimeScale(1f);
             IsUsingFocus = false;
             focusCTS.Dispose(); focusCTS = null;
+            
+            coreManager.uiManager.GetUI<SkillOverlayUI>()?.HideFocusOverlay();
         }
         private void OnInstinctEngaged()
         {
             instinctCTS?.Cancel(); instinctCTS?.Dispose();
             instinctCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
+            coreManager.uiManager.GetUI<SkillOverlayUI>()?.ShowInstinctOverlay();
             _ = InstinctAsync(StatData.instinctSkillTime, instinctCTS.Token);
         }
         private async UniTaskVoid InstinctAsync(float duration, CancellationToken token)
@@ -878,6 +888,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 if (token.IsCancellationRequested)
                 {
                     coreManager.spawnManager.ChangeStencilLayer(false);
+                    coreManager.uiManager.GetUI<SkillOverlayUI>()?.HideInstinctOverlay();
                     return;
                 }
                 if (!coreManager.gameManager.IsGamePaused) t += Time.unscaledDeltaTime;
@@ -888,6 +899,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             coreManager.spawnManager.ChangeStencilLayer(false);
             IsUsingInstinct = false;
             instinctCTS.Dispose(); instinctCTS = null;
+            coreManager.uiManager.GetUI<SkillOverlayUI>()?.HideInstinctOverlay();
         }
         private void OnInstinctRecover_Idle()
         {

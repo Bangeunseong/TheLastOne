@@ -15,6 +15,13 @@ namespace _1.Scripts.Map.SavePoint
             GameEventSystem.Instance.RegisterListener(this);
         }
 
+        private void Start()
+        {
+            var save = CoreManager.Instance.gameManager.SaveData;
+            if (save == null || !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info)) return;
+            if (info.completionDict.TryGetValue(Id, out var value) && value) enabled = false;
+        }
+
         private void OnDisable()
         {
             GameEventSystem.Instance.UnregisterListener(this);
@@ -30,6 +37,16 @@ namespace _1.Scripts.Map.SavePoint
 
         public void OnEventRaised(int eventID)
         {
+            var save = CoreManager.Instance.gameManager.SaveData;
+            if (save == null ||
+                !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+            {
+                throw new MissingReferenceException("Save file not found!");
+            }
+
+            if (!info.completionDict.TryAdd(Id, true))
+                info.completionDict[Id] = true;
+            
             CoreManager.Instance.SaveData_QueuedAsync();
             enabled = false;
         }
