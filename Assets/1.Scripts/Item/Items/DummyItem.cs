@@ -79,8 +79,9 @@ namespace _1.Scripts.Item.Items
                 if (IsStatic)
                 {
                     var save = CoreManager.Instance.gameManager.SaveData;
-                    if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
-                        info.completionDict.TryAdd(InstanceId, true);
+                    if (save is { stageInfos: not null } &&
+                        save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                        if(!info.completionDict.TryAdd(InstanceId, true)) info.completionDict[InstanceId] = true;
                 }
                 else
                 {
