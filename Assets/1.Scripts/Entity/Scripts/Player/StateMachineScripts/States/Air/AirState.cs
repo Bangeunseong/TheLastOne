@@ -11,6 +11,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         
         public override void Enter()
         {
+            stateMachine.MovementSpeedModifier = playerCondition.AirSpeedModifier;
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             

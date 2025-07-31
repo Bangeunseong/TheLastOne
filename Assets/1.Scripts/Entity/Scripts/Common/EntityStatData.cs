@@ -21,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.Common
         public float moveSpeed;
         public float runMultiplier;
         public float walkMultiplier;
+        public float airMultiplier;
 
         [Header("Audio")] 
         public AudioClip[] footStepSounds;

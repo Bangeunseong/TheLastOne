@@ -60,6 +60,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
         [field: SerializeField] public float RunSpeedModifier { get; private set; }
+        [field: SerializeField] public float AirSpeedModifier { get; private set; }
         
         [field: Header("Weapon States")]
         [field: SerializeField] public WeaponType EquippedWeaponIndex { get; private set; }
@@ -156,6 +157,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             CrouchSpeedModifier = StatData.crouchMultiplier;
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
+            AirSpeedModifier = StatData.airMultiplier;
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
