@@ -130,5 +130,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
             }
         }
         #endregion
+        
+        #region Rifle전용
+
+        public void FireRifleForAnimationEvent()
+        {
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
+            FireForAnimationEvent();
+        }
+        
+        #endregion
     }
 }

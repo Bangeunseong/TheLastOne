@@ -18,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedNavMeshAgent agent;
 		public SharedAnimator animator;
 		public bool isShebot;
+		public bool isShebot_Rifle;
 		
 		public SharedLight enemyLight;
 		public SharedLight allyLight;
@@ -54,7 +55,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 					
 					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
 					{
-						if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
+						if (isShebot_Rifle && !stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr))
+						{
+							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_idle);
+						}
+						else if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
+						{
+							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
+						}
 					}
 					else
 					{
