@@ -73,7 +73,7 @@ namespace _1.Scripts.UI.InGame.Modification
         
         private Dictionary<WeaponType, BaseWeapon> ownedWeapons = new();
         private int currentWeaponIdx = 0;
-        private WeaponType CurrentWeaponType => (currentWeaponIdx >= 0 && currentWeaponIdx < SlotOrder.Length) ? SlotOrder[currentWeaponIdx] : SlotOrder[0];
+        private WeaponType CurrentWeaponType => GetSlotWeaponType(currentWeaponIdx);
         private BaseWeapon CurrentWeapon => ownedWeapons.GetValueOrDefault(CurrentWeaponType);
         private Dictionary<(PartType, int), WeaponPartData> partDataMap;
         private WeaponPartData selectedPartData;
@@ -155,10 +155,7 @@ namespace _1.Scripts.UI.InGame.Modification
         private WeaponType GetSlotWeaponType(int slotIdx)
         {
             var role = SlotOrder[slotIdx];
-            if (role == WeaponType.Pistol)
-            {
-                return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol;
-            }
+            if (role == WeaponType.Pistol) return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol; 
             return role;
         }
         
@@ -306,7 +303,7 @@ namespace _1.Scripts.UI.InGame.Modification
 
             if (!partDataMap.TryGetValue((partType, partId), out selectedPartData))
             {
-                requiredText.text = "<color=red>파츠 데이터 없음</color>";
+                requiredText.text = "No Part Data Found.";
                 applyButton.interactable = false;
                 return;
             }
@@ -316,7 +313,7 @@ namespace _1.Scripts.UI.InGame.Modification
             UpdateStatPreview(selectedPartData);
 
             bool hasPart = CurrentWeapon.EquipableWeaponParts.TryGetValue(partId, out var own) && own;
-            requiredText.text = hasPart ? "<color=green>장착 가능</color>" : "<color=red>불가능</color>";
+            requiredText.text = hasPart ? "Available" : "Unavailable";
             applyButton.interactable = hasPart;
             applyButton.gameObject.SetActive(true);
 
@@ -329,8 +326,8 @@ namespace _1.Scripts.UI.InGame.Modification
             float newRecoil = stat.Recoil + partData.ReduceRecoilRate * stat.Recoil;
             int newAmmo = stat.MaxAmmoCountInMagazine + partData.IncreaseMaxAmmoCountInMagazine;
             
-            recoilText.text = $"{stat.Recoil} → <color=yellow>{Mathf.RoundToInt(newRecoil)}</color>";
-            ammoText.text = $"{stat.MaxAmmoCountInMagazine} → <color=yellow>{newAmmo}</color>";
+            recoilText.text = $"{stat.Recoil} → {Mathf.RoundToInt(newRecoil)}";
+            ammoText.text = $"{stat.MaxAmmoCountInMagazine} → {newAmmo}";
 
             int maxDamage = 1000;
             float maxRPM = 100f;
@@ -395,35 +392,17 @@ namespace _1.Scripts.UI.InGame.Modification
             bool applied = false;
             if (!HasAvailablePart() && IsForgeAvailable(CurrentWeapon))
             {
-                applied = TryUpgradePistol();
+                applied = playerWeapon.ForgeWeapon();
             }
             else if (selectedPartType != null && selectedPartData)
             {
                 int partId = GetPartId(CurrentWeaponType, selectedPartType.Value);
-                applied = TryEquipPart(CurrentWeapon, selectedPartData, partId);
+                applied = playerWeapon.EquipPart(CurrentWeaponType, selectedPartType.Value, partId);
             }
             if (applied) Refresh();
             else Debug.LogError("Failed to apply part");
         }
         
-        private bool TryEquipPart(BaseWeapon weapon, WeaponPartData partData, int partId)
-        {
-            if (!weapon || !partData) return false;
-            if (!weapon.EquipableWeaponParts.TryGetValue(partId, out var hasPart) || !hasPart) return false;
-            bool result = weapon.TryEquipWeaponPart(partData.Type, partId);
-            if (result)
-            {
-                weapon.EquipableWeaponParts[partId] = false;
-            }
-            return result;
-        }
-        
-        private bool TryUpgradePistol()
-        {
-            if (CurrentWeapon is Gun gun)
-                return gun.TryForgeWeapon();
-            return false;
-        }
         private bool HasAvailablePart()
         {
             var partTypeList = GetPartTypes(CurrentWeaponType);
