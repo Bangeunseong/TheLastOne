@@ -17,6 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 	public class EnemyInAttackRange : Conditional
 	{
 		public SharedTransform selfTransform;
+		public SharedTransform selfTransform_Head;
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		public SharedFloat maxViewDistance;
@@ -64,7 +65,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 				Collider targetChest = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
 				Vector3 colliderPos = targetChest.bounds.center;
 
-				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
+				if (NpcUtil.IsTargetVisible(selfTransform_Head.Value.position, colliderPos, maxViewDistance.Value, ally))
 				{
 					shouldLookTarget.Value = true;
 					targetTransform.Value = collider.transform;
