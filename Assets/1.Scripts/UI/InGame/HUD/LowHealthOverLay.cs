@@ -84,7 +84,7 @@ namespace _1.Scripts.UI.InGame.HUD
             else tint = color0;
             
             float pulseSpeed = 2f;
-            float pulseStrength = -0.3f;
+            float pulseStrength = -0.4f;
             float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f * pulseStrength;
             
             float finalAlpha = Mathf.Clamp01(tint.a + pulse + flashAlpha);

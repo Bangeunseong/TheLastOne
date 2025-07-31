@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
@@ -28,8 +29,49 @@ namespace _1.Scripts.Manager.Data
         public Quaternion ToQuaternion() { return new Quaternion(x, y, z, w); }
     }
 
-    [Serializable]
-    public class CharacterInfo
+    [Serializable] public class SerializableTransform
+    {
+        public SerializableVector3 position;
+        public SerializableQuaternion rotation;
+
+        public SerializableTransform(SerializableTransform transform)
+        {
+            position = transform.position; rotation = transform.rotation;
+        }
+        
+        public Vector3 GetPosition() { return position.ToVector3(); }
+        public Quaternion GetRotation() { return rotation.ToQuaternion(); }
+    }
+
+    [Serializable] public class SerializableWeaponProp
+    {
+        public WeaponType type;
+        public SerializableTransform transform;
+
+        public SerializableWeaponProp(SerializableWeaponProp data)
+        {
+            type = data.type;
+            transform = new SerializableTransform(data.transform);
+        }
+        
+        public WeaponType GetWeaponType() { return type; }
+    }
+
+    [Serializable] public class SerializableItemProp
+    {
+        public ItemType type;
+        public SerializableTransform transform;
+
+        public SerializableItemProp(SerializableItemProp data)
+        {
+            type = data.type;
+            transform = new SerializableTransform(data.transform);
+        }
+        
+        public ItemType GetItemType() { return type; }
+    }
+
+    [Serializable] public class CharacterInfo
     {
         public int maxHealth;
         public int health;
@@ -62,6 +104,8 @@ namespace _1.Scripts.Manager.Data
 
         [Header("Completed Scene Event Ids")] 
         public SerializedDictionary<int, bool> completionDict;
+        public SerializedDictionary<int, SerializableWeaponProp> dynamicSpawnedWeapons;
+        public SerializedDictionary<int, SerializableItemProp> dynamicSpawnedItems;
     }
 
     [Serializable] public class QuestInfo

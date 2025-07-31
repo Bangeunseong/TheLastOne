@@ -6,9 +6,12 @@ using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame.Dialogue;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Minigame;
+using _1.Scripts.UI.InGame.Modification;
+using _1.Scripts.UI.InGame.SkillOverlay;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using Object = UnityEngine.Object;
@@ -37,12 +40,12 @@ namespace _1.Scripts.Manager.Subs
                 UIType.Persistent, new List<Type> { typeof(LoadingUI), typeof(FadeUI), typeof(LobbyUI) }
             },
             { 
-                UIType.InGame, new List<Type> { typeof(InGameUI), typeof(DistanceUI), typeof(WeaponUI),
-                typeof(QuickSlotUI), typeof(QuestUI), typeof(DialogueUI), typeof(MinigameUI), typeof(InventoryUI), 
-                typeof(PauseMenuUI), typeof(GameOverUI), typeof(LowHealthOverLay) } 
+                UIType.InGame, new List<Type> { typeof(InGameUI), typeof(LowHealthOverLay), typeof(SkillOverlayUI), typeof(DistanceUI), typeof(WeaponUI),
+                typeof(QuickSlotUI), typeof(QuestUI), typeof(DialogueUI), typeof(MinigameUI), typeof(ModificationUI), typeof(InventoryUI), 
+                typeof(PauseMenuUI), typeof(GameOverUI) } 
             },
             {
-                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI), typeof(LowHealthOverLay)}
+                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(LowHealthOverLay), typeof(SkillOverlayUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI)}
             }
         };
         private CoreManager coreManager;

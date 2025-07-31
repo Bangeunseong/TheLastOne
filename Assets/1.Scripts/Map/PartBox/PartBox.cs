@@ -93,12 +93,17 @@ namespace _1.Scripts.Map.PartBox
                 switch (gen.Key)
                 {
                     case BoxType.Ammo:
-                        var ammo = coreManager.objectPoolManager.Get((Random.Range(0f,1f) > 0.5f ? WeaponType.GrenadeLauncher : WeaponType.HackGun) + "_Dummy");
+                        var type = Random.Range(0f, 1f) > 0.5f ? WeaponType.GrenadeLauncher : WeaponType.HackGun;
+                        var ammo = coreManager.objectPoolManager.Get(type + "_Dummy");
                         ammo.transform.SetPositionAndRotation(SpawnPoints.First().position, SpawnPoints.First().rotation);
+                        if (ammo.TryGetComponent(out DummyWeapon ammoComp)) 
+                            ammoComp.Initialize(false, coreManager.spawnManager.GetInstanceHashId(ammo, (int)type, ammo.transform)); 
                         break;
                     case BoxType.Item:
                         var item = coreManager.objectPoolManager.Get(ItemType.Shield + "_Prefab");
                         item.transform.SetPositionAndRotation(SpawnPoints[1].position, SpawnPoints[1].rotation);
+                        if (item.TryGetComponent(out DummyWeapon itemComp)) 
+                            itemComp.Initialize(false, coreManager.spawnManager.GetInstanceHashId(item, (int)ItemType.Shield, item.transform)); 
                         break;
                     case BoxType.Parts:
                         foreach (var weapon in player.PlayerWeapon.Weapons)
