@@ -19,6 +19,14 @@ namespace _1.Scripts.UI.InGame.Modification
 {
     public class ModificationUI : UIBase
     {
+        private static readonly WeaponType[] SlotOrder = new[]
+        {
+            WeaponType.Rifle,
+            WeaponType.Pistol,
+            WeaponType.GrenadeLauncher,
+            WeaponType.HackGun
+        };
+        
         [Header("Preview")] 
         [SerializeField] private Transform previewSpawnPoint;
         private Dictionary<WeaponType, GameObject> weaponPreviewMap;
@@ -64,15 +72,15 @@ namespace _1.Scripts.UI.InGame.Modification
         [SerializeField] private Button nextButton;
         
         private Dictionary<WeaponType, BaseWeapon> ownedWeapons = new();
-        private List<WeaponType> weaponTypeList = new();
         private int currentWeaponIdx = 0;
-        private WeaponType CurrentWeaponType => weaponTypeList.Count > 0 ? weaponTypeList[currentWeaponIdx] : WeaponType.Rifle;
+        private WeaponType CurrentWeaponType => (currentWeaponIdx >= 0 && currentWeaponIdx < SlotOrder.Length) ? SlotOrder[currentWeaponIdx] : SlotOrder[0];
+        private BaseWeapon CurrentWeapon => ownedWeapons.GetValueOrDefault(CurrentWeaponType);
+
         private PartType? selectedPartType;
         private WeaponPartData selectedPartData;
-        
+
         private PlayerCondition playerCondition;
         private PlayerWeapon playerWeapon;
-        private BaseWeapon CurrentWeapon => ownedWeapons.GetValueOrDefault(CurrentWeaponType);
 
         private PartType? lastHighlightedPartType;
         private Material lastSelectedPartMaterial = null;
@@ -80,6 +88,7 @@ namespace _1.Scripts.UI.InGame.Modification
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
+
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             playerWeapon = CoreManager.Instance.gameManager.Player.PlayerWeapon;
 
@@ -99,8 +108,9 @@ namespace _1.Scripts.UI.InGame.Modification
             cancelButton.onClick.AddListener(HideModal);
             prevButton.onClick.AddListener(OnPrevWeaponClicked);
             nextButton.onClick.AddListener(OnNextWeaponClicked);
-            
+
             HideModal();
+            ResetUI();
             Refresh();
         }
         public override void Show()
@@ -138,8 +148,8 @@ namespace _1.Scripts.UI.InGame.Modification
         private void Refresh()
         {
             SyncOwnedWeapons();
-            weaponTypeList = ownedWeapons.Keys.ToList();
-            if (currentWeaponIdx >= weaponTypeList.Count) currentWeaponIdx = 0;
+            if (!ownedWeapons.ContainsKey(CurrentWeaponType))
+                SetCurrentWeaponIdxToFirstOwned();
             ShowWeaponPreview(CurrentWeaponType);
             selectedPartType = null;
             selectedPartData = null;
@@ -147,25 +157,36 @@ namespace _1.Scripts.UI.InGame.Modification
             GeneratePartSlots();
             UpdateStatUI();
             UpdateNameUI();
-            
-            Debug.Log("[ModificationUI] weaponTypeList: " + string.Join(", ", weaponTypeList));
-            foreach (var kvp in ownedWeapons)
-                Debug.Log($"[ModificationUI] ownedWeapons: {kvp.Key} -> {kvp.Value.name}");
         }
         private void SyncOwnedWeapons()
         {
             ownedWeapons.Clear();
-            var weapons = playerWeapon.Weapons;
-            var available = playerWeapon.AvailableWeapons;
-            for (int i = 0; i < weapons.Count; i++)
+
+            if (!playerWeapon) return;
+            foreach (var type in SlotOrder)
             {
-                if (!weapons[i]) continue;
-                if (available.Count > i && !available[i]) continue;
-                if (weapons[i] is Punch) continue;
-                if (!SlotUtility.TryGetWeaponType(weapons[i], out var type)) continue;
-                ownedWeapons[type] = weapons[i];
+                if (type == WeaponType.Punch) continue;
+                if (playerWeapon.Weapons.TryGetValue(type, out var weapon)
+                    && weapon
+                    && playerWeapon.AvailableWeapons.TryGetValue(type, out var unlocked)
+                    && unlocked)
+                {
+                    ownedWeapons[type] = weapon;
+                }
             }
         }
+        
+        private void SetCurrentWeaponIdxToFirstOwned()
+        {
+            for (int i = 0; i < SlotOrder.Length; i++)
+            {
+                if (!ownedWeapons.ContainsKey(SlotOrder[i])) continue;
+                currentWeaponIdx = i;
+                return;
+            }
+            currentWeaponIdx = 0;
+        }
+        
         private void ShowWeaponPreview(WeaponType weaponType)
         {
             foreach (var go in weaponPreviewMap.Values)
@@ -215,11 +236,9 @@ namespace _1.Scripts.UI.InGame.Modification
                     partButtonImages[uiIdx].sprite = GetPartSprite(partType);
 
                 partButtons[uiIdx].onClick.RemoveAllListeners();
-                if (enabled)
-                {
-                    partButtons[uiIdx].onClick.AddListener(() => OnPartButtonClicked(partType));
-                    anyPart = true;
-                }
+                if (!enabled) continue;
+                partButtons[uiIdx].onClick.AddListener(() => OnPartButtonClicked(partType));
+                anyPart = true;
             }
 
             applyButton.gameObject.SetActive(!anyPart);
@@ -251,6 +270,8 @@ namespace _1.Scripts.UI.InGame.Modification
                 case WeaponType.HackGun:
                     return new List<PartType>{ PartType.ExtendedMag };
                 case WeaponType.Pistol:
+                case WeaponType.Punch:
+                case WeaponType.SniperRifle:
                 default:
                     return new List<PartType>();
             }
@@ -291,7 +312,7 @@ namespace _1.Scripts.UI.InGame.Modification
             lastSelectedPartMaterial = null;
         }
 
-        public void OnApplyButtonClicked()
+        private void OnApplyButtonClicked()
         {
             if (CurrentWeaponType == WeaponType.Pistol) { applyModal.SetActive(true); return; }
             if (selectedPartType == null || !selectedPartData) return;
@@ -367,17 +388,29 @@ namespace _1.Scripts.UI.InGame.Modification
                 partNameText.text = selectedPartType != null ? selectedPartType.ToString() : "";
         }
 
-        public void OnPrevWeaponClicked()
+        private void OnPrevWeaponClicked()
         {
-            if (weaponTypeList.Count == 0) return;
-            currentWeaponIdx = (currentWeaponIdx - 1 + weaponTypeList.Count) % (weaponTypeList.Count);
+            int originalIdx = currentWeaponIdx;
+            for (int i = 1; i <= SlotOrder.Length; i++)
+            {
+                int idx = (currentWeaponIdx - i + SlotOrder.Length) % SlotOrder.Length;
+                if (!ownedWeapons.ContainsKey(SlotOrder[idx])) continue;
+                currentWeaponIdx = idx;
+                break;
+            }
             Refresh();
         }
 
-        public void OnNextWeaponClicked()
+        private void OnNextWeaponClicked()
         {
-            if (weaponTypeList.Count == 0) return;
-            currentWeaponIdx = (currentWeaponIdx + 1) % (weaponTypeList.Count);
+            int originalIdx = currentWeaponIdx;
+            for (int i = 1; i <= SlotOrder.Length; i++)
+            {
+                int idx = (currentWeaponIdx + i) % SlotOrder.Length;
+                if (!ownedWeapons.ContainsKey(SlotOrder[idx])) continue;
+                currentWeaponIdx = idx;
+                break;
+            }
             Refresh();
         }
     }
