@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.Inventory;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -11,9 +10,11 @@ using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
 using _1.Scripts.Weapon.Scripts.Melee;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
 namespace _1.Scripts.UI.InGame.Modification
 {
@@ -62,6 +63,7 @@ namespace _1.Scripts.UI.InGame.Modification
         [SerializeField] private TextMeshProUGUI requiredText;
         
         [Header("Apply Modal")] 
+        [SerializeField] private ModalWindowManager modalWindowManager;
         [SerializeField] private GameObject applyModal;
         [SerializeField] private Button applyButton;
         [SerializeField] private Button confirmButton;
@@ -158,7 +160,7 @@ namespace _1.Scripts.UI.InGame.Modification
             if (role == WeaponType.Pistol) return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol; 
             return role;
         }
-        
+
         private void Refresh()
         {
             SyncOwnedWeapons();
@@ -210,7 +212,7 @@ namespace _1.Scripts.UI.InGame.Modification
             lastHighlightedPartType = null;
             lastSelectedPartMaterial = null;
         }
-
+        
         private void GeneratePartSlots()
         {
             for (int i = 0; i < partButtons.Count; i++)
@@ -226,44 +228,88 @@ namespace _1.Scripts.UI.InGame.Modification
             if (!CurrentWeapon)
             {
                 applyButton.interactable = false;
-                applyButton.gameObject.SetActive(false);
+                applyButton.gameObject.SetActive(true);
                 requiredText.text = "Select Weapon First.";
                 return;
             }
 
-            var partTypeList = GetPartTypes(CurrentWeaponType);
+            bool isPistol = CurrentWeaponType == WeaponType.Pistol;
+            if (isPistol)
+            {
+                foreach (var btn in partButtons)
+                    btn.gameObject.SetActive(false);
 
+                if (IsForgeAvailable(CurrentWeapon))
+                {
+                    applyButton.interactable = true;
+                    requiredText.text = "Forge Available";
+                }
+                else
+                {
+                    applyButton.interactable = false;
+                    requiredText.text = "Forge Unavailable (Sight, ExtendedMag, Silencer Required)";
+                }
+                return;
+            }
+            
+            var partTypeList = GetPartTypes(CurrentWeaponType);
             bool anyPart = false;
+            
             for (int i = 0; i < allPartTypes.Length; i++)
             {
                 var partType = allPartTypes[i];
                 int uiIdx = i;
+                int partId = GetPartId(CurrentWeaponType, partType);
 
                 bool enabled = partTypeList.Contains(partType);
-                partButtons[uiIdx].gameObject.SetActive(enabled);
+                bool hasPart = enabled && CurrentWeapon.EquipableWeaponParts.TryGetValue(partId, out var own) && own;
+                bool isEquipped = false;
+                
+                if (CurrentWeapon is Gun { EquippedWeaponParts: not null } gun)
+                    isEquipped = gun.EquippedWeaponParts.TryGetValue(partType, out int equippedId) && equippedId == partId;
+                else if (CurrentWeapon.GetType().Name == "HackGun" && ((HackGun)CurrentWeapon).EquippedWeaponParts != null)
+                    isEquipped = ((HackGun)CurrentWeapon).EquippedWeaponParts.TryGetValue(partType, out int equippedId) && equippedId == partId;
+                else if (CurrentWeapon.GetType().Name == "GrenadeLauncher" && ((GrenadeLauncher)CurrentWeapon).EquippedWeaponParts != null)
+                    isEquipped = ((GrenadeLauncher)CurrentWeapon).EquippedWeaponParts.TryGetValue(partType, out int equippedId) && equippedId == partId;
 
-                if (partButtonTexts.Count > uiIdx && partButtonTexts[uiIdx])
-                    partButtonTexts[uiIdx].text = partType.ToString();
-                if (partButtonImages.Count > uiIdx && partButtonImages[uiIdx])
-                    partButtonImages[uiIdx].sprite = GetPartSprite(CurrentWeaponType, partType);
+                partButtons[uiIdx].gameObject.SetActive(hasPart);
 
-                partButtons[uiIdx].onClick.RemoveAllListeners();
-                if (!enabled) continue;
-                partButtons[uiIdx].onClick.AddListener(() => OnPartButtonClicked(partType));
-                anyPart = true;
+                if (hasPart)
+                {
+                    partButtons[uiIdx].interactable = !isEquipped;
+                    if (partButtonImages.Count > uiIdx && partButtonImages[uiIdx])
+                    {
+                        partButtonImages[uiIdx].sprite = GetPartSprite(CurrentWeaponType, partType);
+                        partButtonImages[uiIdx].color = isEquipped
+                            ? new Color(0.7f, 0.7f, 0.7f, 0.5f)
+                            : Color.white;
+                    }
+                    if (partButtonTexts.Count > uiIdx && partButtonTexts[uiIdx])
+                        partButtonTexts[uiIdx].text = partType.ToString();
+                    partButtons[uiIdx].onClick.RemoveAllListeners();
+                    if (!isEquipped)
+                        partButtons[uiIdx].onClick.AddListener(() => OnPartButtonClicked(partType));
+                    anyPart = true;
+                }
+                else
+                {
+                    if (partButtonImages.Count > uiIdx && partButtonImages[uiIdx])
+                        partButtonImages[uiIdx].sprite = null;
+                    partButtons[uiIdx].onClick.RemoveAllListeners();
+                }
             }
 
-            if (!anyPart && IsForgeAvailable(CurrentWeapon))
+            applyButton.gameObject.SetActive(true);
+
+            if (!anyPart)
             {
-                applyButton.interactable = true;
-                applyButton.gameObject.SetActive(true);
-                requiredText.text = "Modifications Available.";
+                applyButton.interactable = false;
+                requiredText.text = "Modifications Unavailable";
             }
             else
             {
                 applyButton.interactable = false;
-                applyButton.gameObject.SetActive(false);
-                if (!anyPart) requiredText.text = "Modifications Unavailable";
+                requiredText.text = "Select Available Part";
             }
         }
         private void ResetPartButtons()
@@ -298,6 +344,8 @@ namespace _1.Scripts.UI.InGame.Modification
         }
         private void OnPartButtonClicked(PartType partType)
         {
+            if (CurrentWeaponType == WeaponType.Pistol) return;
+            
             selectedPartType = partType;
             int partId = GetPartId(CurrentWeaponType, partType);
 
@@ -351,11 +399,44 @@ namespace _1.Scripts.UI.InGame.Modification
         {
             if (weaponType == WeaponType.Rifle)
             {
-                if (partType == PartType.ExtendedMag) return 11;
-                if (partType == PartType.FlameArrester) return 6;
-                if (partType == PartType.Sight) return 1;
-                if (partType == PartType.Silencer) return 7;
-                if (partType == PartType.Suppressor) return 10;
+                switch (partType)
+                {
+                    case PartType.ExtendedMag:
+                        return 11;
+                    case PartType.FlameArrester:
+                        return 6;
+                    case PartType.Sight:
+                        return 1;
+                    case PartType.Silencer:
+                        return 7;
+                    case PartType.Suppressor:
+                        return 10;
+                }
+            }
+            else if (weaponType == WeaponType.GrenadeLauncher)
+            {
+                if (partType == PartType.Sight) return 5;
+            }
+            else if (weaponType == WeaponType.HackGun)
+            {
+                switch (partType)
+                {
+                    case PartType.ExtendedMag:
+                        return 12;
+                    case PartType.Sight:
+                        return 4;
+                    case PartType.FlameArrester:
+                        return 8;
+                }
+            }
+            else if (weaponType == WeaponType.Pistol)
+            {
+                switch (partType)
+                {
+                    case PartType.Sight: return 1;
+                    case PartType.Silencer: return 7;
+                    case PartType.ExtendedMag: return 10; // 예시
+                }
             }
             return -1;
         }
@@ -383,14 +464,14 @@ namespace _1.Scripts.UI.InGame.Modification
         private void OnApplyButtonClicked()
         {
             if (!applyButton.interactable) return;
-            applyModal.SetActive(true);
+            ShowModal();
         }
 
         private void OnApplyConfirmed()
         {
-            applyModal.SetActive(false);
+            HideModal();
             bool applied = false;
-            if (!HasAvailablePart() && IsForgeAvailable(CurrentWeapon))
+            if (CurrentWeaponType == WeaponType.Pistol && IsForgeAvailable(CurrentWeapon))
             {
                 applied = playerWeapon.ForgeWeapon();
             }
@@ -403,33 +484,32 @@ namespace _1.Scripts.UI.InGame.Modification
             else Debug.LogError("Failed to apply part");
         }
         
-        private bool HasAvailablePart()
-        {
-            var partTypeList = GetPartTypes(CurrentWeaponType);
-            foreach (var partId in partTypeList.Select(partType => GetPartId(CurrentWeaponType, partType)))
-            {
-                if (CurrentWeapon.EquipableWeaponParts.TryGetValue(partId, out var hasPart) && hasPart)
-                    return true;
-            }
-            return false;
-        }
         private bool IsForgeAvailable(BaseWeapon weapon)
         {
-            if (weapon is Gun gun)
+            if (weapon is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol)
             {
-                var reqTypes = new[] { PartType.Sight, PartType.ExtendedMag, PartType.Silencer };
-                foreach (var req in reqTypes)
-                {
-                    int partId = GetPartId(WeaponType.Pistol, req);
-                    if (!gun.EquipableWeaponParts.TryGetValue(partId, out var hasPart) || !hasPart)
-                        return false;
-                }
-                return true;
+                int sightId = GetPartId(WeaponType.Pistol, PartType.Sight);
+                int extId = GetPartId(WeaponType.Pistol, PartType.ExtendedMag);
+                int silencerId = GetPartId(WeaponType.Pistol, PartType.Silencer);
+
+                return gun.EquipableWeaponParts.TryGetValue(sightId, out var hasSight) && hasSight
+                    && gun.EquipableWeaponParts.TryGetValue(extId, out var hasExt) && hasExt
+                    && gun.EquipableWeaponParts.TryGetValue(silencerId, out var hasSilencer) && hasSilencer;
             }
             return false;
         }
 
-        private void HideModal() { applyModal.SetActive(false); }
+        private void ShowModal()
+        {
+            applyModal.SetActive(true);
+            modalWindowManager.ModalWindowIn();
+        }
+
+        private void HideModal()
+        {
+            modalWindowManager.ModalWindowOut();
+            applyModal.SetActive(false);
+        }
 
         private void UpdateStatUI()
         {
