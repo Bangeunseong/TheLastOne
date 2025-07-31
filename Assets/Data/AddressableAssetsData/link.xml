@@ -7,6 +7,7 @@
     <type fullname="_1.Scripts.Entity.Scripts.NPC.Data.StatDataSO.ShebotSniperStatData" preserve="all" />
     <type fullname="_1.Scripts.Entity.Scripts.NPC.Data.StatDataSO.ShebotSwordStatData" preserve="all" />
     <type fullname="_1.Scripts.Entity.Scripts.NPC.Data.StatDataSO.SuicideDroneStatData" preserve="all" />
+    <type fullname="_1.Scripts.Entity.Scripts.NPC.StatControllers.Drone.ReconDroneStatController" preserve="all" />
     <type fullname="_1.Scripts.Entity.Scripts.NPC.StatControllers.Drone.SuicideDroneStatController" preserve="all" />
     <type fullname="_1.Scripts.Entity.Scripts.NPC.StencilAbles.StencilAbleForDrone" preserve="all" />
     <type fullname="_1.Scripts.Entity.Scripts.Player.Data.PlayerStatData" preserve="all" />
@@ -78,6 +79,7 @@
     <type fullname="Michsky.UI.Shift.UIParticleRenderer" preserve="all" />
     <type fullname="Michsky.UI.Shift.VirtualCursorAnimate" preserve="all" />
     <type fullname="MirzaBeig.CinematicExplosionsFree.CustomImpulse" preserve="all" />
+    <type fullname="Shell" preserve="all" />
     <type fullname="Unit_DroneBot" preserve="all" />
     <type fullname="Michsky.UI.Shift.HorizontalSelector/Item" preserve="nothing" serialized="true" />
     <type fullname="Michsky.UI.Shift.MainPanelManager/PanelItem" preserve="nothing" serialized="true" />

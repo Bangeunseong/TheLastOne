@@ -40,10 +40,14 @@ namespace _1.Scripts.MiniGame.WireConnection
             wireImage = wire.GetComponent<Image>();
             wireTransform = wire.GetComponent<RectTransform>();
             wireImage.color = AttachedSocket.GetColor();
+
+            var worldScreenPosition =
+                RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, socketRectTransform.position);
+            Service.Log($"{worldScreenPosition}");
             
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvas.transform as RectTransform, 
-                RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, socketRectTransform.position),
+                worldScreenPosition,
                 eventData.pressEventCamera, out var pos);
 
             wireTransform.anchoredPosition = pos;
@@ -57,6 +61,7 @@ namespace _1.Scripts.MiniGame.WireConnection
                 canvas.transform as RectTransform,
                 eventData.position, eventData.pressEventCamera,
                 out var pos);
+            Service.Log($"{pos}");
             
             // Deprecated
             // Canvas 기준 Local Position을 World 기준으로 바꾸고

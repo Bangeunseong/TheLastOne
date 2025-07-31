@@ -26,10 +26,14 @@ namespace _1.Scripts.Map.SpawnTriggers
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("스폰됨");
-            CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
-            isSpawned = true;
-            enabled = false;
+            if (isSpawned) return;
+            if (other.CompareTag("Player"))
+            {
+                Debug.Log("스폰됨");
+                CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
+                isSpawned = true;
+                enabled = false;
+            }
         }
     }
 }

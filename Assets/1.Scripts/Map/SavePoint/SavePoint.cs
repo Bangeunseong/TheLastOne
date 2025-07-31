@@ -1,4 +1,5 @@
 using System;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
@@ -29,10 +30,13 @@ namespace _1.Scripts.Map.SavePoint
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
-            {
-                GameEventSystem.Instance.RaiseEvent(Id);
-            }
+            if (!other.CompareTag("Player")) return;
+            if (!other.TryGetComponent(out Player player)) return;
+            
+            player.PlayerCondition.LastSavedPosition = player.transform.position;
+            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
+            
+            GameEventSystem.Instance.RaiseEvent(Id);
         }
 
         public void OnEventRaised(int eventID)
