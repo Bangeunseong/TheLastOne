@@ -43,6 +43,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public const string Shebot_Guard_StayStr = "Shebot_Guard_Stay";
         public const string Shebot_Rifle_AimStr = "Shebot_Rifle_Aim";
         public const string Shebot_Rifle_fireStr = "Shebot_Rifle_fire";
+        public const string Shebot_Rifle_idleStr = "Shebot_Rifle_idle";
+        public const string Shebot_Rifle_RunStr = "Shebot_Rifle_Run";
 
         public static readonly int ShebotSword_Run = Animator.StringToHash(Shebot_Sword_RunStr);
         public static readonly int Shebot_Idle = Animator.StringToHash(Shebot_IdleStr);
@@ -54,5 +56,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public static readonly int Shebot_Guard_Stay = Animator.StringToHash(Shebot_Guard_StayStr);
         public static readonly int Shebot_Rifle_Aim = Animator.StringToHash(Shebot_Rifle_AimStr);
         public static readonly int Shebot_Rifle_fire = Animator.StringToHash(Shebot_Rifle_fireStr);
+        public static readonly int Shebot_Rifle_idle = Animator.StringToHash(Shebot_Rifle_idleStr);
+        public static readonly int Shebot_Rifle_Run = Animator.StringToHash(Shebot_Rifle_RunStr);
     }
 }

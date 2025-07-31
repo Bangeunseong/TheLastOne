@@ -224,4 +224,46 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             AlertRadius = sniperSO.AlertRadius;
         }
     }
+    
+    public class RuntimeShebotRifleStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
+    {
+        private readonly ShebotRifleStatData rifleSO;
+        
+        public float DetectRange { get; set; }
+        public float AttackRange { get; set; }
+        public float AlertDuration { get; set; }
+        public float AlertRadius { get; set; }
+        public float MinWaitingDuration { get; set; }
+        public float MaxWaitingDuration { get; set;  }
+        public float MinWanderingDistance { get; set; }
+        public float MaxWanderingDistance { get; set; }
+
+        public RuntimeShebotRifleStatData(ShebotRifleStatData so) : base(so)
+        {
+            rifleSO = so;
+            
+            DetectRange = so.DetectRange;
+            AttackRange = so.AttackRange;
+            AlertDuration = so.AlertDuration;
+            AlertRadius = so.AlertRadius;
+            MinWaitingDuration = so.MinWaitingDuration;
+            MaxWaitingDuration = so.MaxWaitingDuration;
+            MinWanderingDistance = so.MinWanderingDistance;
+            MaxWanderingDistance = so.MaxWanderingDistance;
+        }
+
+        public override void ResetStats()
+        {
+            base.ResetStats();
+            
+            DetectRange = rifleSO.DetectRange;
+            AttackRange = rifleSO.AttackRange;
+            AlertDuration = rifleSO.AlertDuration;
+            AlertRadius = rifleSO.AlertRadius;
+            MinWaitingDuration = rifleSO.MinWaitingDuration;
+            MaxWaitingDuration = rifleSO.MaxWaitingDuration;
+            MinWanderingDistance = rifleSO.MinWanderingDistance;
+            MaxWanderingDistance = rifleSO.MaxWanderingDistance;
+        }
+    }
 }
