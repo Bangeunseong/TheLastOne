@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -94,8 +95,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             foreach (var weapon in Weapons)
             {
-                foreach (var partKey in weapon.Value.EquipableWeaponParts.Keys)
-                    weapon.Value.EquipableWeaponParts[partKey] = true;
+                switch (weapon.Value)
+                {
+                    case Gun gun: gun.UnlockAllParts(); break;
+                    case GrenadeLauncher gL: gL.UnlockAllParts(); break;
+                    case HackGun hackGun: hackGun.UnlockAllParts(); break;
+                }
             }
         }
     }
