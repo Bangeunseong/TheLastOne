@@ -1,6 +1,8 @@
 using System.Collections;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
@@ -26,11 +28,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         
         private float timer;
         private bool hasFired;
+        private bool soundPlayed;
         
         public override void OnStart()
         {
             timer = 0f;
             hasFired = false;
+            soundPlayed = false;
         }
 
         public override TaskStatus OnUpdate()
@@ -39,6 +43,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 
             if (!hasFired)
             {
+                if (!soundPlayed)
+                {
+                    if (shootInterval.Value > 0f) CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index: 0);
+                    else CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index: 1);
+                    soundPlayed = true;
+                }
+                
                 if (timer >= shootInterval.Value)
                 {
                     animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire);
