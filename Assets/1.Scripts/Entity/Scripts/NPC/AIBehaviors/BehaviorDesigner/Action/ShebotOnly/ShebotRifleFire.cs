@@ -6,8 +6,8 @@ using UnityEngine;
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.ShebotOnly
 {
     [TaskCategory("ShebotOnly")]
-    [TaskDescription("ShebotRifleOnRunAnimation")]
-    public class ShebotRifleOnRunAnimation : global::BehaviorDesigner.Runtime.Tasks.Action
+    [TaskDescription("ShebotRifleFire")]
+    public class ShebotRifleFire : global::BehaviorDesigner.Runtime.Tasks.Action
     {
         public SharedAnimator animator;
         
