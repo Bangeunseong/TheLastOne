@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using _1.Scripts.Manager.Subs;
 using UnityEngine;
 

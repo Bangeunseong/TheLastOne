@@ -20,7 +20,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly CoreManager coreManager;
         
         private float speed;
-        private float smoothVelocity = 5f;
+        private float animationBlend;
+        private float smoothVelocity = 10f;
         private Vector3 recoilEuler;
         
         public BaseState(PlayerStateMachine machine)
@@ -109,19 +110,20 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
             if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
             {
-                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, smoothVelocity * Time.unscaledDeltaTime);
+                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.unscaledDeltaTime * smoothVelocity);
                 speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else speed = targetSpeed;
             playerCondition.CurrentSpeed = speed;
             
-            // Service.Log($"Current Horizontal Speed : {currentHorizontalSpeed}\n" + $"Current Speed : {speed}, Target Speed : {targetSpeed}");
-            
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
+            animationBlend = Mathf.Lerp(animationBlend, targetSpeed, Time.unscaledDeltaTime * smoothVelocity);
+            if (animationBlend < 0.01f) animationBlend = 0f;
+            
             if (playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, currentHorizontalSpeed);
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, animationBlend);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, animationBlend);
             
             stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }

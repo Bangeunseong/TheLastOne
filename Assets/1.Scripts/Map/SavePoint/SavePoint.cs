@@ -1,4 +1,5 @@
 using System;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace _1.Scripts.Map.SavePoint
         private void OnEnable()
         {
             GameEventSystem.Instance.RegisterListener(this);
+            Service.Log($"Registered Save Point: {Id}");
         }
 
         private void Start()
@@ -25,18 +27,24 @@ namespace _1.Scripts.Map.SavePoint
         private void OnDisable()
         {
             GameEventSystem.Instance.UnregisterListener(this);
+            Service.Log($"Unregistered Save Point: {Id}");
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
-            {
-                GameEventSystem.Instance.RaiseEvent(Id);
-            }
+            if (!other.CompareTag("Player")) return;
+            if (!other.TryGetComponent(out Player player)) return;
+            
+            player.PlayerCondition.LastSavedPosition = player.transform.position;
+            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
+            
+            GameEventSystem.Instance.RaiseEvent(Id);
         }
 
         public void OnEventRaised(int eventID)
         {
+            if (eventID != Id) return;
+            
             var save = CoreManager.Instance.gameManager.SaveData;
             if (save == null ||
                 !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))

@@ -12,7 +12,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         
         public override void Enter()
         {
-            stateMachine.MovementSpeedModifier = playerCondition.CrouchSpeedModifier;
+            stateMachine.MovementSpeedModifier = 0f;
             playerCondition.OnCrouch(true, 0.1f);
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
