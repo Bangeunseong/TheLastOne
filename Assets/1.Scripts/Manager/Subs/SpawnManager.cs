@@ -28,15 +28,15 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public SerializedDictionary<int, SerializableWeaponProp> DynamicSpawnedWeapons { get; private set; } = new();
         [field: SerializeField] public SerializedDictionary<int, SerializableItemProp> DynamicSpawnedItems { get; private set; } = new();
         
+        [field: Header("Visibility")]
+        [field: SerializeField] public bool IsVisible { get; private set; }
+        
         private HashSet<GameObject> spawnedEnemies = new();
         private HashSet<GameObject> spawnedWeapons = new();
         private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
         private int dynamicIndex;
         
-        [field: Header("Visibility")]
-        [field: SerializeField] public bool IsVisible { get; private set; }
-
         public void Start()
         {
             coreManager = CoreManager.Instance;

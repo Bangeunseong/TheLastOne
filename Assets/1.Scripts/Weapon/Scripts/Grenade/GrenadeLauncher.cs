@@ -185,6 +185,12 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         }
 
         public override bool TryForgeWeapon() { return false; }
+        
+        public void UnlockAllParts()
+        {
+            var keys = EquipableWeaponParts.Keys.ToArray();
+            foreach (var key in keys) EquipableWeaponParts[key] = true;
+        }
 
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)
         {
