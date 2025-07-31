@@ -96,6 +96,12 @@ namespace _1.Scripts.Manager.Subs
                         new SerializableVector3(Player.PlayerCondition.LastSavedPosition);
                     stageInfo.currentCharacterRotation = 
                         new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation);
+                    stageInfo.dynamicSpawnedWeapons = 
+                        new SerializedDictionary<int, SerializableWeaponProp>(
+                            coreManager.spawnManager.DynamicSpawnedWeapons);
+                    stageInfo.dynamicSpawnedItems =
+                        new SerializedDictionary<int, SerializableItemProp>(
+                        coreManager.spawnManager.DynamicSpawnedItems);
                 }
             }
             

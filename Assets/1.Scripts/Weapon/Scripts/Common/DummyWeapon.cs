@@ -12,6 +12,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
+        [field: SerializeField] public bool IsStatic { get; private set; }
         [field: SerializeField] public int TargetId { get; private set; }
         [field: SerializeField] public int InstanceId { get; private set; } = -1;
         [field: SerializeField] public WeaponType Type { get; private set; }
@@ -56,8 +57,12 @@ namespace _1.Scripts.Weapon.Scripts.Common
         {
             CoreManager.Instance.spawnManager.RemoveWeaponFromSpawnedList(gameObject);
         }
-        
-        public void SetInstanceId(int instanceId) => InstanceId = instanceId;
+
+        public void Initialize(bool isStatic, int instanceId)
+        {
+            IsStatic = isStatic;
+            InstanceId = instanceId;
+        } 
 
         public void OnInteract(GameObject ownerObj)
         {
@@ -93,11 +98,15 @@ namespace _1.Scripts.Weapon.Scripts.Common
             player.PlayerCondition.LastSavedPosition = player.transform.position;
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
 
-            if (InstanceId != -1)
+            if (IsStatic)
             {
                 var save = CoreManager.Instance.gameManager.SaveData;
                 if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
                     info.completionDict.TryAdd(InstanceId, true);
+            }
+            else
+            {
+                CoreManager.Instance.spawnManager.DynamicSpawnedWeapons.Remove(InstanceId);
             }
             
             OnPicked?.Invoke();
