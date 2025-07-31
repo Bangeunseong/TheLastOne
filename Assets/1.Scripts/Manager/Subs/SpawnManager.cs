@@ -2,31 +2,37 @@ using System;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = System.Random;
 
 namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class SpawnManager
     {
         public static int BaseWeaponIndex { get; private set; } = 1000; 
-        public static int BaseItemIndex { get; private set; } = 1100; 
-        public static int BaseItemBoxIndex { get; private set; } = 1200;
+        public static int BaseItemIndex { get; private set; } = 1500;
         
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
+        [field: SerializeField] public SerializedDictionary<int, SerializableWeaponProp> DynamicSpawnedWeapons { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<int, SerializableItemProp> DynamicSpawnedItems { get; private set; } = new();
         
         private HashSet<GameObject> spawnedEnemies = new();
         private HashSet<GameObject> spawnedWeapons = new();
         private HashSet<GameObject> spawnedItems = new();
         private CoreManager coreManager;
+        private int dynamicIndex;
         
         [field: Header("Visibility")]
         [field: SerializeField] public bool IsVisible { get; private set; }
@@ -84,7 +90,7 @@ namespace _1.Scripts.Manager.Subs
                     {
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                        if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.SetInstanceId(BaseWeaponIndex + weaponIndex);
+                        if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(true, BaseWeaponIndex + weaponIndex);
                         spawnedWeapons.Add(obj);
                     }
                     weaponIndex++;
@@ -100,12 +106,50 @@ namespace _1.Scripts.Manager.Subs
                     {
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                        if (obj.TryGetComponent(out DummyItem item)) item.SetInstanceId(BaseItemIndex + itemIndex);
+                        if (obj.TryGetComponent(out DummyItem item)) item.Initialize(true, BaseItemIndex + itemIndex);
                         spawnedItems.Add(obj);
                     }
                     itemIndex++;
                 }
             }
+
+            if (dto == null) return;
+            if (!dto.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var dynamicInfo)) return;
+            
+            if (dynamicInfo.dynamicSpawnedWeapons is { Count: > 0 })
+            {
+                foreach (var pair in dynamicInfo.dynamicSpawnedWeapons)
+                {
+                    var obj = coreManager.objectPoolManager.Get(pair.Value.type + "_Prefab");
+                    obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(), pair.Value.transform.rotation.ToQuaternion());
+                    if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(false, pair.Key);
+                    DynamicSpawnedWeapons.Add(pair.Key, new SerializableWeaponProp(pair.Value));
+                }
+            }
+
+            if (dynamicInfo.dynamicSpawnedItems is { Count: > 0 })
+            {
+                foreach (var pair in dynamicInfo.dynamicSpawnedItems)
+                {
+                    var obj = coreManager.objectPoolManager.Get(pair.Value.type + "_Prefab");
+                    obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(), pair.Value.transform.rotation.ToQuaternion());
+                    if (obj.TryGetComponent(out DummyItem item)) item.Initialize(false, pair.Key);
+                    DynamicSpawnedItems.Add(pair.Key, new SerializableItemProp(pair.Value));
+                }
+            }
+        }
+
+        public int GetInstanceHashId(GameObject obj, int type, Transform transform)
+        {
+            int count = 0;
+            var id = HashCode.Combine(obj.GetInstanceID(), type, transform.position, transform.rotation);
+            while (id is >= 1000 and < 2000)
+            {
+                if (count > 5) { id += 1000 + UnityEngine.Random.Range(0,1000); return id; }
+                id = HashCode.Combine(obj.GetInstanceID(), type, transform.position, transform.rotation);
+                count++;
+            }
+            return id;
         }
 
         public void RemoveWeaponFromSpawnedList(GameObject obj)
@@ -181,6 +225,8 @@ namespace _1.Scripts.Manager.Subs
         {
             spawnedWeapons.Clear();
             spawnedItems.Clear();
+            DynamicSpawnedWeapons.Clear();
+            DynamicSpawnedItems.Clear();
         }
 
         public void Reset()

@@ -14,6 +14,7 @@ namespace _1.Scripts.Item.Items
     public class DummyItem : MonoBehaviour, IInteractable
     {
         [field: Header("Dummy Item Settings")]
+        [field: SerializeField] public bool IsStatic { get; private set; }
         [field: SerializeField] public int TargetId { get; private set; }
         [field: SerializeField] public int InstanceId { get; private set; }
         [field: SerializeField] public ItemType ItemType { get; private set; }
@@ -61,19 +62,30 @@ namespace _1.Scripts.Item.Items
 
         public void RemoveSelfFromSpawnedList()
         {
-            CoreManager.Instance.spawnManager.RemoveItemFromSpawnedList(gameObject);
+            if (IsStatic) CoreManager.Instance.spawnManager.RemoveItemFromSpawnedList(gameObject);
         }
         
-        public void SetInstanceId(int instanceId) => InstanceId = instanceId;
+        public void Initialize(bool isStatic, int instanceId)
+        {
+            IsStatic = isStatic;
+            InstanceId = instanceId;
+        } 
 
         public void OnInteract(GameObject ownerObj)
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
             if (player.PlayerInventory.OnRefillItem(ItemType))
             {
-                var save = CoreManager.Instance.gameManager.SaveData;
-                if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
-                    info.completionDict.TryAdd(InstanceId, true);
+                if (IsStatic)
+                {
+                    var save = CoreManager.Instance.gameManager.SaveData;
+                    if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                        info.completionDict.TryAdd(InstanceId, true);
+                }
+                else
+                {
+                    CoreManager.Instance.spawnManager.DynamicSpawnedItems.Remove(InstanceId);
+                }
                 
                 OnPicked?.Invoke();
                 CoreManager.Instance.objectPoolManager.Release(gameObject);
