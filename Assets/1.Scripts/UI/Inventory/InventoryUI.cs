@@ -4,7 +4,6 @@ using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
-using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using TMPro;
@@ -15,20 +14,24 @@ namespace _1.Scripts.UI.Inventory
 {
     public class InventoryUI : UIBase
     {
+        private static readonly WeaponType[] SlotOrder = new[]
+        {
+            WeaponType.Rifle,
+            WeaponType.Pistol,
+            WeaponType.GrenadeLauncher,
+            WeaponType.HackGun
+        };
+        
         [Header("UI")]
         [SerializeField] private GameObject panel;
         [SerializeField] private Animator panelAnimator;
-        [Header("SlotType")]
-        [SerializeField] private SlotType[] slotType;
-        
-        [Header("Slot Buttons")]
-        [SerializeField] private List<Button> slotButtons;
         
         [Header("Preview Image")]
-        [SerializeField] private List<GameObject> weaponPrefabs;
+        [SerializeField] private List<Button> weaponButtons;
+        
+        [Header( "Preview")]
         [SerializeField] private Transform previewSpawnPoint;
-        private Dictionary<SlotType, GameObject> previewPrefabs;
-        private GameObject currentPreviewWeapon;
+        private Dictionary<WeaponType, GameObject> weaponPreviewMap;
 
         [Header("StatsUI")]  
         [SerializeField] private Slider damageSlider;
@@ -36,7 +39,6 @@ namespace _1.Scripts.UI.Inventory
         [SerializeField] private Slider recoilSlider;
         [SerializeField] private Slider weightSlider;
         [SerializeField] private Slider ammoSlider;
-
         [SerializeField] private TextMeshProUGUI damageText;
         [SerializeField] private TextMeshProUGUI rpmText;
         [SerializeField] private TextMeshProUGUI recoilText;
@@ -50,23 +52,26 @@ namespace _1.Scripts.UI.Inventory
         private PlayerCondition playerCondition;
         private PlayerWeapon playerWeapon;
 
-        private int maxDamage = 1000;
-        private float maxRPM = 100f;
-        private float maxRecoil = 100f;
-        private float maxWeight = 1f;
-        private int maxAmmo;
+        private Dictionary<WeaponType, BaseWeapon> ownedWeapons = new();
+        private WeaponType? currentWeaponType = null;
+        
+        private int maxDamage, maxAmmo;
+        private float maxRPM, maxRecoil, maxWeight;
 
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
-            previewPrefabs = new Dictionary<SlotType, GameObject>();
-            foreach (var prefab in weaponPrefabs)
+            weaponPreviewMap = new();
+            foreach (Transform child in previewSpawnPoint)
             {
-                var info = prefab.GetComponent<PreviewWeaponHandler>();
-                if (info) previewPrefabs[info.slotType] = prefab;
+                var handler = child.GetComponent<PreviewWeaponHandler>();
+                if (handler) weaponPreviewMap[handler.weaponType] = child.gameObject;
+                child.gameObject.SetActive(false);
             }
+
             playerCondition = CoreManager.Instance.gameManager.Player.PlayerCondition;
             playerWeapon = CoreManager.Instance.gameManager.Player.PlayerWeapon;
+            SyncOwnedWeapons();
             gameObject.SetActive(false);
         }
 
@@ -90,10 +95,7 @@ namespace _1.Scripts.UI.Inventory
                 panelAnimator.Play("Panel Out");
                 StartCoroutine(HideCoroutine());
             }
-            else
-            {
-                base.Hide();
-            }
+            else base.Hide();
             
             playerCondition.OnEnablePlayerMovement();
             Cursor.lockState = CursorLockMode.Locked;
@@ -102,113 +104,128 @@ namespace _1.Scripts.UI.Inventory
 
         public override void ResetUI()
         {
-            ClearSlotButtons();
-            ClearPreviewWeapon();
-            ClearText();
+            foreach (var btn in weaponButtons)
+            {
+                btn.gameObject.SetActive(false);
+                btn.onClick.RemoveAllListeners();
+                var label = btn.GetComponentInChildren<TextMeshProUGUI>();
+                if (label) label.text = "";
+            }
+            foreach (var go in weaponPreviewMap.Values) go.SetActive(false);
+            titleText.text = descriptionText.text = damageText.text = rpmText.text = recoilText.text = weightText.text = ammoText.text = "";
+            damageSlider.value = rpmSlider.value = recoilSlider.value = weightSlider.value = ammoSlider.value = 0f;
+            currentWeaponType = null;
         }
         
-        private void ClearSlotButtons()
+        private WeaponType GetSlotWeaponType(int slotIdx)
         {
-            foreach (var button in slotButtons)
-            {
-                button.gameObject.SetActive(false);
-                button.onClick.RemoveAllListeners();
-                var label = button.GetComponentInChildren<TextMeshProUGUI>();
-                if (label) label.text = string.Empty;
-            }
+            var role = SlotOrder[slotIdx];
+            if (role != WeaponType.Pistol) return role;
+            return ownedWeapons.ContainsKey(WeaponType.SniperRifle) ? WeaponType.SniperRifle : WeaponType.Pistol;
         }
 
-        private void ClearPreviewWeapon()
+        private void SyncOwnedWeapons()
         {
-            if (currentPreviewWeapon)
+            ownedWeapons.Clear();
+            if (!playerWeapon) return;
+            foreach (var kv in playerWeapon.Weapons)
             {
-                Destroy(currentPreviewWeapon);
-                currentPreviewWeapon = null;
+                var type = kv.Key;
+                var weapon = kv.Value;
+                if (!weapon) continue;
+                if (!playerWeapon.AvailableWeapons.TryGetValue(type, out var unlocked) || !unlocked) continue;
+                if (type == WeaponType.Punch) continue;
+                ownedWeapons[type] = weapon;
             }
-        }
-
-        private void ClearText()
-        {
-            titleText.text = string.Empty;
-            descriptionText.text = string.Empty;
-
-            damageText.text = string.Empty;
-            rpmText.text = string.Empty;
-            recoilText.text = string.Empty;
-            weightText.text = string.Empty;
-            ammoText.text = string.Empty;
-
-            damageSlider.value = 0f;
-            rpmSlider.value = 0f;
-            recoilSlider.value = 0f;
-            weightSlider.value = 0f;
-            ammoSlider.value = 0f;
         }
 
         private void CalculateMaxStats()
         {
-            if (!playerWeapon) return;
-            
-            foreach (var w in playerWeapon.Weapons)
+            maxDamage = 0; maxRPM = 0f; maxRecoil = 0f; maxWeight = 0f; maxAmmo = 0;
+            if (ownedWeapons.Count == 0) return;
+            foreach (var stat in ownedWeapons.Values.Select(SlotUtility.GetWeaponStat))
             {
-                var stat = SlotUtility.GetWeaponStat(w.Value);
                 maxDamage = Mathf.Max(maxDamage, stat.Damage);
                 maxRPM = Mathf.Max(maxRPM, stat.Rpm);
                 maxRecoil = Mathf.Max(maxRecoil, stat.Recoil);
+                maxWeight = Mathf.Max(maxWeight, stat.Weight);
                 maxAmmo = Mathf.Max(maxAmmo, stat.MaxAmmoCountInMagazine);
             }
         }
-        
-        private void InitializeSlots()
+
+        private void InitializeWeaponButtons()
         {
-            if (!playerWeapon) return;
-
-            for (int i = 0; i < slotButtons.Count; i++)
+            for (int i = 0; i < SlotOrder.Length && i < weaponButtons.Count; i++)
             {
-                var button = slotButtons[i];
-                button.onClick.RemoveAllListeners();
-                
-                var slotWeapon = playerWeapon.Weapons.Select(val => val.Value).ToList()
-                    .Where((w, idx) => playerWeapon.AvailableWeapons[(WeaponType)idx] && SlotUtility.IsMatchSlot(w, slotType[i]))
-                    .FirstOrDefault();
+                var weaponType = GetSlotWeaponType(i);
+                var button = weaponButtons[i];
 
-                button.gameObject.SetActive(slotWeapon);
-                if (slotWeapon)
+                button.onClick.RemoveAllListeners();
+
+                if (ownedWeapons.TryGetValue(weaponType, out var weapon))
                 {
+                    button.gameObject.SetActive(true);
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
-                    label.text = SlotUtility.GetWeaponName(slotWeapon);
-                    
-                    var weapon = slotWeapon;
-                    button.onClick.AddListener(() =>
-                    {
-                        int idx = playerWeapon.Weapons.Select(val => val.Value).ToList().IndexOf(weapon);
-                        if (idx != -1) ShowWeapon(idx);
-                    });
+                    if (label) label.text = SlotUtility.GetWeaponName(weapon);
+                    button.onClick.AddListener(() => ShowWeapon(weaponType));
+                }
+                else
+                {
+                    button.gameObject.SetActive(false);
                 }
             }
         }
 
-        private void ShowWeapon(int index)
+        private void ShowWeapon(WeaponType weaponType)
         {
-            if (!playerWeapon || index < 0 || index >= playerWeapon.Weapons.Count) return;
-            
-            var weapon = playerWeapon.Weapons[(WeaponType)index];
+            foreach (var go in weaponPreviewMap.Values)
+                go.SetActive(false);
+
+            if (!ownedWeapons.TryGetValue(weaponType, out var weapon))
+            {
+                titleText.text = descriptionText.text = "";
+                UpdateStats(0, 0, 0, 0, 0);
+                currentWeaponType = null;
+                return;
+            }
+
             var stat = SlotUtility.GetWeaponStat(weapon);
-            
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);
             titleText.text = SlotUtility.GetWeaponName(weapon);
             descriptionText.text = titleText.text + " needs Description";
-
-            ClearPreviewWeapon();
-            var slot = SlotUtility.GetSlotTypeFromWeapon(weapon);
-            if (previewPrefabs.TryGetValue(slot, out var prefab))
-                currentPreviewWeapon = Instantiate(prefab, previewSpawnPoint.position, previewSpawnPoint.rotation);
+            if (weaponPreviewMap.TryGetValue(weaponType, out var previewGo))
+                previewGo.SetActive(true);
+            currentWeaponType = weaponType;
         }
         
         public void RefreshInventoryUI()
         {
+            SyncOwnedWeapons();
             CalculateMaxStats();
-            InitializeSlots();
+            InitializeWeaponButtons();
+            
+            if (currentWeaponType.HasValue && ownedWeapons.ContainsKey(currentWeaponType.Value))
+                ShowWeapon(currentWeaponType.Value);
+            else
+            {
+                WeaponType? firstOwned = null;
+                for (int i = 0; i < SlotOrder.Length; i++)
+                {
+                    var t = GetSlotWeaponType(i);
+                    if (!ownedWeapons.ContainsKey(t)) continue;
+                    firstOwned = t;
+                    break;
+                }
+                if (firstOwned.HasValue)
+                    ShowWeapon(firstOwned.Value);
+                else
+                {
+                    foreach (var go in weaponPreviewMap.Values) go.SetActive(false);
+                    titleText.text = descriptionText.text = "";
+                    UpdateStats(0,0,0,0,0);
+                    currentWeaponType = null;
+                }
+            }
         }
         
         private void UpdateStats(int damage, int ammoCount, float rpm, float recoil, float weight)
