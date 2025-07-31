@@ -18,15 +18,14 @@ namespace _1.Scripts.Util
         /// <summary>
         /// NPC 입장에서 지정된 타겟이 시야에 있는지 검사
         /// </summary>
-        /// <param name="npcPosition">NPC 위치</param>
+        /// <param name="origin">NPC 위치</param>
         /// <param name="targetPosition">타겟 위치</param>
         /// <param name="maxViewDistance">최대 시야 거리</param>
         /// <param name="isAlly">자신이 아군이면 true, 적군이면 false</param>
         /// <returns>시야에 타겟이 있고, 올바른 레이어인지 여부</returns>
-        public static bool IsTargetVisible(Vector3 npcPosition, Vector3 targetPosition, float maxViewDistance,
+        public static bool IsTargetVisible(Vector3 origin, Vector3 targetPosition, float maxViewDistance,
             bool isAlly)
         {
-            Vector3 origin = npcPosition;
             Vector3 direction = (targetPosition - origin).normalized;
 
             int layerMask = isAlly ? LayerConstants.EnemyLayerMask : LayerConstants.AllyLayerMask;
@@ -56,7 +55,7 @@ namespace _1.Scripts.Util
             if (target == Vector3.zero || self == null) return;
 
             Vector3 dir = target - self.position;
-            dir.y = 0;
+            dir.y = 0; // 위/아래 회전은 고정
 
             if (dir == Vector3.zero) return;
 
