@@ -54,16 +54,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 					
 					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
 					{
-						if (!stateInfo.IsName("Shebot_Idle")) animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
+						if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 					}
 					else
 					{
-						if (!stateInfo.IsName("Shebot_Walk")) animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Walk);
+						if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 					}
 				}
 				else
 				{
-					animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Walk);
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 				}
 			}
 			return TaskStatus.Success;

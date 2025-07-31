@@ -66,7 +66,7 @@ namespace _1.Scripts.Map.PartBox
             var save = CoreManager.Instance.gameManager.SaveData;
             if (save is not { stageInfos: not null } ||
                 !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info)) return;
-            if (!info.completionDict.TryGetValue(Id, out var value) || !value) return;
+            if (!info.completionDict.TryGetValue(Id, out var value) || value) return;
             
             isAlreadyOpened = true;
             gameObject.layer = LayerMask.NameToLayer("Default");

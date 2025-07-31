@@ -41,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
             {
                 if (timer >= shootInterval.Value)
                 {
-                    animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Rifle_fire);
+                    animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire);
                     lineRenderer.Value.enabled = false;
                     hasFired = true;
                     timer = 0f;

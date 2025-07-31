@@ -31,12 +31,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 				}
 			}
 
-			if (animator.Value.GetCurrentAnimatorStateInfo(0).IsName("DroneBot_Fire"))
+			if (animator.Value.GetCurrentAnimatorStateInfo(0).IsName(DroneAnimationData.FireStr))
 			{
 				return TaskStatus.Failure;
 			}
 			
-			animator.Value.SetTrigger(DroneAnimationHashData.Fire);
+			animator.Value.SetTrigger(DroneAnimationData.Fire);
 			
 			return TaskStatus.Success;
 		}

@@ -547,7 +547,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     // Play Reload AudioClip
                     float reloadTime = gun.GunData.GunStat.ReloadTime;
                     reloadPlayer = coreManager.soundManager.PlayUISFX(
-                        gun.GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolReload : SfxType.RifleReload, reloadTime);
+                        gun.GunData.GunStat.Type switch
+                        {
+                            WeaponType.Pistol => SfxType.PistolReload,
+                            WeaponType.Rifle => SfxType.RifleReload,
+                            _ => SfxType.SniperRifleReload
+                        }, reloadTime);
                     
                     // Start Reload Coroutine
                     reloadCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
@@ -637,9 +642,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
                 // Animation Control (Reload Start)
                 currentAnimator.SetBool(player.AnimationData.ReloadParameterHash, true);
-                var animationSpeed = gun.GunData.GunStat.Type == WeaponType.Pistol
-                    ? player.AnimationData.PistolReloadClipTime / gun.GunData.GunStat.ReloadTime
-                    : player.AnimationData.RifleReloadClipTime / gun.GunData.GunStat.ReloadTime;
+                var animationSpeed = gun.GunData.GunStat.Type switch
+                {
+                    WeaponType.Pistol => player.AnimationData.PistolReloadClipTime / gun.GunData.GunStat.ReloadTime,
+                    WeaponType.Rifle => player.AnimationData.RifleReloadClipTime / gun.GunData.GunStat.ReloadTime,
+                    _ => player.AnimationData.SniperRifleReloadClipTime / gun.GunData.GunStat.ReloadTime
+                };
                 currentAnimator.SetFloat(player.AnimationData.AniSpeedMultiplierHash, animationSpeed);
                 
                 gun.IsReloading = true;
@@ -802,6 +810,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 case WeaponType.HackGun: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
                     player.AnimationData.AniSpeedMultiplierHash,
                     player.AnimationData.HackGunToOtherWeaponClipTime / duration); break;
+                case WeaponType.SniperRifle: playerWeapon.WeaponAnimators[previousWeaponIndex].SetFloat(
+                    player.AnimationData.AniSpeedMultiplierHash,
+                    player.AnimationData.SniperRifleToOtherWeaponClipTime / duration); break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(previousWeaponIndex), previousWeaponIndex, null);
             }

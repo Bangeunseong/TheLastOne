@@ -19,9 +19,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			if (!statController.Value.RuntimeStatData.IsAlly)
 			{
 				AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-				if (!stateInfo.IsName("Shebot_Idle"))
+				if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
 				{
-					animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Idle);
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 				}
 			}
 			

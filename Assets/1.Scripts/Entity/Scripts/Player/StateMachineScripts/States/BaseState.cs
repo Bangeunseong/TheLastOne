@@ -255,9 +255,17 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         {
             if (playerCondition.IsSwitching || !playerCondition.IsPlayerHasControl) return;
             
-            if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.Pistol, out var value)) return;
-            if (!value) return;
-            playerCondition.OnSwitchWeapon(WeaponType.Pistol, 0.5f);
+            if (playerWeapon.AvailableWeapons.TryGetValue(WeaponType.Pistol, out var pistol))
+            {
+                if (pistol) { playerCondition.OnSwitchWeapon(WeaponType.Pistol, 0.5f); return; }
+                if (!playerWeapon.AvailableWeapons.TryGetValue(WeaponType.SniperRifle, out var sniperRifle)) return;
+                if (sniperRifle) 
+                    playerCondition.OnSwitchWeapon(WeaponType.SniperRifle, 0.5f);
+            } else if (playerWeapon.AvailableWeapons.TryGetValue(WeaponType.SniperRifle, out var sniperRifle))
+            {
+                if (sniperRifle)
+                    playerCondition.OnSwitchWeapon(WeaponType.SniperRifle, 0.5f);
+            }
         }
         private void OnSwitchToGrenade(InputAction.CallbackContext context)
         {

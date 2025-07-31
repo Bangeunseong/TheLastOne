@@ -16,9 +16,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		{
 			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 
-			if (!stateInfo.IsName("anim_f2_run"))
+			if (!stateInfo.IsName(ShebotAnimationData.Shebot_Sword_Run_AnimationNameStr))
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.ShebotSword_Run);
+				animator.Value.SetTrigger(ShebotAnimationData.ShebotSword_Run);
 			}
 		}
 

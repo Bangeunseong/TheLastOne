@@ -45,9 +45,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			}
 			
 			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-			if (!stateInfo.IsName("DroneBot_StrafeLeft"))
+			if (!stateInfo.IsName(DroneAnimationData.StrafeLeftStr))
 			{
-				animator.Value.SetTrigger(DroneAnimationHashData.StrafeLeft);
+				animator.Value.SetTrigger(DroneAnimationData.StrafeLeft);
 			}
 			
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1);

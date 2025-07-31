@@ -31,7 +31,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			
 			if (!shieldUsedOnce.Value)
 			{
-				animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Guard);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 				shieldUsedOnce.Value = true;
 				hasEnteredShield.Value = true;
 			}
@@ -57,9 +57,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			if (!switchedToStayAnimation)
 			{
 				AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-				if (stateInfo.IsName("Shebot_Sword_Guard") && stateInfo.normalizedTime >= 1f)
+				if (stateInfo.IsName(ShebotAnimationData.Shebot_GuardStr) && stateInfo.normalizedTime >= 1f)
 				{
-					animator.Value.SetTrigger(ShebotAnimationHashData.Shebot_Guard_Stay);
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard_Stay);
 					switchedToStayAnimation = true;
 				}
 			}

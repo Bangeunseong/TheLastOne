@@ -13,9 +13,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
         Punch,
         Rifle,
         Pistol,
+        SniperRifle,
         GrenadeLauncher,
         HackGun,
-        SniperRifle,
     }
     
     public abstract class BaseWeapon : MonoBehaviour, IShootable
@@ -67,7 +67,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
             part.OnUnWear();
             return true;
         }
-        
+
+        public abstract bool TryForgeWeapon();
         public abstract void Initialize(GameObject ownerObj, DataTransferObject dto = null);
         public abstract bool OnShoot();
         public abstract bool OnRefillAmmo(int ammo);

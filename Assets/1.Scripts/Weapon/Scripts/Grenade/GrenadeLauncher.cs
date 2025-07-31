@@ -184,6 +184,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             }
         }
 
+        public override bool TryForgeWeapon() { return false; }
+
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)
         {
             right = Vector3.Cross(forward, Vector3.up);
