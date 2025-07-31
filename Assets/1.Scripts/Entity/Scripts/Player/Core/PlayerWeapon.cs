@@ -89,5 +89,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             return ((Gun)weapon).TryForgeWeapon();
         }
+        
+        public void GetAllAvailableParts()
+        {
+            foreach (var weapon in Weapons)
+            {
+                foreach (var partKey in weapon.Value.EquipableWeaponParts.Keys)
+                    weapon.Value.EquipableWeaponParts[partKey] = true;
+            }
+        }
     }
 }

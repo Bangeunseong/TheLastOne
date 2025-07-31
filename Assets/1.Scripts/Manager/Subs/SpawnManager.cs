@@ -17,8 +17,7 @@ namespace _1.Scripts.Manager.Subs
     [Serializable] public class SpawnManager
     {
         public static int BaseWeaponIndex { get; private set; } = 1000; 
-        public static int BaseItemIndex { get; private set; } = 1100; 
-        public static int BaseItemBoxIndex { get; private set; } = 1200;
+        public static int BaseItemIndex { get; private set; } = 1100;
         
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }

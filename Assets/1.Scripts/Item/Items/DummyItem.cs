@@ -71,9 +71,12 @@ namespace _1.Scripts.Item.Items
             if (!ownerObj.TryGetComponent(out Player player)) return;
             if (player.PlayerInventory.OnRefillItem(ItemType))
             {
-                var save = CoreManager.Instance.gameManager.SaveData;
-                if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
-                    info.completionDict.TryAdd(InstanceId, true);
+                if (InstanceId != -1)
+                {
+                    var save = CoreManager.Instance.gameManager.SaveData;
+                    if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                        info.completionDict.TryAdd(InstanceId, true);
+                }
                 
                 OnPicked?.Invoke();
                 CoreManager.Instance.objectPoolManager.Release(gameObject);

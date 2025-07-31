@@ -13,7 +13,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
     {
         [field: Header("DummyGun Settings")]
         [field: SerializeField] public int TargetId { get; private set; }
-        [field: SerializeField] public int InstanceId { get; private set; }
+        [field: SerializeField] public int InstanceId { get; private set; } = -1;
         [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public Transform[] Renderers { get; private set; }
         
@@ -66,8 +66,16 @@ namespace _1.Scripts.Weapon.Scripts.Common
             
             if (!value)
             {
-                player.PlayerWeapon.AvailableWeapons[Type] = true;
-                player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
+                if (Type != WeaponType.SniperRifle)
+                {
+                    player.PlayerWeapon.AvailableWeapons[Type] = true;
+                    player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
+                }
+                else
+                {
+                    player.PlayerWeapon.Weapons[Type].OnRefillAmmo(10);
+                }
+                
             }
             else
             {
@@ -84,10 +92,13 @@ namespace _1.Scripts.Weapon.Scripts.Common
             
             player.PlayerCondition.LastSavedPosition = player.transform.position;
             player.PlayerCondition.LastSavedRotation = player.transform.rotation;
-            
-            var save = CoreManager.Instance.gameManager.SaveData;
-            if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
-                info.completionDict.TryAdd(InstanceId, true);
+
+            if (InstanceId != -1)
+            {
+                var save = CoreManager.Instance.gameManager.SaveData;
+                if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                    info.completionDict.TryAdd(InstanceId, true);
+            }
             
             OnPicked?.Invoke();
             GameEventSystem.Instance.RaiseEvent(TargetId);

@@ -114,6 +114,22 @@
                 AssetDatabase.SaveAssets();
             }
 
+            if (GUILayout.Button("Get All Available Parts"))
+            {
+                playerObj = GameObject.FindWithTag("Player");
+                if (!playerObj.TryGetComponent(out Player player)) return;
+                
+                player.PlayerWeapon.GetAllAvailableParts();
+            }
+
+            if (GUILayout.Button("Forge Weapon"))
+            {
+                playerObj = GameObject.FindWithTag("Player");
+                if (!playerObj.TryGetComponent(out Player player)) return;
+
+                player.PlayerWeapon.ForgeWeapon();
+            }
+            
             if (GUILayout.Button("Clear PlayerPrefs"))
             {
                 PlayerPrefs.DeleteAll();
