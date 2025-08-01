@@ -1,4 +1,5 @@
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Util;
 using UnityEngine;
 
 namespace _1.Scripts.Map.GameEvents
@@ -15,7 +16,7 @@ namespace _1.Scripts.Map.GameEvents
             var save = CoreManager.Instance.gameManager.SaveData;
             if (save == null ||
                 !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info) || 
-                !info.completionDict.TryGetValue(spawnIndex + SavePoint.BaseSavePointIndex + 1, out var val)) return;
+                !info.completionDict.TryGetValue(spawnIndex + BaseEventIndex.BaseSavePointIndex + 1, out var val)) return;
 
             if (!val) return;
             isSpawned = true;

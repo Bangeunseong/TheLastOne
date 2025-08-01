@@ -1,3 +1,4 @@
+using System;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace _1.Scripts.Dialogue
         {
             
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (hasTriggered && triggerOnce) return;
