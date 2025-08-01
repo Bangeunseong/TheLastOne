@@ -22,6 +22,6 @@ namespace _1.Scripts.Quests.Data
         public int requiredAmount;
         public UnityEvent onCompletedAction;
 
-        public string dialogueKey;
+        public int dialogueKey;
     }
 } 
