@@ -65,4 +65,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public static readonly int GettingHit_Idle = Animator.StringToHash(GettingHit_IdleStr);
         public static readonly int GettingHit_Aim = Animator.StringToHash(GettingHit_AimStr);
     }
+
+    public static class DogAnimationData
+    {
+        
+    }
 }

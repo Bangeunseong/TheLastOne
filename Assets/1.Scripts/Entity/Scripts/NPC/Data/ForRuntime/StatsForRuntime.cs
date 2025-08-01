@@ -265,5 +265,47 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MinWanderingDistance = rifleSO.MinWanderingDistance;
             MaxWanderingDistance = rifleSO.MaxWanderingDistance;
         }
+    }   
+    
+    public class RuntimeDogStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
+    {
+        private readonly DogStatData dogSO;
+        
+        public float DetectRange { get; set; }
+        public float AttackRange { get; set; }
+        public float AlertDuration { get; set; }
+        public float AlertRadius { get; set; }
+        public float MinWaitingDuration { get; set; }
+        public float MaxWaitingDuration { get; set;  }
+        public float MinWanderingDistance { get; set; }
+        public float MaxWanderingDistance { get; set; }
+
+        public RuntimeDogStatData(DogStatData so) : base(so)
+        {
+            dogSO = so;
+            
+            DetectRange = so.DetectRange;
+            AttackRange = so.AttackRange;
+            AlertDuration = so.AlertDuration;
+            AlertRadius = so.AlertRadius;
+            MinWaitingDuration = so.MinWaitingDuration;
+            MaxWaitingDuration = so.MaxWaitingDuration;
+            MinWanderingDistance = so.MinWanderingDistance;
+            MaxWanderingDistance = so.MaxWanderingDistance;
+        }
+
+        public override void ResetStats()
+        {
+            base.ResetStats();
+            
+            DetectRange = dogSO.DetectRange;
+            AttackRange = dogSO.AttackRange;
+            AlertDuration = dogSO.AlertDuration;
+            AlertRadius = dogSO.AlertRadius;
+            MinWaitingDuration = dogSO.MinWaitingDuration;
+            MaxWaitingDuration = dogSO.MaxWaitingDuration;
+            MinWanderingDistance = dogSO.MinWanderingDistance;
+            MaxWanderingDistance = dogSO.MaxWanderingDistance;
+        }
     }
 }

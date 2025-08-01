@@ -35,6 +35,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         ShebotSniper,
         ShebotRifle,
         ShebotSword,
+        ShebotRifleDuo,
+        Dog
     }
     
     /// <summary>
