@@ -17,11 +17,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         public SharedTransform targetTransform;
         public SharedVector3 targetPosition;
         public SharedBaseNpcStatController statController;
-
+        public SharedBool isAttacking;
+        
         private Collider targetChset;
+        
         public override void OnStart()
         {
-            animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire_2);
+            if (!isAttacking.Value)
+            {
+                animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire_2);
+                isAttacking.Value = true;
+            }
             int layer = statController.Value.RuntimeStatData.IsAlly ? LayerConstants.Chest_E : LayerConstants.Chest_P;
             targetChset = NpcUtil.FindColliderOfLayerInChildren(targetTransform.Value.gameObject, layer);
         }
@@ -30,8 +36,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         {
             AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
             
-            if (stateInfo.normalizedTime >= 1.0)
+            if (stateInfo.normalizedTime > 1.0)
             {
+                isAttacking.Value = false;
                 return TaskStatus.Success;
             }
             
