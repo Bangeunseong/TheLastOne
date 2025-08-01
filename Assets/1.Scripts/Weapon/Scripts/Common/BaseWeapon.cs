@@ -50,14 +50,12 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         public bool TryEquipWeaponPart(PartType type, int id)
         {
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
+            if (!weaponParts.TryGetValue(id, out WeaponPart part)) return false;
             if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
             
             if (EquippedWeaponParts.TryGetValue(type, out int oldId))
             {
-                if (weaponParts.TryGetValue(oldId, out var oldPart))
-                    oldPart.OnUnWear();
-                EquippedWeaponParts.Remove(type);
+                if (weaponParts.TryGetValue(oldId, out WeaponPart oldPart)) oldPart.OnUnWear();
             }
             
             part.OnWear();
@@ -67,11 +65,12 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         public bool TryUnequipWeaponPart(PartType type, int id)
         {
-            if (!weaponParts.TryGetValue(id, out var part)) return false;
+            if (!weaponParts.TryGetValue(id, out WeaponPart part)) return false;
             if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
             if (!currentPartId.Equals(id)) return false;
             
             part.OnUnWear();
+            EquippedWeaponParts.Remove(type);
             return true;
         }
 
