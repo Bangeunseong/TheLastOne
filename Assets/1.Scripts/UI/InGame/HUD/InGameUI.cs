@@ -38,17 +38,9 @@ namespace _1.Scripts.UI.InGame.HUD
         private Coroutine focusEffectCoroutine;
         private Coroutine instinctEffectCoroutine;
         
-        [field: Header("Handler")]
-        [field: SerializeField] public PauseHandler PauseHandler { get; private set; }
-        
-        [field: Header("Game Control")]
-        [SerializeField] private Button exitGameButton;
-        [SerializeField] private Button loadGameButton;
-        
         [Header("ItemUseUI")]
         [SerializeField] private Image progressFillImage;
-        [SerializeField] private TextMeshProUGUI messageText;
-        [SerializeField] private float messageDuration = 3f;
+        [SerializeField] private TextMeshProUGUI toastText;
         
         private PlayerCondition playerCondition;
         private bool isPaused = false;
@@ -214,7 +206,18 @@ namespace _1.Scripts.UI.InGame.HUD
 
         public void UpdateItemProgress(float progress) { progressFillImage.fillAmount = Mathf.Clamp01(progress); }
 
-        public void ShowMessage(string message) { messageText.text = message; }
+        
+        public void ShowToast(string message)
+        {
+            toastText.text = message;
+            toastText.gameObject.SetActive(true);
+            StartCoroutine(HideToastCoroutine());
+        }
+        private IEnumerator HideToastCoroutine()
+        {
+            yield return new WaitForSeconds(1.5f);
+            toastText.gameObject.SetActive(false);
+        }
 
         private void ResetStatement()
         {
@@ -239,7 +242,6 @@ namespace _1.Scripts.UI.InGame.HUD
             }
             progressFillImage.enabled = false;
             progressFillImage.fillAmount = 0f;
-            messageText.text = "";
         }
     }
 }

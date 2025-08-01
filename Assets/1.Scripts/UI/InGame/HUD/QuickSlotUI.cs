@@ -152,5 +152,6 @@ namespace _1.Scripts.UI.InGame.HUD
                 }
             }
         }
+
     }
 }

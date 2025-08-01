@@ -10,6 +10,11 @@ namespace _1.Scripts.Dialogue
 
         private bool hasTriggered = false;
 
+        private void OnEnable()
+        {
+            
+        }
+        
         private void OnTriggerEnter(Collider other)
         {
             if (hasTriggered && triggerOnce) return;

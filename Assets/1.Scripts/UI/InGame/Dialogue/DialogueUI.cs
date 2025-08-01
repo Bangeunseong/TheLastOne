@@ -112,11 +112,17 @@ namespace _1.Scripts.UI.InGame.Dialogue
                 dialogueTextUIManager.colorType = UIManagerText.ColorType.Negative;
                 frameUIManager.colorType = UIManagerImage.ColorType.Negative;
             }
-            else
+            else if (data.SpeakerType == SpeakerType.Ally)
             {
                 nameTextUIManager.colorType = UIManagerText.ColorType.Primary;
                 dialogueTextUIManager.colorType = UIManagerText.ColorType.Primary;
                 frameUIManager.colorType = UIManagerImage.ColorType.Primary;
+            }
+            else if (data.SpeakerType == SpeakerType.Player)
+            {
+                nameTextUIManager.colorType = UIManagerText.ColorType.Secondary;
+                dialogueTextUIManager.colorType = UIManagerText.ColorType.Secondary;
+                frameUIManager.colorType = UIManagerImage.ColorType.Secondary;
             }
             
             yield return StartCoroutine(FadeIn(0.15f));
