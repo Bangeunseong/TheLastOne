@@ -4,6 +4,7 @@
     {
         public const int BaseTargetIndex = 0;
         public const int BaseSavePointIndex = 100;
+        public const int BaseSpawnEnemyIndex = 200;
         public const int BaseWeaponIndex = 1000;
         public const int BaseItemIndex = 1100;
         public const int BaseItemBoxIndex = 1200;
