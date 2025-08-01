@@ -50,7 +50,7 @@ namespace _1.Scripts.Map.Doors
         private async UniTaskVoid ActiveDoor_Async()
         {
             var originalDoorPosition = Door.localPosition;
-            var targetPosition = IsOpened ? UpperPosition.localPosition : LowerPosition.localPosition;
+            var targetPosition = IsOpened ? LowerPosition.localPosition : UpperPosition.localPosition;
             IsOpened = !IsOpened;
             float time = 0f;
             
