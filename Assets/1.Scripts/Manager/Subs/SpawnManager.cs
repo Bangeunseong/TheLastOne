@@ -112,17 +112,19 @@ namespace _1.Scripts.Manager.Subs
 
             if (dto == null) return;
             if (!dto.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var dynamicInfo)) return;
-            
+
             if (dynamicInfo.dynamicSpawnedWeapons is { Count: > 0 })
             {
                 foreach (var pair in dynamicInfo.dynamicSpawnedWeapons)
                 {
                     var obj = coreManager.objectPoolManager.Get(pair.Value.type + "_Prefab");
-                    obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(), pair.Value.transform.rotation.ToQuaternion());
+                    obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(),
+                        pair.Value.transform.rotation.ToQuaternion());
                     if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(false, pair.Key);
                     DynamicSpawnedWeapons.Add(pair.Key, new SerializableWeaponProp(pair.Value));
                 }
             }
+            else dynamicInfo.dynamicSpawnedWeapons = new SerializedDictionary<int, SerializableWeaponProp>();
 
             if (dynamicInfo.dynamicSpawnedItems is { Count: > 0 })
             {
@@ -134,6 +136,7 @@ namespace _1.Scripts.Manager.Subs
                     DynamicSpawnedItems.Add(pair.Key, new SerializableItemProp(pair.Value));
                 }
             }
+            else  dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
         }
 
         public int GetInstanceHashId(GameObject obj, int type, Transform transform)

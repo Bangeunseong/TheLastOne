@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _1.Scripts.Item.Common
 {
-    public enum ItemType
+    [Serializable] public enum ItemType
     {
         Medkit,
         NanoAmple,
