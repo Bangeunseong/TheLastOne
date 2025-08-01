@@ -4,6 +4,7 @@ using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Item.Common;
+using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Core;
@@ -139,7 +140,7 @@ namespace _1.Scripts.Map.PartBox
                     case BoxType.Item:
                         var item = coreManager.objectPoolManager.Get(ItemType.Shield + "_Prefab");
                         item.transform.SetPositionAndRotation(SpawnPoints[1].position, SpawnPoints[1].rotation);
-                        if (item.TryGetComponent(out DummyWeapon itemComp)) 
+                        if (item.TryGetComponent(out DummyItem itemComp)) 
                             itemComp.Initialize(false, coreManager.spawnManager.GetInstanceHashId(item, (int)ItemType.Shield, item.transform)); 
                         coreManager.spawnManager.DynamicSpawnedItems.TryAdd(itemComp.InstanceId, new SerializableItemProp
                         {

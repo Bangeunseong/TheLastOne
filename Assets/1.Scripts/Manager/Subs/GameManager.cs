@@ -96,12 +96,12 @@ namespace _1.Scripts.Manager.Subs
                         new SerializableVector3(Player.PlayerCondition.LastSavedPosition);
                     stageInfo.currentCharacterRotation = 
                         new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation);
-                    stageInfo.dynamicSpawnedWeapons = 
-                        new SerializedDictionary<int, SerializableWeaponProp>(
-                            coreManager.spawnManager.DynamicSpawnedWeapons);
+                    stageInfo.dynamicSpawnedWeapons =
+                        new SerializedDictionary<int, SerializableWeaponProp>(coreManager.spawnManager
+                            .DynamicSpawnedWeapons);
                     stageInfo.dynamicSpawnedItems =
                         new SerializedDictionary<int, SerializableItemProp>(
-                        coreManager.spawnManager.DynamicSpawnedItems);
+                            coreManager.spawnManager.DynamicSpawnedItems);
                 }
             }
             
@@ -158,7 +158,7 @@ namespace _1.Scripts.Manager.Subs
                     completionList = new SerializedDictionary<int, bool>(quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted)),
                 };
             }
-
+            
             SaveData = save;
             
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
