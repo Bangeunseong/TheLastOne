@@ -25,7 +25,7 @@ namespace _1.Scripts.Map.ClearZone
                     if (obj.IsCompleted) completedQuests++;
                 }
 
-                if (completedQuests == mainQuest.Objectives.Count - 1)
+                if (completedQuests == targetID)
                 {
                     Service.Log("퀘스트 다끝남");
                     GameEventSystem.Instance.RaiseEvent(targetID);
