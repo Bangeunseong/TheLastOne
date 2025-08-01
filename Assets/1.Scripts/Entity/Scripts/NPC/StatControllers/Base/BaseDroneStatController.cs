@@ -125,5 +125,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Base
                 }
             }
         }
+
+        public override void DisposeAllUniTasks()
+        {
+            base.DisposeAllUniTasks();
+            penaltyToken?.Dispose();
+            penaltyToken = null;
+        }
     }
 }
