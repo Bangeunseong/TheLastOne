@@ -78,5 +78,7 @@ namespace _1.Scripts.Static
         public const string DetectionGizmo = "detectionGizmo";
         public const string ShootInterval = "shootInterval";
         public const string MuzzleVisualEffect = "muzzleVisualEffect";
+        public const string RifleTransform = "RifleTransform";
+        public const string SwordTransform = "SwordTransform";
     }
 }
