@@ -30,7 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         {
             AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
             
-            if (stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_fire_2Str) && animator.Value.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+            if (stateInfo.normalizedTime >= 1.0)
             {
                 return TaskStatus.Success;
             }
