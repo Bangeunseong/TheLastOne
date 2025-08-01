@@ -80,7 +80,6 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
         [SerializeField] private bool shouldCountKillQuest;
         [SerializeField] private int[] killQuestIndex;
-
         private static bool hasFirstkilled = false;
         
         // 이 스크립트에서 사용하는 토큰들
@@ -386,7 +385,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
         }
 
-        public void DisposeAllUniTasks()
+        public virtual void DisposeAllUniTasks()
         {
             hackCts?.Dispose();
             hackCts = null;
