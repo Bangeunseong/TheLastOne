@@ -16,6 +16,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         public SharedTransform targetTransform;
         public SharedTransform selfTransform;
         public SharedTransform muzzleTransform;
+        public SharedTransform rifleTransform;
         public SharedVector3 targetPos;
         public SharedBool isAlerted;
         public SharedBaseNpcStatController statController;
@@ -69,6 +70,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
             
             NpcUtil.DrawLineBetweenPoints(lineRenderer.Value, muzzleTransform.Value.position, hit.point);
             NpcUtil.LookAtTarget(selfTransform.Value, targetPos.Value, additionalYangle:45);
+            NpcUtil.LookAtTarget(rifleTransform.Value, targetPos.Value, pinY:false);
             
             return TaskStatus.Running;
         }

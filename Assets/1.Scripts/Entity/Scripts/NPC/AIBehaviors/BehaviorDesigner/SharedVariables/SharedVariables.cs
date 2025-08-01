@@ -6,6 +6,7 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables
 {
@@ -83,6 +84,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVaria
         public static implicit operator SharedDetectionGizmo(DetectionGizmo value)
         {
             return new SharedDetectionGizmo { Value = value };
+        }
+    }    
+    
+    [System.Serializable]
+    public class SharedVisualEffect : SharedVariable<VisualEffect>
+    {
+        public static implicit operator SharedVisualEffect(VisualEffect value)
+        {
+            return new SharedVisualEffect { Value = value };
         }
     }
 }

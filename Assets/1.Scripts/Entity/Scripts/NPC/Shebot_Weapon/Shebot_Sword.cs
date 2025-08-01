@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.Common;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
 using UnityEngine;
 
@@ -45,6 +47,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon
             if (other.TryGetComponent(out IDamagable damagable))
             {
                 canhit = false;
+                CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index:3); // 타격음 출력
                 damagable.OnTakeDamage(statController.RuntimeStatData.BaseDamage);
             }
         }
