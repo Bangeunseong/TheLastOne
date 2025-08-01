@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Quests.Data;
 using TMPro;
@@ -42,15 +43,16 @@ namespace _1.Scripts.UI.InGame.Quest
 
         private void CreateObjectiveSlots()
         {
-            foreach (var slot in objectiveSlots)
-                if (slot) Destroy(slot.gameObject);
+            foreach (var slot in objectiveSlots.Where(slot => slot)) Destroy(slot.gameObject);
             objectiveSlots.Clear();
 
-            foreach (var obj in objectives)
+            if (objectives is not { Count: > 0 }) return;
             {
+                ObjectiveProgress firstNotCompleted = objectives.FirstOrDefault(obj => !obj.IsCompleted);
+                if (firstNotCompleted == null) return;
                 var go = Instantiate(objectiveSlotPrefab, objectiveSlotContainer);
                 var slot = go.GetComponent<ObjectiveSlot>();
-                slot.Initialize(obj);
+                slot.Initialize(firstNotCompleted);
                 objectiveSlots.Add(slot);
             }
         }
