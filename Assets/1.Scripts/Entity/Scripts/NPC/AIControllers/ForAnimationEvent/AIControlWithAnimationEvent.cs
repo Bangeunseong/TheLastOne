@@ -105,6 +105,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                 NpcUtil.FireToTarget(muzzlePosition, direction, isAlly, damage);
             }
         }
+
+        public void PlayFootStepSoundForAnimationEvent()
+        {
+            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 4);
+        }
         
         #region Sword전용
         public void SwordEnableHitForAnimationEvent()
