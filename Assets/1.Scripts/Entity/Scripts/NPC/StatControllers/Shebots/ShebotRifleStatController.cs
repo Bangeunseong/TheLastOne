@@ -21,41 +21,43 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         [SerializeField] protected float hackingFailPenaltyDuration = 10f;
         private CancellationTokenSource penaltyToken;
         
-        private LineRenderer lineRenderer;
-        
         protected override void Awake()
         {
             base.Awake();
             var shebotSwordStatData = CoreManager.Instance.resourceManager.GetAsset<ShebotRifleStatData>("ShebotRifleStatData"); // 자신만의 데이터 가져오기
             runtimeShebotRifleStatData = new RuntimeShebotRifleStatData(shebotSwordStatData);
             runtimeStatData = runtimeShebotRifleStatData;
-            
-            lineRenderer = GetComponentInChildren<LineRenderer>();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             runtimeShebotRifleStatData.ResetStats();
-            lineRenderer.enabled = false;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            animator.SetTrigger(ShebotAnimationData.Shebot_Rifle_Aim);
-            lineRenderer.enabled = true;
+            animator.SetTrigger(ShebotAnimationData.Shebot_Rifle_idle);
         }
 
         protected override void PlayHitAnimation()
         {
-            // 맞는 모션 없으므로 넘김
+            if (!IsStunned)
+            {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr) ||
+                    stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr))
+                {
+                    animator.SetTrigger(ShebotAnimationData.GettingHit_Idle);
+                }
+                else animator.SetTrigger(ShebotAnimationData.GettingHit_Aim);
+            }
         }
 
         protected override void PlayDeathAnimation()
         {
             base.PlayDeathAnimation();
-            lineRenderer.enabled = false;
             animator.SetTrigger(ShebotAnimationData.Shebot_Die);
         }
 
