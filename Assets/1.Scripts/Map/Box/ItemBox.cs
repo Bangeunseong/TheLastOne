@@ -13,7 +13,7 @@ using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace _1.Scripts.Map.PartBox
+namespace _1.Scripts.Map.Box
 {
     public enum BoxType
     {
@@ -22,7 +22,7 @@ namespace _1.Scripts.Map.PartBox
         Parts,
     }
     
-    public class PartBox : MonoBehaviour, IInteractable, IGameEventListener
+    public class ItemBox : MonoBehaviour, IInteractable, IGameEventListener
     {
         public const int BaseItemBoxIndex = 1200;
         

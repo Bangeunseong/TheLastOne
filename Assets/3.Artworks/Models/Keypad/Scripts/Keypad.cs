@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
+using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Interfaces.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace NavKeypad
 {
-    public class Keypad : MonoBehaviour
+    public class Keypad : MonoBehaviour, IInteractable
     {
         [Header("Events")]
         [SerializeField] private UnityEvent onAccessGranted;
@@ -127,5 +129,13 @@ namespace NavKeypad
             audioSource.PlayOneShot(accessGrantedSfx);
         }
 
+        public void OnInteract(GameObject ownerObj)
+        {
+            if (!ownerObj.TryGetComponent(out Player player)) return;
+            
+            StartCoroutine(DisplayResultRoutine(true));
+        }
+
+        public void OnCancelInteract() { }
     }
 }
