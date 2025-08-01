@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
@@ -27,6 +28,7 @@ namespace _1.Scripts.UI.InGame.Modification
             WeaponType.GrenadeLauncher,
             WeaponType.HackGun
         };
+        [SerializeField] private Button closeButton;
         
         [Header("Preview")] 
         [SerializeField] private Transform previewSpawnPoint;
@@ -37,7 +39,7 @@ namespace _1.Scripts.UI.InGame.Modification
         [SerializeField] private List<Button> partButtons;
         [SerializeField] private List<TextMeshProUGUI> partButtonTexts;
         [SerializeField] private List<Image> partButtonImages;
-        private readonly PartType[] allPartTypes = { PartType.Sight, PartType.FlameArrester, PartType.Suppressor, PartType.Silencer, PartType.ExtendedMag };
+        private readonly PartType[] allPartTypes = { PartType.Sight, PartType.Sight, PartType.FlameArrester, PartType.Suppressor, PartType.Silencer, PartType.ExtendedMag };
         
         [Header("Weapon & Part Name")]
         [SerializeField] private TextMeshProUGUI weaponNameText;
@@ -45,7 +47,6 @@ namespace _1.Scripts.UI.InGame.Modification
         
         [Header("Part Highlight Material")]
         [SerializeField] private Material partHighlightMaterial;
-        [SerializeField] private Material partNormalMaterial;
         
         [Header("Stat")]
         [SerializeField] private Slider damageSlider;
@@ -81,6 +82,7 @@ namespace _1.Scripts.UI.InGame.Modification
         private WeaponPartData selectedPartData;
 
         private PartType? selectedPartType;
+        private int selectedPartId;
 
         private PlayerCondition playerCondition;
         private PlayerWeapon playerWeapon;
@@ -113,6 +115,7 @@ namespace _1.Scripts.UI.InGame.Modification
             prevButton.onClick.AddListener(OnPrevWeaponClicked);
             nextButton.onClick.AddListener(OnNextWeaponClicked);
 
+            Hide();
             HideModal();
             ResetUI();
             Refresh();
@@ -218,10 +221,8 @@ namespace _1.Scripts.UI.InGame.Modification
             for (int i = 0; i < partButtons.Count; i++)
             {
                 partButtons[i].gameObject.SetActive(false);
-                if (partButtonTexts.Count > i && partButtonTexts[i])
-                    partButtonTexts[i].text = "";
-                if (partButtonImages.Count > i && partButtonImages[i])
-                    partButtonImages[i].sprite = null;
+                if (partButtonTexts.Count > i && partButtonTexts[i]) partButtonTexts[i].text = "";
+                if (partButtonImages.Count > i && partButtonImages[i]) partButtonImages[i].sprite = null;
                 partButtons[i].onClick.RemoveAllListeners();
             }
 
@@ -236,8 +237,7 @@ namespace _1.Scripts.UI.InGame.Modification
             bool isPistol = CurrentWeaponType == WeaponType.Pistol;
             if (isPistol)
             {
-                foreach (var btn in partButtons)
-                    btn.gameObject.SetActive(false);
+                foreach (var btn in partButtons) btn.gameObject.SetActive(false);
 
                 if (IsForgeAvailable(CurrentWeapon))
                 {
@@ -258,9 +258,14 @@ namespace _1.Scripts.UI.InGame.Modification
             for (int i = 0; i < allPartTypes.Length; i++)
             {
                 var partType = allPartTypes[i];
-                int uiIdx = i;
-                int partId = GetPartId(CurrentWeaponType, partType);
-
+                
+                if (partType == PartType.Sight && CurrentWeaponType != WeaponType.Rifle && i > 0)
+                    continue;
+                
+                int partId = (CurrentWeaponType == WeaponType.Rifle && partType == PartType.Sight)
+                    ? GetPartId(CurrentWeaponType, partType, i)
+                    : GetPartId(CurrentWeaponType, partType);
+                
                 bool enabled = partTypeList.Contains(partType);
                 bool hasPart = enabled && CurrentWeapon.EquipableWeaponParts.TryGetValue(partId, out var own) && own;
                 bool isEquipped = false;
@@ -272,30 +277,32 @@ namespace _1.Scripts.UI.InGame.Modification
                 else if (CurrentWeapon.GetType().Name == "GrenadeLauncher" && ((GrenadeLauncher)CurrentWeapon).EquippedWeaponParts != null)
                     isEquipped = ((GrenadeLauncher)CurrentWeapon).EquippedWeaponParts.TryGetValue(partType, out int equippedId) && equippedId == partId;
 
-                partButtons[uiIdx].gameObject.SetActive(hasPart);
+                partButtons[i].gameObject.SetActive(hasPart);
 
                 if (hasPart)
                 {
-                    partButtons[uiIdx].interactable = !isEquipped;
-                    if (partButtonImages.Count > uiIdx && partButtonImages[uiIdx])
+                    partButtons[i].interactable = !isEquipped;
+                    if (partButtonImages.Count > i && partButtonImages[i])
                     {
-                        partButtonImages[uiIdx].sprite = GetPartSprite(CurrentWeaponType, partType);
-                        partButtonImages[uiIdx].color = isEquipped
+                        partButtonImages[i].sprite = GetPartSprite(CurrentWeaponType, partType, partId);
+                        partButtonImages[i].color = isEquipped
                             ? new Color(0.7f, 0.7f, 0.7f, 0.5f)
                             : Color.white;
                     }
-                    if (partButtonTexts.Count > uiIdx && partButtonTexts[uiIdx])
-                        partButtonTexts[uiIdx].text = partType.ToString();
-                    partButtons[uiIdx].onClick.RemoveAllListeners();
+                    if (partButtonTexts.Count > i && partButtonTexts[i])
+                        partButtonTexts[i].text = partType.ToString() + (CurrentWeaponType == WeaponType.Rifle && partType == PartType.Sight ? $" ({partId})" : "");
+                    partButtons[i].onClick.RemoveAllListeners();
                     if (!isEquipped)
-                        partButtons[uiIdx].onClick.AddListener(() => OnPartButtonClicked(partType));
+                    {
+                        partButtons[i].onClick.AddListener(() => OnPartButtonClicked(partType, partId));
+                    }
                     anyPart = true;
                 }
                 else
                 {
-                    if (partButtonImages.Count > uiIdx && partButtonImages[uiIdx])
-                        partButtonImages[uiIdx].sprite = null;
-                    partButtons[uiIdx].onClick.RemoveAllListeners();
+                    if (partButtonImages.Count > i && partButtonImages[i])
+                        partButtonImages[i].sprite = null;
+                    partButtons[i].onClick.RemoveAllListeners();
                 }
             }
 
@@ -342,13 +349,11 @@ namespace _1.Scripts.UI.InGame.Modification
                     return new List<PartType>();
             }
         }
-        private void OnPartButtonClicked(PartType partType)
+        private void OnPartButtonClicked(PartType partType, int partId)
         {
-            if (CurrentWeaponType == WeaponType.Pistol) return;
-            
             selectedPartType = partType;
-            int partId = GetPartId(CurrentWeaponType, partType);
-
+            selectedPartId = partId;
+            
             if (!partDataMap.TryGetValue((partType, partId), out selectedPartData))
             {
                 requiredText.text = "No Part Data Found.";
@@ -366,6 +371,9 @@ namespace _1.Scripts.UI.InGame.Modification
             applyButton.gameObject.SetActive(true);
 
             UpdateNameUI();
+
+            applyButton.onClick.RemoveAllListeners();
+            applyButton.onClick.AddListener(OnApplyButtonClicked);
         }
         private void UpdateStatPreview(WeaponPartData partData)
         {
@@ -374,8 +382,8 @@ namespace _1.Scripts.UI.InGame.Modification
             float newRecoil = stat.Recoil + partData.ReduceRecoilRate * stat.Recoil;
             int newAmmo = stat.MaxAmmoCountInMagazine + partData.IncreaseMaxAmmoCountInMagazine;
             
-            recoilText.text = $"{stat.Recoil} → {Mathf.RoundToInt(newRecoil)}";
-            ammoText.text = $"{stat.MaxAmmoCountInMagazine} → {newAmmo}";
+            recoilText.text = $"{newRecoil}";
+            ammoText.text = $"{newAmmo}";
 
             int maxDamage = 1000;
             float maxRPM = 100f;
@@ -387,59 +395,54 @@ namespace _1.Scripts.UI.InGame.Modification
             ammoSlider.value = (float)newAmmo / maxAmmo;
         }
 
-        private Sprite GetPartSprite(WeaponType weaponType, PartType partType)
+        private Sprite GetPartSprite(WeaponType weaponType, PartType partType, int partId)
         {
-            int id = GetPartId(weaponType, partType);
-            if (partDataMap != null && partDataMap.TryGetValue((partType, id), out var partData))
+            if (partDataMap != null && partDataMap.TryGetValue((partType, partId), out var partData))
                 return partData.Icon;
             return null;
         }
         
-        private int GetPartId(WeaponType weaponType, PartType partType)
+        private int GetPartId(WeaponType weaponType, PartType partType, int buttonIdx = 0)
         {
-            if (weaponType == WeaponType.Rifle)
+            switch (weaponType)
             {
-                switch (partType)
-                {
-                    case PartType.ExtendedMag:
-                        return 11;
-                    case PartType.FlameArrester:
-                        return 6;
-                    case PartType.Sight:
-                        return 1;
-                    case PartType.Silencer:
-                        return 7;
-                    case PartType.Suppressor:
-                        return 10;
-                }
-            }
-            else if (weaponType == WeaponType.GrenadeLauncher)
-            {
-                if (partType == PartType.Sight) return 5;
-            }
-            else if (weaponType == WeaponType.HackGun)
-            {
-                switch (partType)
-                {
-                    case PartType.ExtendedMag:
-                        return 12;
-                    case PartType.Sight:
-                        return 4;
-                    case PartType.FlameArrester:
-                        return 8;
-                }
-            }
-            else if (weaponType == WeaponType.Pistol)
-            {
-                switch (partType)
-                {
-                    case PartType.Sight: return 14;
-                    case PartType.Silencer: return 15;
-                    case PartType.ExtendedMag: return 13;
-                }
+                case WeaponType.Rifle when partType == PartType.Sight:
+                    return (buttonIdx == 0) ? 1 : 2;
+                case WeaponType.Rifle:
+                    switch (partType)
+                    {
+                        case PartType.ExtendedMag: return 11;
+                        case PartType.FlameArrester: return 6;
+                        case PartType.Sight: return 1;
+                        case PartType.Silencer: return 7;
+                        case PartType.Suppressor: return 10;
+                    }
+
+                    break;
+                case WeaponType.GrenadeLauncher when partType == PartType.Sight:
+                    return 5;
+                case WeaponType.HackGun:
+                    switch (partType)
+                    {
+                        case PartType.ExtendedMag: return 12;
+                        case PartType.Sight: return 4;
+                        case PartType.FlameArrester: return 8;
+                    }
+
+                    break;
+                case WeaponType.Pistol:
+                    switch (partType)
+                    {
+                        case PartType.Sight: return 14;
+                        case PartType.Silencer: return 15;
+                        case PartType.ExtendedMag: return 13;
+                    }
+                    break;
+                default: return -1;
             }
             return -1;
         }
+
         
         private void HighlightPart(PartType partType)
         {
@@ -477,8 +480,7 @@ namespace _1.Scripts.UI.InGame.Modification
             }
             else if (selectedPartType != null && selectedPartData)
             {
-                int partId = GetPartId(CurrentWeaponType, selectedPartType.Value);
-                applied = playerWeapon.EquipPart(CurrentWeaponType, selectedPartType.Value, partId);
+                applied = playerWeapon.EquipPart(CurrentWeaponType, selectedPartType.Value, selectedPartId);
             }
             if (applied) Refresh();
             else Debug.LogError("Failed to apply part");
@@ -507,6 +509,7 @@ namespace _1.Scripts.UI.InGame.Modification
 
         private void HideModal()
         {
+            if (!applyModal.activeInHierarchy) return;
             modalWindowManager.ModalWindowOut();
             applyModal.SetActive(false);
         }
@@ -556,7 +559,7 @@ namespace _1.Scripts.UI.InGame.Modification
             for (int i = 1; i <= SlotOrder.Length; i++)
             {
                 int idx = (currentWeaponIdx - i + SlotOrder.Length) % SlotOrder.Length;
-                if (!ownedWeapons.ContainsKey(SlotOrder[idx])) continue;
+                if (!ownedWeapons.ContainsKey(GetSlotWeaponType(idx))) continue;
                 currentWeaponIdx = idx;
                 break;
             }
@@ -568,7 +571,7 @@ namespace _1.Scripts.UI.InGame.Modification
             for (int i = 1; i <= SlotOrder.Length; i++)
             {
                 int idx = (currentWeaponIdx + i) % SlotOrder.Length;
-                if (!ownedWeapons.ContainsKey(SlotOrder[idx])) continue;
+                if (!ownedWeapons.ContainsKey(GetSlotWeaponType(idx))) continue;
                 currentWeaponIdx = idx;
                 break;
             }

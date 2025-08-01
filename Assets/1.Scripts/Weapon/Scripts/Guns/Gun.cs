@@ -218,10 +218,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 if (data.Data.Type == PartType.ExtendedMag)
                 {
                     CurrentMaxAmmoCountInMagazine += data.Data.IncreaseMaxAmmoCountInMagazine;
-                    // TODO: Refresh Ammo UI
+                    coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                 }
                 
-                EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
+                EquippedWeaponParts[data.Data.Type] = data.Data.Id;
             }
             else
             {
@@ -234,7 +234,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (CurrentAmmoCountInMagazine > GunData.GunStat.MaxAmmoCountInMagazine)
                         CurrentAmmoCount += CurrentAmmoCountInMagazine - GunData.GunStat.MaxAmmoCountInMagazine;
                     CurrentMaxAmmoCountInMagazine -= data.Data.IncreaseMaxAmmoCountInMagazine;
-                    // TODO: Refresh Ammo UI
+                    coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
                 }
                 
                 EquippedWeaponParts.Remove(data.Data.Type);

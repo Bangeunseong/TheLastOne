@@ -122,5 +122,25 @@ namespace _1.Scripts.Util
                     return new WeaponStatView();
             }
         }
+        public static Sprite GetWeaponSprite(BaseWeapon weapon)
+        {
+            return weapon switch
+            {
+                Gun g => g.GunData.Icon,
+                GrenadeLauncher gl => gl.GrenadeData.Icon,
+                HackGun hg => hg.HackData.Icon,
+                _ => null
+            };
+        }
+        public static string GetWeaponDescription(BaseWeapon weapon)
+        {
+            switch (weapon)
+            {
+                case Gun g: return g.GunData.GunStat.Description;
+                case GrenadeLauncher gl: return gl.GrenadeData.GrenadeStat.Description;
+                case HackGun hg: return hg.HackData.HackStat.Description;
+                default: return "";
+            }
+        }
     }
 }
