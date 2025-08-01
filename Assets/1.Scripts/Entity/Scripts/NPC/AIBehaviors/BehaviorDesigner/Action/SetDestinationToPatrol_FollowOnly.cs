@@ -10,10 +10,11 @@ using UnityEngine.AI;
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 {
 	[TaskCategory("Every")]
-	[TaskDescription("SetDestinationToPatrol")]
-	public class SetDestinationToPatrol : global::BehaviorDesigner.Runtime.Tasks.Action
+	[TaskDescription("SetDestinationToPatrol_FollowOnly")]
+	public class SetDestinationToPatrol_FollowOnly : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
 		public SharedTransform selfTransform;
+		public SharedTransform leader;
 		public SharedBaseNpcStatController statController;
 		public SharedNavMeshAgent agent;
 		public SharedAnimator animator;
@@ -41,15 +42,19 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			{
 				targetPosition = GetPlayerPosition();
 			}
-			else
+			else if (leader.Value == null)
 			{ 
 				targetPosition = GetWanderLocation();
+			}
+			else
+			{
+				targetPosition = GetLeaderPosition();
 			}
 			
 			agent.Value.SetDestination(targetPosition);
 			if (isShebot)
 			{
-				if (statController.Value.RuntimeStatData.IsAlly)
+				if (statController.Value.RuntimeStatData.IsAlly || leader.Value != null)
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 					
@@ -96,10 +101,21 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			return hit.position;
 		}
 
+		private Vector3 GetLeaderPosition()
+		{
+			Vector3 directionToLeader = (leader.Value.position - selfTransform.Value.position).normalized;
+			Vector3 targetSpot = leader.Value.position - directionToLeader * stoppingDistance.Value;
+			
+			if (NavMesh.SamplePosition(targetSpot, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+			{
+				return hit.position;
+			}
+
+			return selfTransform.Value.position;
+		} 
+		
 		private Vector3 GetPlayerPosition()
 		{
-			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
-				
 			Vector3 directionToPlayer = (CoreManager.Instance.gameManager.Player.transform.position - selfTransform.Value.position).normalized;
 			Vector3 targetSpot = CoreManager.Instance.gameManager.Player.transform.position - directionToPlayer * (stoppingDistance.Value + 1.5f);
 				
