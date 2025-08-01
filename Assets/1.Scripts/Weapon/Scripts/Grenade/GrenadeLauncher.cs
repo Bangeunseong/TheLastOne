@@ -95,7 +95,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             }
             else
             {
-                CurrentAmmoCount = 0;
+                CurrentAmmoCount = GrenadeData.GrenadeStat.MaxAmmoCount;
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
                 
                 foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);

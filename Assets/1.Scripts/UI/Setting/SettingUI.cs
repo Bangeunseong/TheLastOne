@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -127,7 +128,7 @@ namespace _1.Scripts.UI.Setting
                 var r = resolutions[i];
                 if (r.width == Screen.currentResolution.width &&
                     r.height == Screen.currentResolution.height &&
-                    r.refreshRateRatio.value.Equals(Screen.currentResolution.refreshRateRatio.value))
+                    Math.Abs(r.refreshRateRatio.value - Screen.currentResolution.refreshRateRatio.value) < 0.5f)
                     return i;
             }
             return 0;

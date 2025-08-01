@@ -103,7 +103,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 }
                 else
                 {
-                    CurrentAmmoCount = 0;
+                    CurrentAmmoCount = GunData.GunStat.MaxAmmoCount;
                     CurrentAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
                     
                     foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);

@@ -168,7 +168,7 @@ namespace _1.Scripts.Manager.Core
         public void StartGame()
         {
             gameManager.TryRemoveSavedData();
-            _ = LoadScene(SceneType.Stage1);
+            _ = LoadScene(SceneType.Stage2);
         }
 
         /// <summary>

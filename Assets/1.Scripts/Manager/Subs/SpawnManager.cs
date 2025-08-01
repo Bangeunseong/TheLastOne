@@ -2,26 +2,23 @@ using System;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
-using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
-using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using AYellowpaper.SerializedCollections;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = System.Random;
 
 namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class SpawnManager
     {
-        public static int BaseWeaponIndex { get; private set; } = 1000; 
-        public static int BaseItemIndex { get; private set; } = 1500;
+        public const int BaseWeaponIndex = 1000; 
+        public const int BaseItemIndex = 1100;
         
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }

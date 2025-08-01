@@ -33,7 +33,8 @@ namespace _1.Scripts.Manager.Data
     {
         public SerializableVector3 position;
         public SerializableQuaternion rotation;
-
+        
+        public SerializableTransform(){}
         public SerializableTransform(SerializableTransform transform)
         {
             position = transform.position; rotation = transform.rotation;
@@ -48,6 +49,7 @@ namespace _1.Scripts.Manager.Data
         public WeaponType type;
         public SerializableTransform transform;
 
+        public SerializableWeaponProp(){}
         public SerializableWeaponProp(SerializableWeaponProp data)
         {
             type = data.type;
@@ -62,6 +64,7 @@ namespace _1.Scripts.Manager.Data
         public ItemType type;
         public SerializableTransform transform;
 
+        public SerializableItemProp(){}
         public SerializableItemProp(SerializableItemProp data)
         {
             type = data.type;
