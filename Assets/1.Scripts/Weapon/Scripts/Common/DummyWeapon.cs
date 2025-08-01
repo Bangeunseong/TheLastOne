@@ -80,7 +80,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
                 {
                     player.PlayerWeapon.Weapons[Type].OnRefillAmmo(10);
                 }
-                
             }
             else
             {
@@ -90,7 +89,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
                         WeaponType.HackGun => 5,
                         WeaponType.GrenadeLauncher => 6,
                         WeaponType.Pistol => 30,
-                        _ => 60
+                        WeaponType.Rifle => 60,
+                        WeaponType.SniperRifle => 10,
                     });
                 if (!result) return;
             }
