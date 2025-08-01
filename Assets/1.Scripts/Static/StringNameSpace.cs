@@ -80,5 +80,6 @@ namespace _1.Scripts.Static
         public const string MuzzleVisualEffect = "muzzleVisualEffect";
         public const string RifleTransform = "RifleTransform";
         public const string SwordTransform = "SwordTransform";
+        public const string IsAttacking = "isAttacking";
     }
 }
