@@ -20,7 +20,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
         protected readonly CoreManager coreManager;
         
         private float speed;
-        private float animationBlend;
         private float smoothVelocity = 10f;
         private Vector3 recoilEuler;
         
@@ -117,13 +116,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             playerCondition.CurrentSpeed = speed;
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
-            animationBlend = Mathf.Lerp(animationBlend, targetSpeed, Time.unscaledDeltaTime * smoothVelocity);
-            if (animationBlend < 0.01f) animationBlend = 0f;
-            
             if (playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
                 playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex]
-                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, animationBlend);
-            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, animationBlend);
+                    .SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
+            stateMachine.Player.Animator.SetFloat(stateMachine.Player.AnimationData.SpeedParameterHash, speed);
             
             stateMachine.Player.Controller.Move(direction * (speed * Time.unscaledDeltaTime) + stateMachine.Player.PlayerGravity.ExtraMovement * Time.unscaledDeltaTime);
         }
