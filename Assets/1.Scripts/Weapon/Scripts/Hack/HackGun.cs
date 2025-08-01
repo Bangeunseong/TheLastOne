@@ -9,7 +9,6 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.WeaponDetails;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Hack
@@ -102,7 +101,7 @@ namespace _1.Scripts.Weapon.Scripts.Hack
             }
             else
             {
-                CurrentAmmoCount = 0;
+                CurrentAmmoCount = HackData.HackStat.MaxAmmoCount;
                 CurrentAmmoCountInMagazine = HackData.HackStat.MaxAmmoCountInMagazine;
                 
                 foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);

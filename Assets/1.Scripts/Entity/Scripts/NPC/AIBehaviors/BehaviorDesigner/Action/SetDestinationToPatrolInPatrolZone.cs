@@ -52,7 +52,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			return TaskStatus.Success;
 		}
 		
-		Vector3 GetWanderLocation()
+		private Vector3 GetWanderLocation()
 		{
 			NavMeshHit hit = new NavMeshHit();
 			hit.position = selfTransform.Value.position;
@@ -89,7 +89,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			return hit.position;
 		}
 
-		Vector3 GetPlayerPosition()
+		private Vector3 GetPlayerPosition()
 		{
 			agent.Value.speed = statController.Value.RuntimeStatData.MoveSpeed + statController.Value.RuntimeStatData.RunMultiplier;
 				
