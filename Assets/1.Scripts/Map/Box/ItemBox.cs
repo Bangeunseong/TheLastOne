@@ -8,12 +8,13 @@ using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Core;
+using _1.Scripts.Util;
 using _1.Scripts.Weapon.Scripts.Common;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace _1.Scripts.Map.PartBox
+namespace _1.Scripts.Map.Box
 {
     public enum BoxType
     {
@@ -22,10 +23,8 @@ namespace _1.Scripts.Map.PartBox
         Parts,
     }
     
-    public class PartBox : MonoBehaviour, IInteractable, IGameEventListener
+    public class ItemBox : MonoBehaviour, IInteractable, IGameEventListener
     {
-        public const int BaseItemBoxIndex = 1200;
-        
         [field: Header("Components")]
         [field: SerializeField] public Animator Animator { get; private set; }
         [field: SerializeField] public ParticleSystem ParticleSystem { get; private set; }
@@ -76,7 +75,7 @@ namespace _1.Scripts.Map.PartBox
             var save = CoreManager.Instance.gameManager.SaveData;
             if (save is not { stageInfos: not null } ||
                 !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info)) return;
-            if (!info.completionDict.TryGetValue(BaseItemBoxIndex + InstanceId, out var value) || value) return;
+            if (!info.completionDict.TryGetValue(BaseEventIndex.BaseItemBoxIndex + InstanceId, out var value) || value) return;
             
             GameEventSystem.Instance.UnregisterListener(this);
             isAlreadyOpened = true;
@@ -95,18 +94,18 @@ namespace _1.Scripts.Map.PartBox
             p.PlayerCondition.LastSavedRotation = p.transform.rotation;
             
             GameEventSystem.Instance.RaiseEvent(TargetId);
-            GameEventSystem.Instance.RaiseEvent(BaseItemBoxIndex + InstanceId);
+            GameEventSystem.Instance.RaiseEvent(BaseEventIndex.BaseItemBoxIndex + InstanceId);
         }
 
         public void OnCancelInteract() { }
         
         public void OnEventRaised(int eventID)
         {
-            if (eventID != BaseItemBoxIndex + InstanceId) return;
+            if (eventID != BaseEventIndex.BaseItemBoxIndex + InstanceId) return;
             
             var save = coreManager.gameManager.SaveData;
             if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var info))
-                info.completionDict.TryAdd(BaseItemBoxIndex + InstanceId, true);
+                info.completionDict.TryAdd(BaseEventIndex.BaseItemBoxIndex + InstanceId, true);
             
             GameEventSystem.Instance.UnregisterListener(this);
             coreManager.SaveData_QueuedAsync();

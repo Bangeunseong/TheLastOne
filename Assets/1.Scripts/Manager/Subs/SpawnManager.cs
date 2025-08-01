@@ -17,9 +17,6 @@ namespace _1.Scripts.Manager.Subs
 {
     [Serializable] public class SpawnManager
     {
-        public const int BaseWeaponIndex = 1000; 
-        public const int BaseItemIndex = 1100;
-        
         [field: Header("Spawn Point Data")]
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
         [field: SerializeField] public SerializedDictionary<int, SerializableWeaponProp> DynamicSpawnedWeapons { get; private set; } = new();
@@ -83,12 +80,12 @@ namespace _1.Scripts.Manager.Subs
                 foreach (var val in pair.Value)
                 {
                     if (dto == null || !dto.stageInfos.TryGetValue(sceneType, out var info) || 
-                        !info.completionDict.TryGetValue(BaseWeaponIndex + weaponIndex, out var value) ||
+                        !info.completionDict.TryGetValue(BaseEventIndex.BaseWeaponIndex + weaponIndex, out var value) ||
                         !value)
                     {
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                        if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(true, BaseWeaponIndex + weaponIndex);
+                        if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(true, BaseEventIndex.BaseWeaponIndex + weaponIndex);
                         spawnedWeapons.Add(obj);
                     }
                     weaponIndex++;
@@ -99,12 +96,12 @@ namespace _1.Scripts.Manager.Subs
                 foreach (var val in pair.Value)
                 {
                     if (dto == null || !dto.stageInfos.TryGetValue(sceneType, out var info) || 
-                        !info.completionDict.TryGetValue(BaseItemIndex + itemIndex, out var value) ||
+                        !info.completionDict.TryGetValue(BaseEventIndex.BaseItemIndex + itemIndex, out var value) ||
                         !value)
                     {
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
-                        if (obj.TryGetComponent(out DummyItem item)) item.Initialize(true, BaseItemIndex + itemIndex);
+                        if (obj.TryGetComponent(out DummyItem item)) item.Initialize(true, BaseEventIndex.BaseItemIndex + itemIndex);
                         spawnedItems.Add(obj);
                     }
                     itemIndex++;
