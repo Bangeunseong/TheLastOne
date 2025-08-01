@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
@@ -12,8 +13,8 @@ namespace _1.Scripts.UI.Inventory
     public class PartRendererInfo
     {
         public PartType partType;
-        public MeshRenderer renderer;
-    }
+        public MeshRenderer meshRenderer;
+        public SkinnedMeshRenderer skinnedMeshRenderer;    }
     public class PreviewWeaponHandler : MonoBehaviour
     {
         
@@ -26,13 +27,14 @@ namespace _1.Scripts.UI.Inventory
             transform.Rotate(Vector3.up, speed * Time.unscaledDeltaTime, Space.Self);
         }
         
-        public MeshRenderer GetRendererOfPart(PartType partType)
+        public Renderer GetRendererOfPart(PartType partType)
         {
-            foreach (var info in partRenderers)
+            foreach (var info in partRenderers.Where(info => info.partType == partType))
             {
-                if (info.partType == partType && info.renderer != null)
-                    return info.renderer;
+                if (info.meshRenderer) return info.meshRenderer;
+                if (info.skinnedMeshRenderer) return info.skinnedMeshRenderer;
             }
+
             return null;
         }
     }

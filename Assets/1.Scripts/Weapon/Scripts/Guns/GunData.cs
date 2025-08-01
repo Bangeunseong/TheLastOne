@@ -18,5 +18,6 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     public class GunData : ScriptableObject
     {
         [field: SerializeField] public GunStat GunStat { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
     }
 }

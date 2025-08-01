@@ -21,5 +21,6 @@ namespace _1.Scripts.Weapon.Scripts.Hack
     public class HackData : ScriptableObject
     {
         [field: SerializeField] public HackStat HackStat { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
     }
 }

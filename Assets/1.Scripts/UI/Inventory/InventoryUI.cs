@@ -44,8 +44,9 @@ namespace _1.Scripts.UI.Inventory
         [SerializeField] private TextMeshProUGUI recoilText;
         [SerializeField] private TextMeshProUGUI weightText;
         [SerializeField] private TextMeshProUGUI ammoText;
-        
-        [Header("Description")]
+
+        [Header("Description")] 
+        [SerializeField] private List<Image> weaponImages;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI descriptionText;
         
@@ -167,6 +168,8 @@ namespace _1.Scripts.UI.Inventory
                     button.gameObject.SetActive(true);
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
                     if (label) label.text = SlotUtility.GetWeaponName(weapon);
+                    weaponImages[i].sprite = SlotUtility.GetWeaponSprite(weapon);
+                    weaponImages[i].color = Color.white;
                     button.onClick.AddListener(() => ShowWeapon(weaponType));
                 }
                 else
@@ -192,7 +195,7 @@ namespace _1.Scripts.UI.Inventory
             var stat = SlotUtility.GetWeaponStat(weapon);
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);
             titleText.text = SlotUtility.GetWeaponName(weapon);
-            descriptionText.text = titleText.text + " needs Description";
+            descriptionText.text = SlotUtility.GetWeaponDescription(weapon);
             if (weaponPreviewMap.TryGetValue(weaponType, out var previewGo))
                 previewGo.SetActive(true);
             currentWeaponType = weaponType;

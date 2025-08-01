@@ -158,6 +158,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 if (slotHasWeapon)
                 {
                     slotImages[i].color = Color.white;
+                    slotImages[i].sprite = SlotUtility.GetWeaponSprite(weapon);
                     slotTexts[i].text = SlotUtility.GetWeaponName(weapon);
                     var (mag, total) = SlotUtility.GetWeaponAmmo(weapon);
                     slotAmmoTexts[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : "";
@@ -166,6 +167,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 else
                 {
                     slotImages[i].color = Color.clear;
+                    slotImages[i].sprite = null;
                     slotTexts[i].text = "";
                     slotAmmoTexts[i].text = "";
                 }

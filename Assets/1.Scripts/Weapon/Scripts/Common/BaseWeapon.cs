@@ -52,9 +52,16 @@ namespace _1.Scripts.Weapon.Scripts.Common
         {
             if (!weaponParts.TryGetValue(id, out var part)) return false;
             if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
-            if (!isEquipable || EquippedWeaponParts.ContainsKey(type)) return false;
+            
+            if (EquippedWeaponParts.TryGetValue(type, out int oldId))
+            {
+                if (weaponParts.TryGetValue(oldId, out var oldPart))
+                    oldPart.OnUnWear();
+                EquippedWeaponParts.Remove(type);
+            }
             
             part.OnWear();
+            EquippedWeaponParts[type] = id;
             return true;
         }
 
