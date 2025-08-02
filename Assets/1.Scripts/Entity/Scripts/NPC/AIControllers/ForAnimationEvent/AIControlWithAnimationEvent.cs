@@ -151,6 +151,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void FireRifleForAnimationEvent()
         {
+            if (behaviorTree.GetVariable(BehaviorNames.MuzzleVisualEffect) is SharedVisualEffect muzzleVisualEffect &&
+                muzzleVisualEffect.Value != null)
+            {
+                muzzleVisualEffect.Value.Play();
+            }
+            
             CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
             FireForAnimationEvent();
         }

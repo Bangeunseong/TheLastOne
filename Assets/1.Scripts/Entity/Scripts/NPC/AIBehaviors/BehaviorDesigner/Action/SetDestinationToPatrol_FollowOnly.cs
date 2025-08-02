@@ -1,5 +1,6 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -38,15 +39,27 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public override TaskStatus OnUpdate()
 		{
 			Vector3 targetPosition;
-			if (statController.Value.RuntimeStatData.IsAlly)
+			
+			if (statController.Value.RuntimeStatData.IsAlly) // 1. 본인이 아군이라면
 			{
 				targetPosition = GetPlayerPosition();
 			}
-			else if (leader.Value == null)
+			else if (leader.Value == null) // 2. 리더가 없다면
 			{ 
 				targetPosition = GetWanderLocation();
 			}
-			else
+			else if (leader.Value.TryGetComponent(out BaseNpcStatController stat)) // 3. 리더가 있지만 그 리더가 적일 경우
+			{
+				if (stat.RuntimeStatData.IsAlly != statController.Value.RuntimeStatData.IsAlly)
+				{
+					targetPosition = GetWanderLocation();
+				}
+				else
+				{
+					targetPosition = GetLeaderPosition();
+				}
+			}
+			else // 4. 그 외의 경우
 			{
 				targetPosition = GetLeaderPosition();
 			}
