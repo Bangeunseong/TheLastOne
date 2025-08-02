@@ -27,5 +27,8 @@ namespace _1.Scripts.Entity.Scripts.Common
         public AudioClip[] footStepSounds;
         public AudioClip[] hitSounds;
         public AudioClip[] deathSounds;
+        
+        [Header("SpawnIndex")]
+        public int spawnIndex;
     }
 }

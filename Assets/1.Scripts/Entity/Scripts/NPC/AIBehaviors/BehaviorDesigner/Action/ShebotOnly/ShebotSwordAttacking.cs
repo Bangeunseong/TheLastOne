@@ -12,34 +12,39 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 	public class ShebotSwordAttacking : global::BehaviorDesigner.Runtime.Tasks.Action
 	{
 		public SharedAnimator animator;
-		public SharedBool isInterrupted;
 
 		public SharedTransform selfTransform;
 		public SharedTransform targetTransform;
 		public SharedBaseNpcStatController statController;
+		public SharedBool isAttacking;
 		
 		public override void OnStart()
 		{
-			if (statController.Value.RuntimeStatData.IsAlly)
+			if (!isAttacking.Value)
 			{
-				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
-			}
-			else
-			{
-				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
+				if (statController.Value.RuntimeStatData.IsAlly)
+				{
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
+				}
+				else
+				{
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
+				}
+				isAttacking.Value = true;
 			}
 		}
 
 		public override TaskStatus OnUpdate()
 		{
-			if (isInterrupted.Value)
+			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+
+			if (stateInfo.normalizedTime > 1.0)
 			{
-				isInterrupted.Value = false;
+				isAttacking.Value = false;
 				return TaskStatus.Success;
 			}
 			
-			// 아군일때만 피할수없게 공격
-			if (statController.Value.RuntimeStatData.IsAlly) NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, 50f);
+			NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, 50f);
 			return TaskStatus.Running;
 		}
 	}

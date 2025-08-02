@@ -33,8 +33,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         SuicideDroneNotHackable,
         BattleRoomReconDrone,
         ShebotSniper,
-        ShebotRifle,
         ShebotSword,
+        ShebotRifleSolo,
         ShebotRifleDuo,
         Dog
     }
@@ -168,9 +168,17 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                     hasFirstkilled = true;
                     CoreManager.Instance.dialogueManager.TriggerDialogue(FIRST_KILL_DIALOGUE_KEY);
                 }
-                if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
+
+                if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)
                 {
-                    foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
+                    GameEventSystem.Instance.RaiseEvent(runtimeStatData.SpawnIndex);
+                }
+                else
+                {
+                    if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
+                    {
+                        foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
+                    }   
                 }
 
                 foreach (Light objlight in lights) { objlight.enabled = false; }
@@ -258,10 +266,17 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         {
             RuntimeStatData.IsAlly = true;
             NpcUtil.SetLayerRecursively_Hacking(this.gameObject);
-
-            if (shouldCountHackingQuest)
+            
+            if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)
             {
-                foreach (int index in hackingQuestIndex) {GameEventSystem.Instance.RaiseEvent(index);}
+                GameEventSystem.Instance.RaiseEvent(runtimeStatData.SpawnIndex);
+            }
+            else
+            {
+                if (shouldCountHackingQuest)
+                {
+                    foreach (int index in hackingQuestIndex) {GameEventSystem.Instance.RaiseEvent(index);}
+                }
             }
             
             CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Hack);

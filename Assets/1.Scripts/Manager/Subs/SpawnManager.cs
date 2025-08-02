@@ -58,7 +58,8 @@ namespace _1.Scripts.Manager.Subs
                 {
                     GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
                     if (enemy.TryGetComponent(out BehaviorTree behaviorTree)) behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); // 위치조정 BT가 생성 시 위치조정을 무시할 가능성 있음
-
+                    if (enemy.TryGetComponent(out BaseNpcStatController statController)) statController.RuntimeStatData.SpawnIndex = index + 200; 
+                    
                     enemy.transform.position = val.position;
                     enemy.transform.rotation = val.rotation;
                         
@@ -133,7 +134,7 @@ namespace _1.Scripts.Manager.Subs
                     DynamicSpawnedItems.Add(pair.Key, new SerializableItemProp(pair.Value));
                 }
             }
-            else  dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
+            else dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
         }
 
         public int GetInstanceHashId(GameObject obj, int type, Transform transform)
