@@ -90,9 +90,6 @@ namespace _1.Scripts.Map.Box
             
             PlayOpeningAnimation();
             
-            p.PlayerCondition.LastSavedPosition = p.transform.position;
-            p.PlayerCondition.LastSavedRotation = p.transform.rotation;
-            
             GameEventSystem.Instance.RaiseEvent(TargetId);
             GameEventSystem.Instance.RaiseEvent(BaseEventIndex.BaseItemBoxIndex + InstanceId);
         }
@@ -108,7 +105,6 @@ namespace _1.Scripts.Map.Box
                 info.completionDict.TryAdd(BaseEventIndex.BaseItemBoxIndex + InstanceId, true);
             
             GameEventSystem.Instance.UnregisterListener(this);
-            coreManager.SaveData_QueuedAsync();
         }
         
         private void PlayOpeningAnimation()
