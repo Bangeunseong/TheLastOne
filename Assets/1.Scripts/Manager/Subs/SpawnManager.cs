@@ -58,7 +58,8 @@ namespace _1.Scripts.Manager.Subs
                 {
                     GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
                     if (enemy.TryGetComponent(out BehaviorTree behaviorTree)) behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); // 위치조정 BT가 생성 시 위치조정을 무시할 가능성 있음
-
+                    if (enemy.TryGetComponent(out BaseNpcStatController statController)) statController.RuntimeStatData.SpawnIndex = index + 200; 
+                    
                     enemy.transform.position = val.position;
                     enemy.transform.rotation = val.rotation;
                         

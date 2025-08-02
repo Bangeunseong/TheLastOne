@@ -14,6 +14,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
     {
         private readonly EntityStatData originalSO;
         
+        public int SpawnIndex { get; set; }
         public string EntityName { get; set; }
         public bool IsPlayer { get; set; }
         public bool IsAlly { get; set; }
@@ -33,6 +34,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         protected RuntimeEntityStatData(EntityStatData so)
         {
             originalSO = so;
+            
+            SpawnIndex = so.spawnIndex;
             
             EntityName = so.entityName;
             IsPlayer = so.isPlayer;

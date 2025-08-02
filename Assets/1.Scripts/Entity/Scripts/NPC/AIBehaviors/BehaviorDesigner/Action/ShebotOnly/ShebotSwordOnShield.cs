@@ -1,5 +1,7 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
@@ -31,6 +33,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			
 			if (!shieldUsedOnce.Value)
 			{
+				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
 				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 				shieldUsedOnce.Value = true;
 				hasEnteredShield.Value = true;

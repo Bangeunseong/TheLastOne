@@ -50,12 +50,12 @@ namespace _1.Scripts.Util
         /// <param name="target"></param>
         /// <param name="turnSpeed"></param>
         /// <param name="additionalYangle"></param>
-        public static void LookAtTarget(Transform self, Vector3 target, float turnSpeed = 15f, float additionalYangle = 0f)
+        public static void LookAtTarget(Transform self, Vector3 target, float turnSpeed = 15f, float additionalYangle = 0f, bool pinY = true)
         {
             if (target == Vector3.zero || self == null) return;
 
             Vector3 dir = target - self.position;
-            dir.y = 0; // 위/아래 회전은 고정
+            if (pinY) dir.y = 0; // 위/아래 회전 고정
 
             if (dir == Vector3.zero) return;
 
