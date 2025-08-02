@@ -45,7 +45,7 @@ namespace _1.Scripts.Manager.Subs
                 typeof(PauseMenuUI), typeof(GameOverUI), typeof(EndingCreditUI) } 
             },
             {
-                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(LowHealthOverLay), typeof(SkillOverlayUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI)}
+                UIType.InGame_HUD, new List<Type>{typeof(InGameUI), typeof(DialogueUI), typeof(LowHealthOverLay), typeof(SkillOverlayUI), typeof(DistanceUI), typeof(QuestUI), typeof(WeaponUI)}
             }
         };
         private CoreManager coreManager;

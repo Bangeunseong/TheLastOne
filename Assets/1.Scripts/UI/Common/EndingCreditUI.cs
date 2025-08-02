@@ -29,6 +29,7 @@ namespace _1.Scripts.UI.Common
         public override void Initialize(UIManager manager, object param = null)
         {
             base.Initialize(manager, param);
+            Hide();
             skipButton.onClick.AddListener(SkipCredit);
         }
 
