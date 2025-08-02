@@ -1,4 +1,5 @@
 ﻿using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame.Modification;
 
 namespace _6.Debug
@@ -150,6 +151,11 @@ namespace _6.Debug
             {
                 CoreManager.Instance.uiManager.HideUI<ModificationUI>();
                 Service.Log("ModificationUI Hide");
+            }
+
+            if (GUILayout.Button("Show Ending Credit"))
+            {
+                CoreManager.Instance.uiManager.ShowUI<EndingCreditUI>();
             }
         }
     }
