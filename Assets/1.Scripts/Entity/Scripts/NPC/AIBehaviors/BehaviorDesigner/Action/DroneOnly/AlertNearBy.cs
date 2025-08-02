@@ -37,7 +37,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 			(statController.Value.RuntimeStatData.IsAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
 			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); // 사운드 출력
 			isAlerted.Value = true;
+			
+			float dialogueChance = 1f;
+			int alertDialogueKey = 13;
 
+			if (Random.value < dialogueChance)
+			{
+				CoreManager.Instance.dialogueManager.TriggerDialogue(alertDialogueKey);
+			}
+			
 			bool isAlly = statController.Value.RuntimeStatData.IsAlly; 
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = alertable.AlertRadius;
