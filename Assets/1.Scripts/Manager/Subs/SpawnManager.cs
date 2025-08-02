@@ -134,7 +134,7 @@ namespace _1.Scripts.Manager.Subs
                     DynamicSpawnedItems.Add(pair.Key, new SerializableItemProp(pair.Value));
                 }
             }
-            else  dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
+            else dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
         }
 
         public int GetInstanceHashId(GameObject obj, int type, Transform transform)
