@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Shebot_Weapon;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
@@ -216,6 +217,25 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
             FireForAnimationEvent();
         }
         
+        #endregion
+
+        #region Dog전용
+
+        public void BleedingTargetForAnimationEvent()
+        { 
+            if (statController.TryGetRuntimeStatInterface<IBleeder>(out IBleeder bleeder))
+            {
+                if (behaviorTree.GetVariable(BehaviorNames.TargetTransform) is SharedTransform target && target.Value != null)
+                {
+                    if (target.Value.TryGetComponent(out IBleedable bleedable))
+                    {
+                        int damagePerTick = statController.RuntimeStatData.BaseDamage / bleeder.TotalBleedTick; // 정수간 연산만 가능. 데미지를 TotalTick보다 낮게하지 말 것 (CeilToint를 쓰면 데미지가 폭등)
+                        bleedable.ApplyBleed(bleeder.TotalBleedTick, bleeder.TickInterval, damagePerTick);
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

@@ -2,6 +2,7 @@ using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Entity.Scripts.NPC.Data;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 
@@ -270,7 +271,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         }
     }   
     
-    public class RuntimeDogStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
+    public class RuntimeDogStatData : RuntimeEntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable, IBleeder
     {
         private readonly DogStatData dogSO;
         
@@ -282,6 +283,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
         public float MaxWaitingDuration { get; set;  }
         public float MinWanderingDistance { get; set; }
         public float MaxWanderingDistance { get; set; }
+        public float TickInterval { get; set; }
+        public int TotalBleedTick { get; set; }
 
         public RuntimeDogStatData(DogStatData so) : base(so)
         {
@@ -295,6 +298,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MaxWaitingDuration = so.MaxWaitingDuration;
             MinWanderingDistance = so.MinWanderingDistance;
             MaxWanderingDistance = so.MaxWanderingDistance;
+            TickInterval = so.TickInterval;
+            TotalBleedTick = so.TotalBleedTick;
         }
 
         public override void ResetStats()
@@ -309,6 +314,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime
             MaxWaitingDuration = dogSO.MaxWaitingDuration;
             MinWanderingDistance = dogSO.MinWanderingDistance;
             MaxWanderingDistance = dogSO.MaxWanderingDistance;
+            TickInterval = dogSO.TickInterval;
+            TotalBleedTick = dogSO.TotalBleedTick;
         }
     }
 }
