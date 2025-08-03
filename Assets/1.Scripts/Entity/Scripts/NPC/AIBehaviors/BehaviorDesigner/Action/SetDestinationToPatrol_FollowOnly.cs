@@ -21,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedAnimator animator;
 		public bool isShebot;
 		public bool isShebot_Rifle;
+		public bool isDog;
 		
 		public SharedLight enemyLight;
 		public SharedLight allyLight;
@@ -65,13 +66,16 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			}
 			
 			agent.Value.SetDestination(targetPosition);
+
+			#region ShebotOnly
+			
 			if (isShebot)
 			{
 				if (statController.Value.RuntimeStatData.IsAlly || leader.Value != null)
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 					
-					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
 					{
 						if (isShebot_Rifle && !stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr))
 						{
@@ -82,9 +86,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 						}
 					}
-					else
-					{
-						if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
+					else if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr))
+					{ 
+						animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 					}
 				}
 				else
@@ -92,6 +96,44 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 				}
 			}
+			#endregion
+			
+			#region DogOnly
+
+			if (isDog)
+			{
+				if (statController.Value.RuntimeStatData.IsAlly || leader.Value != null)
+				{
+					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+				
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
+					{
+						if (!stateInfo.IsName(DogAnimationData.Dog_Idle1Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle2Str) && 
+						    !stateInfo.IsName(DogAnimationData.Dog_Idle3Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle4Str))
+						{
+							int[] idleHashes =
+							{
+								DogAnimationData.Dog_Idle1,
+								DogAnimationData.Dog_Idle2,
+								DogAnimationData.Dog_Idle3,
+								DogAnimationData.Dog_Idle4,
+							};
+							animator.Value.SetTrigger(idleHashes[UnityEngine.Random.Range(0, idleHashes.Length)]);
+						}
+					}
+					else if (!stateInfo.IsName(DogAnimationData.Dog_WalkStr))
+					{
+						animator.Value.SetTrigger(DogAnimationData.Dog_Walk);
+					}
+				}
+				else
+				{
+					animator.Value.SetTrigger(DogAnimationData.Dog_Walk);
+				}
+			}
+
+			#endregion
+			
 			return TaskStatus.Success;
 		}
 		

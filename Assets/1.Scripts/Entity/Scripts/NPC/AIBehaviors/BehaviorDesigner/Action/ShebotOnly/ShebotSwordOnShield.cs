@@ -33,10 +33,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 			
 			if (!shieldUsedOnce.Value)
 			{
-				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
-				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 				shieldUsedOnce.Value = true;
 				hasEnteredShield.Value = true;
+				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 			}
 			else
 			{

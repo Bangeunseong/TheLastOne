@@ -57,7 +57,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 					
-					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
 					{
 						if (isShebot_Rifle && !stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr))
 						{
@@ -68,7 +68,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 						}
 					}
-					else
+					else if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr))
 					{ 
 						animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 					}
@@ -88,7 +88,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 				
-					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
 					{
 						if (!stateInfo.IsName(DogAnimationData.Dog_Idle1Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle2Str) && 
 						    !stateInfo.IsName(DogAnimationData.Dog_Idle3Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle4Str))
@@ -103,7 +103,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 							animator.Value.SetTrigger(idleHashes[UnityEngine.Random.Range(0, idleHashes.Length)]);
 						}
 					}
-					else
+					else if (!stateInfo.IsName(DogAnimationData.Dog_WalkStr))
 					{
 						animator.Value.SetTrigger(DogAnimationData.Dog_Walk);
 					}
