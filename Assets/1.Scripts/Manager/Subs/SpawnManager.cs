@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
-using _1.Scripts.Entity.Scripts.NPC.StencilAbles;
+using _1.Scripts.Entity.Scripts.NPC.StencilAble;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -58,7 +58,7 @@ namespace _1.Scripts.Manager.Subs
                 {
                     GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
                     if (enemy.TryGetComponent(out BehaviorTree behaviorTree)) behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); // 위치조정 BT가 생성 시 위치조정을 무시할 가능성 있음
-                    if (enemy.TryGetComponent(out BaseNpcStatController statController)) statController.RuntimeStatData.SpawnIndex = index + 200; 
+                    if (enemy.TryGetComponent(out BaseNpcStatController statController)) statController.RuntimeStatData.SpawnIndex = index + BaseEventIndex.BaseSpawnEnemyIndex; 
                     
                     enemy.transform.position = val.position;
                     enemy.transform.rotation = val.rotation;
@@ -175,12 +175,10 @@ namespace _1.Scripts.Manager.Subs
         {
             foreach (GameObject obj in spawnedEnemies)
             {
-                if (obj.TryGetComponent<StencilAbleForDrone>(out var stencilAbleForDrone))
+                if (obj.TryGetComponent<StencilAbleForNpc>(out var stencilAbleForNpc))
                 {
-                    stencilAbleForDrone.StencilLayerOnOrNot(isOn);
+                    stencilAbleForNpc.StencilLayerOnOrNot(isOn);
                 }
-                // 이후 다른 컴포넌트도 추가
-                // 예시 : TryGetComponent<StencilAbleForGunner>
             }
         }
 

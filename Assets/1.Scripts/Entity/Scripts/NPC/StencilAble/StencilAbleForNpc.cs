@@ -6,9 +6,9 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.NPC.StencilAbles
+namespace _1.Scripts.Entity.Scripts.NPC.StencilAble
 {
-    public class StencilAbleForDrone : MonoBehaviour
+    public class StencilAbleForNpc : MonoBehaviour
     {
         private BaseNpcStatController statController;
         

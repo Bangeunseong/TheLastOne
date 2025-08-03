@@ -4877,6 +4877,74 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!1001 &8937766213253921321
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511043081034955136, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123809558299251368, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b,
+        type: 3}
+      propertyPath: m_Name
+      value: Dog
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 14ff90dd0f73d8c48b08e2ea59a96d0b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4886,3 +4954,4 @@ SceneRoots:
   - {fileID: 1384705108}
   - {fileID: 2022546691}
   - {fileID: 1367050390}
+  - {fileID: 8937766213253921321}

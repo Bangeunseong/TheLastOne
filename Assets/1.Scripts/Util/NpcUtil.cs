@@ -111,7 +111,7 @@ namespace _1.Scripts.Util
         /// <param name="includeSelf"></param>
         public static void SetLayerRecursively(GameObject obj, int layer, int ignoreLayerMask = 0, bool includeSelf = true)
         {
-            if (includeSelf && (ignoreLayerMask == 0 || (ignoreLayerMask & LayerConstants.ToLayerMask(obj.layer)) != 0))
+            if (includeSelf && (ignoreLayerMask == 0 || (ignoreLayerMask & LayerConstants.ToLayerMask(obj.layer)) == 0))
             {
                 obj.layer = layer;
             }
