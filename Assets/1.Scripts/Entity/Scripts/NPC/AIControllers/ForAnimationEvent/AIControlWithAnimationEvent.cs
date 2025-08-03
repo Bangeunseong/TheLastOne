@@ -230,7 +230,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                     if (target.Value.TryGetComponent(out IBleedable bleedable))
                     {
                         int damagePerTick = statController.RuntimeStatData.BaseDamage / bleeder.TotalBleedTick; // 정수간 연산만 가능. 데미지를 TotalTick보다 낮게하지 말 것 (CeilToint를 쓰면 데미지가 폭등)
-                        bleedable.ApplyBleed(bleeder.TotalBleedTick, bleeder.TickInterval, damagePerTick);
+                        bleedable.OnBleed(bleeder.TotalBleedTick, bleeder.TickInterval, damagePerTick);
                     }
                 }
             }

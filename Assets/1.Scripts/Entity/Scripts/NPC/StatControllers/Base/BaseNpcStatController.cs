@@ -193,7 +193,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             }
         }
 
-        public void ApplyBleed(int totalTick, float tickInterval, int damagePerTick)
+        public void OnBleed(int totalTick, float tickInterval, int damagePerTick)
         {
             bleedCts?.Cancel();
             bleedCts?.Dispose();
