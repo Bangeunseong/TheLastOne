@@ -39,14 +39,25 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Dog
         protected override void OnEnable()
         {
             base.OnEnable();
-            animator.SetTrigger(DroneAnimationData.Idle1);
+            animator.SetTrigger(DogAnimationData.Dog_Idle1);
         }
         
         protected override void PlayHitAnimation()
         {
-            if (!IsStunned) behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
+            // Dog는 해당사항 없음
         }
-        
+
+        protected override void PlayDeathAnimation()
+        {
+            base.PlayDeathAnimation();
+            int[] deathHashes =
+            {
+                DogAnimationData.Dog_Death1,
+                DogAnimationData.Dog_Death2
+            };
+            animator.SetTrigger(deathHashes[UnityEngine.Random.Range(0, deathHashes.Length)]);
+        }
+
         protected override void HackingFailurePenalty() // 각 객체마다 패널티를 분리해야한다면 오버라이드를 자식으로 옮기기
         {
             int baseDamage = runtimeStatData.BaseDamage;

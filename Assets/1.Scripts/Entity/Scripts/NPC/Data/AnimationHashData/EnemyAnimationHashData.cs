@@ -74,6 +74,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public const string Dog_Idle3Str = "Dog_Idle3";
         public const string Dog_Idle4Str = "Dog_Idle4";
         public const string Dog_RunStr = "Dog_Run";
+        public const string Dog_Death1Str = "Dog_Death1";
+        public const string Dog_Death2Str = "Dog_Death2";
         
         public static readonly int Dog_Walk = Animator.StringToHash(Dog_WalkStr);
         public static readonly int Dog_Idle1 = Animator.StringToHash(Dog_Idle1Str);
@@ -81,5 +83,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData
         public static readonly int Dog_Idle3 = Animator.StringToHash(Dog_Idle3Str);
         public static readonly int Dog_Idle4 = Animator.StringToHash(Dog_Idle4Str);
         public static readonly int Dog_Run = Animator.StringToHash(Dog_RunStr);
+        public static readonly int Dog_Death1 = Animator.StringToHash(Dog_Death1Str);
+        public static readonly int Dog_Death2 = Animator.StringToHash(Dog_Death2Str);
     }
 }
