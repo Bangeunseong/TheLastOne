@@ -14,6 +14,7 @@ using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 {
@@ -22,37 +23,43 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         [Header("Components")]
         [SerializeField] private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         [SerializeField] private Animator animator;
+        [SerializeField] private NavMeshAgent agent;
         [SerializeField] private Shebot_Sword sword;
         [SerializeField] private Shebot_Shield shield;
         [SerializeField] private float gotDamagedParticleDuration = 0.5f;
         [SerializeField] private BaseNpcStatController statController;
-        private Coroutine gotDamagedCoroutine;
-        public ParticleSystem p_hit, p_dead, p_smoke;
+        [SerializeField] private ParticleSystem p_hit, p_dead, p_smoke;
+        [SerializeField] private VisualEffect muzzleVisualEffect;
 
+        private Coroutine gotDamagedCoroutine;
         private CoreManager coreManager;
         
         private void Awake()
         {
             behaviorTree ??= GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator ??= GetComponent<Animator>();
+            agent ??= GetComponent<NavMeshAgent>();
             sword ??= GetComponentInChildren<Shebot_Sword>(true);
             shield ??= GetComponentInChildren<Shebot_Shield>(true);
             statController ??= GetComponent<BaseNpcStatController>();
             p_hit ??= this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
             p_dead ??= this.TryGetChildComponent<ParticleSystem>("SmallExplosionEffect");
             p_smoke ??= this.TryGetChildComponent<ParticleSystem>("SmokeEffect");
+            muzzleVisualEffect ??= this.TryGetChildComponent<VisualEffect>("vfxgraph_MuzzleFlash05");
         }
 
         private void Reset()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
             sword = GetComponentInChildren<Shebot_Sword>(true);
             shield = GetComponentInChildren<Shebot_Shield>(true);
             statController = GetComponent<BaseNpcStatController>();
             p_hit = this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
             p_dead = this.TryGetChildComponent<ParticleSystem>("SmallExplosionEffect");
             p_smoke = this.TryGetChildComponent<ParticleSystem>("SmokeEffect");
+            muzzleVisualEffect = this.TryGetChildComponent<VisualEffect>("vfxgraph_MuzzleFlash05");
         }
 
         private void Start()
@@ -119,14 +126,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void SetDestinationNullForAnimationEvent()
         {
-            if (behaviorTree.GetVariable(BehaviorNames.Agent) is SharedNavMeshAgent sharedAgent && sharedAgent.Value != null)
-            {
-                sharedAgent.Value.SetDestination(transform.position);
-            }
-            else
-            {
-                Debug.LogWarning("SharedNavMeshAgent를 찾을 수 없거나 값이 없습니다.");
-            }
+            if (agent != null) agent.SetDestination(transform.position);
+        }
+
+        public void AgentEnabledFalseForAnimationEvent()
+        {
+            if (agent != null) agent.enabled = false;
         }
         
         public void DestroyObjectForAnimationEvent()
@@ -148,6 +153,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
         }
+        
         public void PlaySoundBumForAnimationEvent()
         {
             coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
@@ -199,13 +205,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         #region Sniper전용
 
         public void FireSniperForAnimationEvent()
-        {
-            if (behaviorTree.GetVariable(BehaviorNames.MuzzleVisualEffect) is SharedVisualEffect muzzleVisualEffect &&
-                muzzleVisualEffect.Value != null)
-            {
-                muzzleVisualEffect.Value.Play();
-            }
-
+        { 
+            if (muzzleVisualEffect != null) muzzleVisualEffect.Play();
             FireForAnimationEvent();
         }
         #endregion
@@ -213,13 +214,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         #region Rifle전용
 
         public void FireRifleForAnimationEvent()
-        {
-            if (behaviorTree.GetVariable(BehaviorNames.MuzzleVisualEffect) is SharedVisualEffect muzzleVisualEffect &&
-                muzzleVisualEffect.Value != null)
-            {
-                muzzleVisualEffect.Value.Play();
-            }
-            
+        { 
+            if (muzzleVisualEffect != null) muzzleVisualEffect.Play();
             coreManager.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
             FireForAnimationEvent();
         }

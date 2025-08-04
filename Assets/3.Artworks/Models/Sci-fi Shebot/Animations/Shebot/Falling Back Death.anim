@@ -36107,15 +36107,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.71757585
-        inSlope: 1.1686991
-        outSlope: 1.1686991
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.033333335
         value: -0.6786192
         inSlope: 2.1842978
         outSlope: 2.1842978
@@ -40327,7 +40318,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 2.2
+    m_StopTime: 6.0333333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -76433,15 +76424,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.71757585
-        inSlope: 1.1686991
-        outSlope: 1.1686991
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.033333335
         value: -0.6786192
         inSlope: 2.1842978
         outSlope: 2.1842978
@@ -79474,28 +79456,21 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: EnableApplyRootMotion
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
-    functionName: PlaySoundSignalForAnimationEvent
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
     functionName: AIOffForAnimationEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: AgentEnabledFalseForAnimationEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.033333335
-    functionName: SetDestinationNullForAnimationEvent
+    functionName: PlaySoundSignalForAnimationEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -79503,6 +79478,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.033333335
     functionName: PlaySoundBumForAnimationEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: EnableApplyRootMotion
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -79531,6 +79513,13 @@ AnimationClip:
     messageOptions: 0
   - time: 1.8
     functionName: f_Dead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 6.0333333
+    functionName: DestroyObjectForAnimationEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
