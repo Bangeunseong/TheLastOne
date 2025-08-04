@@ -29,6 +29,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         private Coroutine gotDamagedCoroutine;
         public ParticleSystem p_hit, p_dead, p_smoke;
 
+        private CoreManager coreManager;
+        
         private void Awake()
         {
             behaviorTree ??= GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
@@ -51,6 +53,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
             p_hit = this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
             p_dead = this.TryGetChildComponent<ParticleSystem>("SmallExplosionEffect");
             p_smoke = this.TryGetChildComponent<ParticleSystem>("SmokeEffect");
+        }
+
+        private void Start()
+        {
+            coreManager = CoreManager.Instance;
         }
 
         public void f_hit() //hit
@@ -80,14 +87,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     
         public void f_prevDead()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
         }
 
         public void f_Dead()
         {
             p_dead?.Play();
             p_smoke?.Play();
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
         }
         
         public void AIOffForAnimationEvent()
@@ -139,11 +146,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void PlaySoundSignalForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
         }
         public void PlaySoundBumForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
         }
         
         public void FireForAnimationEvent() // 애니메이션 이벤트로 분리해야 원하는 타이밍에 사격가능
@@ -164,7 +171,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void PlayFootStepSoundForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 4);
+            coreManager.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 4);
         }
         
         #region Sword전용
@@ -213,7 +220,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                 muzzleVisualEffect.Value.Play();
             }
             
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
+            coreManager.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
             FireForAnimationEvent();
         }
         
@@ -229,6 +236,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                 {
                     if (target.Value.TryGetComponent(out IBleedable bleedable))
                     {
+                        coreManager.soundManager.PlaySFX(SfxType.Dog, transform.position, index: 1);
+                        
                         int damagePerTick = statController.RuntimeStatData.BaseDamage / bleeder.TotalBleedTick; // 정수간 연산만 가능. 데미지를 TotalTick보다 낮게하지 말 것 (CeilToint를 쓰면 데미지가 폭등)
                         bleedable.OnBleed(bleeder.TotalBleedTick, bleeder.TickInterval, damagePerTick);
                     }
