@@ -10,7 +10,7 @@ namespace _1.Scripts.Map.GameEvents
     {
         [field: Header("Save Point Id")]
         [field: Tooltip("It should be same with corresponding Spawn Trigger Id")]
-        [field: Range(1, 50)] [field: SerializeField] public int Id { get; private set; }
+        [field: SerializeField] public int Id { get; private set; }
 
         private void OnEnable()
         {
