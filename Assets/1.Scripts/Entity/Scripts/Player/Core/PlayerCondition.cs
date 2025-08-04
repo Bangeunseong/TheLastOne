@@ -132,6 +132,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
                 CurrentFocusGauge = CurrentInstinctGauge = 0f;
+                LastSavedPosition = transform.position;
+                LastSavedRotation = transform.rotation;
             }
             else
             {
@@ -149,6 +151,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     LastSavedRotation = info.currentCharacterRotation.ToQuaternion(); 
                     transform.SetPositionAndRotation(LastSavedPosition, LastSavedRotation); 
                     Service.Log(LastSavedPosition + "," +  LastSavedRotation);
+                }
+                else
+                {
+                    LastSavedPosition = transform.position;
+                    LastSavedRotation = transform.rotation;
                 }
                 
                 UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));

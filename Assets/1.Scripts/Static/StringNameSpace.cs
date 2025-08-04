@@ -40,7 +40,12 @@ namespace _1.Scripts.Static
     {
         public static readonly HashSet<string> prefabs = new()
         {
-            "robot2"
+            "ShebotRifle",
+            "ShebotRifleDuo",
+            "ShebotSniper",
+            "ShebotSword",
+            "ShebotSwordDogDuo",
+            "DogSolo",
         };
     }
 

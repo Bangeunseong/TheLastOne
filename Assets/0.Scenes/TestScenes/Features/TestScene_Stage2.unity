@@ -1047,7 +1047,7 @@ MonoBehaviour:
     FieldOfView: 67.5
     OrthographicSize: 5
     NearClipPlane: 0.1
-    FarClipPlane: 100
+    FarClipPlane: 200
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -3511,7 +3511,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 100
+  far clip plane: 200
   field of view: 67.5
   orthographic: 0
   orthographic size: 5
@@ -4052,7 +4052,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &819566877
 Transform:
   m_ObjectHideFlags: 0
@@ -6843,7 +6843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1336799583
 Transform:
   m_ObjectHideFlags: 0
@@ -6896,7 +6896,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1340099566
 Transform:
   m_ObjectHideFlags: 0
@@ -7730,7 +7730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1503211020
 Transform:
   m_ObjectHideFlags: 0
@@ -10093,7 +10093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1944585056
 Transform:
   m_ObjectHideFlags: 0
@@ -10532,7 +10532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d557d9970893d46439c5ee8c3535f469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnIndex: 0
+  spawnIndex: 1
   targetCount: 0
   killedCount: 0
   invisibleWall:

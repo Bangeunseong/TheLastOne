@@ -14,6 +14,7 @@ using _1.Scripts.Util;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 {
@@ -22,41 +23,54 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         [Header("Components")]
         [SerializeField] private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         [SerializeField] private Animator animator;
+        [SerializeField] private NavMeshAgent agent;
         [SerializeField] private Shebot_Sword sword;
         [SerializeField] private Shebot_Shield shield;
         [SerializeField] private float gotDamagedParticleDuration = 0.5f;
         [SerializeField] private BaseNpcStatController statController;
-        private Coroutine gotDamagedCoroutine;
-        public ParticleSystem p_hit, p_dead, p_smoke;
+        [SerializeField] private ParticleSystem p_hit, p_dead, p_smoke;
+        [SerializeField] private VisualEffect muzzleVisualEffect;
 
+        private Coroutine gotDamagedCoroutine;
+        private CoreManager coreManager;
+        
         private void Awake()
         {
             behaviorTree ??= GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator ??= GetComponent<Animator>();
+            agent ??= GetComponent<NavMeshAgent>();
             sword ??= GetComponentInChildren<Shebot_Sword>(true);
             shield ??= GetComponentInChildren<Shebot_Shield>(true);
             statController ??= GetComponent<BaseNpcStatController>();
             p_hit ??= this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
             p_dead ??= this.TryGetChildComponent<ParticleSystem>("SmallExplosionEffect");
             p_smoke ??= this.TryGetChildComponent<ParticleSystem>("SmokeEffect");
+            muzzleVisualEffect ??= this.TryGetChildComponent<VisualEffect>("vfxgraph_MuzzleFlash05");
         }
 
         private void Reset()
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
             sword = GetComponentInChildren<Shebot_Sword>(true);
             shield = GetComponentInChildren<Shebot_Shield>(true);
             statController = GetComponent<BaseNpcStatController>();
             p_hit = this.TryGetChildComponent<ParticleSystem>("PlasmaExplosionEffect");
             p_dead = this.TryGetChildComponent<ParticleSystem>("SmallExplosionEffect");
             p_smoke = this.TryGetChildComponent<ParticleSystem>("SmokeEffect");
+            muzzleVisualEffect = this.TryGetChildComponent<VisualEffect>("vfxgraph_MuzzleFlash05");
+        }
+
+        private void Start()
+        {
+            coreManager = CoreManager.Instance;
         }
 
         public void f_hit() //hit
         {
             // 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
             if (gotDamagedCoroutine != null)
             {
                 StopCoroutine(gotDamagedCoroutine);
@@ -80,14 +94,14 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
     
         public void f_prevDead()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index:1);
         }
 
         public void f_Dead()
         {
             p_dead?.Play();
             p_smoke?.Play();
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index:2);
         }
         
         public void AIOffForAnimationEvent()
@@ -112,14 +126,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void SetDestinationNullForAnimationEvent()
         {
-            if (behaviorTree.GetVariable(BehaviorNames.Agent) is SharedNavMeshAgent sharedAgent && sharedAgent.Value != null)
-            {
-                sharedAgent.Value.SetDestination(transform.position);
-            }
-            else
-            {
-                Debug.LogWarning("SharedNavMeshAgent를 찾을 수 없거나 값이 없습니다.");
-            }
+            if (agent != null) agent.SetDestination(transform.position);
+        }
+
+        public void AgentEnabledFalseForAnimationEvent()
+        {
+            if (agent != null) agent.enabled = false;
         }
         
         public void DestroyObjectForAnimationEvent()
@@ -139,11 +151,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void PlaySoundSignalForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 1);
         }
+        
         public void PlaySoundBumForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
         }
         
         public void FireForAnimationEvent() // 애니메이션 이벤트로 분리해야 원하는 타이밍에 사격가능
@@ -164,7 +177,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void PlayFootStepSoundForAnimationEvent()
         {
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 4);
+            coreManager.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 4);
         }
         
         #region Sword전용
@@ -192,13 +205,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         #region Sniper전용
 
         public void FireSniperForAnimationEvent()
-        {
-            if (behaviorTree.GetVariable(BehaviorNames.MuzzleVisualEffect) is SharedVisualEffect muzzleVisualEffect &&
-                muzzleVisualEffect.Value != null)
-            {
-                muzzleVisualEffect.Value.Play();
-            }
-
+        { 
+            if (muzzleVisualEffect != null) muzzleVisualEffect.Play();
             FireForAnimationEvent();
         }
         #endregion
@@ -206,14 +214,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         #region Rifle전용
 
         public void FireRifleForAnimationEvent()
-        {
-            if (behaviorTree.GetVariable(BehaviorNames.MuzzleVisualEffect) is SharedVisualEffect muzzleVisualEffect &&
-                muzzleVisualEffect.Value != null)
-            {
-                muzzleVisualEffect.Value.Play();
-            }
-            
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
+        { 
+            if (muzzleVisualEffect != null) muzzleVisualEffect.Play();
+            coreManager.soundManager.PlaySFX(SfxType.Shebot, transform.position, index: 2);
             FireForAnimationEvent();
         }
         
@@ -229,6 +232,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
                 {
                     if (target.Value.TryGetComponent(out IBleedable bleedable))
                     {
+                        coreManager.soundManager.PlaySFX(SfxType.Dog, transform.position, index: 1);
+                        
                         int damagePerTick = statController.RuntimeStatData.BaseDamage / bleeder.TotalBleedTick; // 정수간 연산만 가능. 데미지를 TotalTick보다 낮게하지 말 것 (CeilToint를 쓰면 데미지가 폭등)
                         bleedable.OnBleed(bleeder.TotalBleedTick, bleeder.TickInterval, damagePerTick);
                     }
