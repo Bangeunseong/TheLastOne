@@ -1944,11 +1944,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3899554365433528024, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: dialogueKey
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3958522815023532447, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_SceneBindings.Array.data[0].value
       value: 
       objectReference: {fileID: 1074753609}
+    - target: {fileID: 4389699948816986605, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: dialogueKey
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4469942538857047826, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: dialogueKey
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5451800197269041405, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: dialogueKey
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5463202896502898694, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -2009,6 +2029,11 @@ PrefabInstance:
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 900053060764606496}
+    - target: {fileID: 8874275582740947844, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+        type: 3}
+      propertyPath: dialogueKey
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

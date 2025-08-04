@@ -42,8 +42,12 @@ namespace _1.Scripts.UI.InGame.HUD
         
         private void Update()
         {
-            if (!player || !target) return;
-
+            if (!player || !target)
+            {
+                if (gameObject.activeSelf) Hide();
+                return;
+            }
+            
             float distance = Vector3.Distance(player.position, target.position);
             distanceText.text = $"{distance:0.0}m";
         }

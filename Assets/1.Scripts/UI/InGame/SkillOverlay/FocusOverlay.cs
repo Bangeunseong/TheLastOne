@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
 
 namespace _1.Scripts.UI.InGame.SkillOverlay
 {
@@ -19,70 +17,31 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
 
         private Coroutine[] leftCoroutines;
         private Coroutine[] rightCoroutines;
+        private bool isEffectRunning = false;
 
-        private void Start()
+        private void Awake()
         {
             leftCoroutines = new Coroutine[columnCount];
             rightCoroutines = new Coroutine[columnCount];
-            
-            for (int i = 0; i < columnCount; i++)
-            {
-                StartCoroutine(SpawnFocusMatrix(leftPanel));
-            }
-            for (int i = 0; i < columnCount; i++)
-            {
-                StartCoroutine(SpawnFocusMatrix(rightPanel));
-            }
+            KillAllMatrixObjects();
         }
 
-        private IEnumerator SpawnFocusMatrix(RectTransform panel)
+        public void SafeShow()
         {
-            float width = panel.rect.width;
-            float height = panel.rect.height;
-
-            while (true)
-            {
-                float x = Random.Range(-width / 2, width / 2);
-                GameObject go = Instantiate(focusMatrixPrefab, panel);
-                var rect = go.GetComponent<RectTransform>();
-                rect.anchoredPosition = new Vector2(x, height + 50);
-                var text = go.GetComponent<TextMeshProUGUI>();
-                text.fontSize = Random.Range(minFontSize, maxFontSize);
-                Color c = text.color;
-                c.a = Random.Range(minAlpha, maxAlpha);
-                text.color = c;
-                float speed = Random.Range(minSpeed, maxSpeed);
-                float y = height + 50;
-                float charChangeTimer = 0f;
-                while (y > -50)
-                {
-                    y -= speed * Time.deltaTime;
-                    rect.anchoredPosition = new Vector2(x, y);
-                    charChangeTimer += Time.deltaTime;
-                    if (charChangeTimer > charChangeInterval)
-                    {
-                        text.text = GetRandomBinaryString(Random.Range(1, 20));
-                        charChangeTimer = 0f;
-                    }
-
-                    yield return null;
-                }
-                Destroy(go);
-                yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
-            }
+            if (isEffectRunning) return;
+            gameObject.SetActive(true);
+            RestartEffect();
         }
-        private string GetRandomBinaryString(int len)
+        public void SafeHide()
         {
-            var str = "";
-            for (int i = 0; i < len; i++)
-                str += Random.value < 0.5f ? "0" : "1";
-            return str;
+            StopEffect();
+            gameObject.SetActive(false);
         }
 
         public void RestartEffect()
         {
             StopEffect();
-
+            isEffectRunning = true;
             for (int i = 0; i < columnCount; i++)
                 leftCoroutines[i] = StartCoroutine(SpawnFocusMatrix(leftPanel));
             for (int i = 0; i < columnCount; i++)
@@ -91,6 +50,7 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
 
         public void StopEffect()
         {
+            isEffectRunning = false;
             if (leftCoroutines != null)
             {
                 for (int i = 0; i < leftCoroutines.Length; i++)
@@ -109,8 +69,58 @@ namespace _1.Scripts.UI.InGame.SkillOverlay
                         rightCoroutines[i] = null;
                     }
             }
-            foreach (Transform child in leftPanel) Destroy(child.gameObject);
-            foreach (Transform child in rightPanel) Destroy(child.gameObject);
+            KillAllMatrixObjects();
+        }
+
+        private void KillAllMatrixObjects()
+        {
+            foreach (Transform child in leftPanel)
+                Destroy(child.gameObject);
+            foreach (Transform child in rightPanel)
+                Destroy(child.gameObject);
+        }
+
+        private IEnumerator SpawnFocusMatrix(RectTransform panel)
+        {
+            float width = panel.rect.width;
+            float height = panel.rect.height;
+
+            while (isEffectRunning)
+            {
+                float x = Random.Range(-width / 2, width / 2);
+                GameObject go = Instantiate(focusMatrixPrefab, panel);
+                var rect = go.GetComponent<RectTransform>();
+                rect.anchoredPosition = new Vector2(x, height + 50);
+                var text = go.GetComponent<TextMeshProUGUI>();
+                text.fontSize = Random.Range(minFontSize, maxFontSize);
+                Color c = text.color;
+                c.a = Random.Range(minAlpha, maxAlpha);
+                text.color = c;
+                float speed = Random.Range(minSpeed, maxSpeed);
+                float y = height + 50;
+                float charChangeTimer = 0f;
+                while (y > -50 && isEffectRunning)
+                {
+                    y -= speed * Time.deltaTime;
+                    rect.anchoredPosition = new Vector2(x, y);
+                    charChangeTimer += Time.deltaTime;
+                    if (charChangeTimer > charChangeInterval)
+                    {
+                        text.text = GetRandomBinaryString(Random.Range(1, 20));
+                        charChangeTimer = 0f;
+                    }
+                    yield return null;
+                }
+                Destroy(go);
+                yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+            }
+        }
+        private string GetRandomBinaryString(int len)
+        {
+            var str = "";
+            for (int i = 0; i < len; i++)
+                str += Random.value < 0.5f ? "0" : "1";
+            return str;
         }
     }
 }

@@ -9499,7 +9499,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce4c7e97b8ac884d8e4d864d099e8e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bindings: []
+  bindings:
+  - questID: 8
+    target: {fileID: 0}
+  - questID: 9
+    target: {fileID: 127460439}
 --- !u!1001 &1807007105
 PrefabInstance:
   m_ObjectHideFlags: 0

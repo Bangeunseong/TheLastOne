@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Dialogue;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.Sound;
 using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
         [SerializeField] private UIManagerText nameTextUIManager;
         [SerializeField] private UIManagerText dialogueTextUIManager;
         [SerializeField] private UIManagerImage frameUIManager;
-        
+        private Dictionary<SfxType, SoundPlayer> dialogueSfxPlayers = new();
         private Coroutine dialogueRoutine;
         private Coroutine fadeRoutine;
         private bool isShowing = false;
@@ -48,10 +49,13 @@ namespace _1.Scripts.UI.InGame.Dialogue
 
         public override void Hide()
         {
+            StopDialogueRoutine();
+
             if (!gameObject.activeInHierarchy)
             {
                 if (canvasGroup) canvasGroup.alpha = 0;
                 gameObject.SetActive(false);
+                StopAllDialogueSfx();
                 return;
             }
             if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
@@ -74,17 +78,15 @@ namespace _1.Scripts.UI.InGame.Dialogue
         
         private void StopDialogueRoutine()
         {
-            if (dialogueRoutine != null)
-            {
-                StopCoroutine(dialogueRoutine);
-                dialogueRoutine = null;
-            }
+            if (dialogueRoutine == null) return;
+            StopCoroutine(dialogueRoutine);
+            dialogueRoutine = null;
         }
         
         public void ShowSequence(List<DialogueData> sequence)
         {
-            if (sequence == null || sequence.Count == 0) return;
             StopDialogueRoutine();
+            if (sequence == null || sequence.Count == 0) return;
             if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
 
             gameObject.SetActive(true);
@@ -106,20 +108,41 @@ namespace _1.Scripts.UI.InGame.Dialogue
             nameText.text = data.Speaker;
             dialogueText.text = "";
 
-            if (data.SpeakerType == SpeakerType.Enemy)
+            switch (data.SpeakerType)
             {
-                nameTextUIManager.colorType = UIManagerText.ColorType.Negative;
-                dialogueTextUIManager.colorType = UIManagerText.ColorType.Negative;
-                frameUIManager.colorType = UIManagerImage.ColorType.Negative;
-            }
-            else
-            {
-                nameTextUIManager.colorType = UIManagerText.ColorType.Primary;
-                dialogueTextUIManager.colorType = UIManagerText.ColorType.Primary;
-                frameUIManager.colorType = UIManagerImage.ColorType.Primary;
+                case SpeakerType.Enemy:
+                    nameTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                    dialogueTextUIManager.colorType = UIManagerText.ColorType.Negative;
+                    frameUIManager.colorType = UIManagerImage.ColorType.Negative;
+                    break;
+                case SpeakerType.Ally:
+                    nameTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                    dialogueTextUIManager.colorType = UIManagerText.ColorType.Primary;
+                    frameUIManager.colorType = UIManagerImage.ColorType.Primary;
+                    break;
+                case SpeakerType.Player:
+                    nameTextUIManager.colorType = UIManagerText.ColorType.Secondary;
+                    dialogueTextUIManager.colorType = UIManagerText.ColorType.Secondary;
+                    frameUIManager.colorType = UIManagerImage.ColorType.Secondary;
+                    break;
+                case SpeakerType.None:
+                default:
+                    break;
             }
             
             yield return StartCoroutine(FadeIn(0.15f));
+
+            SoundPlayer sfxPlayer = null;
+            if (data.sfxType != SfxType.None)
+            {
+                if (dialogueSfxPlayers.TryGetValue(data.sfxType, out var prevPlayer) && prevPlayer)
+                {
+                    prevPlayer.Stop();
+                    dialogueSfxPlayers[data.sfxType] = null;
+                }
+                sfxPlayer = CoreManager.Instance.soundManager.PlayUISFX(data.sfxType, -1, data.sfxIndex);
+                dialogueSfxPlayers[data.sfxType] = sfxPlayer;
+            }
 
             foreach (char c in data.Message)
             {
@@ -128,17 +151,17 @@ namespace _1.Scripts.UI.InGame.Dialogue
                 yield return new WaitForSeconds(0.01f);
             }
 
-            float minTime = 1.5f;
-            float perChar = 0.01f;
-            float wait = minTime + data.Message.Length * perChar;
-            yield return new WaitForSeconds(wait);
+            if (sfxPlayer)
+                yield return new WaitWhile(() => sfxPlayer.IsPlaying());
+            else
+                yield return new WaitForSeconds(1.5f);
 
             for (int i = dialogueText.text.Length - 1; i >= 0; i--)
             {
                 dialogueText.text = dialogueText.text.Substring(0, i);
                 yield return new WaitForSeconds(0.01f);
             }
-            
+
             yield return PlayDialogueSequence(sequence, index + 1);
         }
 
@@ -165,6 +188,12 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
             canvasGroup.alpha = 0;
             gameObject.SetActive(false);
+        }
+        private void StopAllDialogueSfx()
+        {
+            foreach (var kv in dialogueSfxPlayers)
+                kv.Value?.Stop();
+            dialogueSfxPlayers.Clear();
         }
     }
 }

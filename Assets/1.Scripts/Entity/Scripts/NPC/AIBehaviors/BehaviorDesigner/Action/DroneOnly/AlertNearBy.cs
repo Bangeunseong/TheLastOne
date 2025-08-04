@@ -40,7 +40,15 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 			if (isDog) CoreManager.Instance.soundManager.PlaySFX(SfxType.Dog, myCollider.Value.bounds.center, index:0); // 사운드 출력
 			else CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); 
 			isAlerted.Value = true;
+			
+			float dialogueChance = 1f;
+			int alertDialogueKey = 13;
 
+			if (Random.value < dialogueChance)
+			{
+				CoreManager.Instance.dialogueManager.TriggerDialogue(alertDialogueKey);
+			}
+			
 			bool isAlly = statController.Value.RuntimeStatData.IsAlly; 
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = alertable.AlertRadius;
