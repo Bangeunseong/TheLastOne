@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Util;
-using Unity.Collections;
 using UnityEngine;
 
 namespace _1.Scripts.Map.GameEvents
@@ -12,7 +10,7 @@ namespace _1.Scripts.Map.GameEvents
     {
         [Header("Spawn Trigger Id")]
         [Tooltip("It should be same with corresponding Save Point Id")]
-        [Range(1, 50)] [SerializeField] private int spawnIndex;
+        [SerializeField] private int spawnIndex;
 
         [Header("Target Count")]
         [Tooltip("Target Count of Killed Enemies which corresponding with spawn index")]
@@ -56,7 +54,7 @@ namespace _1.Scripts.Map.GameEvents
         private void OnTriggerEnter(Collider other)
         {
             if (isSpawned || !other.CompareTag("Player")) return;
-
+            
             if (!CoreManager.Instance.spawnManager.CurrentSpawnData.EnemySpawnPoints.TryGetValue(spawnIndex,
                     out var spawnPoints))
             {
@@ -64,7 +62,7 @@ namespace _1.Scripts.Map.GameEvents
                 return;
             }
             
-            Debug.Log("스폰됨");
+            Debug.Log("Spawned!");
             
             targetCount = spawnPoints.Count;
             GameEventSystem.Instance.RegisterListener(this);

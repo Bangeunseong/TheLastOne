@@ -41,7 +41,6 @@ namespace _1.Scripts.Quests.Core
             {
                 currentAmount++;
                 CoreManager.Instance.gameManager.Player.PlayerCondition.UpdateLastSavedTransform();
-                CoreManager.Instance.SaveData_QueuedAsync();
                 Service.Log($"[Objective] {data.description} 진행도: {currentAmount}/{data.requiredAmount}");
                 CoreManager.Instance.questManager.UpdateProgress(questId, eventID);
             }
