@@ -92,7 +92,7 @@ namespace _1.Scripts.Item.Items
             else
             {
                 // Service.Log($"Failed to refill {ItemType}");
-                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowMessage("Failed to refill {ItemType}");
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("Failed to refill {ItemType}");
             }
             GameEventSystem.Instance.RaiseEvent(TargetId);
         }

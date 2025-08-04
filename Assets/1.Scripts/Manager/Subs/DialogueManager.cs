@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _1.Scripts.Dialogue;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.InGame.Dialogue;
+using _1.Scripts.Util;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Subs
@@ -10,7 +11,7 @@ namespace _1.Scripts.Manager.Subs
     [Serializable] public class DialogueManager
     {
         [SerializeField] private List<DialogueDataSO> dialogueDataList = new();
-        private Dictionary<string, DialogueDataSO> dialogueDataDict = new();
+        private Dictionary<int, DialogueDataSO> dialogueDataDict = new();
         private CoreManager coreManager;
 
         public void Start()
@@ -18,10 +19,22 @@ namespace _1.Scripts.Manager.Subs
             coreManager = CoreManager.Instance;
 
         }
+        public bool HasPlayed(int dialogueKey)
+        {
+            int saveKey = BaseEventIndex.BaseDialogueIndex + dialogueKey;
+            var sceneType = coreManager.sceneLoadManager.CurrentScene;
+            return CoreManager.Instance.gameManager.SaveData.stageInfos[sceneType].completionDict.TryGetValue(saveKey, out var done) && done;
+        }
+        public void MarkAsPlayed(int dialogueKey)
+        {
+            int saveKey = BaseEventIndex.BaseDialogueIndex + dialogueKey;
+            var sceneType = coreManager.sceneLoadManager.CurrentScene;
+            CoreManager.Instance.gameManager.SaveData.stageInfos[sceneType].completionDict[saveKey] = true;
+        }
 
         public void CacheDialogueData()
         {
-            dialogueDataDict = new Dictionary<string, DialogueDataSO>();
+            dialogueDataDict = new Dictionary<int, DialogueDataSO>();
             dialogueDataList.Clear();
             
             var loadedSO = coreManager.resourceManager.GetAllAssetsOfType<DialogueDataSO>();
@@ -37,26 +50,19 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        public void TriggerDialogue(string key)
+        public void TriggerDialogue(int key)
         {
-            if (string.IsNullOrEmpty(key)) return;
-            
-            if (dialogueDataDict.TryGetValue(key, out var data))
-            {
-                var dialogueUI = coreManager.uiManager.GetUI<DialogueUI>();
-                if (dialogueUI)
-                {
-                    dialogueUI.ShowSequence(data.sequence);
-                }
-                else
-                {
-                    Debug.LogWarning("DialogueUI is not available.");
-                }
-            }
-            else
+            if (!dialogueDataDict.TryGetValue(key, out var data)) 
             {
                 Debug.LogWarning($"Dialogue key not found: {key}");
+                return;
             }
+
+            var dialogueUI = coreManager.uiManager.GetUI<DialogueUI>();
+            if (dialogueUI)
+                dialogueUI.ShowSequence(data.sequence);
+            else
+                Debug.LogWarning("DialogueUI is not available.");
         }
     }
 }

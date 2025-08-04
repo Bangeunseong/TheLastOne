@@ -82,6 +82,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnSelectItem(ItemType itemType)
         {
             Service.Log($"Attempting to select {itemType}");
+            if (!Items.ContainsKey(itemType) || Items[itemType].CurrentItemCount <= 0)
+            {
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("You can't select this item.");
+                return;
+            }
             CurrentItem = itemType;
         }
 
@@ -94,6 +99,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private bool OnUseItem()
         {
             Service.Log($"Attempting to use {CurrentItem}.");
+            if (!Items.ContainsKey(CurrentItem) || Items[CurrentItem].CurrentItemCount <= 0)
+            {
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("You can't use this item.");
+                return false;
+            }
             switch (Items[CurrentItem])
             {
                 case Medkit medkit: return medkit.OnUse(gameObject);

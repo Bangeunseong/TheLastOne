@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.UI.Common;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using Unity.Collections;
@@ -170,7 +171,9 @@ namespace _1.Scripts.Manager.Subs
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>(); uiManager.ShowUI<LobbyUI>();
                     return;
-                case SceneType.EndingScene: return;
+                case SceneType.EndingScene: 
+                    coreManager.uiManager.GetUI<EndingCreditUI>().Show();
+                    return;
             }
             
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기

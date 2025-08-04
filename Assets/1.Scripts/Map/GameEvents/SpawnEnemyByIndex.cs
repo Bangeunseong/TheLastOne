@@ -27,12 +27,18 @@ namespace _1.Scripts.Map.GameEvents
 
         private void Awake()
         {
-            if (invisibleWall.Count <= 0) invisibleWall.AddRange(this.TryGetChildComponents<BoxCollider>("InvisibleWalls"));
+            if (invisibleWall.Count > 0) return;
+            var list = this.TryGetChildComponents<BoxCollider>("InvisibleWalls");
+            if (list is not { Length: > 0 }) return;
+            invisibleWall.AddRange(list);
         }
 
         private void Reset()
         {
-            if (invisibleWall.Count <= 0) invisibleWall.AddRange(this.TryGetChildComponents<BoxCollider>("InvisibleWalls"));
+            if (invisibleWall.Count > 0) return;
+            var list = this.TryGetChildComponents<BoxCollider>("InvisibleWalls");
+            if (list is not { Length: > 0 }) return;
+            invisibleWall.AddRange(list);
         }
 
         private void Start()

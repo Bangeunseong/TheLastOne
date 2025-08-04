@@ -72,6 +72,12 @@ namespace _1.Scripts.Manager.Subs
         HackingSuccess,
         HackingFail,
         WeaponTuning,
+        
+        // Dialogue
+        None,
+        System,
+        Stage2_Player,
+        Stage2_System,
     }
     
     [Serializable] public class SoundManager

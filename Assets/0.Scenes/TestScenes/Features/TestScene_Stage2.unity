@@ -200,80 +200,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8462577}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &17059031
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 867284777}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 79.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.628555
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -32.91
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6736421
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.73905784
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -95.302
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
---- !u!4 &17059032 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-    type: 3}
-  m_PrefabInstance: {fileID: 17059031}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &36364252
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -285,7 +211,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_3
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -409,7 +335,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -489,7 +415,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -502,6 +428,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 883086494}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &102224472
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1098437808}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotSwordDogDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 87.90566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.641777
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.817814
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.22833422
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.97358286
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -153.602
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66cc7692ba7ece8418ad6bac09568169, type: 3}
+--- !u!4 &102224473 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+    type: 3}
+  m_PrefabInstance: {fileID: 102224472}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &109033127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -513,7 +513,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_6
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -588,6 +588,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 617078235}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &122382163
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1514259427}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotRifleDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20.871841
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.711582
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -105.55777
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99653697
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.083151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 9.539
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c37b2cd6a24f45b438ae7a93ff82468e, type: 3}
+--- !u!4 &122382164 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+    type: 3}
+  m_PrefabInstance: {fileID: 122382163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &127460438
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +690,7 @@ Transform:
   m_GameObject: {fileID: 127460438}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 314.92935, y: -18.24, z: 176.81264}
+  m_LocalPosition: {x: 310.528, y: -18.24, z: 177.215}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -756,7 +830,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -824,7 +898,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -892,7 +966,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1049,7 +1123,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1117,7 +1191,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1185,7 +1259,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1456,16 +1530,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2805228650937658841}
-  - {fileID: 302268149}
   - {fileID: 778816502}
   - {fileID: 36364253}
   - {fileID: 2052044246}
   - {fileID: 2114472832}
-  - {fileID: 643912086}
-  - {fileID: 501004345}
   - {fileID: 384783165}
-  - {fileID: 798325466}
   - {fileID: 856520602}
   - {fileID: 317009003}
   - {fileID: 1088312512}
@@ -1500,80 +1569,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 829ec530f5413674faf3f40d3462ef1c,
     type: 3}
   m_PrefabInstance: {fileID: 1851844741}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &302268148
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 236339051}
-    m_Modifications:
-    - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_Dog
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.649
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -58.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edf6963484837c1419efde70d515f332, type: 3}
---- !u!4 &302268149 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-    type: 3}
-  m_PrefabInstance: {fileID: 302268148}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &309588117
 PrefabInstance:
@@ -1636,7 +1631,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1654,7 +1649,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_5
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -1778,7 +1773,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1957,7 +1952,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2025,7 +2020,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2099,7 +2094,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2197,7 +2192,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_3
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -2407,7 +2402,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2616,80 +2611,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 498882733}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &501004344
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 236339051}
-    m_Modifications:
-    - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_Dog
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 79.31
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.649
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -75.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edf6963484837c1419efde70d515f332, type: 3}
---- !u!4 &501004345 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-    type: 3}
-  m_PrefabInstance: {fileID: 501004344}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &502525078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2701,7 +2622,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_6
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -2764,74 +2685,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 502525078}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &523658829
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -19.819
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.674187
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -103.351
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
 --- !u!1001 &579115768
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2893,7 +2746,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2961,7 +2814,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3029,7 +2882,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3069,7 +2922,7 @@ Transform:
   m_GameObject: {fileID: 596228820}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.71034807, z: -0, w: 0.7038506}
-  m_LocalPosition: {x: 66.008, y: -12.34, z: 145.66}
+  m_LocalPosition: {x: 66.03, y: -12.34, z: 145.66}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3109,74 +2962,80 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Id>k__BackingField: 3
---- !u!1001 &607018617
+--- !u!1001 &605550251
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
+    m_TransformParent: {fileID: 1098437808}
     m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 1560188079724652685, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotSwordDogDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.1399994
+      value: 69.56566
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 61.674187
+      value: 61.641777
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -103.020004
+      value: -29.58781
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.20724276
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.9782896
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -203.922
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 66cc7692ba7ece8418ad6bac09568169, type: 3}
+--- !u!4 &605550252 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+    type: 3}
+  m_PrefabInstance: {fileID: 605550251}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &617078235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3238,7 +3097,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3312,87 +3171,13 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
---- !u!1001 &643912085
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 236339051}
-    m_Modifications:
-    - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_Dog
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 78.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 62.077
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -58.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edf6963484837c1419efde70d515f332, type: 3}
---- !u!4 &643912086 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-    type: 3}
-  m_PrefabInstance: {fileID: 643912085}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &662907370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3454,7 +3239,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3821,7 +3606,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3834,74 +3619,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1816113044}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &724850028
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -5.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.674187
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -95.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
 --- !u!1 &740308664
 GameObject:
   m_ObjectHideFlags: 0
@@ -4016,7 +3733,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4096,7 +3813,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4114,7 +3831,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_3
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -4176,12 +3893,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
     type: 3}
   m_PrefabInstance: {fileID: 778816501}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &783625219 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 607018617}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &788209800 stripped
 Transform:
@@ -4250,87 +3961,13 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
---- !u!1001 &798325465
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 236339051}
-    m_Modifications:
-    - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_Dog
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 79.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.649
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -87.42
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edf6963484837c1419efde70d515f332, type: 3}
---- !u!4 &798325466 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-    type: 3}
-  m_PrefabInstance: {fileID: 798325465}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &798665249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4392,81 +4029,13 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
---- !u!1001 &807151055
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 867284777}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.649
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -33.59
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6736421
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.73905784
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -95.302
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
 --- !u!1 &819566876
 GameObject:
   m_ObjectHideFlags: 0
@@ -4613,7 +4182,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4690,7 +4259,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_5
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -4786,11 +4355,6 @@ Transform:
   - {fileID: 1968607960}
   - {fileID: 1839572046}
   - {fileID: 1400685711}
-  - {fileID: 1440068698}
-  - {fileID: 1633015667}
-  - {fileID: 1399812334}
-  - {fileID: 1375688422}
-  - {fileID: 17059032}
   - {fileID: 1581474373}
   - {fileID: 48631240}
   - {fileID: 832988826}
@@ -4875,7 +4439,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5039,12 +4603,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 4, z: 45}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &950806667 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 724850028}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &955690722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5106,7 +4664,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5186,12 +4744,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Id>k__BackingField: 4
---- !u!4 &966972299 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 2082386782}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &975231434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 829ec530f5413674faf3f40d3462ef1c,
@@ -5259,7 +4811,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5327,7 +4879,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5445,12 +4997,6 @@ Transform:
   - {fileID: 1336799583}
   m_Father: {fileID: 1523964472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1062228736 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 1599272143}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1064217436 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
@@ -5551,7 +5097,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5575,7 +5121,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_5
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -5699,7 +5245,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5773,7 +5319,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5786,6 +5332,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1096952099}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1098437807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1098437808}
+  m_Layer: 0
+  m_Name: Sword&Dog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1098437808
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098437807}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1376939643}
+  - {fileID: 1781527670}
+  - {fileID: 605550252}
+  - {fileID: 1522162743}
+  - {fileID: 102224473}
+  m_Father: {fileID: 1944585056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1102760002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5847,7 +5429,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5915,7 +5497,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6063,7 +5645,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6081,7 +5663,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_6
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -6328,7 +5910,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6396,7 +5978,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6414,7 +5996,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_5
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -6550,7 +6132,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6618,7 +6200,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6686,7 +6268,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6754,7 +6336,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6822,7 +6404,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6896,19 +6478,13 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
---- !u!4 &1249057352 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 1629506936}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1250753945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6970,7 +6546,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7038,7 +6614,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7152,7 +6728,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7244,7 +6820,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7517,159 +7093,85 @@ Transform:
   - {fileID: 2082434157}
   m_Father: {fileID: 1146863509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1375688421
+--- !u!1001 &1376939642
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 867284777}
+    m_TransformParent: {fileID: 1098437808}
     m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 1560188079724652685, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotSwordDogDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 70.7
+      value: 14.125656
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 61.628555
+      value: 61.711582
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -33.18
+      value: -33.597813
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6736421
+      value: 0.6177306
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.73905784
+      value: -0.7863898
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -95.302
+      value: -103.699
       objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
---- !u!4 &1375688422 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 66cc7692ba7ece8418ad6bac09568169, type: 3}
+--- !u!4 &1376939643 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
     type: 3}
-  m_PrefabInstance: {fileID: 1375688421}
+  m_PrefabInstance: {fileID: 1376939642}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1394105755 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
     type: 3}
   m_PrefabInstance: {fileID: 1488217706}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1399812333
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 867284777}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 90.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.628555
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -32.77
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6736421
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.73905784
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -95.302
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
---- !u!4 &1399812334 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1399812333}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1400685711 stripped
 Transform:
@@ -7738,7 +7240,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7888,15 +7390,8 @@ Transform:
   - {fileID: 596228821}
   - {fileID: 964705592}
   - {fileID: 1572003663}
-  - {fileID: 1776023548}
   m_Father: {fileID: 1034493922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1440068698 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-    type: 3}
-  m_PrefabInstance: {fileID: 807151055}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1452364138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7958,7 +7453,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7976,7 +7471,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_5
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -8100,7 +7595,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8168,7 +7663,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8272,6 +7767,115 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 17.5, y: 10, z: 4}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1514259426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514259427}
+  m_Layer: 0
+  m_Name: RifleDuo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1514259427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514259426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1995903021}
+  - {fileID: 1799529001}
+  - {fileID: 122382164}
+  - {fileID: 1878260839}
+  m_Father: {fileID: 1944585056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1522162742
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1098437808}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotSwordDogDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 78.82566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.641777
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.067814
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.012851169
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.99991745
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -178.527
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66cc7692ba7ece8418ad6bac09568169, type: 3}
+--- !u!4 &1522162743 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+    type: 3}
+  m_PrefabInstance: {fileID: 1522162742}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1523964471
 GameObject:
   m_ObjectHideFlags: 0
@@ -8355,7 +7959,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_6
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -8485,7 +8089,6 @@ Transform:
   - {fileID: 2098655949}
   - {fileID: 115082549}
   - {fileID: 686076470}
-  - {fileID: 950806667}
   - {fileID: 1669011602}
   - {fileID: 2035538583}
   - {fileID: 2146518897}
@@ -8496,11 +8099,6 @@ Transform:
   - {fileID: 1649842272}
   - {fileID: 59392079}
   - {fileID: 81308140}
-  - {fileID: 966972299}
-  - {fileID: 1808883094}
-  - {fileID: 783625219}
-  - {fileID: 1062228736}
-  - {fileID: 1249057352}
   - {fileID: 176813333}
   - {fileID: 1394105755}
   m_Father: {fileID: 1944585056}
@@ -8566,7 +8164,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8739,74 +8337,6 @@ Transform:
   - {fileID: 819566877}
   m_Father: {fileID: 911152355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1599272143
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.674187
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -102.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
 --- !u!1001 &1609343793
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8942,7 +8472,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8960,148 +8490,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
     type: 3}
   m_PrefabInstance: {fileID: 134523425}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1629506936
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.59
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.674187
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -94.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
---- !u!1001 &1633015666
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 867284777}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 5.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.649
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -59.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6736421
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.73905784
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -95.302
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a76aa4d008119940a9016d9820dacc4, type: 3}
---- !u!4 &1633015667 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 5a76aa4d008119940a9016d9820dacc4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1633015666}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1646889445
 PrefabInstance:
@@ -9164,7 +8552,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9244,7 +8632,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9318,7 +8706,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9386,7 +8774,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9460,7 +8848,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9696,7 +9084,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9764,7 +9152,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9838,7 +9226,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9906,7 +9294,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9919,73 +9307,154 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1769436066}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1776023547
-GameObject:
+--- !u!1001 &1781527669
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1776023548}
-  - component: {fileID: 1776023549}
-  - component: {fileID: 1776023550}
-  m_Layer: 0
-  m_Name: SavePoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1776023548
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776023547}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 293.47, y: -18.24, z: 177.17}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1426820891}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1776023549
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1098437808}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotSwordDogDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.641808
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -57.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66cc7692ba7ece8418ad6bac09568169, type: 3}
+--- !u!4 &1781527670 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: 66cc7692ba7ece8418ad6bac09568169,
+    type: 3}
+  m_PrefabInstance: {fileID: 1781527669}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776023547}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4, y: 4, z: 50}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1776023550
-MonoBehaviour:
+--- !u!1001 &1799529000
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1514259427}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotRifleDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.1219788
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.641838
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -96.72223
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c37b2cd6a24f45b438ae7a93ff82468e, type: 3}
+--- !u!4 &1799529001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1799529000}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776023547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05af362606de29e49ae0e9c3d16a6996, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Id>k__BackingField: 6
 --- !u!1 &1804247119
 GameObject:
   m_ObjectHideFlags: 0
@@ -10011,8 +9480,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804247119}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.49855804, y: 6.9274826, z: -2.1854324}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10030,7 +9499,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce4c7e97b8ac884d8e4d864d099e8e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bindings: []
+  bindings:
+  - questID: 8
+    target: {fileID: 0}
+  - questID: 9
+    target: {fileID: 127460439}
 --- !u!1001 &1807007105
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10092,19 +9565,13 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
---- !u!4 &1808883094 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-    type: 3}
-  m_PrefabInstance: {fileID: 523658829}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1816113044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10166,7 +9633,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10234,7 +9701,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10382,13 +9849,87 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 829ec530f5413674faf3f40d3462ef1c, type: 3}
+--- !u!1001 &1878260838
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1514259427}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotRifleDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.4775543
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.64185
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -105.21922
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9909361
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.13433415
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -15.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c37b2cd6a24f45b438ae7a93ff82468e, type: 3}
+--- !u!4 &1878260839 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1878260838}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1907497495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10450,7 +9991,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10530,7 +10071,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10566,9 +10107,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1098437808}
   - {fileID: 1269699296}
   - {fileID: 1526482204}
   - {fileID: 867284777}
+  - {fileID: 1514259427}
   - {fileID: 236339051}
   - {fileID: 1423446916}
   m_Father: {fileID: 487849113}
@@ -10634,7 +10177,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10708,7 +10251,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 5a76aa4d008119940a9016d9820dacc4,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSword
+      value: SpawnPoint_ShebotSword_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10776,7 +10319,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10862,13 +10405,87 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 829ec530f5413674faf3f40d3462ef1c,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotSniper
+      value: SpawnPoint_ShebotSniper_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 829ec530f5413674faf3f40d3462ef1c, type: 3}
+--- !u!1001 &1995903020
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1514259427}
+    m_Modifications:
+    - target: {fileID: 1560188079724652685, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint_ShebotRifleDuo_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 79.85566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.641827
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -79.057816
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.38398662
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9233387
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -134.838
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c37b2cd6a24f45b438ae7a93ff82468e, type: 3}
+--- !u!4 &1995903021 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7111964957960735407, guid: c37b2cd6a24f45b438ae7a93ff82468e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1995903020}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2020271960
 GameObject:
   m_ObjectHideFlags: 0
@@ -11008,7 +10625,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11026,7 +10643,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_3
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -11100,17 +10717,17 @@ PrefabInstance:
     - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 216.56802
+      value: 218.354
       objectReference: {fileID: 0}
     - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 61.649
+      value: 61.608
       objectReference: {fileID: 0}
     - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 60.484745
+      value: 61.167
       objectReference: {fileID: 0}
     - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
@@ -11150,7 +10767,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11163,74 +10780,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1924521460}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2082386782
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1526482204}
-    m_Modifications:
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -21.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.674187
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -103.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 475d3cd15dc235f4dafa03b32b9e1bdf, type: 3}
 --- !u!1 &2082434156
 GameObject:
   m_ObjectHideFlags: 0
@@ -11351,7 +10900,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11419,7 +10968,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11437,7 +10986,7 @@ PrefabInstance:
     - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_Dog
+      value: SpawnPoint_DogSolo_3
       objectReference: {fileID: 0}
     - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
         type: 3}
@@ -11561,7 +11110,7 @@ PrefabInstance:
     - target: {fileID: 6055722588480522952, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint_ShebotRifle
+      value: SpawnPoint_ShebotRifle_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11653,80 +11202,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2106701236386880548, guid: 475d3cd15dc235f4dafa03b32b9e1bdf,
     type: 3}
   m_PrefabInstance: {fileID: 754771256}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2805228650937658840
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 236339051}
-    m_Modifications:
-    - target: {fileID: 304273509528164545, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_Name
-      value: SpawnPoint_Dog
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 61.722
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -36.23
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edf6963484837c1419efde70d515f332, type: 3}
---- !u!4 &2805228650937658841 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5089556357939577963, guid: edf6963484837c1419efde70d515f332,
-    type: 3}
-  m_PrefabInstance: {fileID: 2805228650937658840}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

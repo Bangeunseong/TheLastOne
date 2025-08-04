@@ -15,17 +15,15 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HackingProgress;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
-    public enum EnemyType
+    [Serializable] public enum EnemyType
     {
         ReconDrone,
         SuicideDrone,
@@ -34,8 +32,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         BattleRoomReconDrone,
         ShebotSniper,
         ShebotSword,
-        ShebotRifleSolo,
+        ShebotRifle,
         ShebotRifleDuo,
+        ShebotSwordDogDuo,
         DogSolo,
     }
     
@@ -83,6 +82,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] private bool shouldCountKillQuest;
         [SerializeField] private int[] killQuestIndex;
         private static bool hasFirstkilled = false;
+
+        private const int FIRST_KILL_DIALOGUE_KEY = 1;
         
         // 이 스크립트에서 사용하는 토큰들
         private CancellationTokenSource hackCts;
@@ -165,7 +166,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 if (!hasFirstkilled)
                 {
                     hasFirstkilled = true;
-                    CoreManager.Instance.dialogueManager.TriggerDialogue("FirstKill");
+                    CoreManager.Instance.dialogueManager.TriggerDialogue(FIRST_KILL_DIALOGUE_KEY);
                 }
 
                 if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)

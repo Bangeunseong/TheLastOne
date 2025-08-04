@@ -66,8 +66,7 @@ namespace _1.Scripts.UI.InGame.HUD
 
         private void ClearAll()
         {
-            foreach (var slot in questSlots)
-                if (slot) Destroy(slot.gameObject);
+            foreach (var slot in questSlots.Where(slot => slot)) Destroy(slot.gameObject);
             questSlots.Clear();
         }
 
@@ -76,23 +75,20 @@ namespace _1.Scripts.UI.InGame.HUD
             for (int i = 0; i < questSlots.Count; i++)
             {
                 var questSlot = questSlots[i];
-                if (i < questListCache.Count && objectiveDictCache.TryGetValue(questListCache[i].questID, out var objectives))
-                {
-                    questSlot.UpdateQuestProgress();
-                    questSlot.RefreshObjectiveSlots();
-                }
+                if (i >= questListCache.Count ||
+                    !objectiveDictCache.TryGetValue(questListCache[i].questID, out var objectives)) continue;
+                questSlot.UpdateQuestProgress();
+                questSlot.RefreshObjectiveSlots();
             }
         }
 
         private void SetMainQuestNavigation()
         {
             var questManager = CoreManager.Instance.questManager;
-            if (questManager.activeQuests.TryGetValue(0, out var mainQuest))
-            {
-                var targetObjective = mainQuest.Objectives.Values.FirstOrDefault(obj => !obj.IsCompleted);
-                if (targetObjective != null)
-                    QuestTargetBinder.Instance.SetCurrentTarget(targetObjective.data.targetID);
-            }
+            if (!questManager.activeQuests.TryGetValue(0, out var mainQuest)) return;
+            var targetObjective = mainQuest.Objectives.Values.FirstOrDefault(obj => !obj.IsCompleted);
+            if (targetObjective != null)
+                QuestTargetBinder.Instance.SetCurrentTarget(targetObjective.data.targetID);
         }
 
         public void ToggleObjectiveSlot()

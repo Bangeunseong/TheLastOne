@@ -6,7 +6,7 @@ namespace _1.Scripts.Dialogue
 {
     public class DialogueTrigger : MonoBehaviour
     {
-        [SerializeField] private string dialogueKey;
+        [SerializeField] private int dialogueKey;
         [SerializeField] private bool triggerOnce = true;
 
         private bool hasTriggered = false;
@@ -21,8 +21,12 @@ namespace _1.Scripts.Dialogue
             if (hasTriggered && triggerOnce) return;
             if (!other.CompareTag("Player")) return;
 
+            int key = dialogueKey;
+            if (CoreManager.Instance.dialogueManager.HasPlayed(key)) return;
+
             hasTriggered = true;
-            CoreManager.Instance.dialogueManager.TriggerDialogue(dialogueKey);
+            CoreManager.Instance.dialogueManager.TriggerDialogue(key);
+            CoreManager.Instance.dialogueManager.MarkAsPlayed(key);
         }
     }
 }
