@@ -15,17 +15,15 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Static;
 using _1.Scripts.Util;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.UI.InGame.HackingProgress;
 using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
 {
-    public enum EnemyType
+    [Serializable] public enum EnemyType
     {
         ReconDrone,
         SuicideDrone,
@@ -34,8 +32,9 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         BattleRoomReconDrone,
         ShebotSniper,
         ShebotSword,
-        ShebotRifleSolo,
+        ShebotRifle,
         ShebotRifleDuo,
+        ShebotSwordDogDuo,
         DogSolo,
     }
     
