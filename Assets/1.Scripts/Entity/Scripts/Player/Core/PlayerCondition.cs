@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using _1.Scripts.Entity.Scripts.Player.Data;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
@@ -20,7 +21,7 @@ using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.Player.Core
 {
-    public class PlayerCondition : MonoBehaviour
+    public class PlayerCondition : MonoBehaviour, IBleedable
     {
         [Header("Components")] 
         [SerializeField] private Player player;
@@ -93,6 +94,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private CancellationTokenSource instinctRecoveryCTS;
         private CancellationTokenSource staminaCTS;
         private CancellationTokenSource crouchCTS;
+        private CancellationTokenSource bleedCTS;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -211,6 +213,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             OnDamage?.Invoke();
             
             if (CurrentHealth <= 0) { OnDead(); }
+        }
+
+        public void OnBleed(int totalTick, float tickInterval, int damagePerTick)
+        {
+            if (bleedCTS != null) { bleedCTS.Cancel(); bleedCTS.Dispose(); }
+            bleedCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
+            
+            _= BleedAsync(totalTick, tickInterval, damagePerTick, bleedCTS.Token);
+        }
+
+        private async UniTaskVoid BleedAsync(int totalTick, float tickInterval, int damagePerTick, CancellationToken token)
+        {
+            for (int i = 0; i < totalTick; i++)
+            {
+                OnTakeDamage(damagePerTick);
+                await UniTask.WaitForSeconds(tickInterval, cancellationToken:token);
+            }
         }
 
         /// <summary>
@@ -416,6 +435,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             focusCTS?.Dispose(); focusCTS = null; 
             instinctCTS?.Dispose(); instinctCTS = null;
             instinctRecoveryCTS?.Dispose(); instinctRecoveryCTS = null;
+            bleedCTS?.Dispose(); bleedCTS = null;
         }
         
         /* - Crouch 관련 메소드 - */

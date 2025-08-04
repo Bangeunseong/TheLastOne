@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Common;
 using _1.Scripts.Interfaces;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using UnityEngine;
 
 namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
 {
     [CreateAssetMenu(fileName = "Stats", menuName = "ScriptableObjects/Entity/Enemy/DogStatData")]
-    public class DogStatData : EntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable
+    public class DogStatData : EntityStatData, IDetectable, IAttackable, IAlertable, IPatrolable, IBleeder
     {
         [Header("Range")] 
         [SerializeField] private float detectRange;
@@ -24,6 +25,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
         [SerializeField] private float minWanderingDistance;
         [SerializeField] private float maxWanderingDistance;
         
+        [Header("Bleeder")]
+        [SerializeField] private float tickInterval;
+        [SerializeField] private int totalBleedTick;
+        
         public float DetectRange => detectRange;
         public float AttackRange => attackRange;
         public float AlertDuration => alertDuration;
@@ -32,5 +37,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO
         public float MaxWaitingDuration => maxWaitingDuration;
         public float MinWanderingDistance => minWanderingDistance;
         public float MaxWanderingDistance => maxWanderingDistance;
+        public float TickInterval => tickInterval;
+        public int TotalBleedTick => totalBleedTick;
     }
 }

@@ -1,5 +1,6 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedAnimator animator;
 		public bool isShebot;
 		public bool isShebot_Rifle;
+		public bool isDog;
 		
 		public SharedLight enemyLight;
 		public SharedLight allyLight;
@@ -38,27 +40,42 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public override TaskStatus OnUpdate()
 		{
 			Vector3 targetPosition;
-			if (statController.Value.RuntimeStatData.IsAlly)
+			
+			if (statController.Value.RuntimeStatData.IsAlly) // 1. 본인이 아군이라면
 			{
 				targetPosition = GetPlayerPosition();
 			}
-			else if (leader.Value == null)
+			else if (leader.Value == null) // 2. 리더가 없다면
 			{ 
 				targetPosition = GetWanderLocation();
 			}
-			else
+			else if (leader.Value.TryGetComponent(out BaseNpcStatController stat)) // 3. 리더가 있지만 그 리더가 적일 경우
+			{
+				if (stat.RuntimeStatData.IsAlly != statController.Value.RuntimeStatData.IsAlly)
+				{
+					targetPosition = GetWanderLocation();
+				}
+				else
+				{
+					targetPosition = GetLeaderPosition();
+				}
+			}
+			else // 4. 그 외의 경우
 			{
 				targetPosition = GetLeaderPosition();
 			}
 			
 			agent.Value.SetDestination(targetPosition);
+
+			#region ShebotOnly
+			
 			if (isShebot)
 			{
 				if (statController.Value.RuntimeStatData.IsAlly || leader.Value != null)
 				{
 					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 					
-					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.05)
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
 					{
 						if (isShebot_Rifle && !stateInfo.IsName(ShebotAnimationData.Shebot_Rifle_idleStr))
 						{
@@ -69,9 +86,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 						}
 					}
-					else
-					{
-						if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr)) animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
+					else if (!stateInfo.IsName(ShebotAnimationData.Shebot_WalkStr))
+					{ 
+						animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 					}
 				}
 				else
@@ -79,6 +96,44 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Walk);
 				}
 			}
+			#endregion
+			
+			#region DogOnly
+
+			if (isDog)
+			{
+				if (statController.Value.RuntimeStatData.IsAlly || leader.Value != null)
+				{
+					AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
+				
+					if (Vector3.Distance(selfTransform.Value.position, targetPosition) <= 0.1)
+					{
+						if (!stateInfo.IsName(DogAnimationData.Dog_Idle1Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle2Str) && 
+						    !stateInfo.IsName(DogAnimationData.Dog_Idle3Str) && !stateInfo.IsName(DogAnimationData.Dog_Idle4Str))
+						{
+							int[] idleHashes =
+							{
+								DogAnimationData.Dog_Idle1,
+								DogAnimationData.Dog_Idle2,
+								DogAnimationData.Dog_Idle3,
+								DogAnimationData.Dog_Idle4,
+							};
+							animator.Value.SetTrigger(idleHashes[UnityEngine.Random.Range(0, idleHashes.Length)]);
+						}
+					}
+					else if (!stateInfo.IsName(DogAnimationData.Dog_WalkStr))
+					{
+						animator.Value.SetTrigger(DogAnimationData.Dog_Walk);
+					}
+				}
+				else
+				{
+					animator.Value.SetTrigger(DogAnimationData.Dog_Walk);
+				}
+			}
+
+			#endregion
+			
 			return TaskStatus.Success;
 		}
 		

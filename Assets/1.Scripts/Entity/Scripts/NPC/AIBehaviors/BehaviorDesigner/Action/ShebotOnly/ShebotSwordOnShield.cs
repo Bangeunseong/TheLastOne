@@ -22,21 +22,23 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		public SharedBool hasEnteredShield; // 쉴드를 발동한 단 한번만 Update가 실행하도록 하는 플래그
 		public SharedShebot_Shield shield; // 직접 쉴드 끄기위해 참조
 		public SharedFloat shieldDuration; // 쉴드 지속시간
+		public SharedNavMeshAgent agent;
 		
 		private float elapsedTime = 0f;
 		private bool switchedToStayAnimation = false;
 		
 		public override void OnStart()
 		{
+			agent.Value.SetDestination(selfTransform.Value.position);
 			elapsedTime = 0f;
 			switchedToStayAnimation = false;
 			
 			if (!shieldUsedOnce.Value)
 			{
-				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
-				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 				shieldUsedOnce.Value = true;
 				hasEnteredShield.Value = true;
+				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
+				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
 			}
 			else
 			{

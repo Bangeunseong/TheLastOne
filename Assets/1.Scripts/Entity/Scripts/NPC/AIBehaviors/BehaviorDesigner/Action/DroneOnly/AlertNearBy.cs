@@ -23,6 +23,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 		public SharedLight allyLight;
 		public SharedBool isAlerted;
 		public SharedBool shouldAlertNearBy;
+
+		public bool isDog;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -35,7 +37,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
 			}
 			
 			(statController.Value.RuntimeStatData.IsAlly ? allyLight.Value : enemylight.Value).enabled = true; // 경고등 On
-			CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); // 사운드 출력
+			if (isDog) CoreManager.Instance.soundManager.PlaySFX(SfxType.Dog, myCollider.Value.bounds.center, index:0); // 사운드 출력
+			else CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); 
 			isAlerted.Value = true;
 			
 			float dialogueChance = 1f;
