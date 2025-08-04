@@ -36107,15 +36107,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.71757585
-        inSlope: 1.1686991
-        outSlope: 1.1686991
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.033333335
         value: -0.6786192
         inSlope: 2.1842978
         outSlope: 2.1842978
@@ -76433,15 +76424,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.71757585
-        inSlope: 1.1686991
-        outSlope: 1.1686991
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.033333335
         value: -0.6786192
         inSlope: 2.1842978
         outSlope: 2.1842978
@@ -79474,27 +79456,13 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: EnableApplyRootMotion
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
-    functionName: PlaySoundSignalForAnimationEvent
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
     functionName: AIOffForAnimationEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.033333335
+  - time: 0
     functionName: SetDestinationNullForAnimationEvent
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -79502,7 +79470,21 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.033333335
+    functionName: PlaySoundSignalForAnimationEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
     functionName: PlaySoundBumForAnimationEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: EnableApplyRootMotion
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

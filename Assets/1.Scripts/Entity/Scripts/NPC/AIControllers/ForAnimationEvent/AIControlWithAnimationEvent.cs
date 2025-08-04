@@ -22,6 +22,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         [Header("Components")]
         [SerializeField] private BehaviorDesigner.Runtime.BehaviorTree behaviorTree;
         [SerializeField] private Animator animator;
+        [SerializeField] private NavMeshAgent agent;
         [SerializeField] private Shebot_Sword sword;
         [SerializeField] private Shebot_Shield shield;
         [SerializeField] private float gotDamagedParticleDuration = 0.5f;
@@ -35,6 +36,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             behaviorTree ??= GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator ??= GetComponent<Animator>();
+            agent ??= GetComponent<NavMeshAgent>();
             sword ??= GetComponentInChildren<Shebot_Sword>(true);
             shield ??= GetComponentInChildren<Shebot_Shield>(true);
             statController ??= GetComponent<BaseNpcStatController>();
@@ -47,6 +49,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         {
             behaviorTree = GetComponent<BehaviorDesigner.Runtime.BehaviorTree>();
             animator = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
             sword = GetComponentInChildren<Shebot_Sword>(true);
             shield = GetComponentInChildren<Shebot_Shield>(true);
             statController = GetComponent<BaseNpcStatController>();
@@ -119,14 +122,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
 
         public void SetDestinationNullForAnimationEvent()
         {
-            if (behaviorTree.GetVariable(BehaviorNames.Agent) is SharedNavMeshAgent sharedAgent && sharedAgent.Value != null)
-            {
-                sharedAgent.Value.SetDestination(transform.position);
-            }
-            else
-            {
-                Debug.LogWarning("SharedNavMeshAgent를 찾을 수 없거나 값이 없습니다.");
-            }
+            if (agent != null) agent.enabled = false;
         }
         
         public void DestroyObjectForAnimationEvent()
