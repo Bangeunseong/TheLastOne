@@ -63,7 +63,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         public void f_hit() //hit
         {
             // 0번 : 공격, 1번 : 삐빅 시그널. 2번 : 사망, 3번 : 맞았을때
-            CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
+            coreManager.soundManager.PlaySFX(SfxType.Drone, transform.position, index: 3);
             if (gotDamagedCoroutine != null)
             {
                 StopCoroutine(gotDamagedCoroutine);
