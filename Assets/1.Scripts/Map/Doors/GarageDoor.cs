@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Subs;
+using _1.Scripts.Sound;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -16,10 +19,10 @@ namespace _1.Scripts.Map.Doors
         [field: Header("Door State")]
         [field: SerializeField] public bool IsOpened { get; private set; }
         [field: SerializeField] public float OpenDuration { get; private set; } = 3f;
-        [field: SerializeField] public float TimeDelay { get; private set; } = 10f;
         [field: SerializeField] public AnimationCurve DoorAnimationCurve { get; private set; }
 
         private CancellationTokenSource doorCTS;
+        private SoundPlayer soundPlayer;
         
         private void Awake()
         {
@@ -53,6 +56,9 @@ namespace _1.Scripts.Map.Doors
             var targetPosition = IsOpened ? LowerPosition.localPosition : UpperPosition.localPosition;
             IsOpened = !IsOpened;
             float time = 0f;
+
+            if (soundPlayer != null) soundPlayer.Stop();
+            soundPlayer = CoreManager.Instance.soundManager.PlaySFX(SfxType.GarageDoor, transform.position, OpenDuration);
             
             while (time < OpenDuration)
             {
@@ -64,6 +70,8 @@ namespace _1.Scripts.Map.Doors
                 Door.localPosition = Vector3.Lerp(originalDoorPosition, targetPosition, curveT);
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: doorCTS.Token, cancelImmediately: true);
             }
+
+            soundPlayer = null;
         }
     }
 }
