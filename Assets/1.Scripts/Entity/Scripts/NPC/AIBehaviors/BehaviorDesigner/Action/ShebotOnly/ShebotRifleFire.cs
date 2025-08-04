@@ -15,6 +15,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         public SharedAnimator animator;
         public SharedTransform selfTransform;
         public SharedTransform targetTransform;
+        public SharedTransform rifleTransform;
         public SharedVector3 targetPosition;
         public SharedBaseNpcStatController statController;
         public SharedBool isAttacking;
@@ -43,7 +44,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
             }
             
             targetPosition.Value = targetChset.bounds.center;
-            NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, additionalYangle:55);
+            NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, additionalYangle:50);
+            NpcUtil.LookAtTarget(rifleTransform.Value, targetPosition.Value, pinY:false);
             return TaskStatus.Running;
         }
     }

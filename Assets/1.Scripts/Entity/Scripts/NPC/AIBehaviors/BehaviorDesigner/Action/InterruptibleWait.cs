@@ -68,20 +68,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			foreach (var collider in colliders)
 			{
-				if (!collider.CompareTag("Player"))
-				{
-					var otherStatController = collider.GetComponent<BaseNpcStatController>();
-					if (otherStatController == null || otherStatController.IsDead)
-					{
-						continue;
-					}
-				}
-
 				Vector3 colliderPos = collider.bounds.center;
-
+				
 				if (NpcUtil.IsTargetVisible(selfTransform_Head.Value.position, colliderPos, maxViewDistance.Value, ally))
 				{
-					return TaskStatus.Failure;
+					if (!collider.CompareTag("Player"))
+					{
+						var otherStatController = collider.GetComponent<BaseNpcStatController>();
+						if (otherStatController != null && !otherStatController.IsDead)
+						{
+							return TaskStatus.Failure;
+						}
+					}
+					else
+					{
+						return TaskStatus.Failure;
+					}
 				}
 			}
 

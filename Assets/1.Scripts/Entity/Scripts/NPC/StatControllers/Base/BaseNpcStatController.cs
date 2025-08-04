@@ -36,13 +36,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         ShebotSword,
         ShebotRifleSolo,
         ShebotRifleDuo,
-        Dog
+        DogSolo,
     }
     
     /// <summary>
     /// Npc 스텟 공통로직 정의
     /// </summary>
-    public abstract class BaseNpcStatController : MonoBehaviour, IStunnable, IHackable
+    public abstract class BaseNpcStatController : MonoBehaviour, IStunnable, IHackable, IBleedable
     {
         /// <summary>
         /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
@@ -87,6 +87,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         // 이 스크립트에서 사용하는 토큰들
         private CancellationTokenSource hackCts;
         private CancellationTokenSource stunCts;
+        private CancellationTokenSource bleedCts;
         
         protected virtual void Awake()
         {
@@ -152,7 +153,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         public virtual void OnTakeDamage(int damage)
         {
             if (IsDead) return;
-            
+           
             float armorRatio = RuntimeStatData.Armor / RuntimeStatData.MaxArmor;
             float reducePercent = Mathf.Clamp01(armorRatio);
             damage = (int)(damage * (1f - reducePercent));
@@ -191,7 +192,25 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 PlayHitAnimation();
             }
         }
-        
+
+        public void OnBleed(int totalTick, float tickInterval, int damagePerTick)
+        {
+            bleedCts?.Cancel();
+            bleedCts?.Dispose();
+            bleedCts = NpcUtil.CreateLinkedNpcToken();
+            
+            _= BleedAsync(totalTick, tickInterval, damagePerTick, bleedCts.Token);
+        }
+
+        private async UniTaskVoid BleedAsync(int totalTick, float tickInterval, int damagePerTick, CancellationToken token)
+        {
+            for (int i = 0; i < totalTick; i++)
+            {
+                OnTakeDamage(damagePerTick);
+                await UniTask.WaitForSeconds(tickInterval, cancellationToken:token);
+            }
+        }
+
         #region 상호작용
         public void Hacking(float chance)
         {
@@ -408,6 +427,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             hackCts = null;
             stunCts?.Dispose();
             stunCts = null;
+            bleedCts?.Dispose();
+            bleedCts = null;
         }
     }
 }

@@ -59,6 +59,7 @@ namespace _1.Scripts.Manager.Subs
         EnemyFootStep,
         Drone,
         Shebot,
+        Dog,
         
         // Item SFX
         ItemPickup,
