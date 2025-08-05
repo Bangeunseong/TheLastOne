@@ -56,7 +56,7 @@ namespace _1.Scripts.MiniGame
         
         protected void FinishGame(bool isCanceled, bool isSuccess = false, float duration = 0f)
         {
-            Service.Log("Finished Game");
+            // Service.Log("Finished Game");
             isFinished = true;
             _ = EndGame_Async(isCanceled, isSuccess, duration);
         }

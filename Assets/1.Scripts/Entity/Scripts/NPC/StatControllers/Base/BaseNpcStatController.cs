@@ -186,6 +186,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 
                 behaviorTree.SetVariableValue(BehaviorNames.IsDead, true);
                 PlayDeathAnimation();
+                if (!runtimeStatData.IsAlly)
+                    CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Kill);
                 IsDead = true;
             }
             else

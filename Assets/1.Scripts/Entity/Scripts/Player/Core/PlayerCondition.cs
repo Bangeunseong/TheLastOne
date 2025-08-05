@@ -132,8 +132,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
                 CurrentFocusGauge = CurrentInstinctGauge = 0f;
-                LastSavedPosition = transform.position;
-                LastSavedRotation = transform.rotation;
+                UpdateLastSavedTransform();
             }
             else
             {
@@ -154,8 +153,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
                 else
                 {
-                    LastSavedPosition = transform.position;
-                    LastSavedRotation = transform.rotation;
+                    UpdateLastSavedTransform();
                 }
                 
                 UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));

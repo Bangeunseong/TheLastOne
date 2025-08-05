@@ -46,6 +46,7 @@ namespace _1.Scripts.Static
             "ShebotSword",
             "ShebotSwordDogDuo",
             "DogSolo",
+            "WeaponPart_Dummy",
         };
     }
 

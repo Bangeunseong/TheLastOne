@@ -7,6 +7,7 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Data;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.Mission;
+using UnityEngine.SceneManagement;
 using Console = _1.Scripts.Map.Console.Console;
 
 namespace _1.Scripts.Quests.Core
@@ -28,8 +29,10 @@ namespace _1.Scripts.Quests.Core
                 switch (objective.type)
                 {
                     case ObjectiveType.ClearStage1:
-                    case ObjectiveType.ClearStage2:
                         objective.onCompletedAction.AddListener(() => CoreManager.Instance.MoveToNextScene(SceneType.Stage2));
+                        break;
+                    case ObjectiveType.ClearStage2:
+                        objective.onCompletedAction.AddListener(() => CoreManager.Instance.MoveToNextScene(SceneType.EndingScene));
                         break;
                 }
             }
