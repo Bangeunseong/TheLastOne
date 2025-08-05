@@ -157,6 +157,11 @@ namespace _6.Debug
             {
                 CoreManager.Instance.uiManager.ShowUI<EndingCreditUI>();
             }
+
+            if (GUILayout.Button("Show BleedOverlay"))
+            {
+                CoreManager.Instance.gameManager.Player.PlayerCondition.OnBleed(3,2,1);
+            }
         }
     }
     #endif
