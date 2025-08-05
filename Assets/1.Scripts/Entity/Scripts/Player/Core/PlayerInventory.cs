@@ -112,7 +112,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 case Shield shield: return shield.OnUse(gameObject);
                 default: throw new ArgumentOutOfRangeException();
             }
-            return false;
         }
     }
 }
