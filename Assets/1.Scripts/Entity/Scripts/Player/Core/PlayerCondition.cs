@@ -781,7 +781,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
                 
-                Service.Log("Crossbow reloaded");
+                Service.Log("HackGun reloaded");
                 crossbow.OnReload();
                 IsReloading = false;
                 crossbow.IsReloading = false;

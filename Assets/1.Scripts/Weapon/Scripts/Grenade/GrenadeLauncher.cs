@@ -42,10 +42,10 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
-            if (weaponParts.Count <= 0)
+            if (WeaponParts.Count <= 0)
             {
                 var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
-                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
             }
         }
 
@@ -54,10 +54,10 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
-            if (weaponParts.Count <= 0)
+            if (WeaponParts.Count <= 0)
             {
                 var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
-                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
             }
         }
 
@@ -91,15 +91,15 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
                 
                 foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
-                foreach (var part in weapon.equippedParts) weaponParts[part.Value].OnWear();
+                foreach (var part in weapon.equippedParts) WeaponParts[part.Value].OnWear();
             }
             else
             {
                 CurrentAmmoCount = GrenadeData.GrenadeStat.MaxAmmoCount;
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
                 
-                foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
-                foreach (var part in weaponParts.Where(val => val.Value.Data.IsBasicPart)) 
+                foreach (var part in WeaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
+                foreach (var part in WeaponParts.Where(val => val.Value.Data.IsBasicPart)) 
                     part.Value.OnWear();
             }
                 
