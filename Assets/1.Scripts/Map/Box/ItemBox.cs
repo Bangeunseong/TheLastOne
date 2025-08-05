@@ -42,8 +42,7 @@ namespace _1.Scripts.Map.Box
         [field: Header("Randomize Options")]
         [field: Tooltip("Randomize Part Spawns")]
         [field: SerializeField] public bool RandomizePart { get; private set; } = true;
-        [field: SerializeField] public WeaponType WeaponType { get; private set; } = WeaponType.Rifle;
-        [field: SerializeField] public PartType PartType { get; private set; } = PartType.Sight;
+        [field: SerializeField] public SerializedDictionary<PartType, WeaponType> Parts { get; private set; } = new();
         
         private CoreManager coreManager;
         private Player player;
@@ -123,9 +122,9 @@ namespace _1.Scripts.Map.Box
             {
                 switch (gen.Key)
                 {
-                    case BoxType.Ammo: GenAmmo(); break;
-                    case BoxType.Item: GenItem(); break;
-                    case BoxType.Parts: GenPart(RandomizePart, WeaponType, PartType); break;
+                    case BoxType.Ammo: for(var i = 0; i < gen.Value; i++) GenAmmo(); break;
+                    case BoxType.Item: for(var j = 0; j < gen.Value; j++) GenItem(); break;
+                    case BoxType.Parts: foreach(var part in Parts) GenPart(RandomizePart, part.Value, part.Key); break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -184,25 +183,37 @@ namespace _1.Scripts.Map.Box
         private void GenPart(bool randomize, WeaponType type = WeaponType.Rifle, PartType partType = PartType.Sight)
         {
             if (randomize) RandomlyAddMissingWeaponPart();
-            else AddSpecificWeaponPart(type, partType);
+            else SpawnSpecificWeaponPart(type, partType);
         }
 
-        private void AddSpecificWeaponPart(WeaponType weaponType, PartType partType)
+        private void SpawnSpecificWeaponPart(WeaponType weaponType, PartType partType)
         {
             var weapon = player.PlayerWeapon.Weapons[weaponType];
 
-            var parts = GenSettings[BoxType.Parts] switch
-            {
-                > 1 => weapon.WeaponParts.Select(val => val.Key).ToHashSet(),
-                _ => weapon.WeaponParts.Where(val => val.Value.Data.Type == partType).Select(val => val.Key).ToHashSet(),
-            };
+            var parts = weapon.WeaponParts.Where(val => val.Value.Data.Type == partType).Select(val => val.Key).ToHashSet();
             var collectableParts = player.PlayerWeapon.Weapons[weaponType].EquipableWeaponParts.Where(val => !val.Value).Select(val => val.Key).ToHashSet();
             collectableParts.IntersectWith(parts);
+            foreach(var partId in collectableParts) Service.Log($"{partId}");
             
             if (collectableParts.Count == 0) return;
-
-            if (!weapon.TryCollectWeaponPart(collectableParts.FirstOrDefault())){Service.Log($"Warning! : {collectableParts.FirstOrDefault()} is already collected! or does not exist!");}
-            else Service.Log($"Successfully Collected : {collectableParts.FirstOrDefault()}");
+            
+            var part = coreManager.objectPoolManager.Get("WeaponPart_Dummy");
+            part.transform.SetPositionAndRotation(SpawnPoints[2].position, SpawnPoints[2].rotation);
+            if (part.TryGetComponent(out DummyWeaponPart weaponPart))
+                weaponPart.Initialize(weaponType, collectableParts.FirstOrDefault(),
+                    coreManager.spawnManager.GetInstanceHashId(part, (int)weaponType,
+                        part.transform));
+            coreManager.spawnManager.DynamicSpawnedParts.TryAdd(weaponPart.InstanceId,
+                new SerializablePartProp
+                {
+                    type = weaponPart.Type,
+                    id = weaponPart.Id,
+                    transform = new SerializableTransform
+                    {
+                        position = new SerializableVector3(part.transform.position),
+                        rotation = new SerializableQuaternion(part.transform.rotation)
+                    }
+                });
         }
         
         private void RandomlyAddMissingWeaponPart()
@@ -212,7 +223,21 @@ namespace _1.Scripts.Map.Box
                 missingPartIds.AddRange(weapon.Value.EquipableWeaponParts.Where(val => !val.Value).Select(val => (weapon.Key, val.Key)));
 
             var part = missingPartIds[Random.Range(0, missingPartIds.Count)];
-            player.PlayerWeapon.Weapons[part.Item1].TryCollectWeaponPart(part.Item2);
+            var weaponPart = coreManager.objectPoolManager.Get("WeaponPart_Dummy");
+            weaponPart.transform.SetPositionAndRotation(SpawnPoints[2].position, SpawnPoints[2].rotation);
+            if (weaponPart.TryGetComponent(out DummyWeaponPart partComp))
+                partComp.Initialize(part.Item1, part.Item2, coreManager.spawnManager.GetInstanceHashId(weaponPart, (int)part.Item1, partComp.transform));
+            coreManager.spawnManager.DynamicSpawnedParts.TryAdd(partComp.InstanceId,
+                new SerializablePartProp
+                {
+                    type = partComp.Type,
+                    id = partComp.Id,
+                    transform = new SerializableTransform
+                    {
+                        position = new SerializableVector3(partComp.transform.position),
+                        rotation = new SerializableQuaternion(partComp.transform.rotation)
+                    }
+                });
         }
     }
 }

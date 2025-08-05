@@ -36,8 +36,7 @@ namespace _1.Scripts.Map.GameEvents
             if (!other.CompareTag("Player")) return;
             if (!other.TryGetComponent(out Player player)) return;
             
-            player.PlayerCondition.LastSavedPosition = player.transform.position;
-            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
+            player.PlayerCondition.UpdateLastSavedTransform();
             
             GameEventSystem.Instance.RaiseEvent(BaseEventIndex.BaseSavePointIndex + Id);
         }

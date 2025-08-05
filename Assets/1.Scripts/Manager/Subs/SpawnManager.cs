@@ -21,13 +21,13 @@ namespace _1.Scripts.Manager.Subs
         [field: SerializeField] public SpawnData CurrentSpawnData { get; private set; }
         [field: SerializeField] public SerializedDictionary<int, SerializableWeaponProp> DynamicSpawnedWeapons { get; private set; } = new();
         [field: SerializeField] public SerializedDictionary<int, SerializableItemProp> DynamicSpawnedItems { get; private set; } = new();
+        [field: SerializeField] public SerializedDictionary<int, SerializablePartProp> DynamicSpawnedParts { get; private set; } = new(); 
         
         [field: Header("Visibility")]
         [field: SerializeField] public bool IsVisible { get; private set; }
         
         private HashSet<GameObject> spawnedEnemies = new();
-        private HashSet<GameObject> spawnedWeapons = new();
-        private HashSet<GameObject> spawnedItems = new();
+        private HashSet<GameObject> spawnedProps = new();
         private CoreManager coreManager;
         private int dynamicIndex;
         
@@ -91,7 +91,7 @@ namespace _1.Scripts.Manager.Subs
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Dummy");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
                         if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(true, BaseEventIndex.BaseWeaponIndex + weaponIndex);
-                        spawnedWeapons.Add(obj);
+                        spawnedProps.Add(obj);
                     }
                     weaponIndex++;
                 }
@@ -107,7 +107,7 @@ namespace _1.Scripts.Manager.Subs
                         var obj = coreManager.objectPoolManager.Get(pair.Key + "_Prefab");
                         obj.transform.SetPositionAndRotation(val.position, val.rotation);
                         if (obj.TryGetComponent(out DummyItem item)) item.Initialize(true, BaseEventIndex.BaseItemIndex + itemIndex);
-                        spawnedItems.Add(obj);
+                        spawnedProps.Add(obj);
                     }
                     itemIndex++;
                 }
@@ -125,6 +125,7 @@ namespace _1.Scripts.Manager.Subs
                         pair.Value.transform.rotation.ToQuaternion());
                     if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(false, pair.Key);
                     DynamicSpawnedWeapons.Add(pair.Key, new SerializableWeaponProp(pair.Value));
+                    spawnedProps.Add(obj);
                 }
             }
             else dynamicInfo.dynamicSpawnedWeapons = new SerializedDictionary<int, SerializableWeaponProp>();
@@ -137,9 +138,22 @@ namespace _1.Scripts.Manager.Subs
                     obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(), pair.Value.transform.rotation.ToQuaternion());
                     if (obj.TryGetComponent(out DummyItem item)) item.Initialize(false, pair.Key);
                     DynamicSpawnedItems.Add(pair.Key, new SerializableItemProp(pair.Value));
+                    spawnedProps.Add(obj);
                 }
             }
             else dynamicInfo.dynamicSpawnedItems = new SerializedDictionary<int, SerializableItemProp>();
+
+            if (dynamicInfo.dynamicSpawnedParts is { Count: > 0 })
+            {
+                foreach (var pair in dynamicInfo.dynamicSpawnedParts)
+                {
+                    var obj = coreManager.objectPoolManager.Get("WeaponPart_Dummy");
+                    obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(), pair.Value.transform.rotation.ToQuaternion());
+                    if(obj.TryGetComponent(out DummyWeaponPart part)) part.Initialize(pair.Value.type, pair.Value.id, pair.Key);
+                    DynamicSpawnedParts.Add(pair.Key, new SerializablePartProp(pair.Value));
+                    spawnedProps.Add(obj);
+                }
+            } else dynamicInfo.dynamicSpawnedParts = new SerializedDictionary<int, SerializablePartProp>();
         }
 
         public int GetInstanceHashId(GameObject obj, int type, Transform transform)
@@ -155,21 +169,16 @@ namespace _1.Scripts.Manager.Subs
             return id;
         }
 
-        public void RemoveWeaponFromSpawnedList(GameObject obj)
+        public void RemovePropFromSpawnedList(GameObject obj)
         {
-            spawnedWeapons.Remove(obj);
+            spawnedProps.Remove(obj);
         }
-
-        public void RemoveItemFromSpawnedList(GameObject obj)
-        {
-            spawnedItems.Remove(obj);
-        }
-
+        
         public void ChangeStencilLayer(bool isOn)
         {
             IsVisible = isOn;
             ChangeStencilLayerAllNpc(isOn);
-            ChangeLayerOfWeaponsAndItems(isOn);
+            ChangeLayerOfProps(isOn);
         }
 
         /// <summary>
@@ -187,18 +196,16 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        private void ChangeLayerOfWeaponsAndItems(bool isTransparent)
+        private void ChangeLayerOfProps(bool isTransparent)
         {
-            foreach (var obj in spawnedWeapons)
+            foreach (var obj in spawnedProps)
             {
-                if (!obj.TryGetComponent(out DummyWeapon weapon)) continue;
-                weapon.ChangeLayerOfBody(isTransparent);
-            }
-
-            foreach (var obj in spawnedItems)
-            {
-                if (!obj.TryGetComponent(out DummyItem item)) continue;
-                item.ChangeLayerOfBody(isTransparent);
+                if (obj.TryGetComponent(out DummyWeapon weapon))
+                     weapon.ChangeLayerOfBody(isTransparent);
+                else if(obj.TryGetComponent(out DummyItem item))
+                    item.ChangeLayerOfBody(isTransparent);
+                else if(obj.TryGetComponent(out DummyWeaponPart part))
+                    part.ChangeLayerOfBody(isTransparent);
             }
         }
 
@@ -224,10 +231,10 @@ namespace _1.Scripts.Manager.Subs
 
         public void ClearAllProps()
         {
-            spawnedWeapons.Clear();
-            spawnedItems.Clear();
+            spawnedProps.Clear();
             DynamicSpawnedWeapons.Clear();
             DynamicSpawnedItems.Clear();
+            DynamicSpawnedParts.Clear();
         }
 
         public void Reset()
