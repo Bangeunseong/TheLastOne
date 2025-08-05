@@ -81,7 +81,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 						{
 							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_idle);
 						}
-						else if (!stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
+						else if (!isShebot_Rifle && !stateInfo.IsName(ShebotAnimationData.Shebot_IdleStr))
 						{
 							animator.Value.SetTrigger(ShebotAnimationData.Shebot_Idle);
 						}
