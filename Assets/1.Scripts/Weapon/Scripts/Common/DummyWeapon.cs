@@ -53,7 +53,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         private void RemoveSelfFromSpawnedList()
         {
-            CoreManager.Instance.spawnManager.RemoveWeaponFromSpawnedList(gameObject);
+            CoreManager.Instance.spawnManager.RemovePropFromSpawnedList(gameObject);
         }
 
         public void Initialize(bool isStatic, int instanceId)
@@ -92,9 +92,6 @@ namespace _1.Scripts.Weapon.Scripts.Common
                     });
                 if (!result) return;
             }
-            
-            player.PlayerCondition.LastSavedPosition = player.transform.position;
-            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
 
             if (IsStatic)
             {

@@ -41,6 +41,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         {
             timer += Time.deltaTime;
 
+            if (targetTransform.Value == null)
+            {
+                targetPos.Value = Vector3.zero;
+                targetTransform.Value = null;
+                isAlerted.Value = false;
+            }
+            
             if (!hasFired)
             {
                 if (!soundPlayed)

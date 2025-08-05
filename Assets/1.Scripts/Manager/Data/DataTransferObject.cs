@@ -74,6 +74,24 @@ namespace _1.Scripts.Manager.Data
         public ItemType GetItemType() { return type; }
     }
 
+    [Serializable] public class SerializablePartProp
+    {
+        public WeaponType type;
+        public int id;
+        public SerializableTransform transform;
+        
+        public SerializablePartProp(){}
+
+        public SerializablePartProp(SerializablePartProp data)
+        {
+            type = data.type;
+            id = data.id;
+            transform = new SerializableTransform(data.transform);
+        }
+        
+        public int GetPartId() { return id; }
+    }
+
     [Serializable] public class CharacterInfo
     {
         public int maxHealth;
@@ -109,6 +127,7 @@ namespace _1.Scripts.Manager.Data
         public SerializedDictionary<int, bool> completionDict;
         public SerializedDictionary<int, SerializableWeaponProp> dynamicSpawnedWeapons;
         public SerializedDictionary<int, SerializableItemProp> dynamicSpawnedItems;
+        public SerializedDictionary<int, SerializablePartProp> dynamicSpawnedParts;
     }
 
     [Serializable] public class QuestInfo

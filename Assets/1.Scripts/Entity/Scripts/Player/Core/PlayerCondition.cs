@@ -132,8 +132,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 Damage = StatData.baseDamage;
                 AttackRate = StatData.baseAttackRate;
                 CurrentFocusGauge = CurrentInstinctGauge = 0f;
-                LastSavedPosition = transform.position;
-                LastSavedRotation = transform.rotation;
+                UpdateLastSavedTransform();
             }
             else
             {
@@ -154,8 +153,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 }
                 else
                 {
-                    LastSavedPosition = transform.position;
-                    LastSavedRotation = transform.rotation;
+                    UpdateLastSavedTransform();
                 }
                 
                 UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
@@ -700,7 +698,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
                 
-                Service.Log("Gun reloaded");
+                // Service.Log("Gun reloaded");
                 gun.OnReload();
                 IsReloading = false;
                 gun.IsReloading = false;
@@ -743,7 +741,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     }
                 }
                 
-                Service.Log("GL reloaded");
+                // Service.Log("GL reloaded");
                 IsReloading = false;
                 grenadeLauncher.IsReloading = false;
                 
@@ -782,7 +780,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
                 
-                Service.Log("HackGun reloaded");
+                // Service.Log("HackGun reloaded");
                 crossbow.OnReload();
                 IsReloading = false;
                 crossbow.IsReloading = false;
@@ -820,7 +818,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (previousWeaponIndex == currentWeaponIndex) { switchCTS = null; return; }
             IsSwitching = true;
             
-            Service.Log($"Switching from {previousWeaponIndex} to {currentWeaponIndex}");
+            // Service.Log($"Switching from {previousWeaponIndex} to {currentWeaponIndex}");
             if (IsAiming) OnAim(false, 67.5f, 0.2f);
             
             switch (previousWeaponIndex)
@@ -847,7 +845,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     throw new ArgumentOutOfRangeException(nameof(previousWeaponIndex), previousWeaponIndex, null);
             }
             
-            Service.Log("Switch Weapon");
+            // Service.Log("Switch Weapon");
             WeightSpeedMultiplier = 1f;
             playerWeapon.WeaponAnimators[previousWeaponIndex].SetTrigger(player.AnimationData.HideParameterHash);
             await UniTask.WaitForSeconds(duration, true, cancellationToken: token, cancelImmediately: true);
@@ -856,7 +854,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(true);
             
-            Service.Log("Wield Weapon");
+            // Service.Log("Wield Weapon");
             playerWeapon.Weapons[EquippedWeaponIndex].gameObject.SetActive(true);
             await UniTask.DelayFrame(1, cancellationToken: token, cancelImmediately: true);
             playerWeapon.WeaponAnimators[EquippedWeaponIndex].SetFloat(player.AnimationData.AniSpeedMultiplierHash, 1f);

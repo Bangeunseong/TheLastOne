@@ -60,7 +60,7 @@ namespace _1.Scripts.Item.Items
 
         public void RemoveSelfFromSpawnedList()
         {
-            if (IsStatic) CoreManager.Instance.spawnManager.RemoveItemFromSpawnedList(gameObject);
+            if (IsStatic) CoreManager.Instance.spawnManager.RemovePropFromSpawnedList(gameObject);
         }
         
         public void Initialize(bool isStatic, int instanceId)

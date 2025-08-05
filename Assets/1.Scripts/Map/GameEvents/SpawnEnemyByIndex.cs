@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Util;
@@ -65,8 +66,8 @@ namespace _1.Scripts.Map.GameEvents
             
             Debug.Log("Spawned!");
 
-            foreach (var point in spawnPoints.Values)
-                targetCount += point.Count;
+            foreach (var point in spawnPoints)
+                targetCount += point.Key is EnemyType.ShebotRifleDuo or EnemyType.ShebotSwordDogDuo ? point.Value.Count * 2 : point.Value.Count;
             
             GameEventSystem.Instance.RegisterListener(this);
             CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
