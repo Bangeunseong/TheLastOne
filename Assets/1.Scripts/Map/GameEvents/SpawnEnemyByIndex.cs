@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Util;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1.Scripts.Map.GameEvents
@@ -63,15 +64,16 @@ namespace _1.Scripts.Map.GameEvents
             }
             
             Debug.Log("Spawned!");
+
+            foreach (var point in spawnPoints.Values)
+                targetCount += point.Count;
             
-            targetCount = spawnPoints.Count;
             GameEventSystem.Instance.RegisterListener(this);
             CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
             if (invisibleWall.Count > 0)
-                foreach (var wall in invisibleWall) wall.gameObject.SetActive(true);
+                foreach (var wall in invisibleWall) wall.transform.parent.gameObject.SetActive(true);
             
             isSpawned = true;
-            enabled = false;
         }
         
         public void OnEventRaised(int eventID)
@@ -84,6 +86,7 @@ namespace _1.Scripts.Map.GameEvents
             if (invisibleWall.Count > 0)
                 foreach (var wall in invisibleWall) wall.gameObject.SetActive(false);
             GameEventSystem.Instance.UnregisterListener(this);
+            enabled = false;
         }
     }
 }

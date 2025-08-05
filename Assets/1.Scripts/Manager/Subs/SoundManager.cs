@@ -66,6 +66,7 @@ namespace _1.Scripts.Manager.Subs
         
         // Door SFX
         Door,
+        GarageDoor,
         
         // Other
         HackingTry,
