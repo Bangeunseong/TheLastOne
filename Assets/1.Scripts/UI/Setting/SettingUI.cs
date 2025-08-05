@@ -153,21 +153,15 @@ namespace _1.Scripts.UI.Setting
 
         private void AddListeners()
         {
-            tutorialSwitch.OnEvents.AddListener(() => OnTutorialToggled(true));
-            tutorialSwitch.OffEvents.AddListener(() => OnTutorialToggled(false));
+
             
             masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnMasterVolumeChanged);
             bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnBGMVolumeChanged);
             sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnSFXVolumeChanged);
 
+
             //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
             //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
-        }
-        
-
-        private void OnTutorialToggled(bool on)
-        {
-            PlayerPrefs.SetInt("EnableTutorials", on ? 1 : 0);
         }
         
         private void OnLanguageChanged(int idx)

@@ -7,6 +7,7 @@ using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
@@ -33,7 +34,8 @@ namespace _1.Scripts.Manager.Subs
         private bool isKeyPressed;
         private UIManager uiManager;
         private CoreManager coreManager;
-        
+
+
         // Properties
         public bool IsLoading { get; private set; }
         public float LoadingProgress { get; set; }
@@ -136,7 +138,11 @@ namespace _1.Scripts.Manager.Subs
             // Wait for user input
             isInputAllowed = true;
             loadingUI.UpdateLoadingProgress(LoadingProgress);
-            loadingUI.UpdateProgressText("Press any key to continue...");
+            LocalizedString loadingString = new LocalizedString("New Table", "LoadingText_Key");
+            loadingString.StringChanged += value =>
+            {
+                loadingUI.UpdateProgressText(value);
+            };
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;

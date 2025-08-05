@@ -28,10 +28,10 @@ namespace _1.Scripts.UI.InGame.Dialogue
         [SerializeField] private UIManagerText nameTextUIManager;
         [SerializeField] private UIManagerText dialogueTextUIManager;
         [SerializeField] private UIManagerImage frameUIManager;
-        private Dictionary<SfxType, SoundPlayer> dialogueSfxPlayers = new();
+        
         private Coroutine dialogueRoutine;
         private Coroutine fadeRoutine;
-        private bool isShowing = false;
+        private SoundPlayer currentVoicePlayer;
 
         public override void Initialize(UIManager manager, object param = null)
         {
@@ -50,12 +50,12 @@ namespace _1.Scripts.UI.InGame.Dialogue
         public override void Hide()
         {
             StopDialogueRoutine();
+            StopVoice();
 
             if (!gameObject.activeInHierarchy)
             {
                 if (canvasGroup) canvasGroup.alpha = 0;
                 gameObject.SetActive(false);
-                StopAllDialogueSfx();
                 return;
             }
             if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
@@ -83,9 +83,17 @@ namespace _1.Scripts.UI.InGame.Dialogue
             dialogueRoutine = null;
         }
         
+        private void StopVoice()
+        {
+            if (!currentVoicePlayer) return;
+            currentVoicePlayer.Stop();
+            currentVoicePlayer = null;
+        }
+        
         public void ShowSequence(List<DialogueData> sequence)
         {
             StopDialogueRoutine();
+            StopVoice();
             if (sequence == null || sequence.Count == 0) return;
             if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
 
@@ -106,7 +114,26 @@ namespace _1.Scripts.UI.InGame.Dialogue
 
             var data = sequence[index];
             nameText.text = data.Speaker;
-            dialogueText.text = "";
+            
+            bool isTextReady = false;
+            string messageValue = "";
+
+            data.Message.StringChanged += value =>
+            {
+                messageValue = value; 
+                isTextReady = true;
+            };
+            while (!isTextReady) yield return null;
+            
+            bool isAudioReady = false;
+            AudioClip voiceClip = null;
+            data.voiceClip.AssetChanged += clip =>
+            {
+                voiceClip = clip;
+                isAudioReady = true;
+            };
+            while (!isAudioReady) yield return null;
+
 
             switch (data.SpeakerType)
             {
@@ -132,29 +159,28 @@ namespace _1.Scripts.UI.InGame.Dialogue
             
             yield return StartCoroutine(FadeIn(0.15f));
 
-            SoundPlayer sfxPlayer = null;
-            if (data.sfxType != SfxType.None)
+            StopVoice();
+            if (voiceClip)
             {
-                if (dialogueSfxPlayers.TryGetValue(data.sfxType, out var prevPlayer) && prevPlayer)
+                var obj = CoreManager.Instance.objectPoolManager.Get("SoundPlayer");
+                if (obj && obj.TryGetComponent(out SoundPlayer player))
                 {
-                    prevPlayer.Stop();
-                    dialogueSfxPlayers[data.sfxType] = null;
+                    player.Play2D(voiceClip, voiceClip.length, 1.0f);
+                    currentVoicePlayer = player;
                 }
-                sfxPlayer = CoreManager.Instance.soundManager.PlayUISFX(data.sfxType, -1, data.sfxIndex);
-                dialogueSfxPlayers[data.sfxType] = sfxPlayer;
             }
 
-            foreach (char c in data.Message)
+            dialogueText.text = "";
+            
+            foreach (char c in messageValue)
             {
                 dialogueText.text += c;
                 CoreManager.Instance.soundManager.PlayUISFX(SfxType.TypeWriter);
                 yield return new WaitForSeconds(0.01f);
             }
 
-            if (sfxPlayer)
-                yield return new WaitWhile(() => sfxPlayer.IsPlaying());
-            else
-                yield return new WaitForSeconds(1.5f);
+            float waitTime = (voiceClip) ? voiceClip.length : 1.5f;
+            yield return new WaitForSeconds(waitTime);
 
             for (int i = dialogueText.text.Length - 1; i >= 0; i--)
             {
@@ -188,12 +214,6 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
             canvasGroup.alpha = 0;
             gameObject.SetActive(false);
-        }
-        private void StopAllDialogueSfx()
-        {
-            foreach (var kv in dialogueSfxPlayers)
-                kv.Value?.Stop();
-            dialogueSfxPlayers.Clear();
         }
     }
 }
