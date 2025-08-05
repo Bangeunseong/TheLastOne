@@ -32,7 +32,6 @@ namespace Michsky.UI.Shift
         public TMP_FontAsset mediumFont;
         public TMP_FontAsset semiBoldFont;
         public TMP_FontAsset boldFont;
-        
         public TMP_FontAsset lightFont_KR;
         public TMP_FontAsset regularFont_KR;
         public TMP_FontAsset mediumFont_KR;

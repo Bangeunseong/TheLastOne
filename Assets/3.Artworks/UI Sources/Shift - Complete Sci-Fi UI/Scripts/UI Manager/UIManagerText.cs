@@ -16,6 +16,9 @@ namespace Michsky.UI.Shift
         public ColorType colorType;
         public FontType fontType;
 
+        [Header("Localization Key")] 
+        public string localizationKey;
+
         bool dynamicUpdateEnabled;
         private bool IsKorean()
         {
