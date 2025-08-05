@@ -30,7 +30,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         {
             timer = 0f;
             int layer = statController.Value.RuntimeStatData.IsAlly ? LayerConstants.Head_E : LayerConstants.Head_P;
-            targetHead = NpcUtil.FindColliderOfLayerInChildren(targetTransform.Value.gameObject, layer);
+            if (targetTransform.Value != null) targetHead = NpcUtil.FindColliderOfLayerInChildren(targetTransform.Value.gameObject, layer);
         }
 
         public override TaskStatus OnUpdate()

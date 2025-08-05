@@ -57,14 +57,19 @@ namespace _1.Scripts.Manager.Subs
                 foreach (var val in pair.Value)
                 {
                     GameObject enemy = coreManager.objectPoolManager.Get(pair.Key.ToString());
-                    if (enemy.TryGetComponent(out BehaviorTree behaviorTree)) behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); // 위치조정 BT가 생성 시 위치조정을 무시할 가능성 있음
-                    if (enemy.TryGetComponent(out BaseNpcStatController statController)) statController.RuntimeStatData.SpawnIndex = index + BaseEventIndex.BaseSpawnEnemyIndex; 
+                    
+                    var behaviorTrees = enemy.GetComponentsInChildren<BehaviorTree>();
+                    var statControllers = enemy.GetComponentsInChildren<BaseNpcStatController>();
+                    var agents = enemy.GetComponentsInChildren<NavMeshAgent>();
+                    
+                    foreach (var behaviorTree in behaviorTrees) { behaviorTree.SetVariableValue(BehaviorNames.CanRun, false); }
+                    foreach (var statController in statControllers) { statController.RuntimeStatData.SpawnIndex = index + BaseEventIndex.BaseSpawnEnemyIndex; }
                     
                     enemy.transform.position = val.position;
                     enemy.transform.rotation = val.rotation;
-                        
-                    if (enemy.TryGetComponent(out NavMeshAgent agent)) agent.enabled = true; // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
-                    if (behaviorTree != null) behaviorTree.SetVariableValue(BehaviorNames.CanRun, true);
+                    
+                    foreach (var agent in agents) { agent.enabled = true; } // 적 객체마다 OnEnable에서 키면 위에서 Get()할때 켜져서 디폴트 위치로 가는 버그 재발함. 위치 지정 후 켜야함
+                    foreach (var behaviorTree in behaviorTrees) { behaviorTree.SetVariableValue(BehaviorNames.CanRun, true); }
                     
                     spawnedEnemies.Add(enemy);
                 }
