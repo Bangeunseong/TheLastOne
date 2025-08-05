@@ -118,7 +118,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Data
             RifleToOtherWeaponClipTime = rifleToOtherWeaponClipTime;
             GrenadeLauncherToOtherWeaponClipTime = grenadeLauncherToOtherWeaponClipTime;
             HackGunToOtherWeaponClipTime = hackGunToOtherWeaponClipTime;
-            SniperRifleToOtherWeaponClipTime = sniperRifleReloadClipTime;
+            SniperRifleToOtherWeaponClipTime = sniperRifleToOtherWeaponClipTime;
             
             WeaponWieldClipTime = weaponWieldClipTime;
         }
