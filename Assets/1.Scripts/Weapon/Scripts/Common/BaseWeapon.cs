@@ -31,7 +31,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
         [field: SerializeField] public LayerMask HittableLayer { get; protected set; }
         
         [field: Header("Weapon Parts")]
-        [SerializeField] protected SerializedDictionary<int, WeaponPart> weaponParts;
+        [field: SerializeField] public SerializedDictionary<int, WeaponPart> WeaponParts { get; private set; }
         [field: SerializeField] public SerializedDictionary<PartType, int> EquippedWeaponParts { get; private set; } = new();
         [field: SerializeField] public SerializedDictionary<int, bool> EquipableWeaponParts { get; private set; } = new();
         
@@ -50,12 +50,12 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         public bool TryEquipWeaponPart(PartType type, int id)
         {
-            if (!weaponParts.TryGetValue(id, out WeaponPart part)) return false;
+            if (!WeaponParts.TryGetValue(id, out WeaponPart part)) return false;
             if (!EquipableWeaponParts.TryGetValue(id, out bool isEquipable)) return false;
             
             if (EquippedWeaponParts.TryGetValue(type, out int oldId))
             {
-                if (weaponParts.TryGetValue(oldId, out WeaponPart oldPart)) oldPart.OnUnWear();
+                if (WeaponParts.TryGetValue(oldId, out WeaponPart oldPart)) oldPart.OnUnWear();
             }
             
             part.OnWear();
@@ -65,7 +65,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         public bool TryUnequipWeaponPart(PartType type, int id)
         {
-            if (!weaponParts.TryGetValue(id, out WeaponPart part)) return false;
+            if (!WeaponParts.TryGetValue(id, out WeaponPart part)) return false;
             if (!EquippedWeaponParts.TryGetValue(type, out int currentPartId)) return false;
             if (!currentPartId.Equals(id)) return false;
             
