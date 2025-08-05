@@ -14,6 +14,9 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private float crosshairSize = 1.2f;
         [SerializeField] private float sizeModifyDuration = 0.1f;
 
+        [SerializeField] private Image hitMarker;
+        private Coroutine hitMarkerCoroutine;
+
         private InputAction aimAction;
         private InputAction fireAction;
         private PlayerInput playerInput;
@@ -53,17 +56,17 @@ namespace _1.Scripts.UI.InGame.HUD
 
         private void OnAimStarted(InputAction.CallbackContext context)
         {
-            for (int i = 0; i < crosshairImage.Length; i++)
+            foreach (var t in crosshairImage)
             {
-                crosshairImage[i].enabled = false;
+                t.enabled = false;
             }
         }
         
         private void OnAimCanceled(InputAction.CallbackContext context)
         {
-            for (int i = 0; i < crosshairImage.Length; i++)
+            foreach (var t in crosshairImage)
             {
-                crosshairImage[i].enabled = true;
+                t.enabled = true;
             }
         }
 
@@ -74,10 +77,8 @@ namespace _1.Scripts.UI.InGame.HUD
                 StopCoroutine(shrinkCoroutine);
                 shrinkCoroutine = null;
             }
-            if (modifyCoroutine == null)
-            {
-                modifyCoroutine = StartCoroutine(ModifyCrosshairSize());
-            }
+
+            modifyCoroutine ??= StartCoroutine(ModifyCrosshairSize());
         }
         private void OnFireCanceled(InputAction.CallbackContext context)
         {
@@ -86,10 +87,8 @@ namespace _1.Scripts.UI.InGame.HUD
                 StopCoroutine(modifyCoroutine);
                 modifyCoroutine = null;
             }
-            if (shrinkCoroutine == null)
-            {
-                shrinkCoroutine = StartCoroutine(ShrinkCrosshairSize());
-            }
+
+            shrinkCoroutine ??= StartCoroutine(ShrinkCrosshairSize());
         }
 
         private IEnumerator ModifyCrosshairSize()
@@ -122,6 +121,33 @@ namespace _1.Scripts.UI.InGame.HUD
             }
             rectTransform.localScale = originalScale;
             shrinkCoroutine = null;
+        }
+
+        public void ShowHitMarker(bool isHeadShot)
+        {
+            Color color = isHeadShot ? Color.red : Color.white;
+            color.a = 0.5f;
+            hitMarker.color = color;
+            hitMarker.gameObject.SetActive(true);
+            
+            if (hitMarkerCoroutine != null)
+                StopCoroutine(hitMarkerCoroutine);
+            hitMarkerCoroutine = StartCoroutine(DisappearCoroutine());
+        }
+
+        private IEnumerator DisappearCoroutine()
+        {
+            float timer = 0f;
+            Color startColor = hitMarker.color;
+            while (timer < 0.5f)
+            {
+                timer += Time.unscaledDeltaTime;
+                float t = timer / 0.5f;
+                hitMarker.color = Color.Lerp(startColor, Color.clear, t);
+                yield return null;
+            }
+            hitMarker.gameObject.SetActive(false);
+            hitMarkerCoroutine = null;
         }
     }
 }

@@ -234,6 +234,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             for (int i = 0; i < totalTick; i++)
             {
+                coreManager.uiManager.GetUI<BleedOverlayUI>().Flash();
                 OnTakeDamage(damagePerTick);
                 await UniTask.WaitForSeconds(tickInterval, cancellationToken:token);
             }
