@@ -47,10 +47,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
-            if (weaponParts.Count <= 0)
+            if (WeaponParts.Count <= 0)
             {
                 var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
-                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
             }
         }
 
@@ -59,10 +59,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
-            if (weaponParts.Count <= 0)
+            if (WeaponParts.Count <= 0)
             {
                 var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
-                foreach(var weaponPart in weaponPartList) weaponParts.Add(weaponPart.Data.Id, weaponPart);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
             }
         }
 
@@ -99,16 +99,19 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
                     
                     foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
-                    foreach (var part in weapon.equippedParts) weaponParts[part.Value].OnWear();
+                    foreach (var part in weapon.equippedParts) WeaponParts[part.Value].OnWear();
                 }
                 else
                 {
                     CurrentAmmoCount = GunData.GunStat.MaxAmmoCount;
                     CurrentAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
                     
-                    foreach (var part in weaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
-                    foreach (var part in weaponParts.Where(val => val.Value.Data.IsBasicPart))
+                    foreach (var part in WeaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
+                    foreach (var part in WeaponParts.Where(val => val.Value.Data.IsBasicPart))
+                    {
+                        Service.Log($"Worn Part : {part.Key}");
                         part.Value.OnWear();
+                    }
                 }
                     
                 Face = user.CameraPivot;
@@ -253,7 +256,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
 
             foreach (var available in EquipableWeaponParts.Where(val => val.Value))
             {
-                if (!weaponParts.TryGetValue(available.Key, out var part)) continue;
+                if (!WeaponParts.TryGetValue(available.Key, out var part)) continue;
                 switch (part.Data.Type)
                 {
                     case PartType.Sight: availableParts[0] = true; break;
