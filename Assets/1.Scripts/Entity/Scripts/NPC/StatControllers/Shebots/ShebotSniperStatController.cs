@@ -41,7 +41,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
 
         protected override void PlayHitAnimation()
         {
-            // 맞는 모션 없으므로 넘김
+            if (!IsStunned) behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
         }
 
         protected override void PlayDeathAnimation()
