@@ -75,10 +75,17 @@ namespace _1.Scripts.UI.InGame.Quest
                     slot.PlayCompleteAndDestroy();
                     objectiveSlots.RemoveAt(i);
                 }
-                else
-                {
-                    slot.UpdateProgress();
-                }
+                else slot.UpdateProgress();
+            }
+
+            if (objectiveSlots.Count != 0 || objectives == null) return;
+            {
+                var nextObjective = objectives.FirstOrDefault(obj => !obj.IsCompleted);
+                if (nextObjective == null) return;
+                var go = Instantiate(objectiveSlotPrefab, objectiveSlotContainer);
+                var slot = go.GetComponent<ObjectiveSlot>();
+                slot.Initialize(nextObjective);
+                objectiveSlots.Add(slot);
             }
         }
         

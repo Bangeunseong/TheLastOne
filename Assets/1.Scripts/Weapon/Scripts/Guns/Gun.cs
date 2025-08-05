@@ -141,6 +141,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 {
                     if (Vector3.Distance(BulletSpawnPoint.position, hit.point) <= CurrentMaxWeaponRange)
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
+                    if (isOwnedByPlayer)
+                    {
+                        bool isHeadShot = hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Head_E"));
+                        CoreManager.Instance.uiManager.GetUI<InGameUI>().CrosshairController.ShowHitMarker(isHeadShot);
+                    }
                 } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
                 {
                     var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
