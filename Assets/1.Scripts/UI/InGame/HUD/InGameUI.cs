@@ -42,6 +42,9 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private Image progressFillImage;
         [SerializeField] private TextMeshProUGUI toastText;
         
+        public CrosshairController CrosshairController => crosshairController;
+        [SerializeField] private CrosshairController crosshairController;    
+        
         private PlayerCondition playerCondition;
         private bool isPaused = false;
         

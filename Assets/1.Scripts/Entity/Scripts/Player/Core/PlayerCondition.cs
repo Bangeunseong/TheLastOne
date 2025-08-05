@@ -234,6 +234,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             for (int i = 0; i < totalTick; i++)
             {
+                coreManager.uiManager.GetUI<BleedOverlayUI>().Flash();
                 OnTakeDamage(damagePerTick);
                 await UniTask.WaitForSeconds(tickInterval, cancellationToken:token);
             }
@@ -781,7 +782,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                     await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token, cancelImmediately: true);
                 }
                 
-                Service.Log("Crossbow reloaded");
+                Service.Log("HackGun reloaded");
                 crossbow.OnReload();
                 IsReloading = false;
                 crossbow.IsReloading = false;

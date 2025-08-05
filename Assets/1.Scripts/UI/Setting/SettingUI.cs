@@ -169,12 +169,16 @@ namespace _1.Scripts.UI.Setting
         {
             PlayerPrefs.SetInt("EnableTutorials", on ? 1 : 0);
         }
-
-        /*private void OnLanguageChanged(int idx)
+        
+        private void OnLanguageChanged(int idx)
         {
             PlayerPrefs.SetInt("LanguageIndex", idx);
-            LocalizationManager.SetLanguage(idx);
-        }*/
+
+            foreach (var uiText in FindObjectsOfType<UIManagerText>(true))
+            {
+                uiText.UpdateButton();
+            }
+        }
 
         private void OnMasterVolumeChanged(float vol)
         {
