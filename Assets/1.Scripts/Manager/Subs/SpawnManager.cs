@@ -120,7 +120,7 @@ namespace _1.Scripts.Manager.Subs
             {
                 foreach (var pair in dynamicInfo.dynamicSpawnedWeapons)
                 {
-                    var obj = coreManager.objectPoolManager.Get(pair.Value.type + "_Prefab");
+                    var obj = coreManager.objectPoolManager.Get(pair.Value.type + "_Dummy");
                     obj.transform.SetPositionAndRotation(pair.Value.transform.position.ToVector3(),
                         pair.Value.transform.rotation.ToQuaternion());
                     if (obj.TryGetComponent(out DummyWeapon weapon)) weapon.Initialize(false, pair.Key);
