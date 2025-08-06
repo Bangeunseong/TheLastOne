@@ -1994,6 +1994,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c99189ac9aafcb44f966dd5bb0b76e8d, type: 3}
+--- !u!114 &1256476948 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4665202563498301038, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1256476945}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade814da9656e043af8e0f79a579047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1256476950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 197834599828680006, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
@@ -3019,6 +3031,11 @@ PrefabInstance:
       propertyPath: <LowPassFilter>k__BackingField
       value: 
       objectReference: {fileID: 1074753611}
+    - target: {fileID: 71050111894547790, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <PostProcessEditForFocus>k__BackingField
+      value: 
+      objectReference: {fileID: 1256476948}
     - target: {fileID: 1566700488586551609, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_IsActive
