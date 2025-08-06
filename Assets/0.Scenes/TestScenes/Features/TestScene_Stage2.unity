@@ -8872,7 +8872,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: {fileID: 1342333300}
-  darkExposure: -1.3
+  colorAdjustments: {fileID: 0}
+  bloom: {fileID: 0}
+  defaultExposure: 0.6
+  defaultBloomIntensity: 1
+  focusExposure: -1.3
+  focusBloomIntensity: 7
   transitionTime: 1
 --- !u!1 &1347535338
 GameObject:

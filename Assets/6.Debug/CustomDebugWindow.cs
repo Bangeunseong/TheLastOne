@@ -166,13 +166,13 @@ namespace _6.Debug
 
             if (GUILayout.Button("FocusMode On"))
             {
-                var switcher = FindObjectOfType<PostProcessColorAdjustmentsEdit>();
+                var switcher = FindObjectOfType<PostProcessEditForFocus>();
                 switcher.FocusModeOnOrNot(true);
             }
             
             if (GUILayout.Button("FocusMode Off"))
             {
-                var switcher = FindObjectOfType<PostProcessColorAdjustmentsEdit>();
+                var switcher = FindObjectOfType<PostProcessEditForFocus>();
                 switcher.FocusModeOnOrNot(false);
             }
         }

@@ -25,6 +25,7 @@ namespace _1.Scripts.Manager.Subs
         
         [field: Header("Visibility")]
         [field: SerializeField] public bool IsVisible { get; private set; }
+        [field: SerializeField] public bool IsFocused { get; private set; }
         
         private HashSet<GameObject> spawnedEnemies = new();
         private HashSet<GameObject> spawnedProps = new();
@@ -192,6 +193,19 @@ namespace _1.Scripts.Manager.Subs
                 if (obj.TryGetComponent<StencilAbleForNpc>(out var stencilAbleForNpc))
                 {
                     stencilAbleForNpc.StencilLayerOnOrNot(isOn);
+                }
+            }
+        }
+
+        public void FocusModeOnOrNot(bool isOn)
+        {
+            IsFocused = isOn;
+            
+            foreach (GameObject obj in spawnedEnemies)
+            {
+                if (obj.TryGetComponent<FocusAbleForNpc>(out var focusAbleForNpc))
+                {
+                    focusAbleForNpc.FocusOnOrNot(isOn);
                 }
             }
         }
