@@ -148,18 +148,18 @@ namespace _1.Scripts.UI.InGame.Dialogue
             {
                 dialogueText.text += c;
                 CoreManager.Instance.soundManager.PlayUISFX(SfxType.TypeWriter);
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSecondsRealtime(0.01f);
             }
 
             if (sfxPlayer)
                 yield return new WaitWhile(() => sfxPlayer.IsPlaying());
             else
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSecondsRealtime(1.5f);
 
             for (int i = dialogueText.text.Length - 1; i >= 0; i--)
             {
                 dialogueText.text = dialogueText.text.Substring(0, i);
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSecondsRealtime(0.01f);
             }
 
             yield return PlayDialogueSequence(sequence, index + 1);
@@ -171,7 +171,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
             while (t < duration)
             {
                 canvasGroup.alpha = Mathf.Lerp(0, 1, t / duration);
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
                 yield return null;
             }
             canvasGroup.alpha = 1;
@@ -183,7 +183,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
             while (t < duration)
             {
                 canvasGroup.alpha = Mathf.Lerp(1, 0, t / duration);
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
                 yield return null;
             }
             canvasGroup.alpha = 0;
