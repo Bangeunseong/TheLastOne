@@ -554,7 +554,7 @@ Transform:
   m_GameObject: {fileID: 81081313}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.52, y: -3.2317276, z: 1.944}
+  m_LocalPosition: {x: -0.978, y: -3.2317276, z: 1.964}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4779,6 +4779,7 @@ GameObject:
   - component: {fileID: 699854365}
   - component: {fileID: 699854367}
   - component: {fileID: 699854366}
+  - component: {fileID: 699854371}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4963,6 +4964,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &699854371
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699854364}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &704005949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7926,7 +7948,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167492471}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.03441064, y: 0.023305852, z: -0.0004192448, w: 0.999136}
+  m_LocalRotation: {x: 0.03359314, y: 0.023331424, z: -0.00040060972, w: 0.99916315}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9864,8 +9886,8 @@ Transform:
   m_GameObject: {fileID: 1393086720}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 269.84, y: 64.882, z: 49.44}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 269.813, y: 65.634, z: 49.44}
+  m_LocalScale: {x: 1.2298, y: 1.2298, z: 1.2298}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8880388932235152906}
@@ -12329,6 +12351,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 71050111894547790, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <LowPassFilter>k__BackingField
+      value: 
+      objectReference: {fileID: 699854365}
+    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <Pov>k__BackingField
+      value: 
+      objectReference: {fileID: 214153608}
+    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <InputProvider>k__BackingField
+      value: 
+      objectReference: {fileID: 146709862}
+    - target: {fileID: 3698284712353514345, guid: d1ad11f456aebf14297be286489d8ec9,
+        type: 3}
+      propertyPath: <FirstPersonCamera>k__BackingField
+      value: 
+      objectReference: {fileID: 146709863}
     - target: {fileID: 6813290790807052004, guid: d1ad11f456aebf14297be286489d8ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16558,8 +16600,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.08543518, y: 1.4634993, z: 0.6619717}
-  m_Center: {x: 0.012399597, y: 0.73174965, z: -0.32956618}
+  m_Size: {x: 0.5530459, y: 1.4634993, z: 0.6619717}
+  m_Center: {x: 0.246205, y: 0.73174965, z: -0.32956618}
 --- !u!65 &6437273437030087388
 BoxCollider:
   m_ObjectHideFlags: 0

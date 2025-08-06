@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Util;
 using Unity.VisualScripting;
@@ -94,8 +95,9 @@ namespace _1.Scripts.Map.GameEvents
             killedCount++;
             if (killedCount < targetCount) return;
             
+            if (timeline) coreManager.soundManager.PlayBGM(BgmType.Stage2, 0);
             if (invisibleWall.Count > 0)
-                foreach (var wall in invisibleWall) wall.gameObject.SetActive(false);
+                foreach (var wall in invisibleWall) wall.transform.parent.gameObject.SetActive(false);
             GameEventSystem.Instance.UnregisterListener(this);
             enabled = false;
         }
@@ -111,6 +113,10 @@ namespace _1.Scripts.Map.GameEvents
         {
             coreManager.gameManager.Player.InputProvider.enabled = false;
             coreManager.gameManager.PauseGame();
+            
+            // BGM 변경 필요?
+            coreManager.soundManager.PlayBGM(BgmType.Stage2, 1);
+            
             coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
             coreManager.uiManager.OnCutsceneStarted(director);
         }
