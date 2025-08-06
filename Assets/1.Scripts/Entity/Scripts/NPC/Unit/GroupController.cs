@@ -5,48 +5,56 @@ using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Util;
 using UnityEngine;
 
-public class GroupController : MonoBehaviour
+namespace _1.Scripts.Entity.Scripts.NPC.Unit
 {
-    [Header("Components")]
-    [SerializeField] private List<BaseNpcStatController> statControllers;
-    
-    [Header("Setting")]
-    [SerializeField] private float delay = 6f;
-    
-    [Header("For Debugging")]
-    [SerializeField] private int aliveCount;
-    
-    private void Awake()
+    public class GroupController : MonoBehaviour
     {
-        aliveCount = statControllers.Count;
+        [Header("Components")]
+        [SerializeField] private List<BaseNpcStatController> statControllers;
         
-        foreach (var statController in statControllers)
+        [Header("Setting")]
+        [SerializeField] private float delay = 6f;
+        
+        [Header("For Debugging")]
+        [SerializeField] private int aliveCount;
+        
+        private void Awake()
         {
-            statController.OnDeath += OnChildDeath;
+            aliveCount = statControllers.Count;
+            
+            foreach (var statController in statControllers)
+            {
+                statController.OnDeath += OnChildDeath;
+            }
         }
-    }
 
-    private void Reset()
-    {
-        foreach (var statController in GetComponentsInChildren<BaseNpcStatController>())
+        private void Reset()
         {
-            statControllers.Add(statController);
+            foreach (var statController in GetComponentsInChildren<BaseNpcStatController>())
+            {
+                statControllers.Add(statController);
+            }
         }
-    }
 
-    private void OnChildDeath()
-    {
-        aliveCount--;
-
-        if (aliveCount <= 0)
+        private void OnDisable()
         {
-            StartCoroutine(DelayedRelease(delay));
+            aliveCount = statControllers.Count;
         }
-    }
+        
+        private void OnChildDeath()
+        {
+            aliveCount--;
 
-    private IEnumerator DelayedRelease(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        NpcUtil.DisableNpc(this.gameObject);
+            if (aliveCount <= 0)
+            {
+                StartCoroutine(DelayedRelease(delay));
+            }
+        }
+
+        private IEnumerator DelayedRelease(float time)
+        {
+            yield return new WaitForSeconds(time);
+            NpcUtil.DisableNpc(this.gameObject);
+        }
     }
 }
