@@ -49,6 +49,7 @@ namespace _1.Scripts.Manager.Subs
         GrenadeLauncherEmpty,
         HackGunEmpty,
         SniperRifleEmpty,
+        HeadShotSound,
         
         // Grenade SFX
         GrenadeExplode,
