@@ -221,7 +221,7 @@ namespace _1.Scripts.Manager.Subs
         {
             var introGo = GameObject.Find("IntroOpening");
             var playable = introGo?.GetComponentInChildren<PlayableDirector>();
-            if (!playable || coreManager.gameManager.SaveData != null &&
+            if (!playable && coreManager.gameManager.SaveData != null &&
                 coreManager.gameManager.SaveData.stageInfos.TryGetValue(CurrentScene, out var info) &&
                 info.isIntroPlayed)
             {
@@ -234,7 +234,8 @@ namespace _1.Scripts.Manager.Subs
         private void PlayCutScene(PlayableDirector director)
         {
             director.played += OnCutsceneStarted_Intro;
-            director.stopped += OnCutsceneStopped_Intro;
+            if (CurrentScene == SceneType.Stage1) director.stopped += OnCutsceneStopped_Stage1Intro;
+            else if (CurrentScene == SceneType.Stage2) director.stopped += OnCutsceneStopped_Stage2Intro;
             director.Play();
         }
 
@@ -259,7 +260,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.uiManager.OnCutsceneStarted(director);
         }
 
-        private void OnCutsceneStopped_Intro(PlayableDirector director)
+        private void OnCutsceneStopped_Stage1Intro(PlayableDirector director)
         {
             var player = coreManager.gameManager.Player;
             player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
@@ -270,7 +271,20 @@ namespace _1.Scripts.Manager.Subs
             coreManager.uiManager.OnCutsceneStopped(director);
             
             director.played -= OnCutsceneStarted_Intro;
-            director.stopped -= OnCutsceneStopped_Intro;
+            director.stopped -= OnCutsceneStopped_Stage1Intro;
+        }
+
+        private void OnCutsceneStopped_Stage2Intro(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            
+            director.played -= OnCutsceneStarted_Intro;
+            director.stopped -= OnCutsceneStopped_Stage2Intro;
         }
     }
 }
