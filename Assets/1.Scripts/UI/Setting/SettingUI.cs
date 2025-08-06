@@ -5,14 +5,12 @@ using UnityEngine.UI;
 using Michsky.UI.Shift;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using UnityEngine.Localization.Settings;
 
 namespace _1.Scripts.UI.Setting
 {
     public class SettingUI : MonoBehaviour
     {
-        [Header("Tutorial")]
-        [SerializeField] private SwitchManager tutorialSwitch;
-
         [Header("Language")]
         [SerializeField] private HorizontalSelector languageSelector;
 
@@ -35,8 +33,13 @@ namespace _1.Scripts.UI.Setting
         private Resolution[] resolutions;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
 
-        private void Start()
+        private async void Start()
         {
+            await LocalizationSettings.InitializationOperation.Task;
+            int savedIdx = PlayerPrefs.GetInt("LanguageIndex", 0);
+            languageSelector.index = Mathf.Clamp(savedIdx, 0, languageSelector.itemList.Count - 1);
+            languageSelector.UpdateUI();
+            SetLocale(languageSelector.index);
             resolutions = Screen.resolutions; 
             InitSensitivitySliders(); 
             InitResolutionSelector(); 
@@ -45,26 +48,33 @@ namespace _1.Scripts.UI.Setting
             LoadSettings();
             AddListeners();
         }
-        
-        /*private void InitLanguageOptions()
+
+        private void OnEnable()
         {
-            if (languageSelector == null) return;
-            languageSelector.saveValue = false;
-            languageSelector.loopSelection = false;
-            languageSelector.itemList.Clear();
-
-            var languages = new List<string> { "English", "한국어" };
-            foreach (var lang in languages)
-            {
-                languageSelector.CreateNewItem(lang);
-                int idx = languageSelector.itemList.Count - 1;
-                languageSelector.itemList[idx].onValueChanged.AddListener(() => OnLanguageChanged(idx));
-            }
-
-            languageSelector.index = PlayerPrefs.GetInt("LanguageIndex", 0);
+            SyncLanguageSelector();
+        }
+        
+        private void SyncLanguageSelector()
+        {
+            int savedIdx = PlayerPrefs.GetInt("LanguageIndex", 0);
+            languageSelector.index = Mathf.Clamp(savedIdx, 0, languageSelector.itemList.Count - 1);
             languageSelector.UpdateUI();
-        }*/
+        }
+        
+        public void OnLanguageSelectorChanged(int idx)
+        {
+            PlayerPrefs.SetInt("LanguageIndex", idx);
+            SetLocale(idx);
+        }
 
+        private async void SetLocale(int idx)
+        {
+            await LocalizationSettings.InitializationOperation.Task;
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            if (idx >= 0 && idx < locales.Count)
+                LocalizationSettings.SelectedLocale = locales[idx];
+        }
+        
         private void InitSensitivitySliders()
         {
             //float lookDef = CoreManager.Instance.gameManager.LookSensitivity;

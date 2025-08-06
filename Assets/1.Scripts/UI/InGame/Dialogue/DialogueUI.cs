@@ -51,7 +51,8 @@ namespace _1.Scripts.UI.InGame.Dialogue
         {
             StopDialogueRoutine();
             StopVoice();
-
+            ResetUI();
+            
             if (!gameObject.activeInHierarchy)
             {
                 if (canvasGroup) canvasGroup.alpha = 0;
@@ -92,6 +93,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
         
         public void ShowSequence(List<DialogueData> sequence)
         {
+            if (CoreManager.Instance.gameManager.IsGamePaused) return;
             StopDialogueRoutine();
             StopVoice();
             if (sequence == null || sequence.Count == 0) return;
@@ -105,6 +107,12 @@ namespace _1.Scripts.UI.InGame.Dialogue
 
         private IEnumerator PlayDialogueSequence(List<DialogueData> sequence, int index)
         {
+            if (CoreManager.Instance.gameManager.IsGamePaused)
+            {
+                ResetUI();
+                yield break;
+            }
+            
             if (index >= sequence.Count)
             {
                 yield return StartCoroutine(FadeOut(0.15f));

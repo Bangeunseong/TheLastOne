@@ -159,7 +159,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 {
                     slotImages[i].color = Color.white;
                     slotImages[i].sprite = SlotUtility.GetWeaponSprite(weapon);
-                    slotTexts[i].text = SlotUtility.GetWeaponName(weapon);
+                    SlotUtility.GetWeaponName(weapon, slotTexts[i]);
                     var (mag, total) = SlotUtility.GetWeaponAmmo(weapon);
                     slotAmmoTexts[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : "";
                     slotAmmoTexts[i].color = weapon is Gun ? selectedColor : selectedAmmoColor;
@@ -228,7 +228,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 currentTotalAmmoText.text = string.Empty;
                 return;
             }
-            WeaponType type = SlotOrder[selectedIndex];
+            WeaponType type = GetSlotWeaponType(selectedIndex);
 
             if (!ownedWeapons.TryGetValue(type, out var currentWeapon) || type == WeaponType.Punch)
             {

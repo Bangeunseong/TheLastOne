@@ -83,7 +83,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] private int[] killQuestIndex;
         private static bool hasFirstkilled = false;
 
-        private const int FIRST_KILL_DIALOGUE_KEY = 1;
+        private const int FirstKillDialogueKey = 1;
         
         // 이 스크립트에서 사용하는 토큰들
         private CancellationTokenSource hackCts;
@@ -166,7 +166,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 if (!hasFirstkilled)
                 {
                     hasFirstkilled = true;
-                    CoreManager.Instance.dialogueManager.TriggerDialogue(FIRST_KILL_DIALOGUE_KEY);
+                    CoreManager.Instance.dialogueManager.TriggerDialogue(FirstKillDialogueKey);
                 }
 
                 if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)

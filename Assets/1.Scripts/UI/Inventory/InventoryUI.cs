@@ -167,7 +167,7 @@ namespace _1.Scripts.UI.Inventory
                 {
                     button.gameObject.SetActive(true);
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
-                    if (label) label.text = SlotUtility.GetWeaponName(weapon);
+                    if (label) SlotUtility.GetWeaponName(weapon, label);
                     weaponImages[i].sprite = SlotUtility.GetWeaponSprite(weapon);
                     weaponImages[i].color = Color.white;
                     button.onClick.AddListener(() => ShowWeapon(weaponType));
@@ -194,8 +194,8 @@ namespace _1.Scripts.UI.Inventory
 
             var stat = SlotUtility.GetWeaponStat(weapon);
             UpdateStats(stat.Damage, stat.MaxAmmoCountInMagazine, stat.Rpm, stat.Recoil, stat.Weight);
-            titleText.text = SlotUtility.GetWeaponName(weapon);
-            descriptionText.text = SlotUtility.GetWeaponDescription(weapon);
+            SlotUtility.GetWeaponName(weapon, titleText);
+            SlotUtility.GetWeaponDescription(weapon, descriptionText);
             if (weaponPreviewMap.TryGetValue(weaponType, out var previewGo))
                 previewGo.SetActive(true);
             currentWeaponType = weaponType;
