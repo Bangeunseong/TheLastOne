@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
-using _1.Scripts.Entity.Scripts.NPC.StencilAble;
+using _1.Scripts.VisualEffects;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;

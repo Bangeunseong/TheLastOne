@@ -1,6 +1,7 @@
 ﻿using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.Common;
 using _1.Scripts.UI.InGame.Modification;
+using _1.Scripts.VisualEffects;
 
 namespace _6.Debug
 { 
@@ -161,6 +162,18 @@ namespace _6.Debug
             if (GUILayout.Button("Show BleedOverlay"))
             {
                 CoreManager.Instance.gameManager.Player.PlayerCondition.OnBleed(3,2,1);
+            }
+
+            if (GUILayout.Button("FocusMode On"))
+            {
+                var switcher = FindObjectOfType<PostProcessColorAdjustmentsEdit>();
+                switcher.FocusModeOnOrNot(true);
+            }
+            
+            if (GUILayout.Button("FocusMode Off"))
+            {
+                var switcher = FindObjectOfType<PostProcessColorAdjustmentsEdit>();
+                switcher.FocusModeOnOrNot(false);
             }
         }
     }

@@ -6,7 +6,7 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using UnityEngine;
 
-namespace _1.Scripts.Entity.Scripts.NPC.StencilAble
+namespace _1.Scripts.VisualEffects
 {
     public class StencilAbleForNpc : MonoBehaviour
     {

@@ -8765,6 +8765,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3573372371825155662, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
+        type: 3}
+      propertyPath: sharedProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: c0271ba485e96064ab495670e559c4b4,
+        type: 2}
     - target: {fileID: 3801579059887386653, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
         type: 3}
       propertyPath: m_Name
@@ -8823,14 +8829,51 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3129274296332943497, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1342333302}
   m_SourcePrefab: {fileID: 100100000, guid: 10ccf6402a4247c4ea5ee9c9400c0e28, type: 3}
+--- !u!1 &1342333299 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3129274296332943497, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
+    type: 3}
+  m_PrefabInstance: {fileID: 1342333298}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1342333300 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3573372371825155662, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
+    type: 3}
+  m_PrefabInstance: {fileID: 1342333298}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342333299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!108 &1342333301 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 7667165632615422851, guid: 10ccf6402a4247c4ea5ee9c9400c0e28,
     type: 3}
   m_PrefabInstance: {fileID: 1342333298}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1342333302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342333299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade814da9656e043af8e0f79a579047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 1342333300}
+  darkExposure: -1.3
+  transitionTime: 1
 --- !u!1 &1347535338
 GameObject:
   m_ObjectHideFlags: 0
