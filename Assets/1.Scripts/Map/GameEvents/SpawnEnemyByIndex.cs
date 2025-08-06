@@ -60,7 +60,7 @@ namespace _1.Scripts.Map.GameEvents
             foreach (var point in spawnPoints)
                 targetCount += point.Key is EnemyType.ShebotRifleDuo or EnemyType.ShebotSwordDogDuo ? point.Value.Count * 2 : point.Value.Count;
 
-            invisibleWall.SetActive(true);
+            if (invisibleWall) invisibleWall.SetActive(true);
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
             GameEventSystem.Instance.RegisterListener(this);
@@ -76,7 +76,7 @@ namespace _1.Scripts.Map.GameEvents
             if (killedCount < targetCount) return;
             
             if (timeline) coreManager.soundManager.PlayBGM(BgmType.Stage2, 0);
-            invisibleWall.SetActive(false);
+            if (invisibleWall) invisibleWall.SetActive(false);
             GameEventSystem.Instance.UnregisterListener(this);
             enabled = false;
         }
