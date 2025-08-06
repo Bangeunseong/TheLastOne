@@ -202,9 +202,6 @@ namespace _1.Scripts.Manager.Subs
                     PlayCutSceneOrResumeGame(player); break;
             }
             
-            // Step 5. Change Background Music
-            ChangeBGM(0);
-            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -221,7 +218,7 @@ namespace _1.Scripts.Manager.Subs
         {
             var introGo = GameObject.Find("IntroOpening");
             var playable = introGo?.GetComponentInChildren<PlayableDirector>();
-            if (!playable || coreManager.gameManager.SaveData != null &&
+            if (!playable && coreManager.gameManager.SaveData != null &&
                 coreManager.gameManager.SaveData.stageInfos.TryGetValue(CurrentScene, out var info) &&
                 info.isIntroPlayed)
             {
@@ -233,13 +230,23 @@ namespace _1.Scripts.Manager.Subs
 
         private void PlayCutScene(PlayableDirector director)
         {
-            director.played += OnCutsceneStarted_Intro;
-            director.stopped += OnCutsceneStopped_Intro;
+            
+            if (CurrentScene == SceneType.Stage1)
+            {
+                director.played += OnCutsceneStarted_Stage1Intro;
+                director.stopped += OnCutsceneStopped_Stage1Intro;
+            }
+            else if (CurrentScene == SceneType.Stage2)
+            {
+                director.played += OnCutsceneStarted_Stage2Intro;
+                director.stopped += OnCutsceneStopped_Stage2Intro;
+            }
             director.Play();
         }
 
         private void ResumeGame(Player player, bool spawn, int index)
         {
+            ChangeBGM(0);
             player.PlayerCondition.OnEnablePlayerMovement();
             if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
             if (spawn) coreManager.spawnManager.SpawnEnemyBySpawnData(index);
@@ -251,7 +258,16 @@ namespace _1.Scripts.Manager.Subs
                 coreManager.soundManager.PlayBGM(bgmType, index: index);
         }
 
-        private void OnCutsceneStarted_Intro(PlayableDirector director)
+        private void OnCutsceneStarted_Stage1Intro(PlayableDirector director)
+        {
+            ChangeBGM(0);
+            coreManager.gameManager.Player.InputProvider.enabled = false;
+            coreManager.gameManager.PauseGame();
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
+        }
+
+        private void OnCutsceneStarted_Stage2Intro(PlayableDirector director)
         {
             coreManager.gameManager.Player.InputProvider.enabled = false;
             coreManager.gameManager.PauseGame();
@@ -259,7 +275,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.uiManager.OnCutsceneStarted(director);
         }
 
-        private void OnCutsceneStopped_Intro(PlayableDirector director)
+        private void OnCutsceneStopped_Stage1Intro(PlayableDirector director)
         {
             var player = coreManager.gameManager.Player;
             player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
@@ -269,8 +285,22 @@ namespace _1.Scripts.Manager.Subs
             coreManager.gameManager.ResumeGame();
             coreManager.uiManager.OnCutsceneStopped(director);
             
-            director.played -= OnCutsceneStarted_Intro;
-            director.stopped -= OnCutsceneStopped_Intro;
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage1Intro;
+        }
+
+        private void OnCutsceneStopped_Stage2Intro(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            ChangeBGM(0);
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage2Intro;
         }
     }
 }
