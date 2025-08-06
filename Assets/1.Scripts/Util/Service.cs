@@ -26,11 +26,11 @@ public static class Service
         return component;
     }
 
-    public static T[] TryGetChildComponents<T>(this MonoBehaviour _this,  string _target) where T : class
+    public static T[] TryGetChildComponents<T>(this MonoBehaviour _this, string _target, bool includeInActive = false) where T : class
     {
         var target = FindFirstChild(_this.transform, _target);
         if (target == null) return null;
-        var components = target.GetComponentsInChildren<T>();
+        var components = target.GetComponentsInChildren<T>(includeInActive);
         return components;
     }
 
