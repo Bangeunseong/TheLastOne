@@ -1858,6 +1858,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 2
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 1491709152}
   timeline: {fileID: 0}
 --- !u!65 &229119310
@@ -6092,6 +6094,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 3
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 1595070306}
   timeline: {fileID: 0}
 --- !u!65 &911152357
@@ -6269,6 +6273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 6
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 1073473020}
   timeline: {fileID: 412542386}
 --- !u!65 &927044526
@@ -7863,6 +7869,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 5
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 1369899169}
   timeline: {fileID: 487222009}
 --- !u!65 &1146863511
@@ -11102,6 +11110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 4
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 1059459455}
   timeline: {fileID: 0}
 --- !u!65 &1523964474
@@ -11730,7 +11740,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0f7611a21940439408f734fc06e7ebed, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -15223,6 +15233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 1
+  killedCount: 0
+  targetCount: 0
   invisibleWall: {fileID: 824319316}
   timeline: {fileID: 0}
 --- !u!65 &2020271963

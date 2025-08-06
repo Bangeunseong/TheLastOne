@@ -16,7 +16,9 @@ namespace _1.Scripts.Map.GameEvents
         [Header("Spawn Trigger Id")]
         [Tooltip("It should be same with corresponding Save Point Id")]
         [SerializeField] private int spawnIndex;
-
+        [SerializeField] private int killedCount;
+        [SerializeField] private int targetCount;
+        
         [Header("Invisible Wall")] 
         [SerializeField] private GameObject invisibleWall;
 
@@ -25,9 +27,7 @@ namespace _1.Scripts.Map.GameEvents
         
         private CoreManager coreManager;
         private bool isSpawned;
-        private int killedCount;
-        private int targetCount;
-
+        
         private void Start()
         {
             coreManager = CoreManager.Instance;
