@@ -71,11 +71,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
             {
                 if (Type != WeaponType.SniperRifle)
                 {
-                    if (!player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] && Type == WeaponType.Pistol)
-                    {
-                        player.PlayerWeapon.AvailableWeapons[Type] = true;
-                        player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
-                    } else return;
+                    if (player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] && Type == WeaponType.Pistol) return;
+                    player.PlayerWeapon.AvailableWeapons[Type] = true;
+                    player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
                 }
                 else
                 {
