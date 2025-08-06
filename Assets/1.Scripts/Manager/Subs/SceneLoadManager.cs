@@ -240,8 +240,6 @@ namespace _1.Scripts.Manager.Subs
         private void PlayCutScene(PlayableDirector director)
         {
             director.played += OnCutsceneStarted_Intro;
-            director.played += uiManager.OnCutsceneStarted;
-            director.stopped += uiManager.OnCutsceneStopped;
             director.stopped += OnCutsceneStopped_Intro;
             director.Play();
         }

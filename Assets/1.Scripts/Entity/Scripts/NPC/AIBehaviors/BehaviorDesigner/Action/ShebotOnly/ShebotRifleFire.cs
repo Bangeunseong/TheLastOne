@@ -24,17 +24,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
         
         public override void OnStart()
         {
-            if (!isAttacking.Value)
+            if (targetTransform.Value != null)
             {
-                animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire_2);
-                isAttacking.Value = true;
+                if (!isAttacking.Value)
+                {
+                    animator.Value.SetTrigger(ShebotAnimationData.Shebot_Rifle_fire_2);
+                    isAttacking.Value = true;
+                }
+                int layer = statController.Value.RuntimeStatData.IsAlly ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+                targetChset = NpcUtil.FindColliderOfLayerInChildren(targetTransform.Value.gameObject, layer);
             }
-            int layer = statController.Value.RuntimeStatData.IsAlly ? LayerConstants.Chest_E : LayerConstants.Chest_P;
-            targetChset = NpcUtil.FindColliderOfLayerInChildren(targetTransform.Value.gameObject, layer);
         }
 
         public override TaskStatus OnUpdate()
         {
+            if (targetTransform.Value == null) return TaskStatus.Failure;
+            
             AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
             
             if (stateInfo.normalizedTime > 1.0)

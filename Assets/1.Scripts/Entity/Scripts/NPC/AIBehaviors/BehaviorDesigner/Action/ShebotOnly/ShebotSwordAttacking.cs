@@ -20,22 +20,27 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		
 		public override void OnStart()
 		{
-			if (!isAttacking.Value)
+			if (targetTransform.Value != null)
 			{
-				if (statController.Value.RuntimeStatData.IsAlly)
+				if (!isAttacking.Value)
 				{
-					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
+					if (statController.Value.RuntimeStatData.IsAlly)
+					{
+						animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack_Full);
+					}
+					else
+					{
+						animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
+					}
+					isAttacking.Value = true;
 				}
-				else
-				{
-					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Sword_Attack3);
-				}
-				isAttacking.Value = true;
 			}
 		}
 
 		public override TaskStatus OnUpdate()
 		{
+			if (targetTransform.Value == null) return TaskStatus.Failure;
+			
 			AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 
 			if (stateInfo.normalizedTime > 1.0)

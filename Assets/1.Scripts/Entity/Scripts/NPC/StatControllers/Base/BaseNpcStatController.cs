@@ -108,7 +108,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// <summary>
         /// Components 초기화 용도
         /// </summary>
-        private void Reset()
+        protected virtual void Reset()
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();
@@ -124,7 +124,11 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// </summary>
         protected virtual void OnDisable()
         {
+            // 사망 초기화
             IsDead = false;
+            behaviorTree.SetVariableValue(BehaviorNames.IsDead, false);
+            
+            // 스탯 초기화
             isHacking = false;
             isStunned = false;
             if (agent != null) agent.enabled = false;
@@ -132,8 +136,8 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
             if (onStunParticle != null && onStunParticle.IsAlive())
             {
                 onStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            }
-
+            } 
+            
             ResetLayersToOriginal();
             DisposeAllUniTasks();
         }

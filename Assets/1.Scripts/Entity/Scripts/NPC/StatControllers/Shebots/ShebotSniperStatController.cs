@@ -8,13 +8,15 @@ using _1.Scripts.Static;
 using _1.Scripts.Util;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
 {
     public class ShebotSniperStatController : BaseShebotStatController
     {
         private RuntimeShebotSniperStatData runtimeShebotSniperStatData;
-        private LineRenderer lineRenderer;
+        [SerializeField] private LineRenderer lineRenderer;
+        [SerializeField] private VisualEffect muzzleVisualEffect;
         
         protected override void Awake()
         {
@@ -23,9 +25,17 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
             runtimeShebotSniperStatData = new RuntimeShebotSniperStatData(shebotSwordStatData);
             runtimeStatData = runtimeShebotSniperStatData;
             
-            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer ??= GetComponent<LineRenderer>();
+            muzzleVisualEffect ??= GetComponentInChildren<VisualEffect>();
         }
 
+        protected override void Reset()
+        {
+            base.Reset();
+            lineRenderer = GetComponent<LineRenderer>();
+            muzzleVisualEffect = GetComponentInChildren<VisualEffect>(true);
+        }
+        
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -37,11 +47,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Shebots
         {
             base.OnEnable();
             animator.SetTrigger(ShebotAnimationData.Shebot_Rifle_Aim);
+            muzzleVisualEffect.Stop();
         }
 
         protected override void PlayHitAnimation()
         {
-            // 맞는 모션 없으므로 넘김
+            if (!IsStunned) behaviorTree.SetVariableValue(BehaviorNames.ShouldAlertNearBy, true);
         }
 
         protected override void PlayDeathAnimation()

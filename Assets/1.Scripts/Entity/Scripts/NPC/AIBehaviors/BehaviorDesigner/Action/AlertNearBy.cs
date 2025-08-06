@@ -32,6 +32,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		{
 			shouldAlertNearBy.Value = false;
 			if (isAlerted.Value) return TaskStatus.Success;
+			if (targetTransform.Value == null) return TaskStatus.Success;
 			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
 			{
