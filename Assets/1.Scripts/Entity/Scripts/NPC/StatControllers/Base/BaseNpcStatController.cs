@@ -108,7 +108,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         /// <summary>
         /// Components 초기화 용도
         /// </summary>
-        private void Reset()
+        protected virtual void Reset()
         {
             animator = GetComponent<Animator>();
             behaviorTree = GetComponent<BehaviorTree>();

@@ -38,6 +38,12 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.DogO
 
         public override TaskStatus OnUpdate()
         {
+            if (targetTransform.Value == null)
+            {
+                isAttacking.Value = false;
+                return TaskStatus.Failure;
+            }
+            
             AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
         
             if (stateInfo.normalizedTime > 1.0)
