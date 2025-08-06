@@ -29,26 +29,30 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Sheb
 		
 		public override void OnStart()
 		{
-			agent.Value.SetDestination(selfTransform.Value.position);
-			elapsedTime = 0f;
-			switchedToStayAnimation = false;
-			
-			if (!shieldUsedOnce.Value)
+			if (targetTransform.Value != null)
 			{
-				shieldUsedOnce.Value = true;
-				hasEnteredShield.Value = true;
-				CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
-				animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
-			}
-			else
-			{
-				hasEnteredShield.Value = false;
+				agent.Value.SetDestination(selfTransform.Value.position);
+				elapsedTime = 0f;
+				switchedToStayAnimation = false;
+				
+				if (!shieldUsedOnce.Value)
+				{
+					shieldUsedOnce.Value = true;
+					hasEnteredShield.Value = true;
+					CoreManager.Instance.soundManager.PlaySFX(SfxType.Shebot, selfTransform.Value.position, index:5);
+					animator.Value.SetTrigger(ShebotAnimationData.Shebot_Guard);
+				}
+				else
+				{
+					hasEnteredShield.Value = false;
+				}
 			}
 		}
 
 		public override TaskStatus OnUpdate()
 		{
 			if (!hasEnteredShield.Value) return TaskStatus.Success;
+			if (targetTransform.Value == null) return TaskStatus.Failure;
 			
 			if (isInterrupted.Value)
 			{
