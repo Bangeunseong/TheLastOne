@@ -43,14 +43,13 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
     /// </summary>
     public abstract class BaseNpcStatController : MonoBehaviour, IStunnable, IHackable, IBleedable
     {
-        /// <summary>
-        /// 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
-        /// </summary>
+        // 자식마다 들고있는 런타임 스탯을 부모가 가지고 있도록 함
         [Header("StatData")]
         protected RuntimeEntityStatData runtimeStatData;
         public RuntimeEntityStatData RuntimeStatData => runtimeStatData;
         public bool IsDead { get; private set; }
         
+        // 조절할 컴포넌트
         [Header("Components")]
         [SerializeField] protected Animator animator;
         [SerializeField] protected BehaviorTree behaviorTree;
@@ -60,10 +59,12 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         [SerializeField] private DamageConvertForNpc[] damageConvertForNpc;
         [SerializeField] protected ParticleSystem onStunParticle;
         
+        // 스턴 관련 플래그
         [Header("Stunned")] 
         private bool isStunned;
         public bool IsStunned => isStunned;
         
+        // 해킹 관련 정보
         [Header("Hacking_Process")]
         public bool isHacking;
         [SerializeField] private bool canBeHacked = true;
@@ -74,21 +75,25 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
         private HackingProgressUI hackingProgressUI;
         private Dictionary<Transform, int> originalLayers = new();
         
-        [Header("Hacking_Quest")] // 해킹 성공 시 올려야할 퀘스트 진행도들 
+        // 해킹 성공 시 올려야할 퀘스트 진행도들
+        [Header("Hacking_Quest")]  
         [SerializeField] private bool shouldCountHackingQuest;
         [SerializeField] private int[] hackingQuestIndex;
         
-        [Header("Kill_Quest")] // 사망 시 올려야할 퀘스트 진행도들
+        // 사망 시 올려야할 퀘스트 진행도들
+        [Header("Kill_Quest")] 
         [SerializeField] private bool shouldCountKillQuest;
         [SerializeField] private int[] killQuestIndex;
         private static bool hasFirstkilled = false;
-
         private const int FIRST_KILL_DIALOGUE_KEY = 1;
         
         // 이 스크립트에서 사용하는 토큰들
         private CancellationTokenSource hackCts;
         private CancellationTokenSource stunCts;
         private CancellationTokenSource bleedCts;
+
+        // 사망 시 이벤트 (외부에서 등록)
+        public event Action OnDeath;
         
         protected virtual void Awake()
         {
@@ -192,6 +197,7 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                 PlayDeathAnimation();
                 if (!runtimeStatData.IsAlly)
                     CoreManager.Instance.gameManager.Player.PlayerCondition.OnRecoverFocusGauge(FocusGainType.Kill);
+                OnDeath?.Invoke();
                 IsDead = true;
             }
             else
