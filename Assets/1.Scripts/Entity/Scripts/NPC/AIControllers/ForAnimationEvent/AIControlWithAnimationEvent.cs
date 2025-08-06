@@ -26,10 +26,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         [SerializeField] private NavMeshAgent agent;
         [SerializeField] private Shebot_Sword sword;
         [SerializeField] private Shebot_Shield shield;
-        [SerializeField] private float gotDamagedParticleDuration = 0.5f;
         [SerializeField] private BaseNpcStatController statController;
         [SerializeField] private ParticleSystem p_hit, p_dead, p_smoke;
         [SerializeField] private VisualEffect muzzleVisualEffect;
+
+        [Header("Settings")]
+        [SerializeField] private float gotDamagedParticleDuration = 0.5f;
+        [SerializeField] private bool isDuo;
 
         private Coroutine gotDamagedCoroutine;
         private CoreManager coreManager;
@@ -136,9 +139,10 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIControllers.ForAnimationEvent
         
         public void DestroyObjectForAnimationEvent()
         {
-            NpcUtil.DisableNpc(this.gameObject);
+            if (isDuo) this.gameObject.SetActive(false);
+            else NpcUtil.DisableNpc(this.gameObject);
         }
-
+        
         public void EnableApplyRootMotion()
         {
             animator.applyRootMotion = true;
