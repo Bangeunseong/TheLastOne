@@ -54,7 +54,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.Unit
         private IEnumerator DelayedRelease(float time)
         {
             yield return new WaitForSeconds(time);
-            NpcUtil.DisableNpc(this.gameObject);
+            if (this.gameObject.activeInHierarchy) NpcUtil.DisableNpc(this.gameObject);
         }
     }
 }
