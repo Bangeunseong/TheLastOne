@@ -188,7 +188,7 @@ namespace _1.Scripts.UI.InGame.Dialogue
             }
 
             float waitTime = (voiceClip) ? voiceClip.length : 1.5f;
-            yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSecondsRealtime(waitTime);
 
             for (int i = dialogueText.text.Length - 1; i >= 0; i--)
             {
