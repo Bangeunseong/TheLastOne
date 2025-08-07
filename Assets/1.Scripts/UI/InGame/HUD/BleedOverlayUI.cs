@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _1.Scripts.Manager.Subs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,17 @@ namespace _1.Scripts.UI.InGame.HUD
             bleedImage.color = new Color(bleedImage.color.r, bleedImage.color.g, bleedImage.color.b, 0f);
             bleedRoutine = null;
             gameObject.SetActive(false);
+        }
+
+        public override void Initialize(UIManager manager, object param = null)
+        {
+            base.Initialize(manager, param);
+            if (bleedRoutine != null)
+            {
+                StopCoroutine(bleedRoutine);
+                bleedRoutine = null;
+            }
+            bleedImage.color = new Color(bleedImage.color.r, bleedImage.color.g, bleedImage.color.b, 0f);
         }
 
         public override void Hide()

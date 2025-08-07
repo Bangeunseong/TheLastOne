@@ -14,6 +14,7 @@ using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
@@ -28,6 +29,8 @@ namespace _1.Scripts.UI.InGame.Modification
             WeaponType.GrenadeLauncher,
             WeaponType.HackGun
         };
+
+        [SerializeField] private GameObject panel;
         [SerializeField] private Button closeButton;
         
         [Header("Preview")] 
@@ -44,6 +47,7 @@ namespace _1.Scripts.UI.InGame.Modification
         [Header("Weapon & Part Name")]
         [SerializeField] private TextMeshProUGUI weaponNameText;
         [SerializeField] private TextMeshProUGUI partNameText;
+        [SerializeField] private TextMeshProUGUI partDescriptionText;
         
         [Header("Part Highlight Material")]
         [SerializeField] private Material partHighlightMaterial;
@@ -130,7 +134,9 @@ namespace _1.Scripts.UI.InGame.Modification
         }
         public override void Hide()
         {
-            base.Hide();
+            Service.Log("Hide Modification UI");
+            panel.SetActive(false);
+            gameObject.SetActive(false);
             UnhighlightPart();
             playerCondition.OnEnablePlayerMovement();
             Cursor.lockState = CursorLockMode.Locked;
@@ -230,7 +236,7 @@ namespace _1.Scripts.UI.InGame.Modification
             {
                 applyButton.interactable = false;
                 applyButton.gameObject.SetActive(true);
-                requiredText.text = "Select Weapon First.";
+                SetLocalizedText(requiredText, "Require_SelectWeapon");
                 return;
             }
 
@@ -242,12 +248,12 @@ namespace _1.Scripts.UI.InGame.Modification
                 if (IsForgeAvailable(CurrentWeapon))
                 {
                     applyButton.interactable = true;
-                    requiredText.text = "Forge Available";
+                    SetLocalizedText(requiredText, "Require_ForgeAvailable");
                 }
                 else
                 {
                     applyButton.interactable = false;
-                    requiredText.text = "Forge Unavailable (Sight, ExtendedMag, Silencer Required)";
+                    SetLocalizedText(requiredText, "Require_ForgeUnavailable");
                 }
                 return;
             }
@@ -290,7 +296,20 @@ namespace _1.Scripts.UI.InGame.Modification
                             : Color.white;
                     }
                     if (partButtonTexts.Count > i && partButtonTexts[i])
-                        partButtonTexts[i].text = partType.ToString() + (CurrentWeaponType == WeaponType.Rifle && partType == PartType.Sight ? $" ({partId})" : "");
+                    {
+                        if (partDataMap.TryGetValue((partType, partId), out var partData) && !string.IsNullOrEmpty(partData.NameKey))
+                        {
+                            var localized = new LocalizedString("New Table", partData.NameKey);
+                            localized.StringChanged += val =>
+                            {
+                                partButtonTexts[i].text = val + (CurrentWeaponType == WeaponType.Rifle && partType == PartType.Sight ? $" ({partId})" : "");
+                            };
+                        }
+                        else
+                        {
+                            partButtonTexts[i].text = partType.ToString() + (CurrentWeaponType == WeaponType.Rifle && partType == PartType.Sight ? $" ({partId})" : "");
+                        }
+                    }
                     partButtons[i].onClick.RemoveAllListeners();
                     if (!isEquipped)
                     {
@@ -311,12 +330,12 @@ namespace _1.Scripts.UI.InGame.Modification
             if (!anyPart)
             {
                 applyButton.interactable = false;
-                requiredText.text = "Modifications Unavailable";
+                SetLocalizedText(requiredText, "Require_ModificationUnavailable");
             }
             else
             {
                 applyButton.interactable = false;
-                requiredText.text = "Select Available Part";
+                SetLocalizedText(requiredText, "Require_SelectAvailablePart");
             }
         }
         private void ResetPartButtons()
@@ -356,7 +375,7 @@ namespace _1.Scripts.UI.InGame.Modification
             
             if (!partDataMap.TryGetValue((partType, partId), out selectedPartData))
             {
-                requiredText.text = "No Part Data Found.";
+                SetLocalizedText(requiredText, "Require_NoPartDataFound");
                 applyButton.interactable = false;
                 return;
             }
@@ -366,7 +385,7 @@ namespace _1.Scripts.UI.InGame.Modification
             UpdateStatPreview(selectedPartData);
 
             bool hasPart = CurrentWeapon.EquipableWeaponParts.TryGetValue(partId, out var own) && own;
-            requiredText.text = hasPart ? "Available" : "Unavailable";
+            SetLocalizedText(requiredText, hasPart ? "Require_Available" : "Require_Unavailable");
             applyButton.interactable = hasPart;
             applyButton.gameObject.SetActive(true);
 
@@ -549,11 +568,43 @@ namespace _1.Scripts.UI.InGame.Modification
         private void UpdateNameUI()
         {
             if (weaponNameText)
-                weaponNameText.text = CurrentWeapon ? SlotUtility.GetWeaponName(CurrentWeapon) : "";
+            {
+                if (CurrentWeapon)
+                    SlotUtility.GetWeaponName(CurrentWeapon, weaponNameText);
+                else
+                    weaponNameText.text = "";
+            }
             if (partNameText)
-                partNameText.text = selectedPartType != null ? selectedPartType.ToString() : "";
+            {
+                if (selectedPartData && !string.IsNullOrEmpty(selectedPartData.NameKey))
+                {
+                    var localized = new LocalizedString("New Table", selectedPartData.NameKey);
+                    localized.StringChanged += val => partNameText.text = val;
+                }
+                else
+                {
+                    partNameText.text = selectedPartType?.ToString() ?? "";
+                }
+            }
+            if (partDescriptionText)
+            {
+                if (selectedPartData && !string.IsNullOrEmpty(selectedPartData.DescKey))
+                {
+                    var localizedDesc = new LocalizedString("New Table", selectedPartData.DescKey);
+                    localizedDesc.StringChanged += val => partDescriptionText.text = val;
+                }
+                else
+                {
+                    partDescriptionText.text = "";
+                }
+            }
         }
-
+        private void SetLocalizedText(TextMeshProUGUI text, string key)
+        {
+            if (!text || string.IsNullOrEmpty(key)) return;
+            var localized = new LocalizedString("New Table", key);
+            localized.StringChanged += val => text.text = val;
+        }
         private void OnPrevWeaponClicked()
         {
             for (int i = 1; i <= SlotOrder.Length; i++)

@@ -1,14 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using _1.Scripts.UI.InGame;
-using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
 using _1.Scripts.Weapon.Scripts.Melee;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace _1.Scripts.Util
 {
@@ -80,9 +77,11 @@ namespace _1.Scripts.Util
             weaponType = default;
             return false;
         }
-        public static string GetWeaponName(BaseWeapon weapon)
+        public static void GetWeaponName(BaseWeapon weapon, TextMeshProUGUI nameText)
         {
-            return !TryGetWeaponType(weapon, out var type) ? string.Empty : type.ToString();
+            if (!TryGetWeaponType(weapon, out var type)) { nameText.text = ""; return; }
+            var localized = new LocalizedString("New Table", $"{type}_Title");
+            localized.StringChanged += val => nameText.text = val;
         }
         
         public static (int mag, int total) GetWeaponAmmo(BaseWeapon weapon)
@@ -132,15 +131,11 @@ namespace _1.Scripts.Util
                 _ => null
             };
         }
-        public static string GetWeaponDescription(BaseWeapon weapon)
+        public static void GetWeaponDescription(BaseWeapon weapon, TextMeshProUGUI descText)
         {
-            switch (weapon)
-            {
-                case Gun g: return g.GunData.GunStat.Description;
-                case GrenadeLauncher gl: return gl.GrenadeData.GrenadeStat.Description;
-                case HackGun hg: return hg.HackData.HackStat.Description;
-                default: return "";
-            }
+            if (!TryGetWeaponType(weapon, out var type)) { descText.text = ""; return; }
+            var localized = new LocalizedString("New Table", $"{type}_Description");
+            localized.StringChanged += val => descText.text = val;
         }
     }
 }
