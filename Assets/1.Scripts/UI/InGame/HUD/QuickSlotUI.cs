@@ -4,6 +4,7 @@ using _1.Scripts.Manager.Core;
 using Michsky.UI.Shift;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using Cursor = UnityEngine.Cursor;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
@@ -20,6 +21,7 @@ namespace _1.Scripts.UI.InGame.HUD
         
         [Header("QuickSlot Elements")] 
         [SerializeField] public Image[] slotIcons;
+        [SerializeField] private TextMeshProUGUI[] slotNames;
         [SerializeField] private TextMeshProUGUI[] slotCounts;
         
         private CoreManager coreManager;
@@ -131,7 +133,7 @@ namespace _1.Scripts.UI.InGame.HUD
                     if (it.Key == type)
                     {
                         item = it.Value;
-                        Service.Log($"QuickSlot UI : {item.ItemData.Name} {item.CurrentItemCount}");
+                        Service.Log($"QuickSlot UI : {item.ItemData.NameKey} {item.CurrentItemCount}");
                         break;
                     }
                 }
@@ -142,6 +144,14 @@ namespace _1.Scripts.UI.InGame.HUD
                     slotIcons[i].sprite = item.ItemData.Icon;
                     slotCounts[i].text = item.CurrentItemCount.ToString();
                     slotCounts[i].gameObject.SetActive(true);
+                    if (slotNames == null || i >= slotNames.Length) continue;
+                    var localizedName = new LocalizedString("New Table", item.ItemData.NameKey);
+                    int idx = i;
+                    localizedName.StringChanged += value =>
+                    {
+                        slotNames[idx].text = value;
+                        slotNames[idx].gameObject.SetActive(true);
+                    };
                 }
                 else
                 {
@@ -149,6 +159,10 @@ namespace _1.Scripts.UI.InGame.HUD
                     slotIcons[i].enabled = false;
                     slotCounts[i].text = "";
                     slotCounts[i].gameObject.SetActive(false);
+
+                    if (slotNames == null || i >= slotNames.Length) continue;
+                    slotNames[i].text = "";
+                    slotNames[i].gameObject.SetActive(false);
                 }
             }
         }

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Player.Core;
+using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using UIManager = _1.Scripts.Manager.Subs.UIManager;
 
@@ -210,14 +212,22 @@ namespace _1.Scripts.UI.InGame.HUD
         public void UpdateItemProgress(float progress) { progressFillImage.fillAmount = Mathf.Clamp01(progress); }
 
         
-        public void ShowToast(string message)
+        public void ShowToast(string key)
         {
-            toastText.text = message;
-            toastText.gameObject.SetActive(true);
-            StartCoroutine(HideToastCoroutine());
+            var localized = new LocalizedString("New Table", key);
+            StartCoroutine(SetToastAndHide(localized));
         }
-        private IEnumerator HideToastCoroutine()
+        public void ShowToast(ItemData itemData)
         {
+            var localizedDesc = new LocalizedString("New Table", itemData.DescriptionKey);
+            StartCoroutine(SetToastAndHide(localizedDesc));
+        }
+        private IEnumerator SetToastAndHide(LocalizedString localized)
+        {
+            var handle = localized.GetLocalizedStringAsync();
+            yield return handle;
+            toastText.text = handle.Result;
+            toastText.gameObject.SetActive(true);
             yield return new WaitForSeconds(1.5f);
             toastText.gameObject.SetActive(false);
         }
