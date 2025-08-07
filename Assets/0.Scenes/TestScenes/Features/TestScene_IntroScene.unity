@@ -1653,6 +1653,7 @@ MonoBehaviour:
     <DynamicSpawnedParts>k__BackingField:
       _serializedList: []
     <IsVisible>k__BackingField: 0
+    <IsFocused>k__BackingField: 0
   uiManager:
     <RootCanvas>k__BackingField: {fileID: 764888566}
     <UiRoot>k__BackingField: {fileID: 764888563}
@@ -2204,40 +2205,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2418437114548600888, guid: 0b462468169f96f4e812900e4e71ddaf,
-        type: 3}
-      propertyPath: colorType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2418469128596831568, guid: 0b462468169f96f4e812900e4e71ddaf,
-        type: 3}
-      propertyPath: colorType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2418516658579505342, guid: 0b462468169f96f4e812900e4e71ddaf,
-        type: 3}
-      propertyPath: colorType
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 8582870742256833305, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
       propertyPath: m_Name
       value: LobbyUI
       objectReference: {fileID: 0}
-    - target: {fileID: 8879990197651053912, guid: 0b462468169f96f4e812900e4e71ddaf,
+    - target: {fileID: 8726968199499679757, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
-      propertyPath: colorType
-      value: 3
+      propertyPath: itemList.Array.data[0].onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8880029106397798448, guid: 0b462468169f96f4e812900e4e71ddaf,
+    - target: {fileID: 8726968199499679757, guid: 0b462468169f96f4e812900e4e71ddaf,
         type: 3}
-      propertyPath: colorType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880077710668619230, guid: 0b462468169f96f4e812900e4e71ddaf,
-        type: 3}
-      propertyPath: colorType
-      value: 3
+      propertyPath: itemList.Array.data[1].onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
