@@ -107,13 +107,12 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
-            if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
+            if (currentHorizontalSpeed < targetSpeed - 0.5f || currentHorizontalSpeed > targetSpeed + 0.5f)
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.unscaledDeltaTime * smoothVelocity);
                 speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else speed = targetSpeed;
-            playerCondition.CurrentSpeed = speed;
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
