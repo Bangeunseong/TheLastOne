@@ -44,9 +44,11 @@ namespace _1.Scripts.Map.Box
         [field: SerializeField] public bool RandomizePart { get; private set; } = true;
         [field: SerializeField] public SerializedDictionary<PartType, WeaponType> Parts { get; private set; } = new();
         
+        [Header("Item Box State")]
+        [SerializeField] private bool isAlreadyOpened;
+        
         private CoreManager coreManager;
         private Player player;
-        private bool isAlreadyOpened;
         
         private static readonly int Open = Animator.StringToHash("Open");
 
@@ -85,6 +87,7 @@ namespace _1.Scripts.Map.Box
             
             GameEventSystem.Instance.UnregisterListener(this);
             isAlreadyOpened = true;
+            Animator.SetTrigger(Open);
             gameObject.layer = LayerMask.NameToLayer("Default");
         }
 

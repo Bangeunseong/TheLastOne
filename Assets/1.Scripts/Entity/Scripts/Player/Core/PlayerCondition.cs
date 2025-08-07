@@ -9,6 +9,7 @@ using _1.Scripts.Manager.Subs;
 using _1.Scripts.Sound;
 using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.UI.InGame.SkillOverlay;
+using _1.Scripts.VisualEffects;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
@@ -80,6 +81,9 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public Vector3 LastSavedPosition { get; set; }
         [field: SerializeField] public Quaternion LastSavedRotation { get; set; }
         
+        [field: Header("Focus Mode")]
+        [field: SerializeField] public PostProcessEditForFocus PostProcessEditForFocus { get; private set; }
+        
         // Fields
         private CoreManager coreManager;
         private SoundPlayer reloadPlayer;
@@ -104,6 +108,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!player) player = this.TryGetComponent<Player>();
             if (!playerWeapon) playerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
+            if (!PostProcessEditForFocus) PostProcessEditForFocus = FindFirstObjectByType<PostProcessEditForFocus>();
         }
 
         private void Reset()
@@ -111,6 +116,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!player) player = this.TryGetComponent<Player>();
             if (!playerWeapon) playerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!LowPassFilter) LowPassFilter = FindFirstObjectByType<AudioLowPassFilter>();
+            if (!PostProcessEditForFocus) PostProcessEditForFocus = FindFirstObjectByType<PostProcessEditForFocus>();
         }
 
         /// <summary>
@@ -290,7 +296,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
         public bool OnConsumeFocusGauge(float value = 1f)
         {
-            if (IsDead || CurrentFocusGauge < value || IsUsingFocus) return false;
+            if (IsDead || CurrentFocusGauge < value || IsUsingFocus || IsUsingInstinct) return false;
             CurrentFocusGauge = Mathf.Max(CurrentFocusGauge - value, 0f);
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateFocus(CurrentFocusGauge);
             OnFocusEngaged();
@@ -323,7 +329,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /// <returns>Returns true, if there are enough points to consume. If not, return false.</returns>
         public bool OnConsumeInstinctGauge(float value = 1f)
         {
-            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || CurrentHealth >= MaxHealth * 0.5f) return false;
+            if (IsDead || CurrentInstinctGauge < value || IsUsingInstinct || IsUsingFocus || CurrentHealth >= MaxHealth * 0.5f) return false;
             CurrentInstinctGauge = Mathf.Max(CurrentInstinctGauge - value, 0f);
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateInstinct(CurrentInstinctGauge);
             OnInstinctEngaged();
@@ -877,6 +883,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             focusCTS?.Cancel(); focusCTS?.Dispose();
             focusCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             coreManager.uiManager.GetUI<SkillOverlayUI>()?.ShowFocusOverlay();
+            coreManager.spawnManager.FocusModeOnOrNot(true);
+            PostProcessEditForFocus?.FocusModeOnOrNot(true);
             _ = FocusAsync(StatData.focusSkillTime, focusCTS.Token);
         }
         private async UniTaskVoid FocusAsync(float duration, CancellationToken token)
@@ -896,6 +904,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             focusCTS.Dispose(); focusCTS = null;
             
             coreManager.uiManager.GetUI<SkillOverlayUI>()?.HideFocusOverlay();
+            coreManager.spawnManager.FocusModeOnOrNot(false);
+            PostProcessEditForFocus?.FocusModeOnOrNot(false);
         }
         private void OnInstinctEngaged()
         {

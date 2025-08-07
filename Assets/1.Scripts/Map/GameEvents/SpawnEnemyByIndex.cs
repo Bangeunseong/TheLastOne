@@ -16,7 +16,9 @@ namespace _1.Scripts.Map.GameEvents
         [Header("Spawn Trigger Id")]
         [Tooltip("It should be same with corresponding Save Point Id")]
         [SerializeField] private int spawnIndex;
-
+        [SerializeField] private int killedCount;
+        [SerializeField] private int targetCount;
+        
         [Header("Invisible Wall")] 
         [SerializeField] private GameObject invisibleWall;
 
@@ -25,9 +27,7 @@ namespace _1.Scripts.Map.GameEvents
         
         private CoreManager coreManager;
         private bool isSpawned;
-        private int killedCount;
-        private int targetCount;
-
+        
         private void Start()
         {
             coreManager = CoreManager.Instance;
@@ -60,7 +60,7 @@ namespace _1.Scripts.Map.GameEvents
             foreach (var point in spawnPoints)
                 targetCount += point.Key is EnemyType.ShebotRifleDuo or EnemyType.ShebotSwordDogDuo ? point.Value.Count * 2 : point.Value.Count;
 
-            invisibleWall.SetActive(true);
+            if (invisibleWall) invisibleWall.SetActive(true);
             
             coreManager.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
             GameEventSystem.Instance.RegisterListener(this);
@@ -76,7 +76,7 @@ namespace _1.Scripts.Map.GameEvents
             if (killedCount < targetCount) return;
             
             if (timeline) coreManager.soundManager.PlayBGM(BgmType.Stage2, 0);
-            invisibleWall.SetActive(false);
+            if (invisibleWall) invisibleWall.SetActive(false);
             GameEventSystem.Instance.UnregisterListener(this);
             enabled = false;
         }

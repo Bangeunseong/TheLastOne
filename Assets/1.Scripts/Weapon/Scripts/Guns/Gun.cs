@@ -144,7 +144,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                     if (isOwnedByPlayer)
                     {
                         bool isHeadShot = hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Head_E"));
-                        CoreManager.Instance.uiManager.GetUI<InGameUI>().CrosshairController.ShowHitMarker(isHeadShot);
+                        coreManager.uiManager.GetUI<InGameUI>().CrosshairController.ShowHitMarker(isHeadShot);
+                        if (isHeadShot) coreManager.soundManager.PlaySFX(SfxType.HeadShotSound, transform.position, index:0);
                     }
                 } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
                 {

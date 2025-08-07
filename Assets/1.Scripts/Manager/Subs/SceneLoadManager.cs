@@ -224,7 +224,7 @@ namespace _1.Scripts.Manager.Subs
         {
             var introGo = GameObject.Find("IntroOpening");
             var playable = introGo?.GetComponentInChildren<PlayableDirector>();
-            if (!playable && coreManager.gameManager.SaveData != null &&
+            if (!playable || coreManager.gameManager.SaveData != null &&
                 coreManager.gameManager.SaveData.stageInfos.TryGetValue(CurrentScene, out var info) &&
                 info.isIntroPlayed)
             {
