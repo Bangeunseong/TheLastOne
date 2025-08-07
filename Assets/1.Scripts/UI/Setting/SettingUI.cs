@@ -32,47 +32,64 @@ namespace _1.Scripts.UI.Setting
 
         private Resolution[] resolutions;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
-
-        private async void Start()
+        
+        private void Start()
         {
-            await LocalizationSettings.InitializationOperation.Task;
-            int savedIdx = PlayerPrefs.GetInt("LanguageIndex", 0);
-            languageSelector.index = Mathf.Clamp(savedIdx, 0, languageSelector.itemList.Count - 1);
-            languageSelector.UpdateUI();
-            SetLocale(languageSelector.index);
-            resolutions = Screen.resolutions; 
-            InitSensitivitySliders(); 
-            InitResolutionSelector(); 
+            resolutions = Screen.resolutions;
+            InitSensitivitySliders();
+            InitResolutionSelector();
             InitFullscreenModeSelector();
-            
             LoadSettings();
             AddListeners();
         }
-
+        
         private void OnEnable()
+        {
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            RegisterLanguageSelectorEvents();
+            SyncLanguageSelector();
+        }
+        
+        private void OnDisable()
+        {
+            LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        }
+
+        private void OnLocaleChanged(UnityEngine.Localization.Locale newLocale)
         {
             SyncLanguageSelector();
         }
         
+        private void RegisterLanguageSelectorEvents()
+        {
+            if (!languageSelector || languageSelector.itemList == null) return;
+
+            foreach (var item in languageSelector.itemList)
+                item.onValueChanged.RemoveAllListeners();
+
+            for (int i = 0; i < languageSelector.itemList.Count; i++)
+            {
+                int idx = i;
+                languageSelector.itemList[i].onValueChanged.AddListener(() => OnLanguageSelectorChanged(idx));
+            }
+        }
+        
         private void SyncLanguageSelector()
         {
-            int savedIdx = PlayerPrefs.GetInt("LanguageIndex", 0);
-            languageSelector.index = Mathf.Clamp(savedIdx, 0, languageSelector.itemList.Count - 1);
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            var currentLocale = LocalizationSettings.SelectedLocale;
+            int idx = locales.IndexOf(currentLocale);
+            if (idx < 0) idx = 0;
+            languageSelector.index = idx;
             languageSelector.UpdateUI();
         }
         
-        public void OnLanguageSelectorChanged(int idx)
+        private void OnLanguageSelectorChanged(int idx)
         {
-            PlayerPrefs.SetInt("LanguageIndex", idx);
-            SetLocale(idx);
-        }
-
-        private async void SetLocale(int idx)
-        {
-            await LocalizationSettings.InitializationOperation.Task;
             var locales = LocalizationSettings.AvailableLocales.Locales;
-            if (idx >= 0 && idx < locales.Count)
-                LocalizationSettings.SelectedLocale = locales[idx];
+            if (idx < 0 || idx >= locales.Count) return;
+            LocalizationSettings.SelectedLocale = locales[idx];
+            PlayerPrefs.SetInt("LanguageIndex", idx);
         }
         
         private void InitSensitivitySliders()
@@ -85,14 +102,13 @@ namespace _1.Scripts.UI.Setting
 
         private void InitResolutionSelector()
         {
-            if (resolutionSelector == null) return;
+            if (!resolutionSelector) return;
             resolutionSelector.saveValue = false;
             resolutionSelector.loopSelection = false;
             resolutionSelector.itemList.Clear();
 
-            for (int i = 0; i < resolutions.Length; i++)
+            foreach (var r in resolutions)
             {
-                var r = resolutions[i];
                 string option = $"{r.width}x{r.height} {r.refreshRateRatio}hz";
                 resolutionSelector.CreateNewItem(option);
             }
@@ -110,14 +126,14 @@ namespace _1.Scripts.UI.Setting
 
         private void InitFullscreenModeSelector()
         {
-            if (fullscreenModeSelector == null) return;
+            if (!fullscreenModeSelector) return;
             fullscreenModeSelector.saveValue = false;
             fullscreenModeSelector.loopSelection = false;
             fullscreenModeSelector.itemList.Clear();
 
-            for (int i = 0; i < fullscreenModes.Count; i++)
+            foreach (var t in fullscreenModes)
             {
-                fullscreenModeSelector.CreateNewItem(fullscreenModes[i]);
+                fullscreenModeSelector.CreateNewItem(t);
             }
 
             for (int i = 0; i < fullscreenModes.Count; i++)
@@ -172,16 +188,6 @@ namespace _1.Scripts.UI.Setting
 
             //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
             //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
-        }
-        
-        private void OnLanguageChanged(int idx)
-        {
-            PlayerPrefs.SetInt("LanguageIndex", idx);
-
-            foreach (var uiText in FindObjectsOfType<UIManagerText>(true))
-            {
-                uiText.UpdateButton();
-            }
         }
 
         private void OnMasterVolumeChanged(float vol)
