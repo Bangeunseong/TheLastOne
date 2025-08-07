@@ -13,7 +13,8 @@ namespace Michsky.UI.Shift
         public bool invokeAtStart;
         public bool invertAnimation;
         public bool loopSelection;
-        [HideInInspector] public int index = 0;
+        private int _index = 0;
+        public int index { get => _index; set { _index = value; UpdateUI(); } }
 		
 	    [Header("Saving")]
         public bool saveValue;
@@ -286,7 +287,9 @@ namespace Michsky.UI.Shift
                 return;
 
             label.text = itemList[index].itemTitle;
-
+            if (labeHelper != null)
+                labeHelper.text = label.text;
+            
             if (enableIndicators == true)
             {
                 foreach (Transform child in indicatorParent)
