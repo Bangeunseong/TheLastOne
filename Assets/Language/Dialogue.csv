@@ -1,0 +1,33 @@
+﻿Key,English(en),Korean(ko)
+"AI_001","Enemy forces have infiltrated the facility, and drones have entered an aggressive state.
+
+","현재 적 세력의 침입으로 드론들이 공격 상태에 진입했습니다."
+"AI_002","Weapons are available in this room. It is recommended that you equip yourself.","이 방에 무기가 준비되어 있습니다. 장비를 착용하실 것을 권장합니다."
+"AI_003","Available weapons include an assault rifle, EMP grenade launcher, handgun, and hacking gun.","사용 가능한 무기는 소총, EMP 유탄기, 권총, 그리고 해킹건입니다."
+"AI_004","Prolonged cryosleep has resulted in a significant decrease in your physical health. The use of a nano-heal ampoule is advised.","장기간 동면으로 인해 신체의 체력 수치가 크게 감소하였습니다. 나노 힐 앰플 사용을 권고합니다."
+"AI_005","Locating the nearest nano-heal ampoule. I will guide you to the closest location.","나노 힐 앰플의 위치를 탐색 중입니다. 가장 가까운 위치를 안내하겠습니다."
+"AI_006","The path you need to follow is marked on the facility floor with a laser via your suit's system.","진행하실 경로는 슈트 시스템을 통해 기지 바닥에 레이저로 표시됩니다."
+"AI_007","Disengaging the facility door lockdown.
+
+","기지 문의 격폐를 해제합니다."
+"AI_008","Hostile entities are currently present within the facility. Caution is advised.","현재 기지 내에 적대적 개체가 존재하고 있습니다. 주의가 필요합니다."
+"AI_009","Due to power loss, only minimal lighting is being maintained.","동력 손실로 인해 최소한의 조명만 유지되고 있습니다."
+"AI_010","Warning: Health level has dropped below 10. Please use medical supplies immediately.","경고: 체력 수치가 10 이하로 감소하였습니다. 의료용품을 즉시 섭취해 주십시오."
+"AI_011","Guiding you to the next area.","다음 지역으로 안내하겠습니다."
+"AI_012","A hackable entity is currently present. The use of the hacking gun is recommended.","현재 해킹 가능한 개체가 있습니다. 해킹건 사용을 권장합니다."
+"AI_013","The external entrance to the facility has been sealed.","기지 외부 출입구가 봉쇄되었습니다."
+"AI_014","To lift the external entrance lockdown, you must manually operate three panels within the facility.","외부 출입구 봉쇄를 해제하려면 기지 내 3개의 패널을 수동 조작해야 합니다."
+"AI_015","Warning: Security protocols have been activated on the panel. Access is currently restricted.","경고: 해당 패널에 보안 프로그램이 활성화되어 접근이 제한됩니다."
+"AI_016","Warning: Multiple enemy signals detected.","경고: 다수의 적 신호가 감지되었습니다."
+"AI_017","An EMP grenade launcher equipped with EMP rounds is available. Active use is recommended.","EMP탄이 장착된 EMP 유탄기가 있습니다. 적극적인 사용을 권고합니다."
+"AI_018","The lockdown in the storage area has been lifted.","창고 구역의 격폐가 해제되었습니다."
+"AI_019","The outer gate locking mechanism has been disengaged.","외곽문 잠금 장치가 해제되었습니다."
+"AI_020","However, to fully open the outer gate, you must manually operate the release mechanism inside the storage area.","그러나 외곽문을 완전히 열기 위해서는 창고 내 수동 개폐 장치 조작이 필요합니다."
+"AI_021","Providing route guidance to the storage area.","창고 구역 경로를 안내합니다."
+"AI_022","The lockdown at the facility entrance has been lifted.","기지 입구 구역의 격폐가 해제되었습니다."
+"AI_023","Multiple hostile entities have been detected in the outer area of the facility.","기지 외부 구역에서 다수의 적 존재가 감지됩니다."
+"AI_024","Situation resolved.","상황 종료."
+"AI_025","Scan complete. No hostile entities detected inside the facility.","스캔 결과, 현재 기지 내부에서 적대적 개체는 발견되지 않습니다."
+"AI_026","Opening the facility’s outer gate.","기지 외곽문을 개방합니다."
+"AI_027","Hackin Succeed.","해킹 성공."
+"Drone_001","[Alarm][Alarm][Alarm][Alarm][Alarm][Alarm][Alarm]....","[경고][경고][경고][경고][경고][경고][경고]..."
