@@ -107,7 +107,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
             var targetSpeed = GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
-            if (currentHorizontalSpeed < targetSpeed - 0.5f || currentHorizontalSpeed > targetSpeed + 0.5f)
+            if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
             {
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.unscaledDeltaTime * smoothVelocity);
                 speed = Mathf.Round(speed * 1000f) / 1000f;
