@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.Common;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using Unity.Collections;

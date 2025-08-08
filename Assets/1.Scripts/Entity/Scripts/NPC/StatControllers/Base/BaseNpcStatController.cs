@@ -179,16 +179,12 @@ namespace _1.Scripts.Entity.Scripts.Npc.StatControllers.Base
                     CoreManager.Instance.dialogueManager.TriggerDialogue(FirstKillDialogueKey);
                 }
 
-                if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)
+                if (!RuntimeStatData.IsAlly)
                 {
-                    GameEventSystem.Instance.RaiseEvent(runtimeStatData.SpawnIndex);
-                }
-                else
-                {
-                    if (shouldCountKillQuest && !RuntimeStatData.IsAlly)
-                    {
+                    if (CoreManager.Instance.sceneLoadManager.CurrentScene == SceneType.Stage2)
+                        GameEventSystem.Instance.RaiseEvent(runtimeStatData.SpawnIndex);
+                    else if (shouldCountKillQuest)
                         foreach (int index in killQuestIndex) GameEventSystem.Instance.RaiseEvent(index);
-                    }   
                 }
 
                 foreach (Light objlight in lights) { objlight.enabled = false; }
