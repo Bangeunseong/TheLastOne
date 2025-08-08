@@ -118,13 +118,13 @@ namespace _1.Scripts.UI.InGame.Mission
         
         private void SetupMarkerVisual(GameObject marker)
         {
-            var lt = marker.GetComponent<Light>() ?? marker.AddComponent<Light>();
+            var lt = marker.GetComponentInChildren<Light>();
             lt.type = LightType.Point;
             lt.range = 1f;
             lt.intensity = 1f;
             lt.color = Color.cyan;
 
-            var trail = marker.GetComponent<TrailRenderer>() ?? marker.AddComponent<TrailRenderer>();
+            var trail = marker.GetComponentInChildren<TrailRenderer>();
             trail.material = new Material(Shader.Find("Sprites/Default"));
             trail.time = 1.0f;
             trail.startWidth = 0.1f;

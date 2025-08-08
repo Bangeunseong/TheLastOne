@@ -202,6 +202,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (CurrentShield <= 0)
             {
                 CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+                coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
                 if (itemCTS != null) CancelItemUsage();
                 OnRecoverInstinctGauge(InstinctGainType.Hit);
                 player.PlayerInteraction.OnCancelInteract();
@@ -211,11 +212,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 if (CurrentShield < damage)
                 {
                     CurrentHealth = Mathf.Max(CurrentHealth + CurrentShield - damage, 0);
+                    coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
                     if (itemCTS != null) CancelItemUsage();
                     OnRecoverInstinctGauge(InstinctGainType.Hit);
                     player.PlayerInteraction.OnCancelInteract();
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
+                coreManager.soundManager.PlayUISFX(SfxType.PlayerShieldHit);
                 coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
             }
             
