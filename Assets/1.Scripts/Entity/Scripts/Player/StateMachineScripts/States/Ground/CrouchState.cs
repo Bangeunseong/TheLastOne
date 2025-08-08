@@ -16,6 +16,10 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             playerCondition.OnCrouch(true, 0.1f);
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.CrouchParameterHash);
+            
+            playerCondition.OnRecoverStamina(
+                playerCondition.StatData.recoverRateOfStamina_Crouch * playerCondition.StatData.interval, 
+                playerCondition.StatData.interval);
         }
 
         public override void Exit()
