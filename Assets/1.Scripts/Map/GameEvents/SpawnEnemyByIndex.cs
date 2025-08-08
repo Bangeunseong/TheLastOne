@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
+using _1.Scripts.Manager.Subs;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.Util;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace _1.Scripts.Map.GameEvents
 {
@@ -13,39 +16,40 @@ namespace _1.Scripts.Map.GameEvents
         [Header("Spawn Trigger Id")]
         [Tooltip("It should be same with corresponding Save Point Id")]
         [SerializeField] private int spawnIndex;
-
-        [Header("Target Count")]
-        [Tooltip("Target Count of Killed Enemies which corresponding with spawn index")]
-        [SerializeField] private int targetCount;
-        [Tooltip("This is for debugging. Do not touch this value!")]
         [SerializeField] private int killedCount;
-
-        [Header("Invisible Wall")] 
-        [SerializeField] private List<BoxCollider> invisibleWall = new();
+        [SerializeField] private int targetCount;
         
+        [Header("Invisible Wall")] 
+        [SerializeField] private GameObject invisibleWall;
+
+        [Header("Timeline")] 
+        [SerializeField] private PlayableDirector timeline;
+
+        [Header("Trigger Settings")] 
+        [SerializeField] private bool isRelated;
+        [SerializeField] private SpawnEnemyByIndex relatedTrigger;
+        
+        private CoreManager coreManager;
         private bool isSpawned;
-
-        private void Awake()
-        {
-            if (invisibleWall.Count > 0) return;
-            var list = this.TryGetChildComponents<BoxCollider>("InvisibleWalls");
-            if (list is not { Length: > 0 }) return;
-            invisibleWall.AddRange(list);
-        }
-
-        private void Reset()
-        {
-            if (invisibleWall.Count > 0) return;
-            var list = this.TryGetChildComponents<BoxCollider>("InvisibleWalls");
-            if (list is not { Length: > 0 }) return;
-            invisibleWall.AddRange(list);
-        }
-
+        
         private void Start()
         {
-            var save = CoreManager.Instance.gameManager.SaveData;
+            coreManager = CoreManager.Instance;
+            killedCount = targetCount = 0;
+            
+            if (!coreManager.spawnManager.CurrentSpawnData.EnemySpawnPoints.TryGetValue(spawnIndex,
+                    out var spawnPoints))
+            {
+                Debug.LogError("Couldn't find spawn point, Target Count is currently zero!");
+                return;
+            }
+            foreach (var point in spawnPoints)
+                targetCount += point.Key is EnemyType.ShebotRifleDuo or EnemyType.ShebotSwordDogDuo ? point.Value.Count * 2 : point.Value.Count;
+
+            
+            DataTransferObject save = coreManager.gameManager.SaveData;
             if (save == null ||
-                !save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info) || 
+                !save.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var info) ||
                 !info.completionDict.TryGetValue(spawnIndex + BaseEventIndex.BaseSavePointIndex + 1, out var val)) return;
 
             if (!val) return;
@@ -53,28 +57,25 @@ namespace _1.Scripts.Map.GameEvents
             enabled = false;
         }
 
+        private void OnDisable()
+        {
+            GameEventSystem.Instance?.UnregisterListener(this);
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (isSpawned || !other.CompareTag("Player")) return;
             
-            if (!CoreManager.Instance.spawnManager.CurrentSpawnData.EnemySpawnPoints.TryGetValue(spawnIndex,
-                    out var spawnPoints))
-            {
-                Debug.LogError("Couldn't find spawn point, Target Count is currently zero!");
-                return;
-            }
-            
             Debug.Log("Spawned!");
-
-            foreach (var point in spawnPoints)
-                targetCount += point.Key is EnemyType.ShebotRifleDuo or EnemyType.ShebotSwordDogDuo ? point.Value.Count * 2 : point.Value.Count;
-            
-            GameEventSystem.Instance.RegisterListener(this);
-            CoreManager.Instance.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
-            if (invisibleWall.Count > 0)
-                foreach (var wall in invisibleWall) wall.transform.parent.gameObject.SetActive(true);
             
             isSpawned = true;
+            if (invisibleWall) invisibleWall.SetActive(true);
+            if (isRelated && relatedTrigger) relatedTrigger.enabled = false;
+            
+            coreManager.spawnManager.SpawnEnemyBySpawnData(spawnIndex);
+            GameEventSystem.Instance.RegisterListener(this);
+            
+            if (timeline) PlayCutScene(timeline);
         }
         
         public void OnEventRaised(int eventID)
@@ -84,10 +85,41 @@ namespace _1.Scripts.Map.GameEvents
             killedCount++;
             if (killedCount < targetCount) return;
             
-            if (invisibleWall.Count > 0)
-                foreach (var wall in invisibleWall) wall.gameObject.SetActive(false);
-            GameEventSystem.Instance.UnregisterListener(this);
+            if (timeline) coreManager.soundManager.PlayBGM(BgmType.Stage2, 0);
+            if (invisibleWall) invisibleWall.SetActive(false);
+            
             enabled = false;
+        }
+        
+        private void PlayCutScene(PlayableDirector director)
+        {
+            director.played += OnCutsceneStarted;
+            director.stopped += OnCutsceneStopped;
+            director.Play();
+        }
+        
+        private void OnCutsceneStarted(PlayableDirector director)
+        {
+            coreManager.gameManager.Player.InputProvider.enabled = false;
+            coreManager.gameManager.PauseGame();
+            
+            coreManager.soundManager.PlayBGM(BgmType.Stage2, 1);
+            
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
+        }
+        
+        private void OnCutsceneStopped(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            
+            director.played -= OnCutsceneStarted;
+            director.stopped -= OnCutsceneStopped;
         }
     }
 }

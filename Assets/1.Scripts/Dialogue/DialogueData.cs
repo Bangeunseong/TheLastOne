@@ -2,6 +2,7 @@ using System;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.UI.InGame.Dialogue;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace _1.Scripts.Dialogue
 {
@@ -9,9 +10,8 @@ namespace _1.Scripts.Dialogue
     public struct DialogueData
     {
         public string Speaker;
-        public string Message;
+        public LocalizedString Message;
         public SpeakerType SpeakerType;
-        public SfxType sfxType;
-        public int sfxIndex;
+        public LocalizedAsset<AudioClip> voiceClip;
     }
 }

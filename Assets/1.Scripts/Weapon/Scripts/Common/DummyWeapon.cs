@@ -71,6 +71,7 @@ namespace _1.Scripts.Weapon.Scripts.Common
             {
                 if (Type != WeaponType.SniperRifle)
                 {
+                    if (player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] && Type == WeaponType.Pistol) return;
                     player.PlayerWeapon.AvailableWeapons[Type] = true;
                     player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
                 }
@@ -89,6 +90,8 @@ namespace _1.Scripts.Weapon.Scripts.Common
                         WeaponType.Pistol => 30,
                         WeaponType.Rifle => 60,
                         WeaponType.SniperRifle => 10,
+                        WeaponType.Punch => 0,
+                        _ => throw new ArgumentOutOfRangeException()
                     });
                 if (!result) return;
             }

@@ -30,6 +30,7 @@ namespace _1.Scripts.Manager.Subs
         
         // Player SFX
         PlayerHit,
+        PlayerShieldHit,
         PlayerFootStep,
         PlayerLand,
         
@@ -49,6 +50,7 @@ namespace _1.Scripts.Manager.Subs
         GrenadeLauncherEmpty,
         HackGunEmpty,
         SniperRifleEmpty,
+        HeadShotSound,
         
         // Grenade SFX
         GrenadeExplode,

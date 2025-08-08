@@ -45,7 +45,8 @@ namespace _1.Scripts.UI.InGame.HUD
         [SerializeField] private List<Image> selectedSlotImages;
         [SerializeField] private float idleAlpha = 0.5f;
         [SerializeField] private float selectedSlotAlpha = 1f;
-
+        [SerializeField] private Color emptyAmmoColor = Color.red;
+        
         [Header("애니메이터")] 
         [SerializeField] private Animator panelAnimator;
         [SerializeField] private float panelHideDelay = 3f;
@@ -65,6 +66,8 @@ namespace _1.Scripts.UI.InGame.HUD
         private Vector3[] targetScales;
         private Vector3 originalLocalPosition;
         
+        private Coroutine emptyFlashCoroutine;
+        private Color originalAmmoColor;
         private Coroutine hideCoroutine;
         private Coroutine shakeCoroutine;
         private int lastMag = -1;
@@ -76,7 +79,7 @@ namespace _1.Scripts.UI.InGame.HUD
             targetScales = new Vector3[slotTransforms.Count];
             
             if (currentAmmoRectTransform) originalLocalPosition = currentAmmoRectTransform.localPosition;
-            
+            if (currentAmmoText) originalAmmoColor = currentAmmoText.color;
             gameObject.SetActive(false);
         }
         
@@ -102,6 +105,8 @@ namespace _1.Scripts.UI.InGame.HUD
             }
             currentAmmoText.text = string.Empty;
             currentTotalAmmoText.text = string.Empty;
+            currentAmmoText.color = originalAmmoColor;
+            if (emptyFlashCoroutine != null) { StopCoroutine(emptyFlashCoroutine); emptyFlashCoroutine = null; }
             if (ammoSlotFrame) ammoSlotFrame.gameObject.SetActive(false);
             if (hideCoroutine != null) { StopCoroutine(hideCoroutine); hideCoroutine = null; }
             if (!panelAnimator) return;
@@ -159,7 +164,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 {
                     slotImages[i].color = Color.white;
                     slotImages[i].sprite = SlotUtility.GetWeaponSprite(weapon);
-                    slotTexts[i].text = SlotUtility.GetWeaponName(weapon);
+                    SlotUtility.GetWeaponName(weapon, slotTexts[i]);
                     var (mag, total) = SlotUtility.GetWeaponAmmo(weapon);
                     slotAmmoTexts[i].text = (mag > 0 || total > 0) ? $"{mag}/{total}" : "";
                     slotAmmoTexts[i].color = weapon is Gun ? selectedColor : selectedAmmoColor;
@@ -199,7 +204,12 @@ namespace _1.Scripts.UI.InGame.HUD
             panelAnimator?.SetTrigger("Show");
             if (hideCoroutine != null) StopCoroutine(hideCoroutine);
             hideCoroutine = StartCoroutine(HidePanelCoroutine());
-        }        
+        }    
+        public void PlayEmptyFlash(float duration = 0.5f)
+        {
+            if (emptyFlashCoroutine != null) StopCoroutine(emptyFlashCoroutine);
+            emptyFlashCoroutine = StartCoroutine(EmptyAmmoCoroutine(duration));
+        }
 
         private IEnumerator HidePanelCoroutine()
         {
@@ -228,7 +238,7 @@ namespace _1.Scripts.UI.InGame.HUD
                 currentTotalAmmoText.text = string.Empty;
                 return;
             }
-            WeaponType type = SlotOrder[selectedIndex];
+            WeaponType type = GetSlotWeaponType(selectedIndex);
 
             if (!ownedWeapons.TryGetValue(type, out var currentWeapon) || type == WeaponType.Punch)
             {
@@ -272,6 +282,33 @@ namespace _1.Scripts.UI.InGame.HUD
                 yield return null;
             }
             currentAmmoRectTransform.localPosition = originalLocalPosition;
+        }
+        
+        private IEnumerator EmptyAmmoCoroutine(float duration)
+        {
+            float t = 0f;
+            float flashSpeed = 6f;
+            float lerpSpeed = 2f;
+            bool isRed = true;
+
+            while (t < duration)
+            {
+                currentAmmoText.color = isRed ? emptyAmmoColor : originalAmmoColor;
+                isRed = !isRed;
+                yield return new WaitForSecondsRealtime(1f / flashSpeed);
+                t += 1f / flashSpeed;
+            }
+
+            t = 0f;
+            Color startColor = currentAmmoText.color;
+            while (t < 1f)
+            {
+                currentAmmoText.color = Color.Lerp(startColor, originalAmmoColor, t);
+                t += Time.unscaledDeltaTime * lerpSpeed;
+                yield return null;
+            }
+            currentAmmoText.color = originalAmmoColor;
+            emptyFlashCoroutine = null;
         }
     }
 }

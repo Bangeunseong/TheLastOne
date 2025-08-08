@@ -157,6 +157,10 @@ namespace _1.Scripts.Manager.Subs
         public bool ShowPauseMenu()
         {
             if (!HideUIByGroup(UIType.InGame)) return false;
+            var dialogueUI = GetUI<DialogueUI>();
+            if (dialogueUI) dialogueUI.ResetUI();
+            var modificationUI = GetUI<ModificationUI>();
+            if (modificationUI) modificationUI.Hide();
             ShowUI<PauseMenuUI>();
             return true;
         }

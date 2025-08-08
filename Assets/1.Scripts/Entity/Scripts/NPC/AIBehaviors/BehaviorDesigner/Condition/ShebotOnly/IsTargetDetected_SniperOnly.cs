@@ -20,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 		public SharedVector3 targetPos;
 		public SharedFloat maxViewDistance;
 		public SharedBool shouldLookTarget;
+		public SharedBool isShouldAlertNearBy;
 		public SharedBaseNpcStatController statController;
 		public SharedDetectionGizmo detectionGizmo;
 		public SharedQuaternion baseRotation;
@@ -39,6 +40,8 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition.S
 
 		public override TaskStatus OnUpdate()
 		{
+			if (isShouldAlertNearBy.Value) return TaskStatus.Failure;
+			
 			bool ally = statController.Value.RuntimeStatData.IsAlly;
 			Vector3 selfPos = selfTransform.Value.position;
 			float range = 0f;

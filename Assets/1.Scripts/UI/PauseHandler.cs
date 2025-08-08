@@ -1,5 +1,6 @@
 using _1.Scripts.Manager.Core;
 using _1.Scripts.UI.Common;
+using _1.Scripts.UI.InGame.Modification;
 using Michsky.UI.Shift;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ namespace _1.Scripts.UI
         private void Pause()
         {
             if (!pauseMenuUI || coreManager.uiManager.IsCutscene) return;
+            CoreManager.Instance.uiManager.HideUI<ModificationUI>();
             CoreManager.Instance.uiManager.HideHUD();
             CoreManager.Instance.gameManager.PauseGame();
             blurMgr.BlurInAnim();

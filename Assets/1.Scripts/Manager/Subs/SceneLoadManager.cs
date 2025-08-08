@@ -2,11 +2,11 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.UI.Common;
 using _1.Scripts.UI.Loading;
 using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
@@ -33,7 +33,8 @@ namespace _1.Scripts.Manager.Subs
         private bool isKeyPressed;
         private UIManager uiManager;
         private CoreManager coreManager;
-        
+
+
         // Properties
         public bool IsLoading { get; private set; }
         public float LoadingProgress { get; set; }
@@ -71,7 +72,7 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
                 CurrentScene = sceneName;
-                if (CurrentScene == SceneType.IntroScene)
+                if (CurrentScene is SceneType.IntroScene or SceneType.EndingScene)
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
@@ -136,7 +137,11 @@ namespace _1.Scripts.Manager.Subs
             // Wait for user input
             isInputAllowed = true;
             loadingUI.UpdateLoadingProgress(LoadingProgress);
-            loadingUI.UpdateProgressText("Press any key to continue...");
+            LocalizedString loadingString = new LocalizedString("New Table", "LoadingText_Key");
+            loadingString.StringChanged += value =>
+            {
+                loadingUI.UpdateProgressText(value);
+            };
             await WaitForUserInput();
             isInputAllowed = false;
             isKeyPressed = false;
@@ -171,9 +176,7 @@ namespace _1.Scripts.Manager.Subs
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>(); uiManager.ShowUI<LobbyUI>();
                     return;
-                case SceneType.EndingScene: 
-                    coreManager.uiManager.GetUI<EndingCreditUI>().Show();
-                    return;
+                case SceneType.EndingScene: return;
             }
             
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
@@ -201,9 +204,6 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.Stage2:
                     PlayCutSceneOrResumeGame(player); break;
             }
-            
-            // Step 5. Change Background Music
-            ChangeBGM(0);
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -233,15 +233,23 @@ namespace _1.Scripts.Manager.Subs
 
         private void PlayCutScene(PlayableDirector director)
         {
-            director.played += OnCutsceneStarted_Intro;
-            director.played += uiManager.OnCutsceneStarted;
-            director.stopped += uiManager.OnCutsceneStopped;
-            director.stopped += OnCutsceneStopped_Intro;
+            
+            if (CurrentScene == SceneType.Stage1)
+            {
+                director.played += OnCutsceneStarted_Stage1Intro;
+                director.stopped += OnCutsceneStopped_Stage1Intro;
+            }
+            else if (CurrentScene == SceneType.Stage2)
+            {
+                director.played += OnCutsceneStarted_Stage2Intro;
+                director.stopped += OnCutsceneStopped_Stage2Intro;
+            }
             director.Play();
         }
 
         private void ResumeGame(Player player, bool spawn, int index)
         {
+            ChangeBGM(0);
             player.PlayerCondition.OnEnablePlayerMovement();
             if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
             if (spawn) coreManager.spawnManager.SpawnEnemyBySpawnData(index);
@@ -253,7 +261,16 @@ namespace _1.Scripts.Manager.Subs
                 coreManager.soundManager.PlayBGM(bgmType, index: index);
         }
 
-        private void OnCutsceneStarted_Intro(PlayableDirector director)
+        private void OnCutsceneStarted_Stage1Intro(PlayableDirector director)
+        {
+            ChangeBGM(0);
+            coreManager.gameManager.Player.InputProvider.enabled = false;
+            coreManager.gameManager.PauseGame();
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
+        }
+
+        private void OnCutsceneStarted_Stage2Intro(PlayableDirector director)
         {
             coreManager.gameManager.Player.InputProvider.enabled = false;
             coreManager.gameManager.PauseGame();
@@ -261,7 +278,7 @@ namespace _1.Scripts.Manager.Subs
             coreManager.uiManager.OnCutsceneStarted(director);
         }
 
-        private void OnCutsceneStopped_Intro(PlayableDirector director)
+        private void OnCutsceneStopped_Stage1Intro(PlayableDirector director)
         {
             var player = coreManager.gameManager.Player;
             player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
@@ -271,8 +288,22 @@ namespace _1.Scripts.Manager.Subs
             coreManager.gameManager.ResumeGame();
             coreManager.uiManager.OnCutsceneStopped(director);
             
-            director.played -= OnCutsceneStarted_Intro;
-            director.stopped -= OnCutsceneStopped_Intro;
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage1Intro;
+        }
+
+        private void OnCutsceneStopped_Stage2Intro(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            ChangeBGM(0);
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage2Intro;
         }
     }
 }

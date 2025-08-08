@@ -16,8 +16,6 @@ namespace Michsky.UI.Shift
         public ColorType colorType;
         public FontType fontType;
 
-        [Header("Localization Key")] 
-        public string localizationKey;
 
         bool dynamicUpdateEnabled;
         private bool IsKorean()
@@ -125,19 +123,6 @@ namespace Michsky.UI.Shift
                     textObject.font = UIManagerAsset.semiBoldFont;
                 else if (fontType == FontType.Bold)
                     textObject.font = UIManagerAsset.boldFont;
-                
-                bool isKR = IsKorean();
-                
-                if (fontType == FontType.Light)
-                    textObject.font = isKR ? UIManagerAsset.lightFont_KR : UIManagerAsset.lightFont;
-                else if (fontType == FontType.Regular)
-                    textObject.font = isKR ? UIManagerAsset.regularFont_KR : UIManagerAsset.regularFont;
-                else if (fontType == FontType.Medium)
-                    textObject.font = isKR ? UIManagerAsset.mediumFont_KR : UIManagerAsset.mediumFont;
-                else if (fontType == FontType.Semibold)
-                    textObject.font = isKR ? UIManagerAsset.semiBoldFont_KR : UIManagerAsset.semiBoldFont;
-                else if (fontType == FontType.Bold)
-                    textObject.font = isKR ? UIManagerAsset.boldFont_KR : UIManagerAsset.boldFont;
             }
 
             catch { }

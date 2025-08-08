@@ -3,9 +3,11 @@ using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
+using _1.Scripts.UI.InGame.Dialogue;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine.Localization;
 
 namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 {	
@@ -30,6 +32,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		{
 			shouldAlertNearBy.Value = false;
 			if (isAlerted.Value) return TaskStatus.Success;
+			if (targetTransform.Value == null) return TaskStatus.Success;
 			
 			if (!statController.Value.TryGetRuntimeStatInterface<IAlertable>(out var alertable)) // 있을 시 변환
 			{
@@ -40,14 +43,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			if (isDog) CoreManager.Instance.soundManager.PlaySFX(SfxType.Dog, myCollider.Value.bounds.center, index:0); // 사운드 출력
 			else CoreManager.Instance.soundManager.PlaySFX(SfxType.Drone, myCollider.Value.bounds.center, index:1); 
 			isAlerted.Value = true;
-			
-			float dialogueChance = 1f;
-			int alertDialogueKey = 13;
 
-			if (Random.value < dialogueChance)
-			{
-				CoreManager.Instance.dialogueManager.TriggerDialogue(alertDialogueKey);
-			}
+			int droneAlertKey = 13;
+			CoreManager.Instance.dialogueManager.TriggerDialogue(droneAlertKey);
 			
 			bool isAlly = statController.Value.RuntimeStatData.IsAlly; 
 			Vector3 selfPos = selfTransform.Value.position;

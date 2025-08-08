@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _1.Scripts.Quests.Core
@@ -8,7 +9,13 @@ namespace _1.Scripts.Quests.Core
         private static GameEventSystem instance;
         public static GameEventSystem Instance => instance ??= FindObjectOfType<GameEventSystem>();
 
-        private LinkedList<IGameEventListener> listeners = new();
+        private readonly LinkedList<IGameEventListener> listeners = new();
+
+        private void OnDestroy()
+        {
+            listeners.Clear();
+            instance = null;
+        }
 
         public void RegisterListener(IGameEventListener listener)
         {

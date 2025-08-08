@@ -5,14 +5,12 @@ using UnityEngine.UI;
 using Michsky.UI.Shift;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using UnityEngine.Localization.Settings;
 
 namespace _1.Scripts.UI.Setting
 {
     public class SettingUI : MonoBehaviour
     {
-        [Header("Tutorial")]
-        [SerializeField] private SwitchManager tutorialSwitch;
-
         [Header("Language")]
         [SerializeField] private HorizontalSelector languageSelector;
 
@@ -34,37 +32,66 @@ namespace _1.Scripts.UI.Setting
 
         private Resolution[] resolutions;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
-
+        
         private void Start()
         {
-            resolutions = Screen.resolutions; 
-            InitSensitivitySliders(); 
-            InitResolutionSelector(); 
+            resolutions = Screen.resolutions;
+            InitSensitivitySliders();
+            InitResolutionSelector();
             InitFullscreenModeSelector();
-            
             LoadSettings();
             AddListeners();
         }
         
-        /*private void InitLanguageOptions()
+        private void OnEnable()
         {
-            if (languageSelector == null) return;
-            languageSelector.saveValue = false;
-            languageSelector.loopSelection = false;
-            languageSelector.itemList.Clear();
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            RegisterLanguageSelectorEvents();
+            SyncLanguageSelector();
+        }
+        
+        private void OnDisable()
+        {
+            LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        }
 
-            var languages = new List<string> { "English", "한국어" };
-            foreach (var lang in languages)
+        private void OnLocaleChanged(UnityEngine.Localization.Locale newLocale)
+        {
+            SyncLanguageSelector();
+        }
+        
+        private void RegisterLanguageSelectorEvents()
+        {
+            if (!languageSelector || languageSelector.itemList == null) return;
+
+            foreach (var item in languageSelector.itemList)
+                item.onValueChanged.RemoveAllListeners();
+
+            for (int i = 0; i < languageSelector.itemList.Count; i++)
             {
-                languageSelector.CreateNewItem(lang);
-                int idx = languageSelector.itemList.Count - 1;
-                languageSelector.itemList[idx].onValueChanged.AddListener(() => OnLanguageChanged(idx));
+                int idx = i;
+                languageSelector.itemList[i].onValueChanged.AddListener(() => OnLanguageSelectorChanged(idx));
             }
-
-            languageSelector.index = PlayerPrefs.GetInt("LanguageIndex", 0);
+        }
+        
+        private void SyncLanguageSelector()
+        {
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            var currentLocale = LocalizationSettings.SelectedLocale;
+            int idx = locales.IndexOf(currentLocale);
+            if (idx < 0) idx = 0;
+            languageSelector.index = idx;
             languageSelector.UpdateUI();
-        }*/
-
+        }
+        
+        private void OnLanguageSelectorChanged(int idx)
+        {
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            if (idx < 0 || idx >= locales.Count) return;
+            LocalizationSettings.SelectedLocale = locales[idx];
+            PlayerPrefs.SetInt("LanguageIndex", idx);
+        }
+        
         private void InitSensitivitySliders()
         {
             //float lookDef = CoreManager.Instance.gameManager.LookSensitivity;
@@ -75,14 +102,13 @@ namespace _1.Scripts.UI.Setting
 
         private void InitResolutionSelector()
         {
-            if (resolutionSelector == null) return;
+            if (!resolutionSelector) return;
             resolutionSelector.saveValue = false;
             resolutionSelector.loopSelection = false;
             resolutionSelector.itemList.Clear();
 
-            for (int i = 0; i < resolutions.Length; i++)
+            foreach (var r in resolutions)
             {
-                var r = resolutions[i];
                 string option = $"{r.width}x{r.height} {r.refreshRateRatio}hz";
                 resolutionSelector.CreateNewItem(option);
             }
@@ -100,14 +126,14 @@ namespace _1.Scripts.UI.Setting
 
         private void InitFullscreenModeSelector()
         {
-            if (fullscreenModeSelector == null) return;
+            if (!fullscreenModeSelector) return;
             fullscreenModeSelector.saveValue = false;
             fullscreenModeSelector.loopSelection = false;
             fullscreenModeSelector.itemList.Clear();
 
-            for (int i = 0; i < fullscreenModes.Count; i++)
+            foreach (var t in fullscreenModes)
             {
-                fullscreenModeSelector.CreateNewItem(fullscreenModes[i]);
+                fullscreenModeSelector.CreateNewItem(t);
             }
 
             for (int i = 0; i < fullscreenModes.Count; i++)
@@ -153,31 +179,15 @@ namespace _1.Scripts.UI.Setting
 
         private void AddListeners()
         {
-            tutorialSwitch.OnEvents.AddListener(() => OnTutorialToggled(true));
-            tutorialSwitch.OffEvents.AddListener(() => OnTutorialToggled(false));
+
             
             masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnMasterVolumeChanged);
             bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnBGMVolumeChanged);
             sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnSFXVolumeChanged);
 
+
             //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
             //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
-        }
-        
-
-        private void OnTutorialToggled(bool on)
-        {
-            PlayerPrefs.SetInt("EnableTutorials", on ? 1 : 0);
-        }
-        
-        private void OnLanguageChanged(int idx)
-        {
-            PlayerPrefs.SetInt("LanguageIndex", idx);
-
-            foreach (var uiText in FindObjectsOfType<UIManagerText>(true))
-            {
-                uiText.UpdateButton();
-            }
         }
 
         private void OnMasterVolumeChanged(float vol)

@@ -116,12 +116,7 @@ namespace Michsky.UI.Shift
             var mediumFont = serializedObject.FindProperty("mediumFont");
             var semiBoldFont = serializedObject.FindProperty("semiBoldFont");
             var boldFont = serializedObject.FindProperty("boldFont");
-            
-            var lightFont_KR = serializedObject.FindProperty("lightFont_KR");
-            var regularFont_KR = serializedObject.FindProperty("regularFont_KR");
-            var mediumFont_KR = serializedObject.FindProperty("mediumFont_KR");
-            var semiBoldFont_KR = serializedObject.FindProperty("semiBoldFont_KR");
-            var boldFont_KR = serializedObject.FindProperty("boldFont_KR");
+
 
             GUILayout.Space(foldoutTopSpace);
             GUILayout.BeginHorizontal();
@@ -137,14 +132,6 @@ namespace Michsky.UI.Shift
                 ShiftUIEditorHandler.DrawProperty(mediumFont, customSkin, "Medium");
                 ShiftUIEditorHandler.DrawProperty(semiBoldFont, customSkin, "Semibold");
                 ShiftUIEditorHandler.DrawProperty(boldFont, customSkin, "Bold");
-                
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("Korean Fonts", EditorStyles.boldLabel);
-                ShiftUIEditorHandler.DrawProperty(lightFont_KR, customSkin, "Light (KR)");
-                ShiftUIEditorHandler.DrawProperty(regularFont_KR, customSkin, "Regular (KR)");
-                ShiftUIEditorHandler.DrawProperty(mediumFont_KR, customSkin, "Medium (KR)");
-                ShiftUIEditorHandler.DrawProperty(semiBoldFont_KR, customSkin, "Semibold (KR)");
-                ShiftUIEditorHandler.DrawProperty(boldFont_KR, customSkin, "Bold (KR)");
             }
 
             GUILayout.EndVertical();
