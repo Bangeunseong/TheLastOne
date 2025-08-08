@@ -73,7 +73,7 @@ namespace _1.Scripts.Manager.Subs
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
                 CurrentScene = sceneName;
-                if (CurrentScene == SceneType.IntroScene)
+                if (CurrentScene is SceneType.IntroScene or SceneType.EndingScene)
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
@@ -177,9 +177,7 @@ namespace _1.Scripts.Manager.Subs
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>(); uiManager.ShowUI<LobbyUI>();
                     return;
-                case SceneType.EndingScene: 
-                    coreManager.uiManager.GetUI<EndingCreditUI>().Show();
-                    return;
+                case SceneType.EndingScene: return;
             }
             
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
