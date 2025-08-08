@@ -106,7 +106,7 @@ namespace _1.Scripts.Manager.Subs
             }
             
             // Load Resources & Create Pool used in Current Scene
-            await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            if (CurrentScene != SceneType.EndingScene) await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
             coreManager.dialogueManager.CacheDialogueData();
             coreManager.soundManager.CacheSoundGroup();
             await coreManager.soundManager.LoadClips();
@@ -176,7 +176,9 @@ namespace _1.Scripts.Manager.Subs
                     coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
                     uiManager.HideUI<LoadingUI>(); uiManager.ShowUI<LobbyUI>();
                     return;
-                case SceneType.EndingScene: return;
+                case SceneType.EndingScene: 
+                    uiManager.HideUI<LoadingUI>(); PlayEndingCutScene(); 
+                    return;
             }
             
             // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
@@ -231,9 +233,15 @@ namespace _1.Scripts.Manager.Subs
             PlayCutScene(playable);
         }
 
+        private void PlayEndingCutScene()
+        {
+            var endingGo = GameObject.Find("IntroOpening");
+            var playable = endingGo?.GetComponentInChildren<PlayableDirector>();
+            PlayCutScene(playable);
+        }
+        
         private void PlayCutScene(PlayableDirector director)
         {
-            
             if (CurrentScene == SceneType.Stage1)
             {
                 director.played += OnCutsceneStarted_Stage1Intro;
@@ -243,6 +251,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 director.played += OnCutsceneStarted_Stage2Intro;
                 director.stopped += OnCutsceneStopped_Stage2Intro;
+            } 
+            else if (CurrentScene == SceneType.EndingScene)
+            {
+                director.stopped += OnCutsceneStopped_Ending;
             }
             director.Play();
         }
@@ -304,6 +316,12 @@ namespace _1.Scripts.Manager.Subs
             
             director.played -= OnCutsceneStarted_Stage1Intro;
             director.stopped -= OnCutsceneStopped_Stage2Intro;
+        }
+
+        private void OnCutsceneStopped_Ending(PlayableDirector director)
+        {
+            coreManager.MoveToIntroScene();
+            director.stopped -= OnCutsceneStopped_Ending;
         }
     }
 }
