@@ -206,9 +206,6 @@ namespace _1.Scripts.Manager.Subs
                 case SceneType.Stage2:
                     PlayCutSceneOrResumeGame(player); break;
             }
-            
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
         
         private async Task WaitForUserInput()
@@ -265,6 +262,8 @@ namespace _1.Scripts.Manager.Subs
             player.PlayerCondition.OnEnablePlayerMovement();
             if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
             if (spawn) coreManager.spawnManager.SpawnEnemyBySpawnData(index);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         private void ChangeBGM(int index)
@@ -299,6 +298,8 @@ namespace _1.Scripts.Manager.Subs
             coreManager.spawnManager.SpawnEnemyBySpawnData(1);
             coreManager.gameManager.ResumeGame();
             coreManager.uiManager.OnCutsceneStopped(director);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             
             director.played -= OnCutsceneStarted_Stage1Intro;
             director.stopped -= OnCutsceneStopped_Stage1Intro;
@@ -313,6 +314,8 @@ namespace _1.Scripts.Manager.Subs
             ChangeBGM(0);
             coreManager.gameManager.ResumeGame();
             coreManager.uiManager.OnCutsceneStopped(director);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             
             director.played -= OnCutsceneStarted_Stage1Intro;
             director.stopped -= OnCutsceneStopped_Stage2Intro;

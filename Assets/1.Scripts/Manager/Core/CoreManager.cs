@@ -168,7 +168,7 @@ namespace _1.Scripts.Manager.Core
         public void StartGame()
         {
             gameManager.TryRemoveSavedData();
-            _ = LoadScene(SceneType.EndingScene);
+            _ = LoadScene(SceneType.Stage1);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Reset();
             uiManager.ResetUIByGroup(UIType.InGame);
             gameManager.ExitGame();
-            
+             
             _ = LoadDataAndScene();
         }
         
