@@ -158,7 +158,19 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position);
+                coreManager.soundManager.PlaySFX(SfxType.PlayerFootStep_Dirt, transform.position);
+            }
+        }
+
+        /// <summary>
+        /// Play Jump Sound
+        /// </summary>
+        /// <param name="animationEvent"></param>
+        private void OnJump(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                coreManager.soundManager.PlaySFX(SfxType.PlayerJump_Dirt, transform.position);
             }
         }
 
@@ -170,7 +182,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position);
+                coreManager.soundManager.PlaySFX(SfxType.PlayerLand_Dirt, transform.position);
             }
         }
     }
