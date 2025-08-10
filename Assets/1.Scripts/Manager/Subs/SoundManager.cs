@@ -31,8 +31,12 @@ namespace _1.Scripts.Manager.Subs
         // Player SFX
         PlayerHit,
         PlayerShieldHit,
-        PlayerFootStep,
-        PlayerLand,
+        PlayerFootStep_Dirt,
+        PlayerFootStep_Steel,
+        PlayerJump_Dirt,
+        PlayerJump_Steel,
+        PlayerLand_Dirt,
+        PlayerLand_Steel,
         
         // Gun SFX
         PistolShoot,
