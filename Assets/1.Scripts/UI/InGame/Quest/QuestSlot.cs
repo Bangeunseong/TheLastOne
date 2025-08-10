@@ -13,8 +13,6 @@ namespace _1.Scripts.UI.InGame.Quest
     {
         [Header("Quest Info")]
         [SerializeField] private TextMeshProUGUI questTitleText;
-        [SerializeField] private Slider questProgressSlider;
-        [SerializeField] private TextMeshProUGUI questProgressText;
         
         [Header("Quest Objectives")]
         [SerializeField] private GameObject objectiveSlotPrefab;
@@ -36,7 +34,6 @@ namespace _1.Scripts.UI.InGame.Quest
             questData = data;
             objectives = objectiveList;
             questTitleText.text = questData.title;
-            UpdateQuestProgress();
             CreateObjectiveSlots();
             SetPanelHeight(collapsedHeight);
         }
@@ -48,7 +45,7 @@ namespace _1.Scripts.UI.InGame.Quest
 
             if (objectives is not { Count: > 0 }) return;
             {
-                ObjectiveProgress firstNotCompleted = objectives.FirstOrDefault(obj => !obj.IsCompleted);
+                var firstNotCompleted = objectives.FirstOrDefault(obj => !obj.IsCompleted);
                 if (firstNotCompleted == null) return;
                 var go = Instantiate(objectiveSlotPrefab, objectiveSlotContainer);
                 var slot = go.GetComponent<ObjectiveSlot>();
@@ -56,14 +53,7 @@ namespace _1.Scripts.UI.InGame.Quest
                 objectiveSlots.Add(slot);
             }
         }
-
-        public void UpdateQuestProgress()
-        {
-            int completed = objectives.FindAll(o => o.IsCompleted).Count;
-            float progress = objectives.Count > 0 ? (float)completed / objectives.Count : 0;
-            questProgressSlider.value = progress;
-            questProgressText.text = $"{completed}/{objectives.Count}";
-        }
+        
 
         public void RefreshObjectiveSlots()
         {
@@ -73,6 +63,8 @@ namespace _1.Scripts.UI.InGame.Quest
                 if (slot.IsCompleted())
                 {
                     slot.PlayCompleteAndDestroy();
+                    if (!slot.gameObject) { }
+                    else if (!slot.gameObject.activeInHierarchy) Destroy(slot.gameObject); 
                     objectiveSlots.RemoveAt(i);
                 }
                 else slot.UpdateProgress();

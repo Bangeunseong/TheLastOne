@@ -11,6 +11,8 @@ namespace _1.Scripts.UI.Common
         [SerializeField] private GameObject panel;
         [SerializeField] private CanvasGroup settingPanel;
         [SerializeField] private Animator settingAnimator;
+        [SerializeField] private CanvasGroup tutorialPanel;
+        [SerializeField] private Animator tutorialAnimator;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button reloadButton;
         [SerializeField] private Button quitButton;
@@ -18,6 +20,8 @@ namespace _1.Scripts.UI.Common
         private PauseHandler pauseHandler;
         public CanvasGroup SettingPanel => settingPanel;
         public Animator SettingAnimator => settingAnimator;
+        public CanvasGroup TutorialPanel => tutorialPanel;
+        public Animator TutorialAnimator => tutorialAnimator;
 
         public override void Initialize(UIManager manager, object param = null)
         {

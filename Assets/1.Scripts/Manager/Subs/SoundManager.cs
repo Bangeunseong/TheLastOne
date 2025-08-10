@@ -167,7 +167,7 @@ namespace _1.Scripts.Manager.Subs
             if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
-            soundPlayer.Play2D(clip, duration, sfxVolume);
+            soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
             return soundPlayer;
         }
         
@@ -193,7 +193,7 @@ namespace _1.Scripts.Manager.Subs
             var obj = poolManager.Get("SoundPlayer");
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
-            soundPlayer.Play3D(clip, duration, sfxVolume, position);
+            soundPlayer.Play3D(clip, duration, masterVolume * sfxVolume, position);
             return soundPlayer;
         }
         
@@ -220,7 +220,7 @@ namespace _1.Scripts.Manager.Subs
 
         public void SetSFXVolume(float volume)
         {
-            sfxVolume = Mathf.Clamp01(volume) * masterVolume;
+            sfxVolume = Mathf.Clamp01(volume);
             PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         }
 
@@ -232,7 +232,6 @@ namespace _1.Scripts.Manager.Subs
             
             AudioListener.volume = masterVolume;
             bgmSource.volume = masterVolume * bgmVolume;
-            sfxVolume = masterVolume * sfxVolume;
         }
 
         public async Task LoadClips()

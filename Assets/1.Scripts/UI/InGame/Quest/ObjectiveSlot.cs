@@ -24,6 +24,15 @@ namespace _1.Scripts.UI.InGame.Quest
             gameObject.SetActive(false);
         }
 
+        void OnEnable()
+        {
+            if (objective is { IsCompleted: true })
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+        
         public void UpdateProgress()
         {
             int current = objective.currentAmount;
@@ -33,6 +42,11 @@ namespace _1.Scripts.UI.InGame.Quest
 
         public void Expand()
         {
+            if (objective is { IsCompleted: true })
+            {
+                Destroy(gameObject);
+                return;
+            }
             if (expandCoroutine != null) StopCoroutine(expandCoroutine);
             gameObject.SetActive(true);
             expandCoroutine = StartCoroutine(ExpandCoroutine(0f, 1f));
@@ -50,7 +64,7 @@ namespace _1.Scripts.UI.InGame.Quest
             Vector3 scale = transform.localScale;
             while (t < expandDuration)
             {
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
                 float y = Mathf.Lerp(from, to, t / expandDuration);
                 transform.localScale = new Vector3(scale.x, y, scale.z);
                 yield return null;
@@ -62,7 +76,12 @@ namespace _1.Scripts.UI.InGame.Quest
         
         public void PlayCompleteAndDestroy(float duration = 0.3f)
         {
-            if (!gameObject.activeInHierarchy) return;
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (expandCoroutine != null) StopCoroutine(expandCoroutine);
             expandCoroutine = StartCoroutine(FadeAndDestroy(duration));
         }
@@ -78,7 +97,7 @@ namespace _1.Scripts.UI.InGame.Quest
                     Destroy(gameObject); expandCoroutine = null;
                     yield break;
                 }
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
                 float y = Mathf.Lerp(1f, 0f, t / duration);
                 transform.localScale = new Vector3(scale.x, y, scale.z);
                 yield return null;
