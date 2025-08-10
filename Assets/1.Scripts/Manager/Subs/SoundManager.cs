@@ -30,6 +30,7 @@ namespace _1.Scripts.Manager.Subs
         
         // Player SFX
         PlayerHit,
+        PlayerShieldHit,
         PlayerFootStep,
         PlayerLand,
         

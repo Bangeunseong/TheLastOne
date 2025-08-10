@@ -99,6 +99,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         private CancellationTokenSource staminaCTS;
         private CancellationTokenSource crouchCTS;
         private CancellationTokenSource bleedCTS;
+
+        private bool health75, health50, health25;
         
         // Action events
         [CanBeNull] public event Action OnDamage, OnDeath;
@@ -202,6 +204,23 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (CurrentShield <= 0)
             {
                 CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+                
+                switch (CurrentHealth)
+                {
+                    case <= 75 when !health75:
+                        health75 = true; 
+                        coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
+                        break;
+                    case <= 50 when !health50:
+                        health50 = true; health75 = true; 
+                        coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
+                        break;
+                    case <= 25 when !health25:
+                        health25 = true; health50 = true; health75 = true; 
+                        coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
+                        break;
+                }
+                
                 if (itemCTS != null) CancelItemUsage();
                 OnRecoverInstinctGauge(InstinctGainType.Hit);
                 player.PlayerInteraction.OnCancelInteract();
@@ -211,11 +230,14 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 if (CurrentShield < damage)
                 {
                     CurrentHealth = Mathf.Max(CurrentHealth + CurrentShield - damage, 0);
+                    coreManager.soundManager.PlayUISFX(SfxType.PlayerShieldHit);
+                    coreManager.soundManager.PlayUISFX(SfxType.PlayerHit);
                     if (itemCTS != null) CancelItemUsage();
                     OnRecoverInstinctGauge(InstinctGainType.Hit);
                     player.PlayerInteraction.OnCancelInteract();
                 }
                 CurrentShield = Mathf.Max(CurrentShield - damage, 0);
+                
                 coreManager.uiManager.GetUI<InGameUI>()?.UpdateArmorSlider(CurrentShield, MaxShield);
             }
             
@@ -252,6 +274,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (IsDead) return;
             CurrentHealth = Mathf.Min(CurrentHealth + value, MaxHealth);
+            
+            if (CurrentHealth >= 25) health25 = false;
+            if (CurrentHealth >= 50) health50 = false;
+            if (CurrentHealth >= 75) health75 = false;
+            
             UpdateLowPassFilterValue(LowestPoint + (HighestPoint - LowestPoint) * ((float)CurrentHealth / MaxHealth));
             coreManager.uiManager.GetUI<InGameUI>()?.UpdateHealthSlider(CurrentHealth, MaxHealth);
         }
