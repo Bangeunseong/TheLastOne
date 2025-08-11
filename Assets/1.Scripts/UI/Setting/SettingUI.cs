@@ -22,18 +22,18 @@ namespace _1.Scripts.UI.Setting
         [SerializeField] private SliderManager sfxVolumeSlider;
 
         [Header("Sensitivity")]
-        [SerializeField] private SliderManager lookSensitivitySlider;
-        [SerializeField] private SliderManager aimSensitivitySlider;
-
-        [Header("Key Bindings")]
-        // TODO: 키 바인딩 추가
-
+        [SerializeField] private SliderManager lookHSensitivitySlider;
+        [SerializeField] private SliderManager lookVSensitivitySlider;
+        [SerializeField] private SliderManager aimHSensitivitySlider;
+        [SerializeField] private SliderManager aimVSensitivitySlider;
+        
         [Header("Graphics")]
         [SerializeField] private TMP_Dropdown resolutionDropdown;
         [SerializeField] private HorizontalSelector fullscreenModeSelector;
 
         private List<Vector2Int> resolutionSizes;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
+        private Slider _lookH, _lookV, _aimH, _aimV;
         
         private void Start()
         {
@@ -95,12 +95,34 @@ namespace _1.Scripts.UI.Setting
         
         private void InitSensitivitySliders()
         {
-            //float lookDef = CoreManager.Instance.gameManager.LookSensitivity;
-            //float aimDef  = CoreManager.Instance.gameManager.AimSensitivity;
-            lookSensitivitySlider.enableSaving = false;
-            aimSensitivitySlider.enableSaving  = false;
+            if (lookHSensitivitySlider) lookHSensitivitySlider.enableSaving = false;
+            if (lookVSensitivitySlider) lookVSensitivitySlider.enableSaving = false;
+            if (aimHSensitivitySlider)  aimHSensitivitySlider .enableSaving = false;
+            if (aimVSensitivitySlider)  aimVSensitivitySlider .enableSaving = false;
+            
+            _lookH = lookHSensitivitySlider ? lookHSensitivitySlider.GetComponent<Slider>() : null;
+            _lookV = lookVSensitivitySlider ? lookVSensitivitySlider.GetComponent<Slider>() : null;
+            _aimH  = aimHSensitivitySlider  ? aimHSensitivitySlider .GetComponent<Slider>() : null;
+            _aimV  = aimVSensitivitySlider  ? aimVSensitivitySlider .GetComponent<Slider>() : null;
+            
+            float lookH = PlayerPrefs.GetFloat("LookSensitivity_H", 0.10f);
+            float lookV = PlayerPrefs.GetFloat("LookSensitivity_V", 0.06f);
+            float aimH  = PlayerPrefs.GetFloat("AimSensitivity_H",  0.10f);
+            float aimV  = PlayerPrefs.GetFloat("AimSensitivity_V",  0.10f);
+            
+            if (_lookH) _lookH.SetValueWithoutNotify(lookH);
+            if (_lookV) _lookV.SetValueWithoutNotify(lookV);
+            if (_aimH)  _aimH .SetValueWithoutNotify(aimH);
+            if (_aimV)  _aimV .SetValueWithoutNotify(aimV);
+            
+            if (_lookH) _lookH.onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_lookV) _lookV.onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_aimH)  _aimH .onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_aimV)  _aimV .onValueChanged.AddListener(_ => OnSensitivityChanged());
+            
+            ApplySensitivityToRuntime(lookH, lookV, aimH, aimV);
         }
-
+        
         private void InitResolutionSelector()
         {
             if (!resolutionDropdown) return;
@@ -173,6 +195,44 @@ namespace _1.Scripts.UI.Setting
             PlayerPrefs.Save();
         }
         
+        private void OnSensitivityChanged()
+        {
+            float lookH = _lookH ? _lookH.value : PlayerPrefs.GetFloat("LookSensitivity_H", 0.10f);
+            float lookV = _lookV ? _lookV.value : PlayerPrefs.GetFloat("LookSensitivity_V", 0.06f);
+            float aimH  = _aimH  ? _aimH .value : PlayerPrefs.GetFloat("AimSensitivity_H",  0.10f);
+            float aimV  = _aimV  ? _aimV .value : PlayerPrefs.GetFloat("AimSensitivity_V",  0.10f);
+
+            PlayerPrefs.SetFloat("LookSensitivity_H", lookH);
+            PlayerPrefs.SetFloat("LookSensitivity_V", lookV);
+            PlayerPrefs.SetFloat("AimSensitivity_H",  aimH);
+            PlayerPrefs.SetFloat("AimSensitivity_V",  aimV);
+
+            ApplySensitivityToRuntime(lookH, lookV, aimH, aimV);
+        }
+        private void ApplySensitivityToRuntime(float lookH, float lookV, float aimH, float aimV)
+        {
+            var coreManager = CoreManager.Instance;
+            var player = coreManager ? coreManager.gameManager?.Player : null;
+            if (!player) return;
+
+            var pc = player.PlayerCondition;
+            pc.UpdateMouseSensitivity(lookH, lookV, aimH, aimV);
+
+            var pov = player.Pov;
+            bool isAiming = pc.IsAiming;
+
+            if (!pov) return;
+            if (isAiming)
+            {
+                pov.m_HorizontalAxis.m_MaxSpeed = aimH;
+                pov.m_VerticalAxis.m_MaxSpeed   = aimV;
+            }
+            else
+            {
+                pov.m_HorizontalAxis.m_MaxSpeed = lookH;
+                pov.m_VerticalAxis.m_MaxSpeed   = lookV;
+            }
+        }
 
         private void LoadSettings()
         {
@@ -202,38 +262,7 @@ namespace _1.Scripts.UI.Setting
             sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
                 CoreManager.Instance.soundManager.SetSFXVolume(Mathf.Clamp01(v100 / 100f)));
 
-
-            //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
-            //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
         }
-
-        private void OnMasterVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetMasterVolume(vol);
-        }
-
-        private void OnBGMVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetBGMVolume(vol);
-        }
-
-        private void OnSFXVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetSFXVolume(vol);
-        }
-
-        /*private void OnLookSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.LookSensitivity = sens;
-            PlayerPrefs.SetFloat("LookSensitivity", sens);
-        }*/
-
-        /*private void OnAimSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.AimSensitivity = sens;
-            PlayerPrefs.SetFloat("AimSensitivity", sens);
-        }*/
-        
 
         private void OnFullscreenModeChanged(int idx)
         {
