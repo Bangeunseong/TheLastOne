@@ -27,5 +27,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
     public class GrenadeData : ScriptableObject
     {
         [field: SerializeField] public GrenadeStat GrenadeStat { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
+
     }
 }

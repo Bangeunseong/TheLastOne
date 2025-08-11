@@ -50,5 +50,9 @@ namespace _1.Scripts.Sound
             yield return new WaitWhile(() => audioSource.isPlaying);
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
+        public bool IsPlaying()
+        {
+            return audioSource && audioSource.isPlaying;
+        }
     }
 }

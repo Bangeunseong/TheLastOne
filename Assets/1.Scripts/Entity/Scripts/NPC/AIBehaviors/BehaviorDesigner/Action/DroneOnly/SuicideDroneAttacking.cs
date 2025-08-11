@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.NPC;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
 using _1.Scripts.Static;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -21,9 +23,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
         public SharedBaseNpcStatController statController;
         public SharedParticleSystem explosionParticle;
         public SharedCollider myCollider;
+        public SharedNavMeshAgent agent;
         public SharedBool isDead;
         
         private bool isExploded = false;
+        private CancellationTokenSource destroyCts;
         
         public override TaskStatus OnUpdate()
         {
@@ -46,7 +50,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             Vector3 selfPos = selfTransform.Value.position;
             float range = boomable.BoomRange;
             
-            int layerMask = isAlly ? 1 << LayerConstants.Enemy :  1 << LayerConstants.Ally | 1 << LayerConstants.Chest;
+            int layerMask = isAlly ? 1 << LayerConstants.Chest_E : 1 << LayerConstants.Chest_P;
             Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
             foreach (Collider collider in colliders)
             {
@@ -57,8 +61,6 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
                 
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    Service.Log("데미지 입히기 실행");
-                    Service.Log($"{statController.Value.RuntimeStatData.BaseDamage}");
                     damagable.OnTakeDamage(statController.Value.RuntimeStatData.BaseDamage);
                 }
             }
@@ -81,16 +83,28 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action.Dron
             statController.Value.Dead();
             
             // 6. 기다린 후 파괴
-            _ = DelayedDestroy(selfTransform.Value.gameObject);
+            destroyCts = NpcUtil.CreateLinkedNpcToken();
+            _ = DelayedDestroy(selfTransform.Value.gameObject, destroyCts);
+            
+            // 7. 기존경로 비활성화
+            agent.Value.SetDestination(selfTransform.Value.position);
             
             isExploded = true;
             return TaskStatus.Running;
         }
         
-        private async UniTaskVoid DelayedDestroy(GameObject destroyTarget)
+        private async UniTaskVoid DelayedDestroy(GameObject destroyTarget, CancellationTokenSource token)
         {
-            await UniTask.WaitForSeconds(2.5f);
-            CoreManager.Instance.objectPoolManager.Release(destroyTarget);
+            try
+            {
+                await UniTask.WaitForSeconds(2.5f, cancellationToken: token.Token, cancelImmediately: true);
+            }
+            finally
+            {
+                NpcUtil.DisableNpc(destroyTarget);
+                destroyCts?.Dispose();
+                destroyCts = null;
+            }
         }
     }
 }

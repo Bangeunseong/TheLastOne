@@ -26,47 +26,72 @@ namespace _1.Scripts.Manager.Subs
         ButtonClick,
         PopupOpen,
         PopupClose,
+        TypeWriter,
         
         // Player SFX
         PlayerHit,
-        PlayerFootStep,
-        PlayerLand,
+        PlayerShieldHit,
+        PlayerFootStep_Dirt,
+        PlayerFootStep_Steel,
+        PlayerJump_Dirt,
+        PlayerJump_Steel,
+        PlayerLand_Dirt,
+        PlayerLand_Steel,
         
         // Gun SFX
         PistolShoot,
         RifleShoot,
         GrenadeLauncherShoot,
-        CrossbowShoot,
+        HackGunShoot,
+        SniperRifleShoot,
         PistolReload,
         RifleReload,
         GrenadeLauncherReload,
-        CrossbowReload,
+        HackGunReload,
+        SniperRifleReload,
+        PistolEmpty,
+        RifleEmpty,
+        GrenadeLauncherEmpty,
+        HackGunEmpty,
+        SniperRifleEmpty,
+        HeadShotSound,
+        
+        // Grenade SFX
+        GrenadeExplode,
         
         // Enemy SFX
         EnemyAttack,
         EnemyHit,
         EnemyFootStep,
-        
-        // Drone SFX
         Drone,
+        Shebot,
+        Dog,
         
         // Item SFX
         ItemPickup,
         
         // Door SFX
         Door,
+        GarageDoor,
         
         // Other
         HackingTry,
         HackingSuccess,
         HackingFail,
         WeaponTuning,
+        
+        // Dialogue
+        None,
+        System,
+        Stage2_Player,
+        Stage2_System,
     }
     
-    
-    [Serializable]
-    public class SoundManager
+    [Serializable] public class SoundManager
     {
+        [Header("Sound Groups")] 
+        [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
+             
         private AudioSource bgmSource;
         private ResourceManager resourceManager;
         private ObjectPoolManager poolManager;
@@ -74,13 +99,6 @@ namespace _1.Scripts.Manager.Subs
         private float masterVolume = 1.0f;
         private float bgmVolume = 1.0f;
         private float sfxVolume = 1.0f;
-        
-        public float MasterVolume => masterVolume;
-        public float BgmVolume => bgmVolume;
-        public float SfxVolume => sfxVolume;
-        
-        [Header("Sound Groups")]
-        [SerializeField] private SerializedDictionary<string, SoundGroupSO> soundGroups = new();
         
         public void Start(AudioSource audioSource)
         {
@@ -151,6 +169,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             var obj = poolManager.Get("SoundPlayer");
+            if (!obj) return null;
             if (!obj.TryGetComponent(out SoundPlayer soundPlayer)) return null;
             
             soundPlayer.Play2D(clip, duration, masterVolume * sfxVolume);
@@ -193,6 +212,7 @@ namespace _1.Scripts.Manager.Subs
             masterVolume = Mathf.Clamp01(volume);
             AudioListener.volume = masterVolume;
             SetBGMVolume(bgmVolume);
+            SetSFXVolume(sfxVolume);
             PlayerPrefs.SetFloat("MasterVolume", masterVolume);
         }
         
@@ -225,15 +245,10 @@ namespace _1.Scripts.Manager.Subs
             {
                 foreach (var clipRef in group.audioClips)
                 {
-                    if (clipRef == null) 
-                        continue;
+                    if (clipRef == null) continue;
                     // Service.Log(group.name);
                     AudioClip clip;
-
-                    if (clipRef.Asset is AudioClip existingClip)
-                    {
-                        clip = existingClip;
-                    }
+                    if (clipRef.Asset is AudioClip existingClip) clip = existingClip;
                     else
                     {
                         var handle = clipRef.LoadAssetAsync<AudioClip>();

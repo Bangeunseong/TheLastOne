@@ -14,6 +14,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 	public class IsTargetInDetectRange : Conditional
 	{
 		public SharedTransform selfTransform;
+		public SharedTransform selfTransform_Head;
 		public SharedTransform targetTransform;
 		public SharedVector3 targetPos;
 		public SharedFloat maxViewDistance;
@@ -38,6 +39,13 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 
 			Collider[] colliders = Physics.OverlapSphere(selfPos, range, layerMask);
 
+			System.Array.Sort(colliders, (a, b) =>
+			{
+				float distA = (a.bounds.center - selfPos).sqrMagnitude;
+				float distB = (b.bounds.center - selfPos).sqrMagnitude;
+				return distA.CompareTo(distB);
+			});
+			
 			foreach (var collider in colliders)
 			{
 				if (!collider.CompareTag("Player"))
@@ -49,9 +57,11 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Condition
 					}
 				}
 
-				Vector3 colliderPos = collider.bounds.center;
+				int layer = ally ? LayerConstants.Chest_E : LayerConstants.Chest_P;
+				Collider targetCol = NpcUtil.FindColliderOfLayerInChildren(collider.gameObject, layer);
+				Vector3 colliderPos = targetCol.bounds.center;
 
-				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
+				if (NpcUtil.IsTargetVisible(selfTransform_Head.Value.position, colliderPos, maxViewDistance.Value, ally))
 				{
 					targetTransform.Value = collider.transform;
 					targetPos.Value = colliderPos;

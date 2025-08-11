@@ -7,9 +7,12 @@ using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Item.Common;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -56,48 +59,90 @@ namespace _1.Scripts.Manager.Subs
                     maxStamina = Player.PlayerCondition.MaxStamina, stamina = Player.PlayerCondition.CurrentStamina,
                     maxShield = Player.PlayerCondition.MaxShield, shield = Player.PlayerCondition.CurrentShield,
                     attackRate = Player.PlayerCondition.AttackRate, damage = Player.PlayerCondition.Damage,
-                    level = Player.PlayerCondition.Level, experience = Player.PlayerCondition.Experience,
                     focusGauge = Player.PlayerCondition.CurrentFocusGauge, instinctGauge = Player.PlayerCondition.CurrentInstinctGauge,
                 },
                 currentSceneId = coreManager.sceneLoadManager.CurrentScene,
-                currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
-                currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
             };
 
-            // Save Current Weapon Infos
-            var newWeaponInfo = new List<WeaponInfo>();
-            var newAvailableWeapons = Player.PlayerCondition.AvailableWeapons.ToList();
-            foreach (var weapon in Player.PlayerCondition.Weapons)
+            if (SaveData == null)
             {
-                switch (weapon)
+                save.stageInfos = new SerializedDictionary<SceneType, StageInfo>();
+                var newStageInfoOfCurrentScene = new StageInfo
+                {
+                    isIntroPlayed = true,
+                    currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
+                    currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
+                    completionDict = new SerializedDictionary<int, bool>(),
+                };
+                save.stageInfos.TryAdd(coreManager.sceneLoadManager.CurrentScene, newStageInfoOfCurrentScene);
+            }
+            else
+            {
+                save.stageInfos = new SerializedDictionary<SceneType, StageInfo>(SaveData.stageInfos);
+                if (!save.stageInfos.TryGetValue(coreManager.sceneLoadManager.CurrentScene, out var stageInfo))
+                {
+                    var newStageInfoOfCurrentScene = new StageInfo
+                    {
+                        isIntroPlayed = true,
+                        currentCharacterPosition = new SerializableVector3(Player.PlayerCondition.LastSavedPosition),
+                        currentCharacterRotation = new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation),
+                        completionDict = new SerializedDictionary<int, bool>(),
+                    };
+                    save.stageInfos.TryAdd(coreManager.sceneLoadManager.CurrentScene, newStageInfoOfCurrentScene);
+                }
+                else
+                {
+                    stageInfo.currentCharacterPosition =
+                        new SerializableVector3(Player.PlayerCondition.LastSavedPosition);
+                    stageInfo.currentCharacterRotation = 
+                        new SerializableQuaternion(Player.PlayerCondition.LastSavedRotation);
+                    stageInfo.dynamicSpawnedWeapons =
+                        new SerializedDictionary<int, SerializableWeaponProp>(coreManager.spawnManager.DynamicSpawnedWeapons);
+                    stageInfo.dynamicSpawnedItems =
+                        new SerializedDictionary<int, SerializableItemProp>(coreManager.spawnManager.DynamicSpawnedItems);
+                    stageInfo.dynamicSpawnedParts =
+                        new SerializedDictionary<int, SerializablePartProp>(coreManager.spawnManager.DynamicSpawnedParts);
+                }
+            }
+            
+            // Save Current Weapon Infos
+            var newWeaponInfo = new SerializedDictionary<WeaponType, WeaponInfo>();
+            var newAvailableWeapons = Player.PlayerWeapon.AvailableWeapons;
+            foreach (var weapon in Player.PlayerWeapon.Weapons)
+            {
+                switch (weapon.Value)
                 {
                     case Gun gun:
-                        newWeaponInfo.Add(new WeaponInfo
+                        newWeaponInfo.Add(gun.GunData.GunStat.Type, new WeaponInfo
                         {
                             currentAmmoCount = gun.CurrentAmmoCount,
                             currentAmmoCountInMagazine = gun.CurrentAmmoCountInMagazine,
+                            equipableParts = new SerializedDictionary<int, bool>(gun.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(gun.EquippedWeaponParts),
                         });
                         break;
-                    case GrenadeLauncher grenadeThrower:
-                        newWeaponInfo.Add(new WeaponInfo
+                    case GrenadeLauncher grenadeLauncher:
+                        newWeaponInfo.Add(WeaponType.GrenadeLauncher, new WeaponInfo
                         {
-                            currentAmmoCount = grenadeThrower.CurrentAmmoCount,
-                            currentAmmoCountInMagazine = grenadeThrower.CurrentAmmoCountInMagazine,
-
+                            currentAmmoCount = grenadeLauncher.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = grenadeLauncher.CurrentAmmoCountInMagazine,
+                            equipableParts = new SerializedDictionary<int, bool>(grenadeLauncher.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(grenadeLauncher.EquippedWeaponParts),
                         });
                         break;
-                    case Crossbow hackingGun:
-                        newWeaponInfo.Add(new WeaponInfo
+                    case HackGun hackGun:
+                        newWeaponInfo.Add(WeaponType.HackGun, new WeaponInfo
                         {
-                            currentAmmoCount = hackingGun.CurrentAmmoCount,
-                            currentAmmoCountInMagazine = hackingGun.CurrentAmmoCountInMagazine,
-
+                            currentAmmoCount = hackGun.CurrentAmmoCount,
+                            currentAmmoCountInMagazine = hackGun.CurrentAmmoCountInMagazine,
+                            equipableParts = new SerializedDictionary<int, bool>(hackGun.EquipableWeaponParts),
+                            equippedParts = new SerializedDictionary<PartType, int>(hackGun.EquippedWeaponParts),
                         });
                         break;
                 }
             }
-            save.Weapons = newWeaponInfo.ToArray();
-            save.AvailableWeapons = newAvailableWeapons.ToArray();
+            save.weapons = newWeaponInfo;
+            save.availableWeapons = new SerializedDictionary<WeaponType, bool>(newAvailableWeapons);
 
             // Save Current Item Infos
             var newItemCountList = (from ItemType type in Enum.GetValues(typeof(ItemType)) select Player.PlayerInventory.Items[type].CurrentItemCount).ToList();
@@ -109,10 +154,12 @@ namespace _1.Scripts.Manager.Subs
                 save.Quests[quest.Key] = new QuestInfo
                 {
                     currentObjectiveIndex = quest.Value.currentObjectiveIndex,
-                    progresses = quest.Value.Objectives.Select(val => val.currentAmount).ToList(),
-                    completionList = quest.Value.Objectives.Select(val => val.IsCompleted).ToList()
+                    progresses = new SerializedDictionary<int, int>(quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.currentAmount)),
+                    completionList = new SerializedDictionary<int, bool>(quest.Value.Objectives.ToDictionary(val => val.Key, val => val.Value.IsCompleted)),
                 };
             }
+            
+            SaveData = save;
             
             var json = JsonConvert.SerializeObject(save, Formatting.Indented);
             await File.WriteAllTextAsync(SaveDirectoryPath + SaveFileName, json);
@@ -128,18 +175,22 @@ namespace _1.Scripts.Manager.Subs
             else SaveData = null;
         }
 
+        public void TryRemoveSavedData()
+        {
+            if (!Directory.Exists(SaveDirectoryPath)) return;
+            File.Delete(SaveDirectoryPath + SaveFileName);
+            SaveData = null;
+        }
+        
         public void PauseGame()
         {
             if (!Player) return;
-
+            
+            Service.Log("Game Paused!");
             IsGamePaused = true;
-            
-            Player.Pov.m_HorizontalAxis.Reset();
-            Player.Pov.m_VerticalAxis.Reset();
-            Player.InputProvider.enabled = false;
-            Player.PlayerInput.enabled = false;
-            
-            Time.timeScale = 0f;
+               
+            coreManager.timeScaleManager.ChangeTimeScale(0);
+            Player.PlayerCondition.OnDisablePlayerMovement();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -148,15 +199,23 @@ namespace _1.Scripts.Manager.Subs
         {
             if (!Player) return;
 
+            Service.Log("Game Resumed!");
             IsGamePaused = false;
-            Time.timeScale = 1f;
-            if (Player.PlayerCondition.IsPlayerHasControl)
-            {
-                Player.InputProvider.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-            Player.PlayerInput.enabled = true;
+            
+            if (Player.PlayerCondition.IsUsingFocus) coreManager.timeScaleManager.ChangeTimeScale(0.5f);
+            else coreManager.timeScaleManager.ChangeTimeScale(1);
+            
+            if (Player.PlayerCondition.IsInMiniGame) return;
+            Player.PlayerCondition.OnEnablePlayerMovement();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        public void ExitGame()
+        {
+            IsGamePaused = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

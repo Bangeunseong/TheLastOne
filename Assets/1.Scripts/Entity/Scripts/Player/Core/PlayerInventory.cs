@@ -3,6 +3,8 @@ using _1.Scripts.Item.Common;
 using _1.Scripts.Item.Items;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
+using _1.Scripts.UI.InGame;
+using _1.Scripts.UI.InGame.HUD;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
@@ -29,7 +31,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             IsOpenUIAction = Time.unscaledTime - timeSinceLastPressed >= HoldDurationToOpen;
 
             if (!IsOpenUIAction) return;
-            coreManager.uiManager?.InGameUI.QuickSlotUI.OpenQuickSlot();
+            
+            coreManager.uiManager.ShowUI<QuickSlotUI>();
             player.Pov.m_HorizontalAxis.Reset();
             player.Pov.m_VerticalAxis.Reset();
             player.InputProvider.enabled = false;
@@ -69,7 +72,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             switch (IsOpenUIAction)
             {
                 case true:
-                    coreManager.uiManager.InGameUI.QuickSlotUI.CloseAndUse(); 
+                    coreManager.uiManager.HideUI<QuickSlotUI>();
                     player.InputProvider.enabled = true; break;
                 case false: OnUseItem(); break;
             }
@@ -79,7 +82,13 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         public void OnSelectItem(ItemType itemType)
         {
             Service.Log($"Attempting to select {itemType}");
+            if (!Items.ContainsKey(itemType) || Items[itemType].CurrentItemCount <= 0)
+            {
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("FailSelect_Key");
+                return;
+            }
             CurrentItem = itemType;
+            CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast(Items[itemType].ItemData);
         }
 
         public bool OnRefillItem(ItemType itemType)
@@ -88,15 +97,20 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             return Items[itemType].OnRefill();
         }
         
-        private void OnUseItem()
+        private bool OnUseItem()
         {
             Service.Log($"Attempting to use {CurrentItem}.");
+            if (!Items.ContainsKey(CurrentItem) || Items[CurrentItem].CurrentItemCount <= 0)
+            {
+                CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("FailUse_Key");
+                return false;
+            }
             switch (Items[CurrentItem])
             {
-                case Medkit medkit: medkit.OnUse(gameObject); break;
-                case NanoAmple nanoAmple: nanoAmple.OnUse(gameObject); break;
-                case EnergyBar energyBar: energyBar.OnUse(gameObject); break;
-                case Shield shield: shield.OnUse(gameObject); break;
+                case Medkit medkit: return medkit.OnUse(gameObject);
+                case NanoAmple nanoAmple: return nanoAmple.OnUse(gameObject);
+                case EnergyBar energyBar: return energyBar.OnUse(gameObject);
+                case Shield shield: return shield.OnUse(gameObject);
                 default: throw new ArgumentOutOfRangeException();
             }
         }

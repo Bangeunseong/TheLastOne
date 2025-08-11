@@ -18,6 +18,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		private float waitingTime;
 		
 		public SharedTransform selfTransform;
+		public SharedTransform selfTransform_Head;
 		public SharedBool isAlerted;
 		public SharedFloat maxViewDistance;
 		public SharedBaseNpcStatController statController;
@@ -57,7 +58,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 			}
 			else
 			{
-				// 공격 사거리 정보가 없으면 실패 처리
+				// 사거리 정보가 없으면 실패 처리
 				return TaskStatus.Failure;
 			}
 
@@ -67,20 +68,22 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 
 			foreach (var collider in colliders)
 			{
-				if (!collider.CompareTag("Player"))
-				{
-					var otherStatController = collider.GetComponent<BaseNpcStatController>();
-					if (otherStatController == null || otherStatController.IsDead)
-					{
-						continue;
-					}
-				}
-
 				Vector3 colliderPos = collider.bounds.center;
-
-				if (NpcUtil.IsTargetVisible(selfPos, colliderPos, maxViewDistance.Value, ally))
+				
+				if (NpcUtil.IsTargetVisible(selfTransform_Head.Value.position, colliderPos, maxViewDistance.Value, ally))
 				{
-					return TaskStatus.Failure;
+					if (!collider.CompareTag("Player"))
+					{
+						var otherStatController = collider.GetComponent<BaseNpcStatController>();
+						if (otherStatController != null && !otherStatController.IsDead)
+						{
+							return TaskStatus.Failure;
+						}
+					}
+					else
+					{
+						return TaskStatus.Failure;
+					}
 				}
 			}
 

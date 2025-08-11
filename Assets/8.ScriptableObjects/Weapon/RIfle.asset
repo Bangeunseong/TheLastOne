@@ -1,26 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22d3dcceb85a4027b75f30463c4db223, type: 3}
-  m_Name: Rifle
-  m_EditorClassIdentifier: 
-  <GunStat>k__BackingField:
-    <MaxAmmoCount>k__BackingField: 150
-    <MaxWeaponRange>k__BackingField: 450
-    <Recoil>k__BackingField: 5
-    <Damage>k__BackingField: 30
-    <Type>k__BackingField: 0
-    <MaxAmmoCountInMagazine>k__BackingField: 30
-    <BulletSpeed>k__BackingField: 4
-    <Accuracy>k__BackingField: 10
-    <ReloadTime>k__BackingField: 3
-    <Rpm>k__BackingField: 650
-    <BulletPrefabId>k__BackingField: Bullet
+version https://git-lfs.github.com/spec/v1
+oid sha256:6e3027d16010277b6e2f21d512abe345382085eb99ac12634b6a9b3c79af52e4
+size 1073

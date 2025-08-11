@@ -1,18 +1,19 @@
-﻿using _1.Scripts.Entity.Scripts.Player.Core;
+﻿using System.Linq;
+using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Grenade
 {
     public class GrenadeLauncher : BaseWeapon, IReloadable
     {
-        [Header("Components")] 
-        [SerializeField] private ParticleSystem muzzleFlashParticle;
-        
         [field: Header("Gun Data")]
         [field: SerializeField] public GrenadeData GrenadeData { get; protected set; }
         
@@ -31,6 +32,7 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         
         private float timeSinceLastShotFired;
         private CoreManager coreManager;
+        public bool IsAlreadyPlayedEmpty;
         
         public bool IsReady => !isEmpty && !IsReloading && !isRecoiling;
         public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
@@ -40,6 +42,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (WeaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Reset()
@@ -47,6 +54,11 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             if (!ThrowPoint) ThrowPoint = this.TryGetChildComponent<Transform>("ThrowPoint");
             if (!muzzleFlashParticle)
                 muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
+            if (WeaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Update()
@@ -73,15 +85,22 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             isOwnedByPlayer = true;
             if (dto != null)
             {
-                var weapon = dto.Weapons[(int)GrenadeData.GrenadeStat.Type];
+                var weapon = dto.weapons[GrenadeData.GrenadeStat.Type];
                 CurrentAmmoCount = weapon.currentAmmoCount;
                 CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                 if (CurrentAmmoCountInMagazine <= 0) isEmpty = true;
+                
+                foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
+                foreach (var part in weapon.equippedParts) WeaponParts[part.Value].OnWear();
             }
             else
             {
-                CurrentAmmoCount = 0;
+                CurrentAmmoCount = GrenadeData.GrenadeStat.MaxAmmoCount;
                 CurrentAmmoCountInMagazine = GrenadeData.GrenadeStat.MaxAmmoCountInMagazine;
+                
+                foreach (var part in WeaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
+                foreach (var part in WeaponParts.Where(val => val.Value.Data.IsBasicPart)) 
+                    part.Value.OnWear();
             }
                 
             face = user.CameraPivot;
@@ -89,7 +108,16 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
 
         public override bool OnShoot()
         {
-            if (!IsReady) return false;
+            if (!IsReady)
+            {
+                if (isEmpty && !IsAlreadyPlayedEmpty)
+                {
+                    IsAlreadyPlayedEmpty = true;
+                    CoreManager.Instance.soundManager.PlaySFX(SfxType.GrenadeLauncherEmpty, ThrowPoint.position);
+                    CoreManager.Instance.uiManager.GetUI<WeaponUI>()?.PlayEmptyFlash();
+                }
+                return false;
+            }
             
             var obj = CoreManager.Instance.objectPoolManager.Get(GrenadeData.GrenadeStat.GrenadePrefabId); 
             if (!obj.TryGetComponent(out Grenade grenade)) return false;
@@ -112,10 +140,12 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             {
                 isEmpty = true;
                 if (player)
-                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                    player.PlayerWeapon.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
-            if (player != null) player.PlayerCondition.IsAttacking = false;
+
+            if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
+            if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }
 
@@ -123,6 +153,8 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
         {
             if (CurrentAmmoCount >= GrenadeData.GrenadeStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GrenadeData.GrenadeStat.MaxAmmoCount);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+
             return true;
         }
 
@@ -139,6 +171,26 @@ namespace _1.Scripts.Weapon.Scripts.Grenade
             CurrentAmmoCountInMagazine += 1;
             isEmpty = CurrentAmmoCountInMagazine <= 0;
             return true;
+        }
+        
+        public override void UpdateStatValues(WeaponPart data, bool isWorn = true)
+        {
+            if (isWorn)
+            {
+                EquippedWeaponParts.TryAdd(data.Data.Type, data.Data.Id);
+            }
+            else
+            {
+                EquippedWeaponParts.Remove(data.Data.Type);
+            }
+        }
+
+        public override bool TryForgeWeapon() { return false; }
+        
+        public void UnlockAllParts()
+        {
+            var keys = EquipableWeaponParts.Keys.ToArray();
+            foreach (var key in keys) EquipableWeaponParts[key] = true;
         }
 
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)

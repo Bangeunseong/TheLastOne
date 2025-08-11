@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using _1.Scripts.UI.InGame;
 using _1.Scripts.Weapon.Scripts.Common;
 using _1.Scripts.Weapon.Scripts.Grenade;
 using _1.Scripts.Weapon.Scripts.Guns;
 using _1.Scripts.Weapon.Scripts.Hack;
+using _1.Scripts.Weapon.Scripts.Melee;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace _1.Scripts.Util
 {
@@ -33,57 +33,109 @@ namespace _1.Scripts.Util
 
     public static class SlotUtility
     {
-        public static bool IsMatchSlot(BaseWeapon w, SlotType slot)
+        public static bool IsMatchSlot(BaseWeapon weapon, WeaponType weaponType)
         {
-            switch (slot)
+            if (!weapon) return false;
+
+            switch (weaponType)
             {
-                case SlotType.Main:
-                    return w is Gun g1 && g1.GunData.GunStat.Type == WeaponType.Rifle;
-                case SlotType.Pistol:
-                    return w is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
-                case SlotType.GrenadeLauncher:
-                    return w is GrenadeLauncher;
-                case SlotType.Crossbow:
-                    return w is Crossbow;
+                case WeaponType.Rifle:
+                    return weapon is Gun g1 && g1.GunData.GunStat.Type == WeaponType.Rifle;
+                case WeaponType.Pistol:
+                    return weapon is Gun g2 && g2.GunData.GunStat.Type == WeaponType.Pistol;
+                case WeaponType.GrenadeLauncher:
+                    return weapon is GrenadeLauncher;
+                case WeaponType.HackGun:
+                    return weapon is HackGun;
                 default:
                     return false;
             }
         }
         
-        public static string GetWeaponName(BaseWeapon w)
+        public static bool TryGetWeaponType(BaseWeapon weapon, out WeaponType weaponType)
         {
-            if (w is Gun g) return g.GunData.GunStat.Type.ToString();
-            if (w is GrenadeLauncher gl) return gl.GrenadeData.GrenadeStat.Type.ToString();
-            if (w is Crossbow) return "Crossbow";
-            return w?.GetType().Name ?? "Unknown";
+            if (weapon is Punch)
+            {
+                weaponType = default;
+                return false;
+            }
+            if (weapon is Gun g)
+            {
+                weaponType = g.GunData.GunStat.Type;
+                return true;
+            }
+            if (weapon is GrenadeLauncher)
+            {
+                weaponType = WeaponType.GrenadeLauncher;
+                return true;
+            }
+            if (weapon is HackGun)
+            {
+                weaponType = WeaponType.HackGun;
+                return true;
+            }
+            weaponType = default;
+            return false;
+        }
+        public static void GetWeaponName(BaseWeapon weapon, TextMeshProUGUI nameText)
+        {
+            if (!TryGetWeaponType(weapon, out var type)) { nameText.text = ""; return; }
+            var localized = new LocalizedString("New Table", $"{type}_Title");
+            localized.StringChanged += val => nameText.text = val;
         }
         
-        public static (int mag, int total) GetWeaponAmmo(BaseWeapon w)
+        public static (int mag, int total) GetWeaponAmmo(BaseWeapon weapon)
         {
-            if (w is Gun g) return (g.CurrentAmmoCountInMagazine, g.CurrentAmmoCount);
-            if (w is GrenadeLauncher gl) return (gl.CurrentAmmoCountInMagazine, gl.CurrentAmmoCount);
-            if (w is Crossbow cb) return (cb.CurrentAmmoCountInMagazine, cb.CurrentAmmoCount);
-            return (0, 0);
+            switch (weapon)
+            {
+                case Gun g:
+                    return (g.CurrentAmmoCountInMagazine, g.CurrentAmmoCount);
+                case GrenadeLauncher gl:
+                    return (gl.CurrentAmmoCountInMagazine, gl.CurrentAmmoCount);
+                case HackGun hg:
+                    return (hg.CurrentAmmoCountInMagazine, hg.CurrentAmmoCount);
+                default:
+                    return (0, 0);
+            }
         }
-        public static WeaponStatView GetWeaponStat(BaseWeapon w)
+        public static WeaponStatView GetWeaponStat(BaseWeapon weapon)
         {
-            if (w is Gun g)
+            switch (weapon)
             {
-                var s = g.GunData.GunStat;
-                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, g.MaxAmmoCountInMagazine);
+                case Gun g:
+                {
+                    var s = g.GunData.GunStat;
+                    return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, g.CurrentMaxAmmoCountInMagazine);
+                }
+                case GrenadeLauncher gl:
+                {
+                    var s = gl.GrenadeData.GrenadeStat;
+                    return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, gl.MaxAmmoCountInMagazine);
+                }
+                case HackGun hg:
+                {
+                    var s = hg.HackData.HackStat;
+                    return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, s.WeightPenalty, hg.CurrentMaxAmmoCountInMagazine);
+                }
+                default:
+                    return new WeaponStatView();
             }
-            if (w is GrenadeLauncher gl)
-            {
-                var s = gl.GrenadeData.GrenadeStat;
-                return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, gl.MaxAmmoCountInMagazine);
-            }
-            if (w is Crossbow cb)
-            {
-                var s = cb.HackData.HackStat;
-                 return new WeaponStatView(s.Damage, s.Rpm, s.Recoil, 1, cb.MaxAmmoCountInMagazine);
-            }
-            return new WeaponStatView();
         }
-        
+        public static Sprite GetWeaponSprite(BaseWeapon weapon)
+        {
+            return weapon switch
+            {
+                Gun g => g.GunData.Icon,
+                GrenadeLauncher gl => gl.GrenadeData.Icon,
+                HackGun hg => hg.HackData.Icon,
+                _ => null
+            };
+        }
+        public static void GetWeaponDescription(BaseWeapon weapon, TextMeshProUGUI descText)
+        {
+            if (!TryGetWeaponType(weapon, out var type)) { descText.text = ""; return; }
+            var localized = new LocalizedString("New Table", $"{type}_Description");
+            localized.StringChanged += val => descText.text = val;
+        }
     }
 }

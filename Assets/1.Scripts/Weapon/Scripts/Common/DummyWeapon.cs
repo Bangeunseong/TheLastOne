@@ -2,11 +2,9 @@
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Player;
 using _1.Scripts.Manager.Core;
+using _1.Scripts.Manager.Data;
 using _1.Scripts.Quests.Core;
 using _1.Scripts.UI.Inventory;
-using _1.Scripts.Weapon.Scripts.Grenade;
-using _1.Scripts.Weapon.Scripts.Guns;
-using _1.Scripts.Weapon.Scripts.Hack;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Common
@@ -14,7 +12,9 @@ namespace _1.Scripts.Weapon.Scripts.Common
     public class DummyWeapon : MonoBehaviour, IInteractable
     {
         [field: Header("DummyGun Settings")]
-        [field: SerializeField] public int Id { get; private set; }
+        [field: SerializeField] public bool IsStatic { get; private set; }
+        [field: SerializeField] public int TargetId { get; private set; }
+        [field: SerializeField] public int InstanceId { get; private set; } = -1;
         [field: SerializeField] public WeaponType Type { get; private set; }
         [field: SerializeField] public Transform[] Renderers { get; private set; }
         
@@ -33,13 +33,13 @@ namespace _1.Scripts.Weapon.Scripts.Common
         
         private void OnEnable()
         {
-            OnPicked += CoreManager.Instance.SaveData_QueuedAsync;
+            ChangeLayerOfBody(CoreManager.Instance.spawnManager.IsVisible);
             OnPicked += RemoveSelfFromSpawnedList;
         }
 
         private void OnDisable()
         {
-            OnPicked -= CoreManager.Instance.SaveData_QueuedAsync;
+            ChangeLayerOfBody(false);
             OnPicked -= RemoveSelfFromSpawnedList;
         }
 
@@ -53,45 +53,65 @@ namespace _1.Scripts.Weapon.Scripts.Common
 
         private void RemoveSelfFromSpawnedList()
         {
-            CoreManager.Instance.spawnManager.RemoveWeaponFromSpawnedList(gameObject);
+            CoreManager.Instance.spawnManager.RemovePropFromSpawnedList(gameObject);
         }
+
+        public void Initialize(bool isStatic, int instanceId)
+        {
+            IsStatic = isStatic;
+            InstanceId = instanceId;
+        } 
 
         public void OnInteract(GameObject ownerObj)
         {
             if (!ownerObj.TryGetComponent(out Player player)) return;
+            if (!player.PlayerWeapon.AvailableWeapons.TryGetValue(Type, out var value)) return;
             
-            var index = -1;
-            for (var i = 0; i < player.PlayerCondition.Weapons.Count; i++)
+            if (!value)
             {
-                if (player.PlayerCondition.Weapons[i] is Gun gun && gun.GunData.GunStat.Type == Type || 
-                    player.PlayerCondition.Weapons[i] is GrenadeLauncher grenadeThrower && grenadeThrower.GrenadeData.GrenadeStat.Type == Type || 
-                    player.PlayerCondition.Weapons[i] is Crossbow crossbow && crossbow.HackData.HackStat.Type == Type)
+                if (Type != WeaponType.SniperRifle)
                 {
-                    index = i; break;
+                    if (player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] && Type == WeaponType.Pistol) return;
+                    player.PlayerWeapon.AvailableWeapons[Type] = true;
+                    player.PlayerCondition.OnSwitchWeapon(Type, 0.5f);
                 }
-            }
-
-            if (!player.PlayerCondition.AvailableWeapons[index])
-            {
-                player.PlayerCondition.AvailableWeapons[index] = true;
-                player.PlayerCondition.OnSwitchWeapon(index, 0.5f);
+                else
+                {
+                    player.PlayerWeapon.Weapons[Type].OnRefillAmmo(10);
+                }
             }
             else
             {
-                var result = player.PlayerCondition.Weapons[index].OnRefillAmmo(
-                    player.PlayerCondition.Weapons[index] is Crossbow ? 4 :
-                    player.PlayerCondition.Weapons[index] is GrenadeLauncher ? 6 : 
-                        player.PlayerCondition.Weapons[index] is Gun gun && gun.GunData.GunStat.Type == WeaponType.Pistol ? 30 : 60);
+                var result = player.PlayerWeapon.Weapons[Type].OnRefillAmmo(
+                    Type switch
+                    {
+                        WeaponType.HackGun => 5,
+                        WeaponType.GrenadeLauncher => 6,
+                        WeaponType.Pistol => 30,
+                        WeaponType.Rifle => 60,
+                        WeaponType.SniperRifle => 10,
+                        WeaponType.Punch => 0,
+                        _ => throw new ArgumentOutOfRangeException()
+                    });
                 if (!result) return;
             }
-            
-            player.PlayerCondition.LastSavedPosition = player.transform.position;
-            player.PlayerCondition.LastSavedRotation = player.transform.rotation;
+
+            if (IsStatic)
+            {
+                var save = CoreManager.Instance.gameManager.SaveData;
+                if (save is { stageInfos: not null } && save.stageInfos.TryGetValue(CoreManager.Instance.sceneLoadManager.CurrentScene, out var info))
+                    if(!info.completionDict.TryAdd(InstanceId, true)) info.completionDict[InstanceId] = true;
+            }
+            else
+            {
+                CoreManager.Instance.spawnManager.DynamicSpawnedWeapons.Remove(InstanceId);
+            }
             
             OnPicked?.Invoke();
-            GameEventSystem.Instance.RaiseEvent(Id);
-            InventoryUI.Instance.RefreshInventoryUI();
+            GameEventSystem.Instance.RaiseEvent(TargetId);
+            CoreManager.Instance.uiManager.GetUI<InventoryUI>()?.RefreshInventoryUI();
             CoreManager.Instance.objectPoolManager.Release(gameObject);
         }
+        public void OnCancelInteract() { }
     }
 }

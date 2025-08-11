@@ -1,31 +1,32 @@
 ﻿using System.Collections;
+using System.Linq;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Interfaces.Weapon;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.HUD;
 using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.Weapon.Scripts.WeaponDetails;
 using UnityEngine;
 
 namespace _1.Scripts.Weapon.Scripts.Guns
 {
     public class Gun : BaseWeapon, IReloadable
     {
-        [Header("Components")] 
-        [SerializeField] private ParticleSystem muzzleFlashParticle;
-        [SerializeField] private LightCurves lightCurves;
-     
         [field: Header("Gun Data")]
         [field: SerializeField] public GunData GunData { get; protected set; }
         
         [field: Header("Current Weapon Settings")]
         [field: SerializeField] public Transform BulletSpawnPoint { get; private set; }
+        [field: SerializeField] public Transform Face { get; private set; }
         [field: SerializeField] public int CurrentAmmoCount { get; private set; }
-        [field: SerializeField] public int MaxAmmoCountInMagazine { get; private set; }
+        [field: SerializeField] public int CurrentMaxAmmoCountInMagazine { get; private set; }
         [field: SerializeField] public int CurrentAmmoCountInMagazine { get; private set; }
-        [SerializeField] private Transform face;
-        [field: SerializeField] public bool IsRayCastGun { get; private set; }
+        [field: SerializeField] public float CurrentAccuracy { get; private set; }
+        [field: SerializeField] public float CurrentRecoil { get; private set; }
+        [field: SerializeField] public float CurrentMaxWeaponRange { get; private set; }
         
         [field: Header("Current Weapon State")]
         [field: SerializeField] public bool IsRecoiling { get; private set; }
@@ -35,16 +36,22 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         // Fields
         private float timeSinceLastShotFired;
         private CoreManager coreManager;
+        public bool IsAlreadyPlayedEmpty;
         
         // Properties
         public bool IsReady => !IsEmpty && !IsReloading && !IsRecoiling;
-        public bool IsReadyToReload => MaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
+        public bool IsReadyToReload => CurrentMaxAmmoCountInMagazine > CurrentAmmoCountInMagazine && !IsReloading && CurrentAmmoCount > 0;
 
         private void Awake()
         {
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
+            if (WeaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Reset()
@@ -52,6 +59,11 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             if (!BulletSpawnPoint) BulletSpawnPoint = this.TryGetChildComponent<Transform>("BulletSpawnPoint");
             if (!muzzleFlashParticle) muzzleFlashParticle = this.TryGetChildComponent<ParticleSystem>("MuzzleFlashParticle");
             if (!lightCurves) lightCurves = this.TryGetChildComponent<LightCurves>("LightCurves");
+            if (WeaponParts.Count <= 0)
+            {
+                var weaponPartList = GetComponentsInChildren<WeaponPart>(true);
+                foreach(var weaponPart in weaponPartList) WeaponParts.Add(weaponPart.Data.Id, weaponPart);
+            }
         }
 
         private void Update()
@@ -69,7 +81,10 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             coreManager = CoreManager.Instance;
             timeSinceLastShotFired = 0f;
             IsRecoiling = false;
-            MaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
+            CurrentMaxAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
+            CurrentAccuracy = GunData.GunStat.Accuracy;
+            CurrentRecoil = GunData.GunStat.Recoil;
+            CurrentMaxWeaponRange = GunData.GunStat.MaxWeaponRange;
             
             owner = ownerObj;
             if (ownerObj.TryGetComponent(out Player user))
@@ -78,57 +93,76 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 isOwnedByPlayer = true;
                 if (dto != null)
                 {
-                    var weapon = dto.Weapons[(int)GunData.GunStat.Type];
+                    var weapon = dto.weapons[GunData.GunStat.Type];
                     CurrentAmmoCount = weapon.currentAmmoCount;
                     CurrentAmmoCountInMagazine = weapon.currentAmmoCountInMagazine;
                     if (CurrentAmmoCountInMagazine <= 0) IsEmpty = true;
+                    
+                    foreach(var part in weapon.equipableParts) EquipableWeaponParts.Add(part.Key, part.Value);
+                    foreach (var part in weapon.equippedParts) WeaponParts[part.Value].OnWear();
                 }
                 else
                 {
-                    CurrentAmmoCount = 0;
+                    CurrentAmmoCount = GunData.GunStat.MaxAmmoCount;
                     CurrentAmmoCountInMagazine = GunData.GunStat.MaxAmmoCountInMagazine;
+                    
+                    foreach (var part in WeaponParts) EquipableWeaponParts.Add(part.Key, part.Value.Data.IsBasicPart);
+                    foreach (var part in WeaponParts.Where(val => val.Value.Data.IsBasicPart))
+                    {
+                        Service.Log($"Worn Part : {part.Key}");
+                        part.Value.OnWear();
+                    }
                 }
                     
-                face = user.CameraPivot;
+                Face = user.CameraPivot;
             }
             // else if (owner.TryGetComponent(out Enemy enemy)) this.enemy = enemy;
         }
 
         public override bool OnShoot()
         {
-            if (!IsReady) return false;
-            if (!IsRayCastGun)
+            if (!IsReady)
             {
-                var obj = CoreManager.Instance.objectPoolManager.Get(GunData.GunStat.BulletPrefabId); 
-                if (!obj.TryGetComponent(out Bullet bullet)) return false;
-                bullet.Initialize(BulletSpawnPoint.position, GetDirectionOfBullet(),
-                    GunData.GunStat.MaxWeaponRange,
-                    GunData.GunStat.BulletSpeed,
-                    GunData.GunStat.Damage, HittableLayer);
+                if (!IsEmpty || IsAlreadyPlayedEmpty) return false;
+                IsAlreadyPlayedEmpty = true;
+                CoreManager.Instance.soundManager.PlaySFX(
+                    GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolEmpty,
+                        WeaponType.Rifle => SfxType.RifleEmpty,
+                        _ => SfxType.SniperRifleEmpty
+                    }, BulletSpawnPoint.position);
+                CoreManager.Instance.uiManager.GetUI<WeaponUI>()?.PlayEmptyFlash();
+                return false;
             }
-            else
+            
+            if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, float.MaxValue, HittableLayer))
             {
-                if (Physics.Raycast(BulletSpawnPoint.position, GetDirectionOfBullet(), out var hit, float.MaxValue, HittableLayer))
+                if (hit.collider.TryGetComponent(out IDamagable damagable))
                 {
-                    if (hit.collider.TryGetComponent(out IDamagable damagable))
-                    {
+                    if (Vector3.Distance(BulletSpawnPoint.position, hit.point) <= CurrentMaxWeaponRange)
                         damagable.OnTakeDamage(GunData.GunStat.Damage);
-                    } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
+                    if (isOwnedByPlayer)
                     {
-                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
-                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
-                        bulletHole.transform.SetParent(hit.transform);
-                    } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
-                    {
-                        var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
-                        bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
-                        bulletHole.transform.SetParent(hit.transform);
+                        bool isHeadShot = hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Head_E"));
+                        coreManager.uiManager.GetUI<InGameUI>().CrosshairController.ShowHitMarker(isHeadShot);
+                        if (isHeadShot) coreManager.soundManager.PlaySFX(SfxType.HeadShotSound, transform.position, index:0);
                     }
+                } else if(hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
+                {
+                    var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Wall");
+                    bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                    bulletHole.transform.SetParent(hit.transform);
+                } else if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+                {
+                    var bulletHole = CoreManager.Instance.objectPoolManager.Get("BulletHole_Ground");
+                    bulletHole.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
+                    bulletHole.transform.SetParent(hit.transform);
                 }
             }
             
             IsRecoiling = true;
-            if (player) player.PlayerRecoil.ApplyRecoil(-GunData.GunStat.Recoil * player.PlayerCondition.RecoilMultiplier);
+            if (player) player.PlayerRecoil.ApplyRecoil(-CurrentRecoil * player.PlayerCondition.RecoilMultiplier);
             
             // Play VFX
             if (lightCurves) StartCoroutine(Flicker());
@@ -137,7 +171,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             
             // Play Randomized Gun Shooting Sound
             CoreManager.Instance.soundManager
-                .PlaySFX(GunData.GunStat.Type == WeaponType.Pistol ? SfxType.PistolShoot : SfxType.RifleShoot, 
+                .PlaySFX(GunData.GunStat.Type switch
+                    {
+                        WeaponType.Pistol => SfxType.PistolShoot,
+                        WeaponType.Rifle => SfxType.RifleShoot,
+                        _ => SfxType.SniperRifleShoot
+                    }, 
                 BulletSpawnPoint.position, -1);
             
             CurrentAmmoCountInMagazine--;
@@ -145,10 +184,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             {
                 IsEmpty = true;
                 if (player)
-                    player.PlayerCondition.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
+                    player.PlayerWeapon.WeaponAnimators[player.PlayerCondition.EquippedWeaponIndex]
                         .SetBool(player.AnimationData.EmptyParameterHash, true);
             }
-            if (GunData.GunStat.Type != WeaponType.Pistol) return true;
+            
+            if (IsAlreadyPlayedEmpty) IsAlreadyPlayedEmpty = false;
+            if (GunData.GunStat.Type == WeaponType.Rifle) return true;
             if (player) player.PlayerCondition.IsAttacking = false;
             return true;
         }
@@ -157,8 +198,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         {
             int reloadableAmmoCount;
             if (isOwnedByPlayer)
-                reloadableAmmoCount = Mathf.Min(MaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
-            else reloadableAmmoCount = MaxAmmoCountInMagazine - CurrentAmmoCount;
+                reloadableAmmoCount = Mathf.Min(CurrentMaxAmmoCountInMagazine - CurrentAmmoCountInMagazine, CurrentAmmoCount);
+            else reloadableAmmoCount = CurrentMaxAmmoCountInMagazine - CurrentAmmoCount;
             
             if (reloadableAmmoCount <= 0) return false;
             
@@ -167,14 +208,80 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             IsEmpty = CurrentAmmoCountInMagazine <= 0;
             return true;
         }
-
+        
         public override bool OnRefillAmmo(int ammo)
         {
             if (CurrentAmmoCount >= GunData.GunStat.MaxAmmoCount) return false;
             CurrentAmmoCount = Mathf.Min(CurrentAmmoCount + ammo, GunData.GunStat.MaxAmmoCount);
+            coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+            return true;
+        }
+        
+        public override void UpdateStatValues(WeaponPart data, bool isWorn = true)
+        {
+            if (isWorn)
+            {
+                CurrentAccuracy -= data.Data.IncreaseAccuracyRate * GunData.GunStat.Accuracy;
+                CurrentRecoil -= data.Data.ReduceRecoilRate * GunData.GunStat.Recoil;
+                CurrentMaxWeaponRange += data.Data.IncreaseDistanceRate * GunData.GunStat.MaxWeaponRange;
+
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
+                    CurrentMaxAmmoCountInMagazine += data.Data.IncreaseMaxAmmoCountInMagazine;
+                    coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+                }
+                
+                EquippedWeaponParts[data.Data.Type] = data.Data.Id;
+            }
+            else
+            {
+                CurrentAccuracy += data.Data.IncreaseAccuracyRate * GunData.GunStat.Accuracy;
+                CurrentRecoil += data.Data.ReduceRecoilRate * GunData.GunStat.Recoil;
+                CurrentMaxWeaponRange -= data.Data.IncreaseDistanceRate * GunData.GunStat.MaxWeaponRange;
+
+                if (data.Data.Type == PartType.ExtendedMag)
+                {
+                    if (CurrentAmmoCountInMagazine > GunData.GunStat.MaxAmmoCountInMagazine)
+                        CurrentAmmoCount += CurrentAmmoCountInMagazine - GunData.GunStat.MaxAmmoCountInMagazine;
+                    CurrentMaxAmmoCountInMagazine -= data.Data.IncreaseMaxAmmoCountInMagazine;
+                    coreManager.uiManager.GetUI<WeaponUI>()?.Refresh(false);
+                }
+                
+                EquippedWeaponParts.Remove(data.Data.Type);
+            }
+        }
+
+        public override bool TryForgeWeapon()
+        {
+            if (!player || GunData.GunStat.Type != WeaponType.Pistol) return false;
+            var availableParts = new bool[3];
+
+            foreach (var available in EquipableWeaponParts.Where(val => val.Value))
+            {
+                if (!WeaponParts.TryGetValue(available.Key, out var part)) continue;
+                switch (part.Data.Type)
+                {
+                    case PartType.Sight: availableParts[0] = true; break;
+                    case PartType.ExtendedMag: availableParts[1] = true; break;
+                    case PartType.Silencer: availableParts[2] = true; break;
+                }
+            }
+
+            if (!availableParts.All(val => val)) return false;
+            
+            player.PlayerWeapon.AvailableWeapons[WeaponType.Pistol] = false;
+            player.PlayerWeapon.AvailableWeapons[WeaponType.SniperRifle] = true;
+            player.PlayerCondition.OnSwitchWeapon(WeaponType.SniperRifle, 0.5f);
             return true;
         }
 
+        public void UnlockAllParts()
+        {
+            var keys = EquipableWeaponParts.Keys.ToArray();
+            foreach (var key in keys) EquipableWeaponParts[key] = true;
+        }
+
+        /* - Utility Method - */
         private void GetOrthonormalBasis(Vector3 forward, out Vector3 right, out Vector3 up)
         {
             right = Vector3.Cross(forward, Vector3.up);
@@ -184,13 +291,12 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     
             up = Vector3.Cross(right, forward).normalized;
         }
-        
         private Vector3 GetDirectionOfBullet()
         {
             Vector3 targetPoint;
-            Vector2 randomCirclePoint = Random.insideUnitCircle * GunData.GunStat.Accuracy;
+            Vector2 randomCirclePoint = Random.insideUnitCircle * CurrentAccuracy;
             
-            if (Physics.Raycast(face.position, face.forward, out var hit, GunData.GunStat.MaxWeaponRange,
+            if (Physics.Raycast(Face.position, Face.forward, out var hit, CurrentMaxWeaponRange,
                     HittableLayer))
             {
                 GetOrthonormalBasis(hit.normal, out var right, out var up);
@@ -198,8 +304,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
                 {
                     if (!player!.PlayerCondition.IsAiming)
                     {
-                        var distance = Vector3.Distance(hit.point, face.position);
-                        randomCirclePoint *= distance / GunData.GunStat.MaxWeaponRange;
+                        var distance = Vector3.Distance(hit.point, Face.position);
+                        randomCirclePoint *= distance / CurrentMaxWeaponRange;
                         targetPoint = hit.point + right * randomCirclePoint.x + up * randomCirclePoint.y;
                     } else targetPoint = hit.point;
                 }
@@ -207,26 +313,26 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             }
             else
             {
-                GetOrthonormalBasis(face.forward, out var right, out var up);
+                GetOrthonormalBasis(Face.forward, out var right, out var up);
                 
                 if (isOwnedByPlayer)
                 {
                     if (!player!.PlayerCondition.IsAiming)
                     {
-                        targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
-                    } else targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange;
+                        targetPoint = Face.position + Face.forward * CurrentMaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
+                    } else targetPoint = Face.position + Face.forward * CurrentMaxWeaponRange;
                 }
-                else targetPoint = face.position + face.forward * GunData.GunStat.MaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
+                else targetPoint = Face.position + Face.forward * CurrentMaxWeaponRange + right * randomCirclePoint.x + up * randomCirclePoint.y;
             }
 
             return (targetPoint - BulletSpawnPoint.position).normalized;
         }
-
         private IEnumerator Flicker()
         {
             lightCurves.gameObject.SetActive(true);
             yield return new WaitForSecondsRealtime(lightCurves.GraphTimeMultiplier);
             lightCurves.gameObject.SetActive(false);
         }
+        /* ------------------- */
     }
 }

@@ -14,10 +14,11 @@ namespace _1.Scripts.Item.Items
             if (dto != null) { CurrentItemCount = dto.Items[(int)ItemData.ItemType]; }
         }
 
-        public override void OnUse(GameObject interactor)
+        public override bool OnUse(GameObject interactor)
         {
-            if (CurrentItemCount <= 0 || !interactor.TryGetComponent(out Player player)) return;
+            if (CurrentItemCount <= 0 || !interactor.TryGetComponent(out Player player)) return false;
             player.PlayerCondition.OnItemUsed(this);
+            return true;
         }
     }
 }

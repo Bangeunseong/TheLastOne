@@ -8,13 +8,21 @@ namespace _1.Scripts.UI
     {
         protected UIManager uiManager;
 
-        public virtual void Init(UIManager manager)
+        public virtual void Initialize(UIManager manager, object param = null)
         {
-            // Service.Log($"Initialize Started : {name}");
             uiManager = manager;
-            if (uiManager == null) Service.Log("UIManager가 Null");
         }
 
-        public abstract void SetActive(bool active);
+        public virtual void Show()
+        {
+            gameObject.SetActive(true);
+        }
+        
+        public virtual void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public virtual void ResetUI(){}
     }
 }

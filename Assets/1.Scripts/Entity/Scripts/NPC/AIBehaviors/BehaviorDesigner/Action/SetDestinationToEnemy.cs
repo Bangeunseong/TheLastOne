@@ -1,6 +1,7 @@
 using _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.SharedVariables;
 using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.Npc.StatControllers.Base;
+using _1.Scripts.Util;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -19,6 +20,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		public SharedBaseNpcStatController statController;
 		public SharedBool shouldLookTarget;
 		public SharedFloat stoppingDistance;
+		public bool isShebot_Rifle;
 		
 		public override TaskStatus OnUpdate()
 		{
@@ -48,6 +50,9 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 				navMeshAgent.Value.SetDestination(hit.position);
 			}
 
+			if (isShebot_Rifle) NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position, additionalYangle:45);
+			else NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position);
+			
 			return TaskStatus.Success;
 		}
 	}

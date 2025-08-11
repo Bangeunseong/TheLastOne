@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Static;
+using _1.Scripts.UI.Loading;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -18,7 +19,7 @@ namespace _1.Scripts.Manager.Subs
     {
         private Dictionary<string, ObjectPool<GameObject>> pools = new(); // 풀들 모음
         private Dictionary<string, HashSet<GameObject>> activeObjects = new(); // Get()으로 빠져나간 Clone을 추적하기위해 만듬, HashSet으로 한 이유 1. 성능 2. 중복방지
-        private readonly Dictionary<string, HashSet<string>> scenePrefabMap = new() // 풀로 만들 프리팹들의 정보 모아놓은 딕셔너리
+        private Dictionary<string, HashSet<string>> scenePrefabMap = new() // 풀로 만들 프리팹들의 정보 모아놓은 딕셔너리
         {
             { "Stage1", PoolableGameObjects_Stage1.prefabs },
             { "Stage2", PoolableGameObjects_Stage2.prefabs },
@@ -116,7 +117,7 @@ namespace _1.Scripts.Manager.Subs
             }
 
             // 2. 풀 없으면 Instantiate로 새로 생성만 해서 리턴
-            var prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
+            var prefab = coreManager.resourceManager.GetAsset<GameObject>(prefabName);
             if (prefab) return UnityEngine.Object.Instantiate(prefab);
             Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
             return null;
@@ -185,11 +186,11 @@ namespace _1.Scripts.Manager.Subs
                     pools.Remove(prefabName); // 풀에서 삭제
                     activeObjects.Remove(prefabName); // 추적 해시에서 삭제
                     
-                    Transform parent = poolRoot.Find($"{prefabName}_Parent"); // 부모오브젝트 찾아서 삭제
-                    if (parent != null)
-                    {
-                        UnityEngine.Object.Destroy(parent.gameObject);
-                    }
+                    // 부모오브젝트 찾아서 삭제
+                    Transform parent = coreManager.GetComponentInChildrenOfTarget<Transform>(
+                        poolRoot.gameObject, $"{prefabName}_Parent", true);
+                    if (parent) { UnityEngine.Object.Destroy(parent.gameObject); }
+                    // Service.Log($"{parent.name}");
                     
                     await Task.Yield(); // 한프레임 양보 (파괴작업이니까)
                 }
@@ -202,12 +203,19 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="sceneName"></param>
         public async Task CreatePoolsFromResourceBySceneLabelAsync(string sceneName)
         {
-            var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs); 
-            if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
+            if (Enum.TryParse(sceneName, out SceneType sceneType))
             {
-                await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
+                if (sceneType != SceneType.IntroScene)
+                {
+                    var commonSet = new HashSet<string>(PoolableGameObjects_Common.prefabs);
+                    if (!commonSet.IsSubsetOf(pools.Keys)) // 교집합 계산 (비용 적음)
+                    {
+                        await CreatePoolsFromListAsync(PoolableGameObjects_Common.prefabs); // 없다면 생성
+                    }
+                }
             }
-
+            coreManager.sceneLoadManager.LoadingProgress += 0.2f;
+            
             if (!scenePrefabMap.TryGetValue(sceneName, out HashSet<string> prefabsToLoad))
             {
                 // 풀 만들기가 필요없는 씬
@@ -231,9 +239,9 @@ namespace _1.Scripts.Manager.Subs
             foreach (string prefabName in prefabNames)
             {
                 GameObject prefab = CoreManager.Instance.resourceManager.GetAsset<GameObject>(prefabName);
-                if (prefab == null)
+                if (!prefab)
                 {
-                    Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
+                    // Debug.LogWarning($"리소스에서 '{prefabName}' 프리팹을 찾을 수 없음.");
                     continue;
                 }
 
@@ -241,7 +249,7 @@ namespace _1.Scripts.Manager.Subs
                 current++;
                 
                 float progress = (float)current / total;
-                coreManager.uiManager.LoadingUI.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
+                coreManager.uiManager.GetUI<LoadingUI>()?.UpdateLoadingProgress(coreManager.sceneLoadManager.LoadingProgress + progress * 0.2f);
                 await Task.Yield(); 
             }
         }

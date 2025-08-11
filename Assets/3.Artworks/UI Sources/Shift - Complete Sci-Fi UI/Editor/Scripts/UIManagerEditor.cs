@@ -117,6 +117,7 @@ namespace Michsky.UI.Shift
             var semiBoldFont = serializedObject.FindProperty("semiBoldFont");
             var boldFont = serializedObject.FindProperty("boldFont");
 
+
             GUILayout.Space(foldoutTopSpace);
             GUILayout.BeginHorizontal();
             showFonts = EditorGUILayout.Foldout(showFonts, "Fonts", true, foldoutStyle);

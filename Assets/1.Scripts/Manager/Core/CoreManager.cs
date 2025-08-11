@@ -1,6 +1,10 @@
+using System.Collections;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using _1.Scripts.Manager.Data;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.Common;
 using UnityEngine;
 
 namespace _1.Scripts.Manager.Core
@@ -21,12 +25,21 @@ namespace _1.Scripts.Manager.Core
         [SerializeField] public QuestManager questManager;
         [SerializeField] public SoundManager soundManager;
         [SerializeField] public TimeScaleManager timeScaleManager;
+        [SerializeField] public DialogueManager dialogueManager;
         
         [field: Header("Debug")]
         [field: SerializeField] public bool IsDebug { get; private set; } = true;
         [field: SerializeField] public string DebugPrefix { get; private set; } = "TestScene_";
-        
+
+        // Fields
         private Task saveTask = Task.CompletedTask;
+        private CancellationTokenSource mainCTS;
+        
+        // Properties
+        public CancellationTokenSource PlayerCTS { get; private set; } 
+        public CancellationTokenSource NpcCTS { get; private set; }
+        public CancellationTokenSource UiCTS { get; private set; }
+        public CancellationTokenSource MapCTS { get; private set; }
         
         // Singleton
         public static CoreManager Instance { get; private set; }
@@ -47,6 +60,7 @@ namespace _1.Scripts.Manager.Core
             questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
+            dialogueManager = new DialogueManager();
         }
 
         private void Reset()
@@ -62,11 +76,18 @@ namespace _1.Scripts.Manager.Core
             questManager = new QuestManager();
             soundManager = new SoundManager();
             timeScaleManager = new TimeScaleManager();
+            dialogueManager = new DialogueManager();
         }
 
         // Start is called before the first frame update
-        private void Start()
+        private async void Start()
         {
+            mainCTS = new CancellationTokenSource(); 
+            PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token); 
+            NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            
             uiManager.Start();
             gameManager.Start();
             sceneLoadManager.Start();
@@ -76,14 +97,33 @@ namespace _1.Scripts.Manager.Core
             timeScaleManager.Start();
             spawnManager.Start();
             questManager.Start();
+            dialogueManager.Start();
+            
+            await resourceManager.LoadAssetsByLabelAsync("IntroScene");
+            soundManager.CacheSoundGroup();
+            await soundManager.LoadClips();
         }
 
         // Update is called once per frame
         private void Update()
         {
             if (sceneLoadManager.IsLoading) { sceneLoadManager.Update(); }
-            timeScaleManager.Update();
-            questManager.Update();
+        }
+
+        private void OnDestroy()
+        {
+            resourceManager.OnDestroy();
+            mainCTS?.Cancel(); 
+            PlayerCTS?.Dispose(); NpcCTS?.Dispose(); UiCTS?.Dispose(); MapCTS?.Dispose();
+            mainCTS?.Dispose();
+        }
+
+        public void CreateNewCTS()
+        {
+            PlayerCTS?.Cancel(); PlayerCTS?.Dispose(); PlayerCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            NpcCTS?.Cancel(); NpcCTS?.Dispose(); NpcCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            UiCTS?.Cancel(); UiCTS?.Dispose(); UiCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
+            MapCTS?.Cancel(); MapCTS?.Dispose(); MapCTS = CancellationTokenSource.CreateLinkedTokenSource(mainCTS.Token);
         }
 
         /// <summary>
@@ -95,6 +135,13 @@ namespace _1.Scripts.Manager.Core
             saveTask = saveTask.ContinueWith(_ => gameManager.TrySaveData()).Unwrap();
         }
 
+        public async Task LoadScene(SceneType sceneType)
+        {
+            Service.Log($"Load Scene: {sceneType}");
+            while(saveTask.Status != TaskStatus.RanToCompletion){ await Task.Yield(); }
+            await sceneLoadManager.OpenScene(sceneType);
+        }
+        
         /// <summary>
         /// Load User Data
         /// </summary>
@@ -116,29 +163,105 @@ namespace _1.Scripts.Manager.Core
         }
 
         /// <summary>
-        /// Start Game with the latest saved data
+        /// Start Game with new game data
         /// </summary>
         public void StartGame()
         {
+            gameManager.TryRemoveSavedData();
+            _ = LoadScene(SceneType.Stage1);
+        }
+
+        /// <summary>
+        /// Reload Game with the latest saved data
+        /// </summary>
+        public void ReloadGame()
+        {
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUIByGroup(UIType.InGame);
+            gameManager.ExitGame();
+             
             _ = LoadDataAndScene();
+        }
+        
+        public void MoveToNextScene(SceneType sceneType)
+        {
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUIByGroup(UIType.InGame);
+            gameManager.ExitGame();
+
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(sceneType));
         }
         
         /// <summary>
         /// Back to Intro Scene
         /// </summary>
-        public void MoveToIntroScene() 
+        public void MoveToIntroScene()
         {
-            _ = sceneLoadManager.OpenScene(SceneType.IntroScene);
+            spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            questManager.Reset();
+            spawnManager.Reset();
+            timeScaleManager.Reset();
+            uiManager.ResetUIByGroup(UIType.InGame);
+            gameManager.ExitGame();
+            
+            StartCoroutine(FadeOutAndLoadSceneCoroutine(SceneType.IntroScene));
         }
 
-        /// <summary>
-        /// Save data and move to the next scene
-        /// </summary>
-        /// <param name="nextScene"></param>
-        public void MoveToNextGameScene(SceneType nextScene)
+        private IEnumerator FadeOutAndLoadSceneCoroutine(SceneType sceneType)
         {
-            SaveData_QueuedAsync();
-            _ = LoadDataAndScene();
+            var fade = uiManager.GetUI<FadeUI>();
+            fade.Show(); 
+            fade.FadeOut();
+            yield return new WaitForSecondsRealtime(1f);
+            _ = LoadScene(sceneType);
         }
+        
+        /* - Extensions for Sub Managers - */
+        public T GetComponentOfTarget<T>(GameObject target) where T : Component
+        {
+            if (!target) return null;
+            if (target.TryGetComponent(out T component)) return component;
+            Service.Log($"Can't find component of type {typeof(T)} in {target.name}");
+            return null;
+        }
+
+        public T GetComponentInChildrenOfTarget<T>(GameObject target, string childrenName = null, bool inActive = false) where T : Component
+        {
+            if (!target) return null;
+            if (childrenName == null)
+            {
+                var component = target.GetComponentInChildren<T>(inActive);
+                if (component) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in children of {target.name}");
+                return null;
+            }
+
+            var specificComponent = target.GetComponentsInChildren<T>(inActive);
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == childrenName);
+        }
+
+        public T GetComponentInParentOfTarget<T>(GameObject target, string parentName = null, bool inActive = false)
+            where T : Component
+        {
+            if (!target) return null;
+            if (parentName == null)
+            {
+                var component = target.GetComponentInParent<T>(inActive);
+                if (component != null) return component;
+                Service.Log($"Can't find component of type {typeof(T)} in parent of {target.name}");
+                return null;
+            }
+            
+            var specificComponent = target.GetComponentsInParent<T>(inActive);
+            
+            return specificComponent.FirstOrDefault(component => component.gameObject.name == parentName);
+        }
+        /* ------------------------------------- */
     }
 }

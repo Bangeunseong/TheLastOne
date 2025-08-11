@@ -17,7 +17,7 @@ namespace _1.Scripts.Entity.Scripts.NPC.AIBehaviors.BehaviorDesigner.Action
 		{
 			if (shouldLookTarget.Value)
 			{
-				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value);
+				NpcUtil.LookAtTarget(selfTransform.Value, targetTransform.Value.position);
 			}
 			return TaskStatus.Success;
 		}

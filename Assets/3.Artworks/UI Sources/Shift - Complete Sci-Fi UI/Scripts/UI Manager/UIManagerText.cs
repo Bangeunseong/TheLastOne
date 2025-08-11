@@ -16,8 +16,13 @@ namespace Michsky.UI.Shift
         public ColorType colorType;
         public FontType fontType;
 
-        bool dynamicUpdateEnabled;
 
+        bool dynamicUpdateEnabled;
+        private bool IsKorean()
+        {
+            int idx = PlayerPrefs.GetInt("LanguageIndex", 0);
+            return idx == 1;
+        }
         public enum ColorType
         {
             Primary,
@@ -71,7 +76,7 @@ namespace Michsky.UI.Shift
             }
         }
 
-        void UpdateButton()
+        public void UpdateButton()
         {
             try
             {

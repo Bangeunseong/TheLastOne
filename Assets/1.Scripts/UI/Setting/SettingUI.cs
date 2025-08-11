@@ -1,17 +1,18 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Michsky.UI.Shift;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using TMPro;
+using UnityEngine.Localization.Settings;
 
 namespace _1.Scripts.UI.Setting
 {
     public class SettingUI : MonoBehaviour
     {
-        [Header("Tutorial")]
-        [SerializeField] private SwitchManager tutorialSwitch;
-
         [Header("Language")]
         [SerializeField] private HorizontalSelector languageSelector;
 
@@ -21,96 +22,144 @@ namespace _1.Scripts.UI.Setting
         [SerializeField] private SliderManager sfxVolumeSlider;
 
         [Header("Sensitivity")]
-        [SerializeField] private SliderManager lookSensitivitySlider;
-        [SerializeField] private SliderManager aimSensitivitySlider;
-
-        [Header("Key Bindings")]
-        // TODO: 키 바인딩 추가
-
+        [SerializeField] private SliderManager lookHSensitivitySlider;
+        [SerializeField] private SliderManager lookVSensitivitySlider;
+        [SerializeField] private SliderManager aimHSensitivitySlider;
+        [SerializeField] private SliderManager aimVSensitivitySlider;
+        
         [Header("Graphics")]
-        [SerializeField] private HorizontalSelector resolutionSelector;
+        [SerializeField] private TMP_Dropdown resolutionDropdown;
         [SerializeField] private HorizontalSelector fullscreenModeSelector;
 
-        private Resolution[] resolutions;
+        private List<Vector2Int> resolutionSizes;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
-
-        private void Awake()
+        private Slider _lookH, _lookV, _aimH, _aimV;
+        
+        private void Start()
         {
-            resolutions = Screen.resolutions;
             InitSensitivitySliders();
             InitResolutionSelector();
             InitFullscreenModeSelector();
-        }
-
-        private void Start()
-        {
             LoadSettings();
             AddListeners();
         }
-
-
-        /*private void InitLanguageOptions()
+        
+        private void OnEnable()
         {
-            if (languageSelector == null) return;
-            languageSelector.saveValue = false;
-            languageSelector.loopSelection = false;
-            languageSelector.itemList.Clear();
-
-            var languages = new List<string> { "English", "한국어" };
-            foreach (var lang in languages)
-            {
-                languageSelector.CreateNewItem(lang);
-                int idx = languageSelector.itemList.Count - 1;
-                languageSelector.itemList[idx].onValueChanged.AddListener(() => OnLanguageChanged(idx));
-            }
-
-            languageSelector.index = PlayerPrefs.GetInt("LanguageIndex", 0);
-            languageSelector.UpdateUI();
-        }*/
-
-        private void InitSensitivitySliders()
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            RegisterLanguageSelectorEvents();
+            SyncLanguageSelector();
+        }
+        
+        private void OnDisable()
         {
-            //float lookDef = CoreManager.Instance.gameManager.LookSensitivity;
-            //float aimDef  = CoreManager.Instance.gameManager.AimSensitivity;
-            lookSensitivitySlider.enableSaving = false;
-            aimSensitivitySlider.enableSaving  = false;
+            LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
         }
 
-        private void InitResolutionSelector()
+        private void OnLocaleChanged(UnityEngine.Localization.Locale newLocale)
         {
-            if (resolutionSelector == null) return;
-            resolutionSelector.saveValue = false;
-            resolutionSelector.loopSelection = false;
-            resolutionSelector.itemList.Clear();
+            SyncLanguageSelector();
+        }
+        
+        private void RegisterLanguageSelectorEvents()
+        {
+            if (!languageSelector || languageSelector.itemList == null) return;
 
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                var r = resolutions[i];
-                string option = $"{r.width}x{r.height} {r.refreshRate}hz";
-                resolutionSelector.CreateNewItem(option);
-            }
+            foreach (var item in languageSelector.itemList)
+                item.onValueChanged.RemoveAllListeners();
 
-            for (int i = 0; i < resolutionSelector.itemList.Count; i++)
+            for (int i = 0; i < languageSelector.itemList.Count; i++)
             {
                 int idx = i;
-                resolutionSelector.itemList[i].onValueChanged.AddListener(() => OnResolutionChanged(idx));
+                languageSelector.itemList[i].onValueChanged.AddListener(() => OnLanguageSelectorChanged(idx));
             }
+        }
+        
+        private void SyncLanguageSelector()
+        {
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            var currentLocale = LocalizationSettings.SelectedLocale;
+            int idx = locales.IndexOf(currentLocale);
+            if (idx < 0) idx = 0;
+            languageSelector.index = idx;
+            languageSelector.UpdateUI();
+        }
+        
+        private void OnLanguageSelectorChanged(int idx)
+        {
+            var locales = LocalizationSettings.AvailableLocales.Locales;
+            if (idx < 0 || idx >= locales.Count) return;
+            LocalizationSettings.SelectedLocale = locales[idx];
+            PlayerPrefs.SetInt("LanguageIndex", idx);
+        }
+        
+        private void InitSensitivitySliders()
+        {
+            if (lookHSensitivitySlider) lookHSensitivitySlider.enableSaving = false;
+            if (lookVSensitivitySlider) lookVSensitivitySlider.enableSaving = false;
+            if (aimHSensitivitySlider)  aimHSensitivitySlider .enableSaving = false;
+            if (aimVSensitivitySlider)  aimVSensitivitySlider .enableSaving = false;
+            
+            _lookH = lookHSensitivitySlider ? lookHSensitivitySlider.GetComponent<Slider>() : null;
+            _lookV = lookVSensitivitySlider ? lookVSensitivitySlider.GetComponent<Slider>() : null;
+            _aimH  = aimHSensitivitySlider  ? aimHSensitivitySlider .GetComponent<Slider>() : null;
+            _aimV  = aimVSensitivitySlider  ? aimVSensitivitySlider .GetComponent<Slider>() : null;
+            
+            float lookH = PlayerPrefs.GetFloat("LookSensitivity_H", 0.10f);
+            float lookV = PlayerPrefs.GetFloat("LookSensitivity_V", 0.06f);
+            float aimH  = PlayerPrefs.GetFloat("AimSensitivity_H",  0.10f);
+            float aimV  = PlayerPrefs.GetFloat("AimSensitivity_V",  0.10f);
+            
+            if (_lookH) _lookH.SetValueWithoutNotify(lookH);
+            if (_lookV) _lookV.SetValueWithoutNotify(lookV);
+            if (_aimH)  _aimH .SetValueWithoutNotify(aimH);
+            if (_aimV)  _aimV .SetValueWithoutNotify(aimV);
+            
+            if (_lookH) _lookH.onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_lookV) _lookV.onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_aimH)  _aimH .onValueChanged.AddListener(_ => OnSensitivityChanged());
+            if (_aimV)  _aimV .onValueChanged.AddListener(_ => OnSensitivityChanged());
+            
+            ApplySensitivityToRuntime(lookH, lookV, aimH, aimV);
+        }
+        
+        private void InitResolutionSelector()
+        {
+            if (!resolutionDropdown) return;
 
-            int defaultIdx = PlayerPrefs.GetInt("ResolutionIndex", GetCurrentResolutionIndex());
-            resolutionSelector.index = defaultIdx;
-            resolutionSelector.UpdateUI();
+            resolutionSizes = Screen.resolutions
+                .Select(r => new Vector2Int(r.width, r.height))
+                .Distinct()
+                .OrderBy(v => v.x)
+                .ThenBy(v => v.y)
+                .ToList();
+
+            resolutionDropdown.ClearOptions();
+            var opts = resolutionSizes
+                .Select(size => new TMP_Dropdown.OptionData($"{size.x} x {size.y}"))
+                .ToList();
+            resolutionDropdown.AddOptions(opts);
+
+            int idx = GetCurrentResolutionIndex();
+            resolutionDropdown.SetValueWithoutNotify(idx);
+            resolutionDropdown.RefreshShownValue();
+
+            resolutionDropdown.onValueChanged.RemoveAllListeners();
+            resolutionDropdown.onValueChanged.AddListener(OnResolutionDropdownChanged);
+            
+            OnResolutionDropdownChanged(idx);
         }
 
         private void InitFullscreenModeSelector()
         {
-            if (fullscreenModeSelector == null) return;
+            if (!fullscreenModeSelector) return;
             fullscreenModeSelector.saveValue = false;
             fullscreenModeSelector.loopSelection = false;
             fullscreenModeSelector.itemList.Clear();
 
-            for (int i = 0; i < fullscreenModes.Count; i++)
+            foreach (var t in fullscreenModes)
             {
-                fullscreenModeSelector.CreateNewItem(fullscreenModes[i]);
+                fullscreenModeSelector.CreateNewItem(t);
             }
 
             for (int i = 0; i < fullscreenModes.Count; i++)
@@ -119,98 +168,100 @@ namespace _1.Scripts.UI.Setting
                 fullscreenModeSelector.itemList[i].onValueChanged.AddListener(() => OnFullscreenModeChanged(idx));
             }
 
-            int defaultMode = PlayerPrefs.GetInt("FullscreenMode", Screen.fullScreen ? 0 : 2);
+            int defaultMode = PlayerPrefs.GetInt("FullscreenMode",
+                Screen.fullScreenMode == FullScreenMode.ExclusiveFullScreen ? 0 :
+                Screen.fullScreenMode == FullScreenMode.FullScreenWindow   ? 1 : 2);
             fullscreenModeSelector.index = defaultMode;
             fullscreenModeSelector.UpdateUI();
         }
 
         private int GetCurrentResolutionIndex()
         {
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                var r = resolutions[i];
-                if (r.width == Screen.currentResolution.width &&
-                    r.height == Screen.currentResolution.height &&
-                    r.refreshRate == Screen.currentResolution.refreshRate)
-                    return i;
-            }
-            return 0;
+            var cur = Screen.currentResolution;
+            int byCurrent = resolutionSizes.FindIndex(v => v.x == cur.width && v.y == cur.height);
+
+            int saved = PlayerPrefs.GetInt("ResolutionIndex", byCurrent >= 0 ? byCurrent : 0);
+            return Mathf.Clamp(saved, 0, resolutionSizes.Count - 1);
+        }
+
+        private void OnResolutionDropdownChanged(int idx)
+        {
+            if (idx < 0 || idx >= resolutionSizes.Count) return;
+            var size = resolutionSizes[idx];
+
+            Screen.SetResolution(size.x, size.y, Screen.fullScreenMode);
+
+            PlayerPrefs.SetInt("ResolutionIndex", idx);
+            PlayerPrefs.Save();
         }
         
+        private void OnSensitivityChanged()
+        {
+            float lookH = _lookH ? _lookH.value : PlayerPrefs.GetFloat("LookSensitivity_H", 0.10f);
+            float lookV = _lookV ? _lookV.value : PlayerPrefs.GetFloat("LookSensitivity_V", 0.06f);
+            float aimH  = _aimH  ? _aimH .value : PlayerPrefs.GetFloat("AimSensitivity_H",  0.10f);
+            float aimV  = _aimV  ? _aimV .value : PlayerPrefs.GetFloat("AimSensitivity_V",  0.10f);
+
+            PlayerPrefs.SetFloat("LookSensitivity_H", lookH);
+            PlayerPrefs.SetFloat("LookSensitivity_V", lookV);
+            PlayerPrefs.SetFloat("AimSensitivity_H",  aimH);
+            PlayerPrefs.SetFloat("AimSensitivity_V",  aimV);
+
+            ApplySensitivityToRuntime(lookH, lookV, aimH, aimV);
+        }
+        private void ApplySensitivityToRuntime(float lookH, float lookV, float aimH, float aimV)
+        {
+            var coreManager = CoreManager.Instance;
+            var player = coreManager ? coreManager.gameManager?.Player : null;
+            if (!player) return;
+
+            var pc = player.PlayerCondition;
+            pc.UpdateMouseSensitivity(lookH, lookV, aimH, aimV);
+
+            var pov = player.Pov;
+            bool isAiming = pc.IsAiming;
+
+            if (!pov) return;
+            if (isAiming)
+            {
+                pov.m_HorizontalAxis.m_MaxSpeed = aimH;
+                pov.m_VerticalAxis.m_MaxSpeed   = aimV;
+            }
+            else
+            {
+                pov.m_HorizontalAxis.m_MaxSpeed = lookH;
+                pov.m_VerticalAxis.m_MaxSpeed   = lookV;
+            }
+        }
 
         private void LoadSettings()
         {
-            SoundManager sm = CoreManager.Instance.soundManager;
-            sm.SetMasterVolume(PlayerPrefs.GetFloat(masterVolumeSlider.sliderTag + "SliderValue",
-                masterVolumeSlider.defaultValue));
-            sm.SetBGMVolume(PlayerPrefs.GetFloat(bgmVolumeSlider.sliderTag + "SliderValue",
-                bgmVolumeSlider.defaultValue));
-            sm.SetSFXVolume(PlayerPrefs.GetFloat(sfxVolumeSlider.sliderTag + "SliderValue",
-                sfxVolumeSlider.defaultValue));
+            var sm = CoreManager.Instance.soundManager;
 
-            //float lookVal = PlayerPrefs.GetFloat("LookSensitivity", CoreManager.Instance.gameManager.LookSensitivity);
-            //float aimVal  = PlayerPrefs.GetFloat("AimSensitivity", CoreManager.Instance.gameManager.AimSensitivity);
-            //lookSensitivitySlider.GetComponent<Slider>().value = lookVal;
-            //aimSensitivitySlider.GetComponent<Slider>().value  = aimVal;
+            float master01 = PlayerPrefs.GetFloat("MasterVolume", 1f);
+            float bgm01    = PlayerPrefs.GetFloat("BGMVolume",    1f);
+            float sfx01    = PlayerPrefs.GetFloat("SFXVolume",    1f);
+
+            masterVolumeSlider.GetComponent<Slider>().SetValueWithoutNotify(master01 * 100f);
+            bgmVolumeSlider   .GetComponent<Slider>().SetValueWithoutNotify(bgm01    * 100f);
+            sfxVolumeSlider   .GetComponent<Slider>().SetValueWithoutNotify(sfx01    * 100f);
+
+            sm.SetMasterVolume(master01);
+            sm.SetBGMVolume(bgm01);
+            sm.SetSFXVolume(sfx01);
         }
 
         private void AddListeners()
         {
-            tutorialSwitch.OnEvents.AddListener(() => OnTutorialToggled(true));
-            tutorialSwitch.OffEvents.AddListener(() => OnTutorialToggled(false));
-            
-            masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnMasterVolumeChanged);
-            bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnBGMVolumeChanged);
-            sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnSFXVolumeChanged);
+            masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetMasterVolume(Mathf.Clamp01(v100 / 100f)));
 
-            //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
-            //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
-        }
-        
+            bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetBGMVolume(Mathf.Clamp01(v100 / 100f)));
 
-        private void OnTutorialToggled(bool on)
-        {
-            PlayerPrefs.SetInt("EnableTutorials", on ? 1 : 0);
-        }
+            sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetSFXVolume(Mathf.Clamp01(v100 / 100f)));
 
-        /*private void OnLanguageChanged(int idx)
-        {
-            PlayerPrefs.SetInt("LanguageIndex", idx);
-            LocalizationManager.SetLanguage(idx);
-        }*/
-
-        private void OnMasterVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetMasterVolume(vol);
-        }
-
-        private void OnBGMVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetBGMVolume(vol);
-        }
-
-        private void OnSFXVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetSFXVolume(vol);
-        }
-
-        /*private void OnLookSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.LookSensitivity = sens;
-            PlayerPrefs.SetFloat("LookSensitivity", sens);
-        }*/
-
-        /*private void OnAimSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.AimSensitivity = sens;
-            PlayerPrefs.SetFloat("AimSensitivity", sens);
-        }*/
-
-        private void OnResolutionChanged(int idx)
-        {
-            var r = resolutions[idx];
-            Screen.SetResolution(r.width, r.height, Screen.fullScreen);
-            PlayerPrefs.SetInt("ResolutionIndex", idx);
         }
 
         private void OnFullscreenModeChanged(int idx)

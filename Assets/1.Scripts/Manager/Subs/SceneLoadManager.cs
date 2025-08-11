@@ -2,10 +2,12 @@ using System;
 using System.Threading.Tasks;
 using _1.Scripts.Entity.Scripts.Player.Core;
 using _1.Scripts.Manager.Core;
-using _1.Scripts.Util;
-using _1.Scripts.Weapon.Scripts.Common;
+using _1.Scripts.UI.Loading;
+using _1.Scripts.UI.Lobby;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace _1.Scripts.Manager.Subs
@@ -31,7 +33,8 @@ namespace _1.Scripts.Manager.Subs
         private bool isKeyPressed;
         private UIManager uiManager;
         private CoreManager coreManager;
-        
+
+
         // Properties
         public bool IsLoading { get; private set; }
         public float LoadingProgress { get; set; }
@@ -55,93 +58,99 @@ namespace _1.Scripts.Manager.Subs
             IsLoading = true;
             PreviousScene = CurrentScene;
             
+            // Reset All Managers
+            coreManager.soundManager.StopBGM();
             coreManager.objectPoolManager.ReleaseAll();
             coreManager.spawnManager.ClearAllSpawnedEnemies();
+            coreManager.uiManager.HideHUD();
+            coreManager.uiManager.ResetUIByGroup(UIType.InGame);
+            uiManager.UnregisterDynamicUIByGroup(UIType.InGame);
+            
+            // Remove all remain resources that belongs to previous scene
             if (PreviousScene != sceneName)
             {
                 await coreManager.objectPoolManager.DestroyUnusedStagePools(PreviousScene.ToString());
                 await coreManager.resourceManager.UnloadAssetsByLabelAsync(PreviousScene.ToString());
-                if (CurrentScene == SceneType.IntroScene)
+                CurrentScene = sceneName;
+                if (CurrentScene is SceneType.IntroScene or SceneType.EndingScene)
                 {
                     await coreManager.objectPoolManager.DestroyUnusedStagePools("Common");
                     await coreManager.resourceManager.UnloadAssetsByLabelAsync("Common");
-                    Cursor.lockState = CursorLockMode.None;
                 }
-                
-                CurrentScene = sceneName;
             }
+            
+            // Hide Lobby and Show Loading
+            uiManager.HideUI<LobbyUI>();
+            uiManager.ShowUI<LoadingUI>();
             
             var loadingScene = 
                 SceneManager.LoadSceneAsync(coreManager.IsDebug ? 
                     coreManager.DebugPrefix + nameof(SceneType.Loading) : nameof(SceneType.Loading));
-            while (!loadingScene!.isDone)
-            {
-                await Task.Yield();
-            }
-
+            while (!loadingScene!.isDone) { await Task.Yield(); }
+            
+            // Update Loading Progress
             LoadingProgress = 0f;
-            uiManager.ChangeState(CurrentState.Loading);
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+            var loadingUI = uiManager.GetUI<LoadingUI>();
+            loadingUI.UpdateLoadingProgress(LoadingProgress);
             
             Debug.Log("Resource and Scene Load Started!");
             if (PreviousScene == SceneType.IntroScene)
             {
+                // Load Common Resource used in Game Scene
                 await coreManager.resourceManager.LoadAssetsByLabelAsync("Common");
-                coreManager.soundManager.StopBGM();
-                coreManager.soundManager.CacheSoundGroup();
-                await coreManager.soundManager.LoadClips();
-                await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync("Common");
-                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
                 LoadingProgress = 0.4f;
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
+                loadingUI.UpdateLoadingProgress(LoadingProgress);
             }
             
-            await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            // Load Resources & Create Pool used in Current Scene
+            if (CurrentScene != SceneType.EndingScene) await coreManager.resourceManager.LoadAssetsByLabelAsync(CurrentScene.ToString());
+            coreManager.dialogueManager.CacheDialogueData();
             coreManager.soundManager.CacheSoundGroup();
             await coreManager.soundManager.LoadClips();
             await coreManager.objectPoolManager.CreatePoolsFromResourceBySceneLabelAsync(CurrentScene.ToString());
+            
+            // Load Scene
             await LoadSceneWithProgress(CurrentScene);
         }
         
+        /// <summary>
+        /// Current Scene이 로드되는 Task (sceneLoaded event가 실행된다)
+        /// </summary>
+        /// <param name="sceneName"></param>
         private async Task LoadSceneWithProgress(SceneType sceneName)
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
+            var loadingUI = uiManager.GetUI<LoadingUI>();
+            
             sceneLoad = SceneManager.LoadSceneAsync(coreManager.IsDebug ? coreManager.DebugPrefix + sceneName : sceneName.ToString());
             sceneLoad!.allowSceneActivation = false;
             while (sceneLoad.progress < 0.9f)
             {
-                uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
+                loadingUI.UpdateLoadingProgress(LoadingProgress + sceneLoad.progress * 0.2f);
                 await Task.Yield();
             }
             LoadingProgress = 1f;
             
             // Wait for user input
             isInputAllowed = true;
-            uiManager.LoadingUI.UpdateLoadingProgress(LoadingProgress);
-            uiManager.LoadingUI.UpdateProgressText("Press any key to continue...");
+            loadingUI.UpdateLoadingProgress(LoadingProgress);
+            LocalizedString loadingString = new LocalizedString("New Table", "LoadingText_Key");
+            loadingString.StringChanged += value =>
+            {
+                loadingUI.UpdateProgressText(value);
+            };
             await WaitForUserInput();
             isInputAllowed = false;
+            isKeyPressed = false;
             
             sceneLoad!.allowSceneActivation = true;
+            
             while (sceneLoad is { isDone: false }) 
             {
                 await Task.Yield();
-            }
-
-            switch (CurrentScene)
-            { 
-                case SceneType.IntroScene: uiManager.ChangeState(CurrentState.Lobby);
-                    break;
-                case SceneType.Loading: 
-                    break;
-                case SceneType.Stage1:
-                case SceneType.Stage2: uiManager.ChangeState(CurrentState.InGame); break;
-                case SceneType.EndingScene:
-                    break;
-                default: throw new ArgumentOutOfRangeException();
             }
             
             IsLoading = false;
@@ -155,17 +164,47 @@ namespace _1.Scripts.Manager.Subs
         /// <param name="mode"></param>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            var playerObj = GameObject.FindWithTag("Player");
-            if (playerObj == null || !playerObj.TryGetComponent(out Player player)) return;
-            coreManager.gameManager.Initialize_Player(player);
-            player.PlayerCondition.IsPlayerHasControl = true;
+            // Step 0. Always dispose all UniTask left in Enemies (It remains in ObjectPool, so remaining tasks need to be disposed)
+            // Then, create new CTS(Cancellation Token Source)
+            coreManager.spawnManager.DisposeAllUniTasksFromSpawnedEnemies();
+            coreManager.CreateNewCTS();
             
-            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
-            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene);
-
-            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType))
+            // Check if the player is going to intro or ending scene (loading is obsolete)
+            switch (CurrentScene)
             {
-                coreManager.soundManager.PlayBGM(bgmType, index:0);
+                case SceneType.IntroScene: 
+                    coreManager.soundManager.PlayBGM(BgmType.Lobby, 0);
+                    uiManager.HideUI<LoadingUI>(); uiManager.ShowUI<LobbyUI>();
+                    return;
+                case SceneType.EndingScene: 
+                    uiManager.HideUI<LoadingUI>(); PlayEndingCutScene(); 
+                    return;
+            }
+            
+            // Notice!! : 이 밑에 넣을 코드들은 본 게임에서 쓰일 것들만 넣기
+            // Step 1. Find Player in scene
+            var playerObj = GameObject.FindWithTag("Player");
+            if (playerObj == null || !playerObj.TryGetComponent(out Player player)) 
+                throw new MissingComponentException("Player not found");
+            
+            // Step 2. Initialize Player, Spawn Mobs, Initialize Quests
+            coreManager.gameManager.Initialize_Player(player);
+            coreManager.spawnManager.ChangeSpawnDataAndInstantiate(CurrentScene, coreManager.gameManager.SaveData);
+            coreManager.questManager.Initialize(coreManager.gameManager.SaveData);
+            
+            // Step 3. Hide Loading UI & Register InGame UIs
+            uiManager.HideUI<LoadingUI>();
+            uiManager.RegisterDynamicUIByGroup(UIType.InGame);
+
+            // Step 4. Check if there is a cutscene and intro is played, if not play intro.
+            // Then, start the game
+            switch (CurrentScene)
+            {
+                case SceneType.Stage1: 
+                    // Play Cutscene If needed
+                    PlayCutSceneOrResumeGame(player, true); break;
+                case SceneType.Stage2:
+                    PlayCutSceneOrResumeGame(player); break;
             }
         }
         
@@ -177,11 +216,115 @@ namespace _1.Scripts.Manager.Subs
             }
         }
 
-        // Scene Loading Test Method (Deprecated)
-        // private IEnumerator LoadMainScene()
-        // {
-        //     yield return new WaitForSeconds(1);
-        //     _ = OpenScene(nameof(CurrentScene.Main));
-        // }
+        private void PlayCutSceneOrResumeGame(Player player, bool spawn = false, int index = 1)
+        {
+            var introGo = GameObject.Find("IntroOpening");
+            var playable = introGo?.GetComponentInChildren<PlayableDirector>();
+            if (!playable || coreManager.gameManager.SaveData != null &&
+                coreManager.gameManager.SaveData.stageInfos.TryGetValue(CurrentScene, out var info) &&
+                info.isIntroPlayed)
+            {
+                ResumeGame(player, spawn, index); return;
+            }
+
+            PlayCutScene(playable);
+        }
+
+        private void PlayEndingCutScene()
+        {
+            var endingGo = GameObject.Find("IntroOpening");
+            var playable = endingGo?.GetComponentInChildren<PlayableDirector>();
+            PlayCutScene(playable);
+        }
+        
+        private void PlayCutScene(PlayableDirector director)
+        {
+            if (CurrentScene == SceneType.Stage1)
+            {
+                director.played += OnCutsceneStarted_Stage1Intro;
+                director.stopped += OnCutsceneStopped_Stage1Intro;
+            }
+            else if (CurrentScene == SceneType.Stage2)
+            {
+                director.played += OnCutsceneStarted_Stage2Intro;
+                director.stopped += OnCutsceneStopped_Stage2Intro;
+            } 
+            else if (CurrentScene == SceneType.EndingScene)
+            {
+                director.stopped += OnCutsceneStopped_Ending;
+            }
+            director.Play();
+        }
+
+        private void ResumeGame(Player player, bool spawn, int index)
+        {
+            ChangeBGM(0);
+            player.PlayerCondition.OnEnablePlayerMovement();
+            if (!coreManager.uiManager.ShowHUD()) throw new MissingReferenceException();
+            if (spawn) coreManager.spawnManager.SpawnEnemyBySpawnData(index);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private void ChangeBGM(int index)
+        {
+            if (Enum.TryParse(CurrentScene.ToString(), out BgmType bgmType)) 
+                coreManager.soundManager.PlayBGM(bgmType, index: index);
+        }
+
+        private void OnCutsceneStarted_Stage1Intro(PlayableDirector director)
+        {
+            ChangeBGM(0);
+            coreManager.gameManager.Player.InputProvider.enabled = false;
+            coreManager.gameManager.PauseGame();
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
+        }
+
+        private void OnCutsceneStarted_Stage2Intro(PlayableDirector director)
+        {
+            coreManager.gameManager.Player.InputProvider.enabled = false;
+            coreManager.gameManager.PauseGame();
+            coreManager.gameManager.Player.PlayerCondition.UpdateLowPassFilterValue(coreManager.gameManager.Player.PlayerCondition.HighestPoint);
+            coreManager.uiManager.OnCutsceneStarted(director);
+        }
+
+        private void OnCutsceneStopped_Stage1Intro(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            coreManager.spawnManager.SpawnEnemyBySpawnData(1);
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage1Intro;
+        }
+
+        private void OnCutsceneStopped_Stage2Intro(PlayableDirector director)
+        {
+            var player = coreManager.gameManager.Player;
+            player.PlayerCondition.UpdateLowPassFilterValue(player.PlayerCondition.LowestPoint + (player.PlayerCondition.HighestPoint - player.PlayerCondition.LowestPoint) * ((float)player.PlayerCondition.CurrentHealth / player.PlayerCondition.MaxHealth));
+            player.InputProvider.enabled = true;
+            
+            ChangeBGM(0);
+            coreManager.gameManager.ResumeGame();
+            coreManager.uiManager.OnCutsceneStopped(director);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            
+            director.played -= OnCutsceneStarted_Stage1Intro;
+            director.stopped -= OnCutsceneStopped_Stage2Intro;
+        }
+
+        private void OnCutsceneStopped_Ending(PlayableDirector director)
+        {
+            coreManager.MoveToIntroScene();
+            director.stopped -= OnCutsceneStopped_Ending;
+        }
     }
 }

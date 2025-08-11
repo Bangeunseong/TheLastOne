@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using _1.Scripts.UI.Inventory;
 
 namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
 {
@@ -10,19 +11,15 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Air
         
         public override void Enter()
         {
+            stateMachine.MovementSpeedModifier = playerCondition.AirSpeedModifier;
             base.Enter();
             StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
             
             // Cancel Crouch
-            if (playerCondition.IsCrouching)
-            {
-                if (crouchCTS != null) { crouchCTS.Cancel(); crouchCTS.Dispose(); }
-                crouchCTS = new CancellationTokenSource();
-                _ = Crouch_Async(playerCondition.IsCrouching = false, 0.1f, crouchCTS.Token); 
-            }
+            playerCondition.OnCrouch(false, 0.1f);
             
-            // Stop Reload Coroutine
-            playerCondition.TryCancelReload();
+            // Hide Inventory UI
+            coreManager.uiManager.HideUI<InventoryUI>();
         }
 
         public override void Exit()

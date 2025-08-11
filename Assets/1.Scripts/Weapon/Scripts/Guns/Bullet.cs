@@ -1,4 +1,5 @@
-﻿using _1.Scripts.Interfaces.Common;
+﻿using System;
+using _1.Scripts.Interfaces.Common;
 using _1.Scripts.Manager.Core;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace _1.Scripts.Weapon.Scripts.Guns
     {
         [Header("Components")] 
         [SerializeField] private Rigidbody rigidBody;
-
+        [SerializeField] private TrailRenderer trailRenderer;
+        
         [Header("Bullet Presets")] 
         [SerializeField] private float appliedForce;
         [SerializeField] private float maxMoveDistance;
@@ -26,11 +28,13 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void Awake()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void Reset()
         {
             if (!rigidBody) rigidBody = this.TryGetComponent<Rigidbody>();
+            if (!trailRenderer) trailRenderer = this.TryGetComponent<TrailRenderer>();
         }
 
         private void OnEnable()
@@ -45,10 +49,14 @@ namespace _1.Scripts.Weapon.Scripts.Guns
         private void FixedUpdate()
         {
             if (isAlreadyReached) return;
-            if (!((transform.position - initializedPosition).sqrMagnitude > maxMoveDistance * maxMoveDistance)) return;
-            rigidBody.useGravity = true;
-            rigidBody.drag = drag;
+            if (!((transform.position - initializedPosition).magnitude > maxMoveDistance)) return;
             isAlreadyReached = true;
+            CoreManager.Instance.objectPoolManager.Release(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            trailRenderer.Clear();
         }
 
         public void Initialize(Vector3 position, Vector3 dir, float maxDistance, float force, int dealtDamage, LayerMask hitLayer)
@@ -61,8 +69,7 @@ namespace _1.Scripts.Weapon.Scripts.Guns
             appliedForce = force; 
             maxMoveDistance = maxDistance;
             direction = dir;
-            hittableLayer = 0;
-            hittableLayer |= hitLayer;
+            hittableLayer = hitLayer;
 
             rigidBody.AddForce(direction.normalized * appliedForce, ForceMode.Impulse);
         }

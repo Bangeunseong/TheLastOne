@@ -1,3 +1,4 @@
+using _1.Scripts.Entity.Scripts.NPC.Data.AnimationHashData;
 using _1.Scripts.Entity.Scripts.NPC.Data.ForRuntime;
 using _1.Scripts.Entity.Scripts.NPC.Data.StatDataSO;
 using _1.Scripts.Entity.Scripts.NPC.StatControllers.Base;
@@ -17,5 +18,18 @@ namespace _1.Scripts.Entity.Scripts.NPC.StatControllers.Drone
             runtimeStatData = runtimeSuicideDroneStatData;
         }
         // 이후 runtimeSuicideDroneStatData 수정 시 베이스에 반영
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            runtimeSuicideDroneStatData.ResetStats();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            animator.SetTrigger(DroneAnimationData.Repair);
+        }
+
     }
 }

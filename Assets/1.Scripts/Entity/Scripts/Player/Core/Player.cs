@@ -2,6 +2,7 @@ using _1.Scripts.Entity.Scripts.Player.Data;
 using _1.Scripts.Entity.Scripts.Player.StateMachineScripts;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using _1.Scripts.UI.InGame.HUD;
 using Cinemachine;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerCondition), typeof(PlayerInteraction))]
     [RequireComponent(typeof(PlayerInput), typeof(PlayerGravity), typeof(PlayerRecoil))]
-    [RequireComponent(typeof(PlayerInventory))]
+    [RequireComponent(typeof(PlayerInventory), typeof(PlayerWeapon), typeof(PlayerDamageReceiver))]
     
     public class Player : MonoBehaviour
     {
@@ -18,6 +19,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public CharacterController Controller { get; private set; }
         [field: SerializeField] public PlayerInput PlayerInput { get; private set; }
         [field: SerializeField] public PlayerCondition PlayerCondition { get; private set; }
+        [field: SerializeField] public PlayerDamageReceiver PlayerDamageReceiver { get; private set; }
+        [field: SerializeField] public PlayerWeapon PlayerWeapon { get; private set; }
         [field: SerializeField] public PlayerInteraction PlayerInteraction { get; private set; }
         [field: SerializeField] public PlayerGravity PlayerGravity { get; private set; }
         [field: SerializeField] public PlayerRecoil PlayerRecoil { get; private set; }
@@ -56,6 +59,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Animator) Animator = this.TryGetComponent<Animator>();
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
+            if (!PlayerDamageReceiver) PlayerDamageReceiver = this.TryGetComponent<PlayerDamageReceiver>();
+            if (!PlayerWeapon) PlayerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
@@ -68,7 +73,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!CrouchPivot) CrouchPivot = this.TryGetChildComponent<Transform>("CrouchPivot");
             
             if (!FirstPersonCamera) FirstPersonCamera = GameObject.Find("FirstPersonCamera")?.GetComponent<CinemachineVirtualCamera>();
-            if (!InputProvider)InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
+            if (!InputProvider) InputProvider = FirstPersonCamera?.GetComponent<CinemachineInputProvider>();
             if (!Pov) Pov = FirstPersonCamera?.GetCinemachineComponent<CinemachinePOV>();
             
             AnimationData.Initialize();
@@ -79,6 +84,8 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             if (!Animator) Animator = this.TryGetComponent<Animator>();
             if (!Controller) Controller = this.TryGetComponent<CharacterController>();
             if (!PlayerCondition) PlayerCondition = this.TryGetComponent<PlayerCondition>();
+            if (!PlayerDamageReceiver) PlayerDamageReceiver = this.TryGetComponent<PlayerDamageReceiver>();
+            if (!PlayerWeapon) PlayerWeapon = this.TryGetComponent<PlayerWeapon>();
             if (!PlayerInteraction) PlayerInteraction = this.TryGetComponent<PlayerInteraction>();
             if (!PlayerInput) PlayerInput = this.TryGetComponent<PlayerInput>();
             if (!PlayerGravity) PlayerGravity = this.TryGetComponent<PlayerGravity>();
@@ -111,10 +118,17 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             
             // Core Component 선언 -> Save Data에 영향을 받는 것들에게만 적용
             PlayerCondition.Initialize(coreManager.gameManager.SaveData);
+            PlayerDamageReceiver.Initialize();
             PlayerInventory.Initialize(coreManager.gameManager.SaveData);
+            PlayerWeapon.Initialize(coreManager.gameManager.SaveData);
+            
+            coreManager.uiManager.GetUI<InGameUI>().UpdateStateUI();
+            coreManager.uiManager.GetUI<WeaponUI>().Refresh(false);
             
             StateMachine = new PlayerStateMachine(this);
             StateMachine.ChangeState(StateMachine.IdleState);
+            
+            coreManager.SaveData_QueuedAsync();
         }
 
         private void FixedUpdate()
@@ -136,11 +150,6 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             StateMachine.LateUpdate();
         }
 
-        private void OnDestroy()
-        {
-            StopAllCoroutines();
-        }
-
         /// <summary>
         /// Play Foot Step Sound
         /// </summary>
@@ -149,7 +158,19 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerFootStep, transform.position);
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
+            }
+        }
+
+        /// <summary>
+        /// Play Jump Sound
+        /// </summary>
+        /// <param name="animationEvent"></param>
+        private void OnJump(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
             }
         }
 
@@ -161,7 +182,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                CoreManager.Instance.soundManager.PlaySFX(SfxType.PlayerLand, transform.position);
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
             }
         }
     }
