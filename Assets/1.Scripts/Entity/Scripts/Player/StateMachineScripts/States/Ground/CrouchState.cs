@@ -35,7 +35,15 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
             playerCondition.OnCrouch(false, 0.1f);
             stateMachine.ChangeState(stateMachine.IdleState);
         }
-        
+
+        protected override void OnRunStarted(InputAction.CallbackContext context)
+        {
+            base.OnRunStarted(context);
+            if (!playerCondition.IsPlayerHasControl) return;
+            playerCondition.OnCrouch(false, 0.1f);
+            stateMachine.ChangeState(stateMachine.RunState);
+        }
+
         public override void Update()
         {
             base.Update();

@@ -158,7 +158,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                coreManager.soundManager.PlaySFX(SfxType.PlayerFootStep_Dirt, transform.position);
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
             }
         }
 
@@ -170,7 +170,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                coreManager.soundManager.PlaySFX(SfxType.PlayerJump_Dirt, transform.position);
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
             }
         }
 
@@ -182,7 +182,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                coreManager.soundManager.PlaySFX(SfxType.PlayerLand_Dirt, transform.position);
+                coreManager.soundManager.PlayUISFX(PlayerGravity.CurrentGroundType == GroundType.Grass ? SfxType.PlayerFootStep_Dirt : SfxType.PlayerFootStep_Steel);
             }
         }
     }

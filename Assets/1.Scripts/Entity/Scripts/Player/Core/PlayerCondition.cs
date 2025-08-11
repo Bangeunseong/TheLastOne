@@ -58,6 +58,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float JumpForce { get; private set; }
         [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
 
+        [field: Header("Current Mouse Sensitivity")]
+        [field: SerializeField] public float LookSensitivity { get; private set; } = 0.1f;
+        [field: SerializeField] public float AimSensitivity { get; private set; } = 0.1f;
+        
         [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
         [field: SerializeField] public float WalkSpeedModifier { get; private set; }
@@ -173,6 +177,10 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             AirSpeedModifier = StatData.airMultiplier;
+            LookSensitivity = PlayerPrefs.GetFloat("LookSensitivity", 0.1f);
+            AimSensitivity = LookSensitivity * PlayerPrefs.GetFloat("AimSensitivity", 0.6f);
+
+            ChangeMouseSensitivity(false);
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
@@ -264,6 +272,12 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
                 OnTakeDamage(damagePerTick);
                 await UniTask.WaitForSeconds(tickInterval, cancellationToken:token);
             }
+        }
+
+        private void ChangeMouseSensitivity(bool isAim)
+        {
+            if (isAim) {player.Pov.m_HorizontalAxis.m_MaxSpeed = AimSensitivity; player.Pov.m_VerticalAxis.m_MaxSpeed = AimSensitivity / 2f;}
+            else {player.Pov.m_HorizontalAxis.m_MaxSpeed = LookSensitivity; player.Pov.m_VerticalAxis.m_MaxSpeed = LookSensitivity / 2f;}
         }
 
         /// <summary>
@@ -561,6 +575,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         /* - Aim 관련 메소드 - */
         public void OnAim(bool isAim, float targetFoV, float transitionTime)
         {
+            ChangeMouseSensitivity(isAim);
             aimCTS?.Cancel(); aimCTS?.Dispose();
             aimCTS = CancellationTokenSource.CreateLinkedTokenSource(coreManager.PlayerCTS.Token);
             _ = AimAsync(isAim, targetFoV, transitionTime, aimCTS.Token);

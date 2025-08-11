@@ -64,7 +64,7 @@ namespace _1.Scripts.Map.GameEvents
 
         private void OnTriggerEnter(Collider other)
         {
-            if (isSpawned || !other.CompareTag("Player")) return;
+            if (!enabled || isSpawned || !other.CompareTag("Player")) return;
             
             Debug.Log("Spawned!");
             
