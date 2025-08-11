@@ -59,8 +59,11 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
         [field: SerializeField] public float RotationDamping { get; private set; } = 10f;  // Rotation Speed
 
         [field: Header("Current Mouse Sensitivity")]
-        [field: SerializeField] public float LookSensitivity { get; private set; } = 0.1f;
-        [field: SerializeField] public float AimSensitivity { get; private set; } = 0.1f;
+        [field: SerializeField] public float LookSensitivity_H { get; private set; } = 0.1f;
+
+        [field: SerializeField] public float LookSensitivity_V { get; private set; } = 0.06f;
+        [field: SerializeField] public float AimSensitivity_H { get; private set; } = 0.1f;
+        [field: SerializeField] public float AimSensitivity_V { get; private set; } = 0.1f;
         
         [field: Header("Speed Modifiers")]
         [field: SerializeField] public float CrouchSpeedModifier { get; private set; }
@@ -177,13 +180,22 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
             WalkSpeedModifier = StatData.walkMultiplier;
             RunSpeedModifier = StatData.runMultiplier;
             AirSpeedModifier = StatData.airMultiplier;
-            LookSensitivity = PlayerPrefs.GetFloat("LookSensitivity", 0.1f);
-            AimSensitivity = LookSensitivity * PlayerPrefs.GetFloat("AimSensitivity", 0.6f);
-
+            
+            UpdateMouseSensitivity(PlayerPrefs.GetFloat("LookSensitivity_H", 0.1f), PlayerPrefs.GetFloat("LookSensitivity_V", 0.06f),
+                PlayerPrefs.GetFloat("AimSensitivity_H", 0.1f), PlayerPrefs.GetFloat("AimSensitivity_V", 0.06f));
             ChangeMouseSensitivity(false);
 
             OnInstinctRecover_Idle();
             player.Controller.enabled = true;
+        }
+
+        public void UpdateMouseSensitivity(float lookSensitivity_H, float lookSensitivity_V, 
+            float aimSensitivity_H, float aimSensitivity_V)
+        {
+            LookSensitivity_H = lookSensitivity_H;
+            LookSensitivity_V = lookSensitivity_V;
+            AimSensitivity_H = aimSensitivity_H;
+            AimSensitivity_V = aimSensitivity_V;
         }
 
         public void UpdateLowPassFilterValue(float value)
@@ -276,8 +288,16 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         private void ChangeMouseSensitivity(bool isAim)
         {
-            if (isAim) {player.Pov.m_HorizontalAxis.m_MaxSpeed = AimSensitivity; player.Pov.m_VerticalAxis.m_MaxSpeed = AimSensitivity / 2f;}
-            else {player.Pov.m_HorizontalAxis.m_MaxSpeed = LookSensitivity; player.Pov.m_VerticalAxis.m_MaxSpeed = LookSensitivity / 2f;}
+            if (isAim)
+            {
+                player.Pov.m_HorizontalAxis.m_MaxSpeed = AimSensitivity_H; 
+                player.Pov.m_VerticalAxis.m_MaxSpeed = AimSensitivity_V;
+            }
+            else
+            {
+                player.Pov.m_HorizontalAxis.m_MaxSpeed = LookSensitivity_H;
+                player.Pov.m_VerticalAxis.m_MaxSpeed = LookSensitivity_V;
+            }
         }
 
         /// <summary>
