@@ -61,7 +61,7 @@ namespace Michsky.UI.Shift
                 if (usePercent == true)
                     valueText.text = mainSlider.value.ToString("F1") + "%";
                 else
-                    valueText.text = mainSlider.value.ToString("F1");
+                    valueText.text = mainSlider.value.ToString("F2");
             }
         }
     }
