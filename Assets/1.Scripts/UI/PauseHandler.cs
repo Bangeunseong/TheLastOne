@@ -15,6 +15,10 @@ namespace _1.Scripts.UI
         [SerializeField] private CanvasGroup settingPanel;
         [SerializeField] private Animator settingAnimator;
         
+        [Header("Tutorial Panel")]
+        [SerializeField] private CanvasGroup tutorialPanel;
+        [SerializeField] private Animator tutorialAnimator;
+        
         private PauseMenuUI pauseMenuUI;
         private CoreManager coreManager;
 
@@ -57,6 +61,12 @@ namespace _1.Scripts.UI
                 settingPanel.interactable = false;
                 settingPanel.blocksRaycasts = false;
             }
+
+            if (!tutorialPanel || !(tutorialPanel.alpha > 0f)) return;
+            tutorialAnimator?.Play("Panel Out");
+            tutorialPanel.alpha = 0f;
+            tutorialPanel.interactable = false;
+            tutorialPanel.blocksRaycasts = false;
         }
 
         private void Resume()
@@ -75,6 +85,12 @@ namespace _1.Scripts.UI
                 settingPanel.interactable = false;
                 settingPanel.blocksRaycasts = false;
             }
+
+            if (!tutorialPanel || !(tutorialPanel.alpha > 0f)) return;
+            tutorialAnimator?.Play("Panel Out");
+            tutorialPanel.alpha = 0f;
+            tutorialPanel.interactable = false;
+            tutorialPanel.blocksRaycasts = false;
         }
 
         public void SetPauseMenuUI(PauseMenuUI ui)
@@ -82,6 +98,8 @@ namespace _1.Scripts.UI
             pauseMenuUI = ui;
             settingPanel = ui.SettingPanel;
             settingAnimator = ui.SettingAnimator;
+            tutorialPanel = ui.TutorialPanel;
+            tutorialAnimator = ui.TutorialAnimator;
         }
     }
 }
