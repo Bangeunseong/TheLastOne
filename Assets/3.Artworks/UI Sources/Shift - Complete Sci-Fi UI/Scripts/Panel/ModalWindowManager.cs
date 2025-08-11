@@ -70,7 +70,7 @@ namespace Michsky.UI.Shift
 
         IEnumerator DisableWindow()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
             gameObject.SetActive(false);
         }
     }

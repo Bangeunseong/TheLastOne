@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Michsky.UI.Shift;
 using _1.Scripts.Manager.Core;
 using _1.Scripts.Manager.Subs;
+using TMPro;
 using UnityEngine.Localization.Settings;
 
 namespace _1.Scripts.UI.Setting
@@ -27,15 +29,14 @@ namespace _1.Scripts.UI.Setting
         // TODO: 키 바인딩 추가
 
         [Header("Graphics")]
-        [SerializeField] private HorizontalSelector resolutionSelector;
+        [SerializeField] private TMP_Dropdown resolutionDropdown;
         [SerializeField] private HorizontalSelector fullscreenModeSelector;
 
-        private Resolution[] resolutions;
+        private List<Vector2Int> resolutionSizes;
         private readonly List<string> fullscreenModes = new List<string> { "Fullscreen", "Borderless", "Windowed" };
         
         private void Start()
         {
-            resolutions = Screen.resolutions;
             InitSensitivitySliders();
             InitResolutionSelector();
             InitFullscreenModeSelector();
@@ -102,26 +103,29 @@ namespace _1.Scripts.UI.Setting
 
         private void InitResolutionSelector()
         {
-            if (!resolutionSelector) return;
-            resolutionSelector.saveValue = false;
-            resolutionSelector.loopSelection = false;
-            resolutionSelector.itemList.Clear();
+            if (!resolutionDropdown) return;
 
-            foreach (var r in resolutions)
-            {
-                string option = $"{r.width}x{r.height} {r.refreshRateRatio}hz";
-                resolutionSelector.CreateNewItem(option);
-            }
+            resolutionSizes = Screen.resolutions
+                .Select(r => new Vector2Int(r.width, r.height))
+                .Distinct()
+                .OrderBy(v => v.x)
+                .ThenBy(v => v.y)
+                .ToList();
 
-            for (int i = 0; i < resolutionSelector.itemList.Count; i++)
-            {
-                int idx = i;
-                resolutionSelector.itemList[i].onValueChanged.AddListener(() => OnResolutionChanged(idx));
-            }
+            resolutionDropdown.ClearOptions();
+            var opts = resolutionSizes
+                .Select(size => new TMP_Dropdown.OptionData($"{size.x} x {size.y}"))
+                .ToList();
+            resolutionDropdown.AddOptions(opts);
+
+            int idx = GetCurrentResolutionIndex();
+            resolutionDropdown.SetValueWithoutNotify(idx);
+            resolutionDropdown.RefreshShownValue();
+
+            resolutionDropdown.onValueChanged.RemoveAllListeners();
+            resolutionDropdown.onValueChanged.AddListener(OnResolutionDropdownChanged);
             
-            int defaultIdx = PlayerPrefs.GetInt("ResolutionIndex", GetCurrentResolutionIndex());
-            resolutionSelector.index = defaultIdx;
-            resolutionSelector.UpdateUI();
+            OnResolutionDropdownChanged(idx);
         }
 
         private void InitFullscreenModeSelector()
@@ -142,48 +146,61 @@ namespace _1.Scripts.UI.Setting
                 fullscreenModeSelector.itemList[i].onValueChanged.AddListener(() => OnFullscreenModeChanged(idx));
             }
 
-            int defaultMode = PlayerPrefs.GetInt("FullscreenMode", Screen.fullScreen ? 0 : 2);
+            int defaultMode = PlayerPrefs.GetInt("FullscreenMode",
+                Screen.fullScreenMode == FullScreenMode.ExclusiveFullScreen ? 0 :
+                Screen.fullScreenMode == FullScreenMode.FullScreenWindow   ? 1 : 2);
             fullscreenModeSelector.index = defaultMode;
             fullscreenModeSelector.UpdateUI();
         }
 
         private int GetCurrentResolutionIndex()
         {
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                var r = resolutions[i];
-                if (r.width == Screen.currentResolution.width &&
-                    r.height == Screen.currentResolution.height &&
-                    Math.Abs(r.refreshRateRatio.value - Screen.currentResolution.refreshRateRatio.value) < 0.5f)
-                    return i;
-            }
-            return 0;
+            var cur = Screen.currentResolution;
+            int byCurrent = resolutionSizes.FindIndex(v => v.x == cur.width && v.y == cur.height);
+
+            int saved = PlayerPrefs.GetInt("ResolutionIndex", byCurrent >= 0 ? byCurrent : 0);
+            return Mathf.Clamp(saved, 0, resolutionSizes.Count - 1);
+        }
+
+        private void OnResolutionDropdownChanged(int idx)
+        {
+            if (idx < 0 || idx >= resolutionSizes.Count) return;
+            var size = resolutionSizes[idx];
+
+            Screen.SetResolution(size.x, size.y, Screen.fullScreenMode);
+
+            PlayerPrefs.SetInt("ResolutionIndex", idx);
+            PlayerPrefs.Save();
         }
         
 
         private void LoadSettings()
         {
-            SoundManager sm = CoreManager.Instance.soundManager;
-            sm.SetMasterVolume(PlayerPrefs.GetFloat(masterVolumeSlider.sliderTag + "SliderValue",
-                masterVolumeSlider.defaultValue));
-            sm.SetBGMVolume(PlayerPrefs.GetFloat(bgmVolumeSlider.sliderTag + "SliderValue",
-                bgmVolumeSlider.defaultValue));
-            sm.SetSFXVolume(PlayerPrefs.GetFloat(sfxVolumeSlider.sliderTag + "SliderValue",
-                sfxVolumeSlider.defaultValue));
+            var sm = CoreManager.Instance.soundManager;
 
-            //float lookVal = PlayerPrefs.GetFloat("LookSensitivity", CoreManager.Instance.gameManager.LookSensitivity);
-            //float aimVal  = PlayerPrefs.GetFloat("AimSensitivity", CoreManager.Instance.gameManager.AimSensitivity);
-            //lookSensitivitySlider.GetComponent<Slider>().value = lookVal;
-            //aimSensitivitySlider.GetComponent<Slider>().value  = aimVal;
+            float master01 = PlayerPrefs.GetFloat("MasterVolume", 1f);
+            float bgm01    = PlayerPrefs.GetFloat("BGMVolume",    1f);
+            float sfx01    = PlayerPrefs.GetFloat("SFXVolume",    1f);
+
+            masterVolumeSlider.GetComponent<Slider>().SetValueWithoutNotify(master01 * 100f);
+            bgmVolumeSlider   .GetComponent<Slider>().SetValueWithoutNotify(bgm01    * 100f);
+            sfxVolumeSlider   .GetComponent<Slider>().SetValueWithoutNotify(sfx01    * 100f);
+
+            sm.SetMasterVolume(master01);
+            sm.SetBGMVolume(bgm01);
+            sm.SetSFXVolume(sfx01);
         }
 
         private void AddListeners()
         {
+            masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetMasterVolume(Mathf.Clamp01(v100 / 100f)));
 
-            
-            masterVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnMasterVolumeChanged);
-            bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnBGMVolumeChanged);
-            sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(OnSFXVolumeChanged);
+            bgmVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetBGMVolume(Mathf.Clamp01(v100 / 100f)));
+
+            sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
+                CoreManager.Instance.soundManager.SetSFXVolume(Mathf.Clamp01(v100 / 100f)));
 
 
             //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
@@ -216,13 +233,7 @@ namespace _1.Scripts.UI.Setting
             CoreManager.Instance.gameManager.AimSensitivity = sens;
             PlayerPrefs.SetFloat("AimSensitivity", sens);
         }*/
-
-        private void OnResolutionChanged(int idx)
-        {
-            var r = resolutions[idx];
-            Screen.SetResolution(r.width, r.height, Screen.fullScreen);
-            PlayerPrefs.SetInt("ResolutionIndex", idx);
-        }
+        
 
         private void OnFullscreenModeChanged(int idx)
         {

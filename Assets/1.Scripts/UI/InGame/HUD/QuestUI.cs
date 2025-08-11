@@ -77,7 +77,6 @@ namespace _1.Scripts.UI.InGame.HUD
                 var questSlot = questSlots[i];
                 if (i >= questListCache.Count ||
                     !objectiveDictCache.TryGetValue(questListCache[i].questID, out var objectives)) continue;
-                questSlot.UpdateQuestProgress();
                 questSlot.RefreshObjectiveSlots();
             }
         }
