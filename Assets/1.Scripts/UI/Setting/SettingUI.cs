@@ -24,10 +24,7 @@ namespace _1.Scripts.UI.Setting
         [Header("Sensitivity")]
         [SerializeField] private SliderManager lookSensitivitySlider;
         [SerializeField] private SliderManager aimSensitivitySlider;
-
-        [Header("Key Bindings")]
-        // TODO: 키 바인딩 추가
-
+        
         [Header("Graphics")]
         [SerializeField] private TMP_Dropdown resolutionDropdown;
         [SerializeField] private HorizontalSelector fullscreenModeSelector;
@@ -95,8 +92,6 @@ namespace _1.Scripts.UI.Setting
         
         private void InitSensitivitySliders()
         {
-            //float lookDef = CoreManager.Instance.gameManager.LookSensitivity;
-            //float aimDef  = CoreManager.Instance.gameManager.AimSensitivity;
             lookSensitivitySlider.enableSaving = false;
             aimSensitivitySlider.enableSaving  = false;
         }
@@ -202,38 +197,7 @@ namespace _1.Scripts.UI.Setting
             sfxVolumeSlider.GetComponent<Slider>().onValueChanged.AddListener(v100 =>
                 CoreManager.Instance.soundManager.SetSFXVolume(Mathf.Clamp01(v100 / 100f)));
 
-
-            //lookSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnLookSensitivityChanged);
-            //aimSensitivitySlider.GetComponent<Slider>().onValueChanged.AddListener(OnAimSensitivityChanged);
         }
-
-        private void OnMasterVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetMasterVolume(vol);
-        }
-
-        private void OnBGMVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetBGMVolume(vol);
-        }
-
-        private void OnSFXVolumeChanged(float vol)
-        {
-            CoreManager.Instance.soundManager.SetSFXVolume(vol);
-        }
-
-        /*private void OnLookSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.LookSensitivity = sens;
-            PlayerPrefs.SetFloat("LookSensitivity", sens);
-        }*/
-
-        /*private void OnAimSensitivityChanged(float sens)
-        {
-            CoreManager.Instance.gameManager.AimSensitivity = sens;
-            PlayerPrefs.SetFloat("AimSensitivity", sens);
-        }*/
-        
 
         private void OnFullscreenModeChanged(int idx)
         {
