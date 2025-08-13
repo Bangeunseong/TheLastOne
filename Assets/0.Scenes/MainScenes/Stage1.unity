@@ -1984,17 +1984,6 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[0].second
       value: 
       objectReference: {fileID: 1917048629}
-    - target: {fileID: 7157355390648712954, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_NavMeshData
-      value: 
-      objectReference: {fileID: 23800000, guid: bc275fac5b140084e8b4ab22f47cd1f4,
-        type: 2}
-    - target: {fileID: 7157355390648712954, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
-        type: 3}
-      propertyPath: m_LayerMask.m_Bits
-      value: 286261246
-      objectReference: {fileID: 0}
     - target: {fileID: 8598486223725032148, guid: c99189ac9aafcb44f966dd5bb0b76e8d,
         type: 3}
       propertyPath: m_Events.m_Events.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
