@@ -13,6 +13,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         {
             stateMachine.MovementSpeedModifier = playerCondition.RunSpeedModifier;
             base.Enter();
+            
             playerCondition.OnConsumeStamina(
                 playerCondition.StatData.consumeRateOfStamina * playerCondition.StatData.interval, 
                 playerCondition.StatData.interval);

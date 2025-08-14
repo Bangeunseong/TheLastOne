@@ -23,7 +23,6 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States.Ground
         public override void Exit()
         {
             base.Exit();
-            
             playerCondition.CancelStaminaTask();
         }
         

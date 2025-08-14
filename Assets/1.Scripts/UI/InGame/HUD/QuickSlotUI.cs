@@ -101,7 +101,7 @@ namespace _1.Scripts.UI.InGame.HUD
             if (currentSlot != -1) UseSlot(currentSlot);
             else if (currentSlot == -1)
             {
-                Service.Log($"선택된 아이템 없음");
+                // Service.Log($"선택된 아이템 없음");
             }
             
             RefreshQuickSlot(); 
@@ -117,7 +117,7 @@ namespace _1.Scripts.UI.InGame.HUD
 
         private void UseSlot(int idx)
         {
-            Service.Log($"{idx} 번째 슬롯의 아이템 사용");
+            // Service.Log($"{idx} 번째 슬롯의 아이템 사용");
             CoreManager.Instance.gameManager.Player.PlayerInventory.OnSelectItem((ItemType)currentSlot);
         }
 
@@ -133,7 +133,7 @@ namespace _1.Scripts.UI.InGame.HUD
                     if (it.Key == type)
                     {
                         item = it.Value;
-                        Service.Log($"QuickSlot UI : {item.ItemData.NameKey} {item.CurrentItemCount}");
+                        // Service.Log($"QuickSlot UI : {item.ItemData.NameKey} {item.CurrentItemCount}");
                         break;
                     }
                 }

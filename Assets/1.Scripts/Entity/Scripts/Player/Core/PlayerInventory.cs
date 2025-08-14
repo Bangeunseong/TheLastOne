@@ -81,7 +81,7 @@ namespace _1.Scripts.Entity.Scripts.Player.Core
 
         public void OnSelectItem(ItemType itemType)
         {
-            Service.Log($"Attempting to select {itemType}");
+            // Service.Log($"Attempting to select {itemType}");
             if (!Items.ContainsKey(itemType) || Items[itemType].CurrentItemCount <= 0)
             {
                 CoreManager.Instance.uiManager.GetUI<InGameUI>()?.ShowToast("FailSelect_Key");
