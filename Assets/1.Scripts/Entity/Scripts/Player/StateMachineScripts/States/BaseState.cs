@@ -103,7 +103,7 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
 
         private void Move(Vector3 direction)
         {
-            var targetSpeed = GetMovementSpeed();
+            var targetSpeed = direction == Vector3.zero ? 0f : GetMovementSpeed();
             var currentHorizontalSpeed = new Vector3(stateMachine.Player.Controller.velocity.x, 0f, stateMachine.Player.Controller.velocity.z).magnitude * Time.timeScale;
 
             if (currentHorizontalSpeed < targetSpeed - 0.1f || currentHorizontalSpeed > targetSpeed + 0.1f)
@@ -112,6 +112,8 @@ namespace _1.Scripts.Entity.Scripts.Player.StateMachineScripts.States
                 speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else speed = targetSpeed;
+
+            playerCondition.CurrentSpeed = speed;
             
             // Set Animator Speed Parameter (Only Applied to Activated Animator)
             if (playerWeapon.WeaponAnimators[playerCondition.EquippedWeaponIndex].isActiveAndEnabled)
